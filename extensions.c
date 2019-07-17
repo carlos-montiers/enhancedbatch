@@ -1,0 +1,1166 @@
+/*
+ Copyright (c) 2019 Carlos Montiers Aguilera
+ Copyright (c) 2019 Jason Hood
+
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any damages
+ arising from the use of this software.
+
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+
+ 1. The origin of this software must not be misrepresented; you must not
+ claim that you wrote the original software. If you use this software
+ in a product, an acknowledgment in the product documentation would be
+ appreciated but is not required.
+
+ 2. Altered source versions must be plainly marked as such, and must not be
+ misrepresented as being the original software.
+
+ 3. This notice may not be removed or altered from any source distribution.
+
+ Carlos Montiers Aguilera   cmontiers@gmail.com
+ Jason Hood                 jadoxa@yahoo.com.au
+
+*/
+
+#include "dll_enhancedbatch.h"
+#include "extensions.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+extern LPVOID cmd_end;
+
+static DWORD toString(DWORD num, LPWSTR buffer, DWORD size) {
+	return snwprintf(buffer, size, L"%d", num);
+}
+
+static void toNumber(int *num, int argc, LPCWSTR argv[]) {
+	while (argc-- > 0) {
+		*num++ = (int) wcstol(*argv++, NULL, 10);
+	}
+}
+
+DWORD Getch(LPWSTR buffer, DWORD size) {
+
+	int code;
+
+	while (!(code = _getwch()) || (0xE0 == code)) {
+		_getwch();
+	}
+
+	*buffer = code;
+	buffer[1] = L'\0';
+	return 1;
+}
+
+DWORD Chhit(LPWSTR buffer, DWORD size) {
+
+	int code;
+
+	if (_kbhit()) {
+		if (!(code = _getwch()) || (0xE0 == code)) {
+			_getwch();
+			return toString(-1, buffer, size);
+		}
+		*buffer = code;
+		buffer[1] = L'\0';
+		return 1;
+	} else {
+		return toString(-1, buffer, size);
+	}
+}
+
+DWORD Getkb(LPWSTR buffer, DWORD size) {
+
+	int code;
+
+	code = _getwch();
+	if ((!code) || (0xE0 == code)) {
+		code = _getwch();
+		code = -code;
+	}
+
+	return toString(code, buffer, size);
+}
+
+DWORD Kbhit(LPWSTR buffer, DWORD size) {
+
+	if (_kbhit()) {
+		return Getkb(buffer, size);
+	} else {
+		return toString(0, buffer, size);
+	}
+}
+
+void setPosition(int row, int column) {
+
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	HANDLE hOut;
+	COORD screen_max;
+	COORD coord;
+	SHORT x, y;
+
+	x = column;
+	y = row;
+
+	hOut = getOutputHandle();
+	GetConsoleScreenBufferInfo(hOut, &csbi);
+	screen_max.X = csbi.srWindow.Right - csbi.srWindow.Left;
+	screen_max.Y = csbi.srWindow.Bottom - csbi.srWindow.Top;
+
+	if (x < 0) {
+		x = 0;
+	}
+
+	if (y < 0) {
+		y = 0;
+	}
+
+	if (x > screen_max.X) {
+		x = screen_max.X;
+	}
+
+	if (y > screen_max.Y) {
+		y = screen_max.Y;
+	}
+
+	coord.X = x + csbi.srWindow.Left;
+	coord.Y = y + csbi.srWindow.Top;
+
+	SetConsoleCursorPosition(hOut, coord);
+	CloseHandle(hOut);
+}
+
+BOOL SetPosition(int argc, LPCWSTR argv[]) {
+
+	int num[2];
+
+	if (argc != 2) {
+		return FALSE;
+	}
+
+	toNumber(num, 2, argv);
+	setPosition(num[0], num[1]);
+
+	return TRUE;
+}
+
+COORD getPosition(void) {
+
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	HANDLE hOut;
+
+	hOut = getOutputHandle();
+	GetConsoleScreenBufferInfo(hOut, &csbi);
+
+	CloseHandle(hOut);
+
+	csbi.dwCursorPosition.X -= csbi.srWindow.Left;
+	csbi.dwCursorPosition.Y -= csbi.srWindow.Top;
+
+	return csbi.dwCursorPosition;
+}
+
+DWORD GetPosition(LPWSTR buffer, DWORD size) {
+
+	COORD position;
+
+	position = getPosition();
+	return snwprintf(buffer, size, L"%d %d", position.Y, position.X);
+}
+
+BOOL SetRow(int argc, LPCWSTR argv[]) {
+
+	COORD cur;
+	int row;
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	toNumber(&row, 1, argv);
+	cur = getPosition();
+	setPosition(row, cur.X);
+
+	return TRUE;
+}
+
+DWORD GetRow(LPWSTR buffer, DWORD size) {
+	return toString(getPosition().Y, buffer, size);
+}
+
+BOOL SetColumn(int argc, LPCWSTR argv[]) {
+
+	COORD cur;
+	int column;
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	toNumber(&column, 1, argv);
+	cur = getPosition();
+	setPosition(cur.Y, column);
+
+	return TRUE;
+}
+
+DWORD GetColumn(LPWSTR buffer, DWORD size) {
+	return toString(getPosition().X, buffer, size);
+}
+
+COORD getSize(void) {
+
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	HANDLE hOut;
+	COORD size;
+
+	hOut = getOutputHandle();
+	GetConsoleScreenBufferInfo(hOut, &csbi);
+	size.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+	size.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+	CloseHandle(hOut);
+
+	return size;
+}
+
+DWORD GetSize(LPWSTR buffer, DWORD size) {
+
+	COORD csize;
+
+	csize = getSize();
+	return snwprintf(buffer, size, L"%d %d", csize.Y, csize.X);
+}
+
+DWORD GetHeight(LPWSTR buffer, DWORD size) {
+	return toString(getSize().Y, buffer, size);
+}
+
+DWORD GetWidth(LPWSTR buffer, DWORD size) {
+	return toString(getSize().X, buffer, size);
+}
+
+BOOL SetColor(int argc, LPCWSTR argv[]) {
+
+	HANDLE hOut;
+	WORD value;
+	BOOL ret;
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	hOut = getOutputHandle();
+
+	value = (WORD) wcstol(argv[0], NULL, 16);
+
+	ret = SetConsoleTextAttribute(hOut, value);
+	CloseHandle(hOut);
+
+	return ret;
+}
+
+DWORD GetColor(LPWSTR buffer, DWORD size) {
+
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	HANDLE hOut;
+
+	hOut = getOutputHandle();
+	GetConsoleScreenBufferInfo(hOut, &csbi);
+
+	CloseHandle(hOut);
+
+	return snwprintf(buffer, size, L"%X", csbi.wAttributes);
+}
+
+BOOL WaitMilliseconds(int argc, LPCWSTR argv[]) {
+
+	int milliseconds;
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	toNumber(&milliseconds, 1, argv);
+	if (milliseconds < 0) {
+		return FALSE;
+	}
+
+	Sleep(milliseconds);
+
+	return TRUE;
+}
+
+static DWORD lo_timer_begin, lo_timer_end;
+static LARGE_INTEGER hi_timer_begin, hi_timer_end, hi_frequency;
+static BOOL lo_timer, hi_timer;
+static BOOL lo_timer_valid, hi_timer_valid;
+
+BOOL SetMyTimer(int argc, LPCWSTR argv[]) {
+	if (argc > 1) {
+		return FALSE;
+	}
+
+	if (argc == 0 || _wcsicmp(*argv, L"stop") == 0) {
+		if (hi_timer) {
+			QueryPerformanceCounter(&hi_timer_end);
+			hi_timer = lo_timer_valid = FALSE;
+			hi_timer_valid = TRUE;
+		}
+		if (lo_timer) {
+			lo_timer_end = GetTickCount();
+			lo_timer = hi_timer_valid = FALSE;
+			lo_timer_valid = TRUE;
+		}
+		return TRUE;
+	}
+
+	if (_wcsicmp(*argv, L"stoplo") == 0) {
+		if (lo_timer) {
+			lo_timer_end = GetTickCount();
+			lo_timer = hi_timer_valid = FALSE;
+			lo_timer_valid = TRUE;
+		}
+		return TRUE;
+	}
+
+	if (_wcsicmp(*argv, L"stophi") == 0) {
+		if (hi_timer) {
+			QueryPerformanceCounter(&hi_timer_end);
+			hi_timer = lo_timer_valid = FALSE;
+			hi_timer_valid = TRUE;
+		}
+		return TRUE;
+	}
+
+	if (_wcsicmp(*argv, L"start" ) == 0 ||
+		_wcsicmp(*argv, L"startlo" ) == 0 ||
+		_wcsicmp(*argv, L"lo" ) == 0) {
+		lo_timer = lo_timer_valid = TRUE;
+		hi_timer_valid = FALSE;
+		lo_timer_begin = GetTickCount();
+		return TRUE;
+	}
+
+	if (_wcsicmp(*argv, L"starthi" ) == 0 ||
+		_wcsicmp(*argv, L"hi" ) == 0) {
+		if (hi_frequency.QuadPart == -1) {
+			return FALSE;
+		}
+		if (!hi_frequency.QuadPart) {
+			if (!QueryPerformanceFrequency(&hi_frequency)) {
+				hi_frequency.QuadPart = -1;
+				return FALSE;
+			}
+		}
+		hi_timer = hi_timer_valid = TRUE;
+		lo_timer_valid = FALSE;
+		QueryPerformanceCounter(&hi_timer_begin);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DWORD GetTimer(LPWSTR buffer, DWORD size) {
+	if (lo_timer_valid) {
+		DWORD end = lo_timer ? GetTickCount() : lo_timer_end;
+		return toString(end - lo_timer_begin, buffer, size);
+	}
+	if (hi_timer_valid) {
+		LARGE_INTEGER end;
+		if (hi_timer) {
+			QueryPerformanceCounter(&end);
+		}
+		else {
+			end = hi_timer_end;
+		}
+		return toString((int)((end.QuadPart - hi_timer_begin.QuadPart)
+							  * 1000000 / hi_frequency.QuadPart),
+						buffer, size);
+	}
+	return toString(0, buffer, size);
+}
+
+BOOL SetOpacity(int argc, LPCWSTR argv[]) {
+
+	int pc;
+	BYTE alpha;
+	HANDLE hwnd;
+	LONG_PTR exstyle;
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	toNumber(&pc, 1, argv);
+	if (pc <= MIN_OPACITY_PERCENT) {
+		alpha = MIN_OPACITY_ALPHA;
+	} else if (pc >= MAX_OPACITY_PERCENT) {
+		alpha = MAX_OPACITY_ALPHA;
+	} else {
+		alpha = (MAX_OPACITY_ALPHA * pc + MAX_OPACITY_PERCENT - 1)
+				/ MAX_OPACITY_PERCENT;
+	}
+
+	hwnd = GetConsoleWindow();
+
+	if (LOBYTE(GetVersion()) >= 10) { // is Windows 10 or greater
+		// Simulate wheel movements to keep the properties dialog in sync
+		// (within 4.7%, anyway).
+		BYTE curr_alpha;
+		int wheel_movements;
+		if (!GetLayeredWindowAttributes(hwnd, NULL, &curr_alpha, NULL)) {
+			curr_alpha = MAX_OPACITY_ALPHA;
+		}
+		wheel_movements = alpha - curr_alpha;
+		wheel_movements /= OPACITY_DELTA_INTERVAL;
+		if (wheel_movements) {
+			PostMessage(
+				hwnd,
+				WM_MOUSEWHEEL,
+				MAKELONG(MK_CONTROL | MK_SHIFT, WHEEL_DELTA * wheel_movements),
+				0
+			);
+		}
+	}
+
+	exstyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
+	if (!(exstyle & WS_EX_LAYERED)) {
+		exstyle |= WS_EX_LAYERED;
+		SetWindowLongPtr(hwnd, GWL_EXSTYLE, exstyle);
+	}
+	return SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
+}
+
+DWORD GetOpacity(LPWSTR buffer, DWORD size) {
+
+	HANDLE hwnd = GetConsoleWindow();
+	BYTE alpha;
+	DWORD pc;
+
+	if (!GetLayeredWindowAttributes(hwnd, NULL, &alpha, NULL)) {
+		pc = MAX_OPACITY_PERCENT;
+	} else {
+		pc = MAX_OPACITY_PERCENT * alpha / MAX_OPACITY_ALPHA;
+	}
+
+	return toString(pc, buffer, size);
+}
+
+BOOL SetConsoleCursor(int argc, LPCWSTR argv[]) {
+
+	CONSOLE_CURSOR_INFO cci;
+	HANDLE hOut;
+	int iValue;
+	BOOL ret;
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	hOut = getOutputHandle();
+	GetConsoleCursorInfo(hOut, &cci);
+
+	toNumber(&iValue, 1, argv);
+	if (iValue < 0) {
+		iValue = 0;
+	} else if (iValue > 100) {
+		iValue = 100;
+	}
+	if (iValue == 0 || iValue == 1) {
+		cci.bVisible = iValue;
+	} else if (iValue >= 2 && iValue <= 100) {
+		cci.dwSize = iValue;
+		cci.bVisible = TRUE;
+	}
+
+	ret = SetConsoleCursorInfo(hOut, &cci);
+	CloseHandle(hOut);
+
+	return ret;
+}
+
+DWORD GetConsoleCursor(LPWSTR buffer, DWORD size) {
+
+	CONSOLE_CURSOR_INFO cci;
+	HANDLE hOut;
+
+	hOut = getOutputHandle();
+	GetConsoleCursorInfo(hOut, &cci);
+
+	CloseHandle(hOut);
+
+	if (!cci.bVisible) {
+		return toString(0, buffer, size);
+	} else {
+		return toString(cci.dwSize, buffer, size);
+	}
+}
+
+DWORD GetCodePage(LPWSTR buffer, DWORD size) {
+	return toString(GetConsoleOutputCP(), buffer, size);
+}
+
+BOOL SetCodePage(int argc, LPCWSTR argv[]) {
+
+	int cp;
+
+	if (argc > 1) {
+		return FALSE;
+	}
+
+	if (argc == 0 || _wcsicmp(*argv, L"oem") == 0) {
+		cp = GetOEMCP();
+	} else if (_wcsicmp(*argv, L"utf-8") == 0 ||
+			   _wcsicmp(*argv, L"utf8") == 0 ||
+			   _wcsicmp(*argv, L"utf_8") == 0) {
+		cp = CP_UTF8;
+	} else if (_wcsicmp(*argv, L"ansi") == 0) {
+		cp = GetACP();
+	} else {
+		toNumber(&cp, 1, argv);
+	}
+	if (!SetConsoleOutputCP(cp)) {
+		return FALSE;
+	}
+	return SetConsoleCP(cp);
+}
+
+DWORD GetArgCount(LPWSTR buffer, DWORD size) {
+
+	LPWSTR *argv, rest;
+	DWORD argc;
+
+	if (!pCurrentBatchFile || !*pCurrentBatchFile) {
+		return toString(-1, buffer, size);
+	}
+
+	argv = *pCurrentBatchFile;
+#ifdef _WIN64
+	if (cmdFileVersionMS >= 0x60000) {
+		argv += 10;
+	} else {
+		argv += 6;
+	}
+#else
+	if (cmdFileVersionMS >= 0x60000) {
+		argv += 15;
+	} else if (cmdFileVersionMS > 0x50000) {
+		argv += 8;
+	} else {
+		argv += 7;
+	}
+#endif
+	rest = argv[-1];
+	if (rest && *rest) {
+		argc = 10;
+		for (;; ++rest) {
+			if (!*rest) {
+				++argc;
+				if (!rest[1]) {
+					break;
+				}
+			}
+		}
+	}
+	else {
+		argc = 0;
+		while (*argv) {
+			if (++argc == 10) {
+				break;
+			}
+			++argv;
+		}
+	}
+	return toString(argc - 1, buffer, size);
+}
+
+DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size) {
+
+	LPWSTR *argv, rest;
+	DWORD argc, *arglen;
+
+	if (!pCurrentBatchFile || !*pCurrentBatchFile) {
+		return 0;
+	}
+
+	argv = *pCurrentBatchFile;
+#ifdef _WIN64
+	if (cmdFileVersionMS >= 0x60000) {
+		argv += 10;
+	} else {
+		argv += 6;
+	}
+#else
+	if (cmdFileVersionMS >= 0x60000) {
+		argv += 15;
+	} else if (cmdFileVersionMS > 0x50000) {
+		argv += 8;
+	} else {
+		argv += 7;
+	}
+#endif
+	arglen = (DWORD *) (argv + 10);
+	rest = argv[-1];
+
+	// I'll take a shortcut here: the supplied buffer is 32Ki, which is as big
+	// as the command line can be, so no need to test size.
+	size = 0;
+	argc = 0;
+	while (*argv) {
+		if (argc >= first) {
+			if (argc > first) {
+				*buffer++ = L' ';
+				++size;
+			}
+			memcpy(buffer, *argv, *arglen * 2);
+			buffer += *arglen;
+			size += *arglen;
+		}
+		if (argc == last) {
+			*buffer = L'\0';
+			return size;
+		}
+		if (++argc == 10) {
+			if (rest && *rest) {
+				if (argc > first) {
+					*buffer++ = L' ';
+					++size;
+				}
+				for (;; ++rest) {
+					if (*rest) {
+						if (argc >= first) {
+							*buffer++ = *rest;
+							++size;
+						}
+					} else {
+						if (argc++ == last || !rest[1]) {
+							*buffer = L'\0';
+							return size;
+						}
+						if (argc > first) {
+							*buffer++ = L' ';
+							++size;
+						}
+					}
+				}
+			}
+			break;
+		}
+		++arglen;
+		++argv;
+	}
+	*buffer = L'\0';
+	return size;
+}
+
+BOOL SetUnicode(int argc, LPCWSTR argv[]) {
+
+	int unicode;
+
+	if (argc != 1 || !pfOutputUnicode) {
+		return FALSE;
+	}
+
+	toNumber(&unicode, 1, argv);
+	*pfOutputUnicode = (BYTE) unicode;
+	return TRUE;
+}
+
+DWORD GetUnicode(LPWSTR buffer, DWORD size) {
+	if (!pfOutputUnicode) {
+		return toString(-1, buffer, size);
+	}
+	return toString(*pfOutputUnicode, buffer, size);
+}
+
+BOOL SetDelayedExpansion(int argc, LPCWSTR argv[]) {
+
+	int flag;
+
+	if (argc != 1 || !pfDelayedExpansion) {
+		return FALSE;
+	}
+
+	toNumber(&flag, 1, argv);
+	*pfDelayedExpansion = (BYTE) flag;
+	return TRUE;
+}
+
+DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size) {
+	if (!pfDelayedExpansion) {
+		return toString(-1, buffer, size);
+	}
+	return toString(*pfDelayedExpansion, buffer, size);
+}
+
+BOOL SetExtensions(int argc, LPCWSTR argv[]) {
+
+	int flag;
+
+	if (argc != 1 || !pfEnableExtensions) {
+		return FALSE;
+	}
+
+	toNumber(&flag, 1, argv);
+	*pfEnableExtensions = (BYTE) flag;
+	return TRUE;
+}
+
+DWORD GetExtensions(LPWSTR buffer, DWORD size) {
+	if (!pfEnableExtensions) {
+		return toString(-1, buffer, size);
+	}
+	return toString(*pfEnableExtensions, buffer, size);
+}
+
+DWORD GetTransient(LPWSTR buffer, DWORD size) {
+
+	static int transient = -1;
+
+	if (transient == -1) {
+		LPWSTR cmd;
+		for (cmd = GetCommandLine();; ++cmd) {
+			cmd = wcschr(cmd, L'/');
+			if (cmd == NULL || cmd[1] == L'k' || cmd[1] == L'K') {
+				transient = 0;
+				break;
+			}
+			if (cmd[1] == L'c' || cmd[1] == L'C') {
+				transient = 1;
+				break;
+			}
+		}
+	}
+
+	return toString(transient, buffer, size);
+}
+
+DWORD getStd(DWORD handle, LPWSTR buffer, DWORD size) {
+	DWORD mode;
+	return toString(GetConsoleMode(GetStdHandle(handle), &mode), buffer, size);
+}
+
+DWORD GetStdin(LPWSTR buffer, DWORD size) {
+	return getStd(STD_INPUT_HANDLE, buffer, size);
+}
+
+DWORD GetStdout(LPWSTR buffer, DWORD size) {
+	return getStd(STD_OUTPUT_HANDLE, buffer, size);
+}
+
+DWORD GetStderr(LPWSTR buffer, DWORD size) {
+	return getStd(STD_ERROR_HANDLE, buffer, size);
+}
+
+DWORD GetUnique(LPWSTR buffer, DWORD size) {
+	*buffer = L'\0';
+	GetTempFileName(L".", L"eb-", 0, buffer);
+	return wcslen(buffer);
+}
+
+DWORD GetTempFile(LPWSTR buffer, DWORD size) {
+
+	WCHAR temp[MAX_PATH];
+
+	GetTempPath(MAX_PATH, temp);
+	*buffer = L'\0';
+	GetTempFileName(temp, L"eb-", 0, buffer);
+	return wcslen(buffer);
+}
+
+DWORD GetTempDir(LPWSTR buffer, DWORD size) {
+	size = GetTempFile(buffer, size);
+	if (size) {
+		if (!DeleteFile(buffer) || !CreateDirectory(buffer, NULL)) {
+			size = 0;
+		}
+	}
+	return size;
+}
+
+static SYSTEMTIME st;
+static DWORD time_retrieved;
+static WCHAR point;
+static int	 english;
+static const LPCWSTR MonthNames[] = {
+	L"January", L"February", L"March", L"April", L"May", L"June",
+	L"July", L"August", L"September", L"October", L"November", L"December"
+};
+static const LPCWSTR DayNames[] = {
+	L"Sunday", L"Monday", L"Tuesday", L"Wednesday",
+	L"Thursday", L"Friay", L"Saturday"
+};
+
+WCHAR getPoint(void) {
+	if (!point) {
+		WCHAR buf[5];
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, buf, 5);
+		point = *buf;
+	}
+	return point;
+}
+
+void getDate(void) {
+	DWORD ticks = GetTickCount();
+	if (ticks - time_retrieved >= 1000) {
+		GetLocalTime(&st);
+		time_retrieved = ticks;
+	}
+}
+
+DWORD GetDate(LPWSTR buffer, DWORD size) {
+	getDate();
+	return snwprintf(buffer, size, L"%d-%02d-%02d",
+					 st.wYear, st.wMonth, st.wDay);
+}
+
+DWORD GetTime(LPWSTR buffer, DWORD size) {
+	getDate();
+	return snwprintf(buffer, size, L"%02d:%02d:%02d",
+					 st.wHour, st.wMinute, st.wSecond);
+}
+
+DWORD GetTimems(LPWSTR buffer, DWORD size) {
+	DWORD len = GetTime(buffer, size);
+	return len + snwprintf(buffer + len, size - len, L"%c%03d",
+						   getPoint(), st.wMilliseconds);
+}
+
+DWORD getDateTime(fnGetExt tfn, LPWSTR buffer, DWORD size) {
+	DWORD len = GetDate(buffer, size);
+	buffer[len++] = L' ';
+	return len + tfn(buffer + len, size - len);
+}
+
+DWORD GetDateTime(LPWSTR buffer, DWORD size) {
+	return getDateTime(GetTime, buffer, size);
+}
+
+DWORD GetDateTimems(LPWSTR buffer, DWORD size) {
+	return getDateTime(GetTimems, buffer, size);
+}
+
+DWORD GetYear(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wYear, buffer, size);
+}
+
+DWORD GetMonth(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wMonth, buffer, size);
+}
+
+DWORD GetMonthName(LPWSTR buffer, DWORD size) {
+	getDate();
+	if (english) {
+		return snwprintf(buffer, size, L"%s", MonthNames[st.wMonth-1]);
+	}
+	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SMONTHNAME1-1+st.wMonth,
+						 buffer, size);
+}
+
+DWORD GetMonthShort(LPWSTR buffer, DWORD size) {
+	getDate();
+	if (english) {
+		return snwprintf(buffer, size, L"%.3s", MonthNames[st.wMonth-1]);
+	}
+	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVMONTHNAME1-1+st.wMonth,
+						 buffer, size);
+}
+
+DWORD GetDay(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wDay, buffer, size);
+}
+
+DWORD GetDayName(LPWSTR buffer, DWORD size) {
+	int day;
+	getDate();
+	if (english) {
+		return snwprintf(buffer, size, L"%s", DayNames[st.wDayOfWeek]);
+	}
+	day = (st.wDayOfWeek == 0) ? 7 : st.wDayOfWeek;
+	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDAYNAME1-1+day,
+						 buffer, size);
+}
+
+DWORD GetDayShort(LPWSTR buffer, DWORD size) {
+	int day;
+	getDate();
+	if (english) {
+		return snwprintf(buffer, size, L"%.3s", DayNames[st.wDayOfWeek]);
+	}
+	day = (st.wDayOfWeek == 0) ? 7 : st.wDayOfWeek;
+	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVDAYNAME1-1+day,
+						 buffer, size);
+}
+
+DWORD GetDayOfWeek(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wDayOfWeek, buffer, size);
+}
+
+DWORD GetHour(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wHour, buffer, size);
+}
+
+DWORD GetMinute(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wMinute, buffer, size);
+}
+
+DWORD GetSecond(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wSecond, buffer, size);
+}
+
+DWORD GetMilliseconds(LPWSTR buffer, DWORD size) {
+	getDate();
+	return toString(st.wMilliseconds, buffer, size);
+}
+
+DWORD GetEnglish(LPWSTR buffer, DWORD size) {
+	return toString(english, buffer, size);
+}
+
+BOOL SetEnglish(int argc, LPCWSTR argv[]) {
+	if (argc != 1) {
+		return FALSE;
+	}
+	toNumber(&english, 1, argv);
+	return TRUE;
+}
+
+DWORD GetDecSep(LPWSTR buffer, DWORD size) {
+	*buffer = getPoint();
+	buffer[1] = L'\0';
+	return 1;
+}
+
+BOOL SetDecSep(int argc, LPCWSTR argv[]) {
+	if (argc == 0) {
+		point = L'\0';
+	} else {
+		point = **argv;
+	}
+	return TRUE;
+}
+
+DWORD GetBatchLine(LPWSTR buffer, DWORD size) {
+	return toString(getBatchLine(), buffer, size);
+}
+
+DWORD GetBatchFile(LPWSTR buffer, DWORD size) {
+	return toString(batchfile, buffer, size);
+}
+
+BOOL SetBatchFile(int argc, LPCWSTR argv[]) {
+	if (argc != 1) {
+		return FALSE;
+	}
+	toNumber(&batchfile, 1, argv);
+	return TRUE;
+}
+
+DWORD getVersionRevision(void) {
+	HKEY curver;
+	DWORD revision = 0;
+	LONG rc;
+	rc = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+					  L"Software\\Microsoft\\Windows NT\\CurrentVersion",
+					  0, MAXIMUM_ALLOWED | KEY_WOW64_64KEY, &curver);
+#ifndef _WIN64
+	if (rc == ERROR_ACCESS_DENIED) {
+		rc = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+						  L"Software\\Microsoft\\Windows NT\\CurrentVersion",
+						  0, MAXIMUM_ALLOWED, &curver);
+		revision = 1;
+	}
+#endif
+	if (rc == ERROR_SUCCESS) {
+		DWORD type, rev, size = sizeof(rev);
+		if (ERROR_SUCCESS == RegQueryValueEx(curver, L"UBR", NULL, &type,
+											 (LPBYTE) &rev, &size)
+			&& REG_DWORD == type) {
+			revision = rev;
+		}
+		RegCloseKey(curver);
+	}
+	return revision;
+}
+
+DWORD GetEBVersion(LPWSTR buffer, DWORD size) {
+	return toString(BEVERSION, buffer, size);
+}
+
+DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size) {
+	return toString(eb_value, buffer, size);
+}
+
+DWORD GetOSVersion(LPWSTR buffer, DWORD size) {
+	DWORD ver = GetVersion();
+	return snwprintf(buffer, size, L"%d.%d.%d.%d",
+					 LOBYTE(LOWORD(ver)), HIBYTE(LOWORD(ver)), HIWORD(ver),
+					 getVersionRevision());
+}
+
+DWORD GetOSMajor(LPWSTR buffer, DWORD size) {
+	return toString(LOBYTE(LOWORD(GetVersion())), buffer, size);
+}
+
+DWORD GetOSMinor(LPWSTR buffer, DWORD size) {
+	return toString(HIBYTE(LOWORD(GetVersion())), buffer, size);
+}
+
+DWORD GetOSBuild(LPWSTR buffer, DWORD size) {
+	return toString(HIWORD(GetVersion()), buffer, size);
+}
+
+DWORD GetOSRevision(LPWSTR buffer, DWORD size) {
+	return toString(getVersionRevision(), buffer, size);
+}
+
+DWORD GetCmdVersion(LPWSTR buffer, DWORD size) {
+	return snwprintf(buffer, size, L"%d.%d.%d.%d%s",
+					 HIWORD(cmdFileVersionMS), LOWORD(cmdFileVersionMS),
+					 HIWORD(cmdFileVersionLS), LOWORD(cmdFileVersionLS),
+					 cmdDebug ? L" [debug]" : L"");
+}
+
+DWORD GetTitle(LPWSTR buffer, DWORD size) {
+
+	WCHAR admin[128];
+	DWORD tsize, asize;
+
+	for (;;) {
+		tsize = GetConsoleTitle(buffer, size);
+		if (tsize) {
+			break;
+		}
+		// This happened running an XP virtual machine.
+		if (GetLastError() == ERROR_NOT_ENOUGH_MEMORY) {
+			size /= 2;
+		} else if (GetLastError() == ERROR_SUCCESS) {
+			size += size / 2;
+		} else {
+			break;
+		}
+	}
+
+	// Strip off "Administrator: " and an extra space.
+	asize = FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
+						  NULL, 0x40002748, 0, admin, lenof(admin), NULL);
+	if (asize) {
+		if (wcsncmp(buffer, admin, asize) == 0) {
+			if (buffer[asize] == L' ') {
+				++asize;
+			}
+			wcscpy(buffer, buffer+asize);
+			tsize -= asize;
+		}
+	}
+
+	return tsize;
+}
+
+
+DWORD GetElevated(LPWSTR buffer, DWORD size) {
+
+	static int isElevated = -1;
+
+	if (isElevated == -1) {
+		HKEY hKey;
+		LONG rc = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Software", 0, KEY_WRITE, &hKey);
+		isElevated = (rc == ERROR_SUCCESS) ? 1 : 0;
+		if (isElevated) {
+			RegCloseKey(hKey);
+		}
+	}
+	return toString(isElevated, buffer, size);
+}
+
+DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size) {
+
+	FILE *pipe;
+	DWORD len, r;
+	char *buf, *pos;
+
+	pipe = _wpopen(cmd, L"rb");
+	if (pipe == NULL) {
+		return 0;
+	}
+
+	buf = malloc(size);
+	if (buf == NULL) {
+		_pclose(pipe);
+		return 0;
+	}
+
+	pos = buf;
+	len = size - 1;
+	while (len > 0) {
+		r = fread(pos, 1, len, pipe);
+		if (r == 0) {
+			break;
+		}
+		pos += r;
+		len -= r;
+	}
+
+	_pclose(pipe);
+
+	len = (DWORD) (pos - buf);
+	len = MultiByteToWideChar(GetConsoleOutputCP(), 0, buf, len, buffer, size);
+	free(buf);
+
+	if (len > 0 && buffer[len-1] == '\n') {
+		--len;
+		if (len > 0 && buffer[len-1] == '\r') {
+			--len;
+		}
+	}
+	buffer[len] = '\0';
+	return len;
+}
+
+BOOL SetDumpTokens(int argc, LPCWSTR argv[]) {
+
+	int dump;
+
+	if (argc != 1 || !pfDumpTokens) {
+		return FALSE;
+	}
+
+	toNumber(&dump, 1, argv);
+	*pfDumpTokens = (BYTE) dump;
+	return TRUE;
+}
+
+BOOL SetDumpParse(int argc, LPCWSTR argv[]) {
+
+	int dump;
+
+	if (argc != 1 || !pfDumpParse) {
+		return FALSE;
+	}
+
+	toNumber(&dump, 1, argv);
+	*pfDumpParse = (BYTE) dump;
+	return TRUE;
+}
+
+HANDLE getOutputHandle(void) {
+
+	HANDLE hOut;
+
+	hOut = CreateFileW(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
+			(FILE_SHARE_READ | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, 0, NULL);
+
+	return hOut;
+}
