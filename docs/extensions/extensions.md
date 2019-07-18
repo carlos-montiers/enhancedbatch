@@ -1,0 +1,29 @@
+---
+layout: default
+title: Extensions
+nav_order: 3
+has_children: true
+permalink: docs/extensions
+---
+
+# Extensions
+{: .no_toc }
+
+Extensions are identified with the `@` prefix.
+
+There are two types of usage:
+
+Get: For get the result of it, expand it:
+
+```batch
+echo %@theextension%
+```
+
+Set: For call it with a parameter, use the set command:
+
+```batch
+set "@theextension=value"
+```
+
+
+{: .fs-6 .fw-300 }
