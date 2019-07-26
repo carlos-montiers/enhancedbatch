@@ -151,6 +151,10 @@ function initSearch() {
 }
 
 function pageFocus() {
+  var activeListLink = document.querySelector(".navigation-list-link.active");
+  if (activeListLink) {
+    activeListLink.scrollIntoView();
+  }
   var mainContent = document.querySelector('.js-main-content');
   mainContent.focus();
 }

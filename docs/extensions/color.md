@@ -2,7 +2,6 @@
 layout: default
 title: Color
 parent: Extensions
-nav_order: 11
 ---
 
 # Color
@@ -32,5 +31,6 @@ Get the foreground and background color of the console.
 ```batch
 echo !@color!
 07
-
 ```
+
+{: .fs-6 .fw-300 }

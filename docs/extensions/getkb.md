@@ -2,7 +2,6 @@
 layout: default
 title: Getkb
 parent: Extensions
-nav_order: 3
 ---
 
 # Getkb
@@ -23,3 +22,5 @@ Wait for key press and return the code of it.
 set "code="!@getkb!"
 echo code: !code!
 ```
+
+{: .fs-6 .fw-300 }

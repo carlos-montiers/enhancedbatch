@@ -1,29 +1,35 @@
 ---
 layout: default
 title: Extensions
-nav_order: 3
-has_children: true
-permalink: docs/extensions
+parent: Extensions
 ---
 
 # Extensions
 {: .no_toc }
 
-Extensions are identified with the `@` prefix.
+## Table of contents
+{: .no_toc .text-delta }
 
-There are two types of usage:
+1. TOC
+{:toc}
 
-Get: For get the result of it, expand it:
+---
+
+## set @extensions
+Activate the extensions without needs of setlocal
+
+Parameters: Number 0 or 1
+
 
 ```batch
-echo %@theextension%
+set @extensions=1
 ```
 
-Set: For call it with a parameter, use the set command:
+## get @extensions
+Get the status of the @extensions
 
 ```batch
-set "@theextension=value"
+echo Extensions: %@extensions%
 ```
-
 
 {: .fs-6 .fw-300 }

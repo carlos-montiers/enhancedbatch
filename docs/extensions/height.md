@@ -2,7 +2,6 @@
 layout: default
 title: Height
 parent: Extensions
-nav_order: 9
 ---
 
 # Height
@@ -23,3 +22,5 @@ Get the window height of the console.
 echo Current height: !@height!
 30
 ```
+
+{: .fs-6 .fw-300 }

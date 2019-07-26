@@ -2,7 +2,6 @@
 layout: default
 title: Row
 parent: Extensions
-nav_order: 6
 ---
 
 # Row
@@ -37,3 +36,5 @@ echo Row: !@row!
 
 ## related extensions
 @position
+
+{: .fs-6 .fw-300 }

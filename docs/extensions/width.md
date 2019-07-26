@@ -2,7 +2,6 @@
 layout: default
 title: Width
 parent: Extensions
-nav_order: 10
 ---
 
 # Width

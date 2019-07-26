@@ -2,7 +2,6 @@
 layout: default
 title: Opacity
 parent: Extensions
-nav_order: 12
 ---
 
 # Opacity
@@ -31,3 +30,5 @@ Get the opacity of the console.
 ```batch
 echo Opacity: !@opacity!
 ```
+
+{: .fs-6 .fw-300 }

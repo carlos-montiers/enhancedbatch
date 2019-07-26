@@ -2,7 +2,6 @@
 layout: default
 title: Column
 parent: Extensions
-nav_order: 7
 ---
 
 # Column
@@ -37,3 +36,5 @@ echo Column: !@column!
 
 ## related extensions
 @position
+
+{: .fs-6 .fw-300 }
