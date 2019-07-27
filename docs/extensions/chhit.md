@@ -2,7 +2,6 @@
 layout: default
 title: Chhit
 parent: Extensions
-nav_order: 2
 ---
 
 # Chhit
@@ -24,3 +23,5 @@ If no key is found return 0
 set "lastchar=!@chhit!"
 if "!lastchar!" == "-1" echo No pressed key
 ```
+
+{: .fs-6 .fw-300 }

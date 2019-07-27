@@ -2,7 +2,6 @@
 layout: default
 title: Getch
 parent: Extensions
-nav_order: 1
 ---
 
 # Getch
@@ -23,3 +22,5 @@ Wait for key press and return the character of it.
 set "char="!@getch!"
 echo char: !char!
 ```
+
+{: .fs-6 .fw-300 }

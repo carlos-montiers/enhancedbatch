@@ -2,7 +2,6 @@
 layout: default
 title: Sleep
 parent: Extensions
-nav_order: 13
 ---
 
 # Sleep
@@ -22,5 +21,7 @@ Stop the execution for a time.
 Parameters: Number milliseconds
 
 ```batch
-set @sleep=1500
+set @sleep=4000
 ```
+
+{: .fs-6 .fw-300 }

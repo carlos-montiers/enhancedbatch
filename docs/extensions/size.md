@@ -2,7 +2,6 @@
 layout: default
 title: Size
 parent: Extensions
-nav_order: 8
 ---
 
 # Size
@@ -23,3 +22,5 @@ Get the window height and width of the console.
 echo Current size: !@size!
 30 120
 ```
+
+{: .fs-6 .fw-300 }

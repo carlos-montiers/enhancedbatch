@@ -2,7 +2,6 @@
 layout: default
 title: Kbhit
 parent: Extensions
-nav_order: 4
 ---
 
 # Kbhit
@@ -24,3 +23,5 @@ If no key is found return -1
 set "lastcode=!@kbhit!"
 if "!lastcode!" == "-1" echo No pressed key
 ```
+
+{: .fs-6 .fw-300 }

@@ -58,7 +58,7 @@ Set "@unicode=1"
 1. Just download the DLLs from the release and run the following command at the start of your batch script:
 
 ```batch
-@rundll32.exe enhancedbatch_%processor_architecture%.dll,load
+rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 ```
 
 2. Verify the result of the previous step:
