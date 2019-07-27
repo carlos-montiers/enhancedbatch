@@ -970,8 +970,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 
 BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 
-	if (_wcsnicmp(lpFileName, L":range*", 7) == 0 &&
-		findForStackTop < FINDSTACKMAX - 1) {
+	if (_wcsnicmp(lpFileName, L":range*", 7) == 0) {
 		LPCWSTR paramsLine = lpFileName + 7;
 		int args, arg[3];
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
@@ -1011,8 +1010,7 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 
 BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 
-	if (wcscmp(lpFileName, L":*") == 0 &&
-		findForStackTop < FINDSTACKMAX - 1) {
+	if (wcscmp(lpFileName, L":*") == 0) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 		findForStack[++findForStackTop] = lpFindFileData;
 		ZeroMemory(lpFindFileData, sizeof(WIN32_FIND_DATA));
@@ -1025,7 +1023,7 @@ BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 }
 
 BOOL findFor(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
-	if (*lpFileName == L':') {
+	if (*lpFileName == L':' && findForStackTop < FINDSTACKMAX - 1) {
 		if (findInfinite(lpFileName, lpFindFileData)) {
 			return TRUE;
 		}
