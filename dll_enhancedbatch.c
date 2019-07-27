@@ -80,12 +80,12 @@ int findForStackTop = -1;
 enum { forRange, forInfinite };
 
 struct sFor {
-	// The size of this struct cannot be higher than MAX_PATH
-	// that is the size for the field cFileName of struct WIN32_FIND_DATA
+	// The size of this struct cannot be higher than MAX_PATH,
+	// that is the size for the field cFileName of struct WIN32_FIND_DATA.
 	// The value field must be first, and null terminated.
 	WCHAR szValue[12];	 // longest value for a 32-bit number + null
 	int type;
-	int stop, start, step;
+	int start, stop, step;
 };
 
 BOOL Next(int argc, LPCWSTR argv[]);
