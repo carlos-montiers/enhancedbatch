@@ -77,12 +77,14 @@ WCHAR varBuffer[STRINGBUFFERMAX];
 LPWIN32_FIND_DATA findForStack[FINDSTACKMAX];
 int findForStackTop = -1;
 
+enum { forRange, forInfinite };
+
 struct sFor {
 	// The size of this struct cannot be higher than MAX_PATH
 	// that is the size for the field cFileName of struct WIN32_FIND_DATA
 	// The value field must be first, and null terminated.
 	WCHAR szValue[12];	 // longest value for a 32-bit number + null
-	enum { Range, Infinite } type;
+	int type;
 	int stop, start, step;
 };
 
@@ -975,7 +977,7 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 		findForStack[++findForStackTop] = lpFindFileData;
 		ZeroMemory(lpFindFileData, sizeof(WIN32_FIND_DATA));
-		it->type = Range;
+		it->type = forRange;
 		args = swscanf(paramsLine, L"%d:%d:%d", &arg[0], &arg[1], &arg[2]);
 		if (args == 3) {
 			it->start = arg[0];
@@ -1015,7 +1017,7 @@ BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 		findForStack[++findForStackTop] = lpFindFileData;
 		ZeroMemory(lpFindFileData, sizeof(WIN32_FIND_DATA));
-		it->type = Infinite;
+		it->type = forInfinite;
 		wcsncpy(it->szValue, L"\u221E", lenof(it->szValue));
 		it->szValue[lenof(it->szValue) - 1] = L'\0';
 		return TRUE;
@@ -1063,10 +1065,10 @@ MyFindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData) {
 	if (findForStackTop >= 0 && lpFindFileData == findForStack[findForStackTop]) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 
-		if (it->type == Infinite) {
+		if (it->type == forInfinite) {
 			return TRUE;
 		}
-		if (it->type == Range) {
+		if (it->type == forRange) {
 			it->start += it->step;
 			if (it->step < 0) {
 				if (it->start < it->stop) {
@@ -1092,7 +1094,7 @@ BOOL Next(int argc, LPCWSTR argv[]) {
 	}
 	if (argc == 1) {
 		struct sFor *it = (struct sFor *) findForStack[findForStackTop]->cFileName;
-		if (it->type == Range) {
+		if (it->type == forRange) {
 			it->start = _wtoi(*argv) - it->step;
 		} else {
 			return FALSE;
