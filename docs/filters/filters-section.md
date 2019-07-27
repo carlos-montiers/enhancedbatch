@@ -9,7 +9,9 @@ nav_order: 3
 # Filters
 {: .no_toc }
 
-Filters allow you chain transformations to the value of a variable.
+Filters allow transform the value of a variable.
+
+You can specify the first filter with `;` at the end of the variable name.
 
 You can chain two or more filters separating it with `,`
 

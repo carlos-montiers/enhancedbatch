@@ -2,7 +2,7 @@
 layout: default
 title: Constants
 parent: Behaviors
-nav_order: 7
+nav_order: 9
 ---
 
 # Constants

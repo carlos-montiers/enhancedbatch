@@ -2,7 +2,7 @@
 layout: default
 title: UTF-8 Bugfixes
 parent: Behaviors
-nav_order: 6
+nav_order: 8
 ---
 
 # UTF-8 Bugfixes
@@ -16,8 +16,12 @@ nav_order: 6
 
 ---
 
-Cmd have bug some bugs reading batch files and text files using the utf-8 codepage.
+Cmd have the next bugs using the utf-8 codepage:
 
-These are fixed if you use enhancedbatch.
+- If you write text in utf-8 ocassionally bad characters are displayed.
+
+- You cannot run a batch file using utf-8 on windows xp.
+
+These bugs are fixed if you use enhancedbatch.
 
 {: .fs-6 .fw-300 }
