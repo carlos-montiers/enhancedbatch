@@ -978,6 +978,7 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 		findForStack[++findForStackTop] = lpFindFileData;
 		ZeroMemory(lpFindFileData, sizeof(WIN32_FIND_DATA));
 		it->type = forRange;
+		it->step = 1;
 		args = swscanf(paramsLine, L"%d:%d:%d", &arg[0], &arg[1], &arg[2]);
 		if (args == 3) {
 			it->start = arg[0];
@@ -986,15 +987,14 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 		} else if (args == 2) {
 			it->start = arg[0];
 			it->stop = arg[1];
-			it->step = it->start <= it->stop ? 1 : -1;
+			if (it->start > it->stop)
+				it->step = -1;
 		} else if (args == 1) {
 			it->stop = arg[0];
 			if (it->stop == 0) {
 				it->start = 0;
-				it->step = 1;
 			} else if (it->stop > 0) {
 				it->start = 1;
-				it->step = 1;
 			} else {
 				it->start = -1;
 				it->step = -1;
@@ -1002,7 +1002,6 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 		} else {
 			it->start = 1;
 			it->stop = 0x7fffffff;
-			it->step = 1;
 		}
 		_itow(it->start, it->szValue, 10);
 		return TRUE;
