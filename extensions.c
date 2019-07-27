@@ -296,57 +296,41 @@ BOOL WaitMilliseconds(int argc, LPCWSTR argv[]) {
 
 static DWORD lo_timer_begin, lo_timer_end;
 static LARGE_INTEGER hi_timer_begin, hi_timer_end, hi_frequency;
-static BOOL lo_timer, hi_timer;
-static BOOL lo_timer_valid, hi_timer_valid;
+static BOOL lo_timer_running, hi_timer_running;
+static BOOL lo_timer_started, hi_timer_started;
 
-BOOL SetMyTimer(int argc, LPCWSTR argv[]) {
+BOOL SetLoTimer(int argc, LPCWSTR argv[]) {
 	if (argc > 1) {
 		return FALSE;
 	}
 
 	if (argc == 0 || _wcsicmp(*argv, L"stop") == 0) {
-		if (hi_timer) {
-			QueryPerformanceCounter(&hi_timer_end);
-			hi_timer = lo_timer_valid = FALSE;
-			hi_timer_valid = TRUE;
-		}
-		if (lo_timer) {
+		if (lo_timer_running) {
 			lo_timer_end = GetTickCount();
-			lo_timer = hi_timer_valid = FALSE;
-			lo_timer_valid = TRUE;
+			lo_timer_running = FALSE;
+			return TRUE;
 		}
-		return TRUE;
-	}
-
-	if (_wcsicmp(*argv, L"stoplo") == 0) {
-		if (lo_timer) {
-			lo_timer_end = GetTickCount();
-			lo_timer = hi_timer_valid = FALSE;
-			lo_timer_valid = TRUE;
-		}
-		return TRUE;
-	}
-
-	if (_wcsicmp(*argv, L"stophi") == 0) {
-		if (hi_timer) {
-			QueryPerformanceCounter(&hi_timer_end);
-			hi_timer = lo_timer_valid = FALSE;
-			hi_timer_valid = TRUE;
-		}
-		return TRUE;
-	}
-
-	if (_wcsicmp(*argv, L"start" ) == 0 ||
-		_wcsicmp(*argv, L"startlo" ) == 0 ||
-		_wcsicmp(*argv, L"lo" ) == 0) {
-		lo_timer = lo_timer_valid = TRUE;
-		hi_timer_valid = FALSE;
+	} else if (_wcsicmp(*argv, L"start" ) == 0) {
+		lo_timer_running = lo_timer_started = TRUE;
 		lo_timer_begin = GetTickCount();
 		return TRUE;
 	}
 
-	if (_wcsicmp(*argv, L"starthi" ) == 0 ||
-		_wcsicmp(*argv, L"hi" ) == 0) {
+	return FALSE;
+}
+
+BOOL SetHiTimer(int argc, LPCWSTR argv[]) {
+	if (argc > 1) {
+		return FALSE;
+	}
+
+	if (argc == 0 || _wcsicmp(*argv, L"stop") == 0) {
+		if (hi_timer_running) {
+			QueryPerformanceCounter(&hi_timer_end);
+			hi_timer_running = FALSE;
+			return TRUE;
+		}
+	} else if (_wcsicmp(*argv, L"start" ) == 0) {
 		if (hi_frequency.QuadPart == -1) {
 			return FALSE;
 		}
@@ -356,8 +340,7 @@ BOOL SetMyTimer(int argc, LPCWSTR argv[]) {
 				return FALSE;
 			}
 		}
-		hi_timer = hi_timer_valid = TRUE;
-		lo_timer_valid = FALSE;
+		hi_timer_running = hi_timer_started = TRUE;
 		QueryPerformanceCounter(&hi_timer_begin);
 		return TRUE;
 	}
@@ -366,23 +349,26 @@ BOOL SetMyTimer(int argc, LPCWSTR argv[]) {
 }
 
 DWORD GetTimer(LPWSTR buffer, DWORD size) {
-	if (lo_timer_valid) {
-		DWORD end = lo_timer ? GetTickCount() : lo_timer_end;
+	if (lo_timer_started) {
+		DWORD end = lo_timer_running ? GetTickCount() : lo_timer_end;
 		return toString(end - lo_timer_begin, buffer, size);
 	}
-	if (hi_timer_valid) {
+	return toString(-1, buffer, size);
+}
+
+DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
+	if (hi_timer_started) {
 		LARGE_INTEGER end;
-		if (hi_timer) {
+		if (hi_timer_running) {
 			QueryPerformanceCounter(&end);
-		}
-		else {
+		} else {
 			end = hi_timer_end;
 		}
 		return toString((int)((end.QuadPart - hi_timer_begin.QuadPart)
 							  * 1000000 / hi_frequency.QuadPart),
 						buffer, size);
 	}
-	return toString(0, buffer, size);
+	return toString(-1, buffer, size);
 }
 
 BOOL SetOpacity(int argc, LPCWSTR argv[]) {

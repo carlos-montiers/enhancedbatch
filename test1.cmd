@@ -12,10 +12,11 @@ set $temp=@tempfile
 if not exist %$temp% echo Failed: temporary file doesn't exist.&goto :eof
 
 set @timer=start
-set @timer=hi
+set @timerhi=start
 set @sleep=45
-set $hi=@timer
+set @timerhi=
 set @timer=
+set $hi=@timerhi
 set $lo=@timer
 if %$lo% lss 30 echo Failed: low timer too short (%$lo% ^< 45).&goto :eof
 if %$hi% lss 30000 echo Failed: high timer too short (%$hi% ^< 45000).&goto :eof

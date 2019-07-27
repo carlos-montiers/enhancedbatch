@@ -96,9 +96,11 @@ DWORD GetTempDir(LPWSTR buffer, DWORD size);
 
 BOOL WaitMilliseconds(int argc, LPCWSTR argv[]);
 
-BOOL SetMyTimer(int argc, LPCWSTR argv[]);
+BOOL SetLoTimer(int argc, LPCWSTR argv[]);
+BOOL SetHiTimer(int argc, LPCWSTR argv[]);
 
 DWORD GetTimer(LPWSTR buffer, DWORD size);
+DWORD GetHiTimer(LPWSTR buffer, DWORD size);
 
 DWORD GetDate(LPWSTR buffer, DWORD size);
 DWORD GetDateTime(LPWSTR buffer, DWORD size);
