@@ -87,6 +87,16 @@ for %%j in (:range*1:5:2) do >>%$temp% echo %%j
 for %%j in (:range*-3) do >>%$temp% echo %%j
 for %%j in (:range*3:1) do >>%$temp% echo %%j
 
+set $j=1
+for %%_ in (:*) do (
+  >>%$temp% echo;!$j!..
+  if !$j! == 5 (
+    >>%$temp% echo Stop
+    set @next=
+  )
+  set /a $j=!$j!+1
+)
+
 ::copy %$temp% test1.out
 fc >nul /b test1.out %$temp% || (
   echo Failed.
