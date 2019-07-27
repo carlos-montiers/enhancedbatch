@@ -1015,8 +1015,8 @@ BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 		findForStack[++findForStackTop] = lpFindFileData;
 		ZeroMemory(lpFindFileData, sizeof(WIN32_FIND_DATA));
 		it->type = forInfinite;
-		wcsncpy(it->szValue, L"\u221E", lenof(it->szValue));
-		it->szValue[lenof(it->szValue) - 1] = L'\0';
+		it->szValue[0] = L'\u221E';
+		it->szValue[1] = L'\0';
 		return TRUE;
 	}
 	return FALSE;
