@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Timer
+title: TimerHi
 parent: Extensions
 ---
 
-# Timer
+# TimerHi
 {: .no_toc }
 
 ## Table of contents
@@ -15,37 +15,37 @@ parent: Extensions
 
 ---
 
-Millisecond timer, with a resolution of 10-15ms.
+Microsecond timer, with a resolution greater than that (CPU speed).
 
 
-## start the low-resolution timer
+## start the high-resolution timer
 ```batch
-set @timer=start
+set @timerhi=start
 ```
 
 ## read the running timer
 ```batch
-echo %@timer%
+echo %@timerhi%
 ```
 
 ## stop the timer
 ```batch
-set @timer=
-set @timer=stop
+set @timerhi=
+set @timerhi=stop
 ```
 
 ## read the elapsed time
 ```batch
-echo %@timer%
+echo %@timerhi%
 ```
 
 ## Example
 ```batch
-set @timer=start
+set @timerhi=start
 echo Wait a little bit and press a key ...
 pause > nul
-set @timer=stop
-echo Elapsed milliseconds: %@timer%
+set @timerhi=stop
+echo Elapsed microseconds: %@timerhi%
 ```
 
 {: .fs-6 .fw-300 }
