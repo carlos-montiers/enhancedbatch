@@ -1,0 +1,3 @@
+*.bat eol=crlf
+*.cmd eol=crlf
+*.out eol=crlf diff
