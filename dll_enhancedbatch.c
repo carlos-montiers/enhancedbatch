@@ -1068,14 +1068,15 @@ MyFindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData) {
 			return TRUE;
 		}
 		if (it->type == forRange) {
+			int before = it->start;
 			it->start += it->step;
 			if (it->step < 0) {
-				if (it->start < it->stop) {
+				if (it->start < it->stop || it->start > before) {
 					--findForStackTop;
 					return FALSE;
 				}
 			} else {
-				if (it->start > it->stop) {
+				if (it->start > it->stop || it->start < before) {
 					--findForStackTop;
 					return FALSE;
 				}
