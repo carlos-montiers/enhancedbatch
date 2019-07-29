@@ -1149,6 +1149,44 @@ typedef struct {
 	DWORD_PTR oldfunc;
 } HookFn, *PHookFn;
 
+void HookThunks(PHookFn Hooks,
+				PIMAGE_DOS_HEADER pDosHeader,
+				PIMAGE_THUNK_DATA pThunk,
+				PIMAGE_THUNK_DATA pNameThunk) {
+	PHookFn hook;
+
+	// Blast through the table of import names
+	while (pNameThunk->u1.AddressOfData) {
+		PIMAGE_IMPORT_BY_NAME pName = MakeVA(PIMAGE_IMPORT_BY_NAME,
+				pNameThunk->u1.AddressOfData);
+		LPCSTR name = (LPCSTR) pName->Name;
+		for (hook = Hooks; hook->name; ++hook) {
+			if (strcmp(name, hook->name) == 0) {	// We found it!
+				DWORD flOldProtect, flDummy;
+
+				// Change the access protection on the region of committed pages in the
+				// virtual address space of the current process
+				VirtualProtect(&pThunk->u1.Function, sizeof(PVOID),
+						PAGE_READWRITE, &flOldProtect);
+
+				// Overwrite the original address with the address of the new function
+				if (hook->oldfunc) {
+					pThunk->u1.Function = hook->oldfunc;
+				} else {
+					hook->oldfunc = pThunk->u1.Function;
+					pThunk->u1.Function = hook->newfunc;
+				}
+
+				// Put the page attributes back the way they were.
+				VirtualProtect(&pThunk->u1.Function, sizeof(PVOID),
+						flOldProtect, &flDummy);
+			}
+		}
+		pThunk++;	// Advance to next imported function address
+		pNameThunk++;
+	}
+}
+
 //-----------------------------------------------------------------------------
 //   HookAPIOneMod
 // Substitute a new function in the Import Address Table (IAT) of the
@@ -1163,46 +1201,25 @@ BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 	PIMAGE_NT_HEADERS pNTHeader;
 	PIMAGE_IMPORT_DESCRIPTOR pImportDesc;
 	PIMAGE_THUNK_DATA pThunk, pNameThunk;
-	PHookFn hook;
+	DWORD rva;
 
-	// Tests to make sure we're looking at a module image (the 'MZ' header)
 	pDosHeader = (PIMAGE_DOS_HEADER) hFromModule;
-	if (IsBadReadPtr(pDosHeader, sizeof(IMAGE_DOS_HEADER))) {
-		return FALSE;
-	}
-	if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE) {
-		return FALSE;
-	}
-	// The MZ header has a pointer to the PE header
 	pNTHeader = MakeVA(PIMAGE_NT_HEADERS, pDosHeader->e_lfanew);
 
-	// More tests to make sure we're looking at a "PE" image
-	if (IsBadReadPtr(pNTHeader, sizeof(IMAGE_NT_HEADERS))) {
-		return FALSE;
-	}
-	if (pNTHeader->Signature != IMAGE_NT_SIGNATURE) {
-		return FALSE;
-	}
-	// We now have a valid pointer to the module's PE header.
-	// Get a pointer to its imports section
-	pImportDesc =
-			MakeVA(PIMAGE_IMPORT_DESCRIPTOR,
-					pNTHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
-
+	// Get a pointer to the module's imports section
+	rva = pNTHeader->OptionalHeader
+					 .DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]
+					 .VirtualAddress;
 	// Bail out if the RVA of the imports section is 0 (it doesn't exist)
-	if (pImportDesc == (PIMAGE_IMPORT_DESCRIPTOR) pNTHeader) {
+	if (rva == 0) {
 		return TRUE;
 	}
+	pImportDesc = MakeVA(PIMAGE_IMPORT_DESCRIPTOR, rva);
+
 	// Iterate through the array of imported module descriptors, looking
-	// for the module whose name matches the pszFunctionModule parameter
-	for (;; pImportDesc++) {
+	// for module names of interest.
+	for (; pImportDesc->Name != 0; pImportDesc++) {
 		PSTR pszModName = MakeVA(PSTR, pImportDesc->Name);
-
-		// Bail out if we didn't find the import module descriptor for the
-		// specified module (Name will be 0).
-		if (pszModName == (PSTR) pDosHeader)
-			return TRUE;
-
 		if (_stricmp(pszModName, "kernel32.dll") == 0
 			|| _strnicmp(pszModName, "API-MS-Win-Core-ProcessEnvironment-", 35) == 0
 			|| _strnicmp(pszModName, "API-MS-Win-Core-String-", 23) == 0
@@ -1212,41 +1229,48 @@ BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 			pThunk = MakeVA(PIMAGE_THUNK_DATA, pImportDesc->FirstThunk);
 			pNameThunk = MakeVA(PIMAGE_THUNK_DATA,
 					pImportDesc->OriginalFirstThunk);
-
-			// Blast through the table of import names
-			while (pNameThunk->u1.AddressOfData) {
-				PIMAGE_IMPORT_BY_NAME pName = MakeVA(PIMAGE_IMPORT_BY_NAME,
-						pNameThunk->u1.AddressOfData);
-				LPCSTR name = (LPCSTR) pName->Name;
-				for (hook = Hooks; hook->name; ++hook) {
-					if (strcmp(name, hook->name) == 0) {	// We found it!
-						DWORD flOldProtect, flDummy;
-
-						// Change the access protection on the region of committed pages in the
-						// virtual address space of the current process
-						VirtualProtect(&pThunk->u1.Function, sizeof(PVOID),
-								PAGE_READWRITE, &flOldProtect);
-
-						// Overwrite the original address with the address of the new function
-						if (hook->oldfunc) {
-							pThunk->u1.Function = hook->oldfunc;
-						} else {
-							hook->oldfunc = pThunk->u1.Function;
-							pThunk->u1.Function = hook->newfunc;
-						}
-
-						// Put the page attributes back the way they were.
-						VirtualProtect(&pThunk->u1.Function, sizeof(PVOID),
-								flOldProtect, &flDummy);
-					}
-				}
-				pThunk++;	// Advance to next imported function address
-				pNameThunk++;
-
-			}
-
+			HookThunks(Hooks, pDosHeader, pThunk, pNameThunk);
 		}
+	}
+	return TRUE;		// Function not found
+}
 
+BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept calls from
+		PHookFn Hooks	// Functions to replace
+		) {
+	PIMAGE_DOS_HEADER pDosHeader;
+	PIMAGE_NT_HEADERS pNTHeader;
+	PIMAGE_DELAYLOAD_DESCRIPTOR pImportDesc;
+	PIMAGE_THUNK_DATA pThunk, pNameThunk;
+	DWORD rva;
+
+	pDosHeader = (PIMAGE_DOS_HEADER) hFromModule;
+	pNTHeader = MakeVA(PIMAGE_NT_HEADERS, pDosHeader->e_lfanew);
+
+	// Get a pointer to the module's imports section
+	rva = pNTHeader->OptionalHeader
+					 .DataDirectory[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT]
+					 .VirtualAddress;
+	// Bail out if the RVA of the delayed imports section is 0 (it doesn't exist)
+	if (rva == 0) {
+		return TRUE;
+	}
+	pImportDesc = MakeVA(PIMAGE_DELAYLOAD_DESCRIPTOR, rva);
+
+	// Iterate through the array of imported module descriptors, looking
+	// for module names of interest.
+	for (; pImportDesc->DllNameRVA != 0; pImportDesc++) {
+		PSTR pszModName = MakeVA(PSTR, pImportDesc->DllNameRVA);
+		if (_strnicmp(pszModName, "ext-ms-win-cmd-util-", 20) == 0) {
+
+			// Get a pointer to the found module's import address table (IAT)
+			pThunk = MakeVA(PIMAGE_THUNK_DATA,
+					pImportDesc->ImportAddressTableRVA);
+			pNameThunk = MakeVA(PIMAGE_THUNK_DATA,
+					pImportDesc->ImportNameTableRVA);
+			HookThunks(Hooks, pDosHeader, pThunk, pNameThunk);
+			break;
+		}
 	}
 	return TRUE;		// Function not found
 }
@@ -1256,13 +1280,19 @@ BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 HookFn *Hooks, AllHooks[] = {
 	// This is expected first!
 	{ "MultiByteToWideChar",     (DWORD_PTR) MyMultiByteToWideChar,     0 },
+	// This is expected second!
+	{ "CmdBatNotification",      (DWORD_PTR) MyCmdBatNotification,      0 },
 	{ "GetEnvironmentVariableW", (DWORD_PTR) MyGetEnvironmentVariableW, 0 },
 	{ "SetEnvironmentVariableW", (DWORD_PTR) MySetEnvironmentVariableW, 0 },
-	{ "CmdBatNotification",      (DWORD_PTR) MyCmdBatNotification,      0 },
 	{ "ReadFile",                (DWORD_PTR) MyReadFile,                0 },
 	{ "FindFirstFileExW",        (DWORD_PTR) MyFindFirstFileExW,        0 },
 	{ "FindNextFileW",           (DWORD_PTR) MyFindNextFileW,           0 },
 	{ "FindFirstFileW",          (DWORD_PTR) MyFindFirstFileW,          0 },
+	{ NULL, 0, 0 },
+},
+
+DelayedHooks[] = {
+	{ "CmdBatNotificationStub",  (DWORD_PTR) MyCmdBatNotification,      0 },
 	{ NULL, 0, 0 },
 };
 
@@ -1416,7 +1446,15 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 			++Hooks;
 		}
 		if (HookAPIOneMod(GetModuleHandle(NULL), Hooks)) {
-			HookAPIOneMod(hInstance, Hooks);
+			if (AllHooks[1].oldfunc) {
+				HookAPIOneMod(hInstance, Hooks);
+			} else {
+				// CmdBatNotification is delay-loaded as CmdBatNotificationStub,
+				// so point our own CmdBatNotification to the stub, too.
+				HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
+				AllHooks[1].oldfunc = DelayedHooks[0].oldfunc;
+				HookAPIOneMod(hInstance, Hooks);
+			}
 		}
 		setChars();
 		hookCmd();
@@ -1432,6 +1470,7 @@ void unhook(void) {
 	khint_t k;
 
 	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
+	HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
 
 	for (k = 0; k < kh_end(variables); ++k) {
 		if (kh_exist(variables, k)) {
