@@ -20,7 +20,7 @@ Retrieves the current day name in the local language.
 
 If you enable @english, is retrieved on english.
 
-```batch
+```
 echo !@dayname!
 Viernes
 set @english=1

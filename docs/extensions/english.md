@@ -24,19 +24,19 @@ Enables or disable the translation to english of the values of the next extensio
 - @dayshort
 
 ## enable
-```batch
+```
 set @english=1
 ```
 
 ## disable
-```batch
+```
 set @english=0
 ```
 
 ## get @english
 Retrieves the current configuration value
 
-```batch
+```
 echo !@english!
 0
 ```

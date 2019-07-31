@@ -18,7 +18,7 @@ parent: Extensions
 ## get @stdout
 Returns 1 if STDOUT has not been redirected, or 0 otherwise.
 
-```batch
+```
 echo stdout is not redirected: !@stdout!
 ```
 

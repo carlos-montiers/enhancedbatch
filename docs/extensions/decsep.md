@@ -18,7 +18,7 @@ parent: Extensions
 ## get @decsep
 Retrieves the local decimal separator character
 
-```batch
+```
 echo 15!@decsep!8
 15.8
 ```

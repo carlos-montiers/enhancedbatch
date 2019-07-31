@@ -15,13 +15,13 @@ There are two types of usage:
 
 Get: For get the result of it, expand it:
 
-```batch
+```
 echo %@theextension%
 ```
 
 Set: For call it with a parameter, use the set command:
 
-```batch
+```
 set "@theextension=value"
 ```
 

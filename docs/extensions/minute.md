@@ -18,7 +18,7 @@ parent: Extensions
 ## get @minute
 Retrieves the current local minute (0-59).
 
-```batch
+```
 echo !@minute!
 0
 ```

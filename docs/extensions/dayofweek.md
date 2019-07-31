@@ -22,7 +22,7 @@ Retrieves the current day of week number (0-6).
 - 1 for Monday
 - 6 for Saturday
 
-```batch
+```
 echo !@dayofweek!
 2
 ```

@@ -18,7 +18,7 @@ parent: Extensions
 ## get @day
 Retrieves the current day number (1-31).
 
-```batch
+```
 echo !@day!
 31
 ```

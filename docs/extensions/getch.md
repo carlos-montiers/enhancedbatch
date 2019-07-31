@@ -18,7 +18,7 @@ parent: Extensions
 ## get @getch
 Wait for key press and return the character of it.
 
-```batch
+```
 set "char="!@getch!"
 echo char: !char!
 ```

@@ -19,7 +19,7 @@ parent: Extensions
 Get a key from the input keyboard buffer and return the character of it.
 If no key is found return 0
 
-```batch
+```
 set "lastchar=!@chhit!"
 if "!lastchar!" == "-1" echo No pressed key
 ```

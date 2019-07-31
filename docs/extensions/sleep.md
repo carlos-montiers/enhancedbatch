@@ -20,7 +20,7 @@ Stop the execution for a time.
 
 Parameters: Number milliseconds
 
-```batch
+```
 set @sleep=4000
 ```
 

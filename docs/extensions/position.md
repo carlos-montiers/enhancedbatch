@@ -20,7 +20,7 @@ Set the row and column cursor position of the console.
 
 Parameters: row column
 
-```batch
+```
 echo Setting position to row 10 and column 40 and printing text
 set "@position=10 40"
 echo Text
@@ -30,7 +30,7 @@ echo Text
 Get the row and column cursor position of the console.
 row and column separated by and space.
 
-```batch
+```
 echo Position: !@position!
 10 40
 ```

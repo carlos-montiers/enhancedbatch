@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves a integer number that is equal to the major version of enhancedbatch.
 
-```batch
+```
 echo enhancedbatch version: !@version!
 1
 ```

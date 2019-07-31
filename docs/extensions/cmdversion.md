@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves the cmd version
 
-```batch
+```
 echo cmd version: !@cmdversion!
 10.0.18362.1
 ```

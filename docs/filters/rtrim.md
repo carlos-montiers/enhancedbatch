@@ -17,14 +17,14 @@ nav_order: 11
 ---
 
 ## RTrim
-```batch
+```
 set "$var= oKay "
 echo !$var;rtrim!.
  oKay.
 ```
 
 ## RTrim Cutset
-```batch
+```
 set "$var= oKay "
 echo !$var;rtrim[ y]!.
  oKa.

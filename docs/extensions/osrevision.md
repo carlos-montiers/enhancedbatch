@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves the revision version number of the operating system
 
-```batch
+```
 echo windows build version: !@osrevision!
 239
 ```

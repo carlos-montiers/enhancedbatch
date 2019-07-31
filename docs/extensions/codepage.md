@@ -21,7 +21,7 @@ Set the output codepage.
 Parameters: Number codepage.
 
 
-```batch
+```
 rem set utf-8 codepage
 set @codepage=65001
 ```
@@ -29,7 +29,7 @@ set @codepage=65001
 ## get @codepage
 Get the output codepage.
 
-```batch
+```
 echo Codepage: !@codepage!
 ```
 

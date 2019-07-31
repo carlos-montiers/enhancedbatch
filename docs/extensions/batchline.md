@@ -18,7 +18,7 @@ parent: Extensions
 ## get @batchline
 Retrieves the number of line inside a batch file.
 
-```batch
+```
 @echo off
 echo The current line number is: !@batchline!
 2

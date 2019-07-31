@@ -20,7 +20,7 @@ The infinite for `:*` allows you run an infinite loop, with the possibility of s
 
 ## Example
 
-```batch
+```
 for %%j in (:*) do (
   echo j = %%j press a key for stop
   set "lastcode=!@kbhit!"

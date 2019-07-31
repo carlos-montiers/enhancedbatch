@@ -21,14 +21,14 @@ Activate the delayed expansion without needs of setlocal
 Parameters: Number 0 or 1
 
 
-```batch
+```
 set @delayedexpansion=1
 ```
 
 ## get @delayedexpansion
 Get the status of the @delayedexpansion
 
-```batch
+```
 echo Delayed Expansion: %@delayedexpansion%
 ```
 

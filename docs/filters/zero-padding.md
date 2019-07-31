@@ -17,7 +17,7 @@ nav_order: 3
 ---
 
 ## Zero Padding
-```batch
+```
 set $A=1
 echo !$A;05!.
 00001.

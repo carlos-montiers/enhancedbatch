@@ -18,7 +18,7 @@ parent: Extensions
 ## get @year
 Retrieves the current year.
 
-```batch
+```
 echo !@year!
 2019
 ```

@@ -18,7 +18,7 @@ parent: Extensions
 ## get @width
 Get the window width of the console.
 
-```batch
+```
 echo Current width: !@width!
 120
 ```

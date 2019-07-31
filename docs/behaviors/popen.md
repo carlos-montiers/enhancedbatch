@@ -18,7 +18,7 @@ nav_order: 5
 
 You can execute a command an save the output of it to a variable using `@@`
 
-```batch
+```
 set "result=@@vol /?"
 set result
 result=Displays the disk volume label and serial number, if they exist.

@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves the minor version number of the operating system
 
-```batch
+```
 echo windows minor version: !@osminor!
 0
 ```

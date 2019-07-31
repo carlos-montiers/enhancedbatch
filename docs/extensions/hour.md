@@ -18,7 +18,7 @@ parent: Extensions
 ## get @hour
 Retrieves the current local hour (0-23).
 
-```batch
+```
 echo !@hour!
 23
 ```

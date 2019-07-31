@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/carlos-montiers/rouge.git
+  revision: b35832490c1ea8cf1cdd4b7208492226d0e2c7ae
+  specs:
+    rouge (3.7.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -57,7 +63,6 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rouge (3.3.0)
     ruby_dep (1.5.0)
     safe_yaml (1.0.5)
     sass (3.7.4)
@@ -73,7 +78,8 @@ DEPENDENCIES
   jekyll-feed (~> 0.6)
   just-the-docs
   minima (~> 2.0)
+  rouge!
   tzinfo-data
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

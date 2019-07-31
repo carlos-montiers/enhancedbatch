@@ -18,7 +18,7 @@ parent: Extensions
 ## get @stdin
 Returns 1 if STDIN has not been redirected, or 0 otherwise.
 
-```batch
+```
 echo stdin is not redirected: !@stdin!
 ```
 

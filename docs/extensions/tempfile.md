@@ -27,7 +27,7 @@ The next paths are checked in the following order and is used the first path fou
 -    The path specified by the USERPROFILE environment variable.
 -    The Windows directory.
 
-```batch
+```
 set "emptyfile=!@tempfile!"
 Echo created: !emptyfile!
 ```

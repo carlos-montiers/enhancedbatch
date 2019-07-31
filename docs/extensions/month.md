@@ -18,7 +18,7 @@ parent: Extensions
 ## get @month
 Retrieves the current month number (1-12).
 
-```batch
+```
 echo !@month!
 12
 ```

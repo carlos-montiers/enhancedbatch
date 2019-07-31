@@ -22,7 +22,7 @@ If you enable @english, is retrieved on english.
 
 The short name have a length of 3 characters.
 
-```batch
+```
 echo !@monthshort!
 Ene
 set @english=1

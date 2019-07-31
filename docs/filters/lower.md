@@ -17,7 +17,7 @@ nav_order: 6
 ---
 
 ## Lower
-```batch
+```
 set "$var= oKay "
 echo !$var;lower!.
  okay .

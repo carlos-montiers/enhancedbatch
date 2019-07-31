@@ -20,14 +20,14 @@ Set the opacity of the console.
 
 Parameters: Number between 30 and 100
 
-```batch
+```
 set @opacity=80
 ```
 
 ## get @opacity
 Get the opacity of the console.
 
-```batch
+```
 echo Opacity: !@opacity!
 ```
 

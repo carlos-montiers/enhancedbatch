@@ -19,7 +19,7 @@ parent: Extensions
 Returns 1 if the current cmd is transient (started with a /C), or 0 otherwise.
 
 
-```batch
+```
 echo transient: !@transient!
 ```
 

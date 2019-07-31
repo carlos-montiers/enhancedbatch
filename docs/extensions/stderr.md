@@ -18,7 +18,7 @@ parent: Extensions
 ## get @stderr
 Returns 1 if STDERR has not been redirected, or 0 otherwise.
 
-```batch
+```
 echo stderr is not redirected: !@stderr!
 ```
 

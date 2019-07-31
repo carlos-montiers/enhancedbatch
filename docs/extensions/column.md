@@ -20,7 +20,7 @@ Set the column cursor position of the console.
 
 Parameters: Number
 
-```batch
+```
 echo Setting position to column 40 and printing text
 set "@column=40"
 echo Text
@@ -29,7 +29,7 @@ echo Text
 ## get @row
 Get the column cursor position of the console.
 
-```batch
+```
 echo Column: !@column!
 40
 ```

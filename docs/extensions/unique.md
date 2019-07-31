@@ -20,7 +20,7 @@ Create a temporal file in the current directory.
 
 Returns the name of the new file.
 
-```batch
+```
 set "emptyfile=!@unique!"
 Echo created: !emptyfile!
 ```

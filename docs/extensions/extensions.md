@@ -21,14 +21,14 @@ Activate the extensions without needs of setlocal
 Parameters: Number 0 or 1
 
 
-```batch
+```
 set @extensions=1
 ```
 
 ## get @extensions
 Get the status of the @extensions
 
-```batch
+```
 echo Extensions: %@extensions%
 ```
 

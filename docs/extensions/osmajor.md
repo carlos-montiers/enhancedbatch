@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves the major version number of the operating system
 
-```batch
+```
 echo windows major version: !@osmajor!
 10
 ```

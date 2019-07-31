@@ -20,7 +20,7 @@ Set the foreground and background color of the console.
 If you specify a single character (foreground),
 it uses 0 (black) as background.
 
-```batch
+```
 set "@color=7"
 
 ```
@@ -28,7 +28,7 @@ set "@color=7"
 ## get @color
 Get the foreground and background color of the console.
 
-```batch
+```
 echo !@color!
 07
 ```

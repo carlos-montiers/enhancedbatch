@@ -18,7 +18,7 @@ parent: Extensions
 ## get @datetime
 Retrieves the current local date and time in the format: YYYY-MM-DD HH:MM:SS
 
-```batch
+```
 echo !@datetime!
 2019-12-31 23:00:59
 ```

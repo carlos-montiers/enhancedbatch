@@ -17,7 +17,7 @@ nav_order: 8
 ---
 
 ## Length
-```batch
+```
 set "$var= oKay "
 echo !$var;length!.
 6

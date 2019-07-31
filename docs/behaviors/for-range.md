@@ -41,7 +41,7 @@ For stop in the next iteration, use `set @next=`
 `:range*3:0`
 
 ## Examples
-```batch
+```
 for %%j in (:range*) do (
   for %%k in (:range*) do (
     echo %%j.%%k
@@ -69,7 +69,7 @@ for %%j in (:range*) do (
 8.6
 ```
 
-```batch
+```
 for %%j in (:range*3) do echo %%j
 1
 2

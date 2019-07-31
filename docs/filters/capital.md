@@ -17,7 +17,7 @@ nav_order: 7
 ---
 
 ## Capital
-```batch
+```
 set "$var= oKay "
 echo !$var;capital!.
  Okay .

@@ -23,14 +23,14 @@ Parameters: Number between 0 and 100.
 1 shows the cursor
 2-100 set that size.
 
-```batch
+```
 set @cursor=50
 ```
 
 ## get @opacity
 Get the console cursor size.
 
-```batch
+```
 echo Cursor: !@cursor!
 ```
 

@@ -20,7 +20,7 @@ Set the row cursor position of the console.
 
 Parameters: Number
 
-```batch
+```
 echo Setting position to row 10 and printing text
 set "@row=10"
 echo Text
@@ -29,7 +29,7 @@ echo Text
 ## get @row
 Get the row cursor position of the console.
 
-```batch
+```
 echo Row: !@row!
 10
 ```

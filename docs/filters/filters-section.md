@@ -15,7 +15,7 @@ You can specify the first filter with `;` at the end of the variable name.
 
 You can chain two or more filters separating it with `,`
 
-```batch
+```
 set "$var= oKay "
 echo !$var;trim,capital!.
 OKay.

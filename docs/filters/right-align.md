@@ -17,7 +17,7 @@ nav_order: 2
 ---
 
 ## Right Align
-```batch
+```
 set $A=1
 echo !$A;5!.
     1.

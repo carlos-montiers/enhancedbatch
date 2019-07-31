@@ -21,7 +21,7 @@ Retrieves the current title of cmd.
 
 If cmd is running with elevated privileges, it contains the Administrator prefix. The getter cut off this prefix.
 
-```batch
+```
 echo The current title is: !@title!
 ```
 

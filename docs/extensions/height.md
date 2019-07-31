@@ -18,7 +18,7 @@ parent: Extensions
 ## get @height
 Get the window height of the console.
 
-```batch
+```
 echo Current height: !@height!
 30
 ```

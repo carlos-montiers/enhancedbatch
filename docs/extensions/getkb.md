@@ -18,7 +18,7 @@ parent: Extensions
 ## get @getkb
 Wait for key press and return the code of it.
 
-```batch
+```
 set "code="!@getkb!"
 echo code: !code!
 ```

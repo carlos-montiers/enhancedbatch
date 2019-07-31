@@ -18,7 +18,7 @@ parent: Extensions
 ## get @date
 Retrieves the current local date in the format: YYYY-MM-DD
 
-```batch
+```
 echo !@date!
 2019-12-31
 ```

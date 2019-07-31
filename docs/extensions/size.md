@@ -18,7 +18,7 @@ parent: Extensions
 ## get @size
 Get the window height and width of the console.
 
-```batch
+```
 echo Current size: !@size!
 30 120
 ```

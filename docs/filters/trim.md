@@ -17,14 +17,14 @@ nav_order: 9
 ---
 
 ## Trim
-```batch
+```
 set "$var= oKay "
 echo !$var;trim!.
 oKay.
 ```
 
 ## Trim Cutset
-```batch
+```
 set "$var= oKay "
 echo !$var;trim[ oy]!.
 Ka.

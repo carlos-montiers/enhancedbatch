@@ -20,7 +20,7 @@ Retrieves the current month name in the local language.
 
 If you enable @english, is retrieved on english.
 
-```batch
+```
 echo !@monthname!
 Enero
 set @english=1

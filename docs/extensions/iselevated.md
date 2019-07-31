@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves if the current cmd is running with elevated privileges or as administrator.
 
-```batch
+```
 echo Running with elevated privileges: !@iselevated!
 ```
 

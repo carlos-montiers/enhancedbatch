@@ -17,7 +17,7 @@ nav_order: 4
 ---
 
 ## Blank Text
-```batch
+```
 echo !$no-var;'is undefined'!.
 is undefined.
 

@@ -23,7 +23,7 @@ Retrieves the operating system version, composed of the numbers:
 - build
 - revision
 
-```batch
+```
 echo windows version: !@osversion!
 10.0.18362.239
 ```

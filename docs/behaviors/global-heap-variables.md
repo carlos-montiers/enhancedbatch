@@ -20,7 +20,7 @@ You can save global variables in the heap prefixing it with the `$` character.
 
 That are case sensitive.
 
-```batch
+```
 set $A=1
 set $a=2
 echo $A=%$A% $a=%$a%

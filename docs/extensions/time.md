@@ -18,7 +18,7 @@ parent: Extensions
 ## get @time
 Retrieves the current local time in the format: HH:MM:SS
 
-```batch
+```
 echo !@time!
 23:00:59
 ```

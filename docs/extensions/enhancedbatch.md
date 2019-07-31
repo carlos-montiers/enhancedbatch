@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves a integer number that determine if enhancedbatch was succesfully loaded.
 
-```batch
+```
 if not defined @enhancedbatch (
 echo EnhancedBatch was not loaded successfully
 )

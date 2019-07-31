@@ -17,14 +17,14 @@ nav_order: 10
 ---
 
 ## LTrim
-```batch
+```
 set "$var= oKay "
 echo !$var;ltrim!.
 oKay .
 ```
 
 ## LTrim Cutset
-```batch
+```
 set "$var= oKay "
 echo !$var;ltrim[ o]!.
 Kay .

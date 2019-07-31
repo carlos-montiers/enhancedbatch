@@ -30,9 +30,9 @@ Additionally, some bugs of `cmd.exe` are fixed.
 
 Example of heap variable:
 
-```batch
+```
 Set $myPrivateVar=Okay
-Rem Looking in the environment block, it will say undefined.
+Rem Looking in the environment block, it will say not defined.
 Set $myPrivateVar
 Rem Looking in the heap also
 If Defined $myPrivateVar (
@@ -45,7 +45,7 @@ The extensions can have getters and setters.
 
 Example of an extension, in this case `@unicode`:
 
-```batch
+```
 Echo Working with unicode: %@unicode%
 If "%@unicode%"=="0" (
 Echo Enabling unicode
@@ -57,13 +57,13 @@ Set "@unicode=1"
 
 1. Just download the DLLs from the release and run the following command at the start of your batch script:
 
-```batch
+```
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 ```
 
 2. Verify the result of the previous step:
 
-```batch
+```
 If Not Defined @enhancedbatch (
 Echo Something failed
 Goto :Eof

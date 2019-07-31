@@ -20,7 +20,7 @@ Retrieves the current local date and time in the format: YYYY-MM-DD HH:MM:SS.mil
 
 The milliseconds have a width of 3 and uses the local decimal point.
 
-```batch
+```
 echo !@datetimems!
 2019-12-31 23:00:59.136
 ```

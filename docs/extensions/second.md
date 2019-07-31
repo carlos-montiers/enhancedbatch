@@ -18,7 +18,7 @@ parent: Extensions
 ## get @second
 Retrieves the current local second (0-59).
 
-```batch
+```
 echo !@second!
 59
 ```

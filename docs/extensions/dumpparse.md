@@ -19,7 +19,7 @@ parent: Extensions
 
 Enable or disable the debug dump of parse
 
-```batch
+```
 set @dumpparse=1
 ```
 

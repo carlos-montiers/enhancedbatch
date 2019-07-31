@@ -19,7 +19,7 @@ parent: Extensions
 
 Retrieves the build version number of the operating system
 
-```batch
+```
 echo windows build version: !@osbuild!
 18362
 ```

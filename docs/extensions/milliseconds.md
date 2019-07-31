@@ -18,7 +18,7 @@ parent: Extensions
 ## get @milliseconds
 Retrieves the current local milliseconds (0-999).
 
-```batch
+```
 echo !@milliseconds!
 136
 ```

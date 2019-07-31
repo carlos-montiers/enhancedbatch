@@ -19,7 +19,7 @@ parent: Extensions
 
 Enable or disable the debug dump of tokens
 
-```batch
+```
 set @dumptokens=1
 ```
 
