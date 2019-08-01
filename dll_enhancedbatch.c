@@ -1356,6 +1356,114 @@ void hookCmd(void) {
 			// Remove the default "eol=;".
 			WriteMemory(peol, 0, 1);
 
+			// Patch FOR to fix a bug with wildcard expansion - each name
+			// accumulates, resizing bigger and bigger (this patch is not
+			// undone on unload).
+			// I've made the initial size big enough, no need to resize.
+			WriteMemory(pForResize, (LPVOID) 0xEB, 1);
+#ifdef _WIN64
+			if (cmdFileVersionMS == 0x50002) {
+				// 5.2.*.*
+				WriteMemory(pForResize, "\x90\xE9", 2);
+				WriteMemory(pForMkstr, "\x90\x90\x90"               // nop
+									   "\x44\x8D\xA1\x00\x01\x00"   // lea r12d,rcx+256
+									   , 10);
+			} else if (cmdFileVersionMS == 0x60000 ||
+					   cmdFileVersionMS == 0x60001) {
+				// 6.0.*.*
+				// 6.1.*.*
+				WriteMemory(pForMkstr, "\x90\x90\x90"               // nop
+									   "\x44\x8D\xA9\x00\x01\x00"   // lea r13d,rcx+256
+									   , 10);
+			} else if (cmdFileVersionMS == 0x60002) {
+				if (cmdFileVersionLS == 0x1FA60000) {
+					// 6.2.8102.0
+					WriteMemory(pForMkstr, "\x90"                       // nop
+										   "\x49\xFF\xC7"               // inc r15
+										   "\x66\x42\x83\x3C\x79\x00"	// jmp word[rcx+r15*2],0
+										   "\x75\xF5"                   // jnz inc
+										   "\x41\x81\xC7\x00\x01\x00"   // add r15d,100
+										   , 19);
+				} else {
+					// 6.2.9200.16384
+					WriteMemory(pForMkstr, "\x90"                       // nop
+										   "\x48\xFF\xC5"               // inc rbp
+										   "\x66\x83\x3C\x69\x00"       // cmp word[rcx+rbp*2],0
+										   "\x75\xF6"                   // jnz inc
+										   "\x81\xC5\x00\x01\x00"       // add ebp,100
+										   , 17);
+				}
+			} else if (cmdFileVersionMS == 0x60003 &&
+					   cmdFileVersionLS == 0x24D70000 &&
+					   cmdDebug) {
+				// 6.3.9431.0u
+				WriteMemory(pForMkstr, "\x90"                   // nop
+									   "\x48\xFF\xC2"           // inc rdx
+									   "\x66\x44\x39\x24\x51"   // cmp [rcx+rdx*2],r12w
+									   "\x75\xF6"               // jnz inc
+									   "\xFE\xC6"               // inc dh
+									   "\x89\xD7", 15);         // mov edi,edx
+			} else if (cmdFileVersionMS == 0xA0000 &&
+					   HIWORD(cmdFileVersionLS) >= 17763) {
+				// 10.0.17763.1
+				// 10.0.18362.1
+				WriteMemory(pForMkstr, "\x48\xFF\xC2"           // inc rdx
+									   "\x90"                   // nop
+									   "\x66\x44\x39\x34\x51"   // cmp [rcx+rdx*2],r14w
+									   "\x75\xF5"               // jnz inc
+									   "\xFE\xC6"               // inc dh
+									   "\x89\xD7", 15);         // mov edi,edx
+			} else {
+				// 6.3.*.*
+				// 10.0.*.*
+				WriteMemory(pForMkstr, "\x90"                   // nop
+									   "\x48\xFF\xC2"           // inc rdx
+									   "\x66\x39\x2C\x51"       // cmp [rcx+rdx*2],bp
+									   "\x75\xF7"               // jnz inc
+									   "\xFE\xC6"               // inc dh
+									   "\x89\xD7", 14);         // mov edi,edx
+			}
+#else
+			if (cmdFileVersionMS == 0x50000) {
+				// 5.0.*.*
+				WriteMemory(pForMkstr, "\xEB\x00\xFE\xC4", 4);  // jmp $+2; inc ah
+			} else if (HIWORD(cmdFileVersionMS) == 5) {
+				if (LOWORD(cmdFileVersionLS) == 0) {
+					// 5.1.2600.0
+					// 5.2.3790.0
+					WriteMemory(pForMkstr, pForMkstr+2, 8);
+					WriteMemory(pForMkstr+8, "\xFE\xC4", 2);    // inc ah
+				} else {
+					// 5.1.*.*
+					// 5.2.*.*
+					WriteMemory(pForMkstr, pForMkstr+6, 8);
+					WriteMemory(pForMkstr+8, "\x81\xC0\x00\x01\x00", 6);    // add eax,256
+				}
+			} else if (cmdFileVersionMS == 0x60000) {
+				// 6.0.*.*
+				WriteMemory(pForMkstr, "\xFE\xC4"   // inc ah
+									   "\x93", 3);	// xchg ebx,eax
+			} else if (cmdFileVersionMS == 0x60001) {
+				// 6.1.*.*
+				WriteMemory(pForMkstr, "\xFE\xC4"   // inc ah
+									   "\x97", 3);	// xchg edi,eax
+			} else if (cmdFileVersionMS == 0x60002) {
+				// 6.2.*.*
+				WriteMemory(pForMkstr, "\x85\xC0"   // test eax,eax
+									   "\x75\xF6"   // jnz $-8
+									   "\x2B\xD1"   // sub edx,ecx
+									   "\xD1\xFA"   // sar edx,1
+									   "\xFE\xC6"   // inc dh
+									   "\x89\xD3"   // mov ebx,edx
+									   , 12);
+			} else {
+				// 6.3.*.*
+				// 10.0.*.*
+				WriteMemory(pForMkstr, "\xFE\xC6"   // inc dh
+									   "\x92", 3);	// xchg edx,eax
+			}
+#endif
+
 #ifdef _WIN64
 			// CMD and the DLL could be more than 2GiB apart, so allocate some
 			// memory before CMD to near jump to, which then does an absolute

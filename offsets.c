@@ -39,6 +39,8 @@ LPBYTE cmd_addrs[] = {
 	0,			// fEnableExtensions
 	0,			// fDumpTokens
 	0,			// fDumpParse
+	0,			// ForMkstr
+	0,			// ForResize
 };
 
 #ifdef _WIN64
@@ -55,6 +57,8 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x46c12,	// fEnableExtensions
 	0x2f964,	// fDumpTokens
 	0x2f848,	// fDumpParse
+	0x01e9a,	// ForMkstr
+	0x01ef3,	// ForResize
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -69,6 +73,8 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x47c32,	// fEnableExtensions
 	0x30984,	// fDumpTokens
 	0x30868,	// fDumpParse
+	0x0162a,	// ForMkstr
+	0x01683,	// ForResize
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -83,6 +89,8 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x46d39,	// fEnableExtensions
 	0x46bf4,	// fDumpTokens
 	0x46d10,	// fDumpParse
+	0x026ea,	// ForMkstr
+	0x02743,	// ForResize
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -97,6 +105,8 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x502b9,	// fEnableExtensions
 	0x4bf64,	// fDumpTokens
 	0x4c070,	// fDumpParse
+	0x055c7,	// ForMkstr
+	0x05620,	// ForResize
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -111,6 +121,8 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x502b9,	// fEnableExtensions
 	0x4bf64,	// fDumpTokens
 	0x4c070,	// fDumpParse
+	0x05737,	// ForMkstr
+	0x05790,	// ForResize
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -125,6 +137,8 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x502b9,	// fEnableExtensions
 	0x4bf64,	// fDumpTokens
 	0x4c070,	// fDumpParse
+	0x04f06,	// ForMkstr
+	0x04f5f,	// ForResize
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -139,6 +153,8 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x43aa5,	// fEnableExtensions
 	0x56685,	// fDumpTokens
 	0x56686,	// fDumpParse
+	0x06fd2,	// ForMkstr
+	0x0702d,	// ForResize
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -153,6 +169,8 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x43aa5,	// fEnableExtensions
 	0x56ab1,	// fDumpTokens
 	0x56ab2,	// fDumpParse
+	0x07d52,	// ForMkstr
+	0x07dad,	// ForResize
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -167,6 +185,8 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x42058,	// fEnableExtensions
 	0x4b385,	// fDumpTokens
 	0x4b384,	// fDumpParse
+	0x1d2f8,	// ForMkstr
+	0x1d3d1,	// ForResize
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -181,6 +201,8 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x42058,	// fEnableExtensions
 	0x4b385,	// fDumpTokens
 	0x4b384,	// fDumpParse
+	0x1d2f8,	// ForMkstr
+	0x1d3d1,	// ForResize
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -195,6 +217,8 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x2e08a,	// fEnableExtensions
 	0x3bd60,	// fDumpTokens
 	0x3beb0,	// fDumpParse
+	0x12622,	// ForMkstr
+	0x126bb,	// ForResize
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -209,6 +233,8 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x2e08a,	// fEnableExtensions
 	0x37d20,	// fDumpTokens
 	0x3bd80,	// fDumpParse
+	0x1235a,	// ForMkstr
+	0x123f3,	// ForResize
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -223,6 +249,8 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x2d0ca,	// fEnableExtensions
 	0x3ac84,	// fDumpTokens
 	0x3afa0,	// fDumpParse
+	0x103c7,	// ForMkstr
+	0x10425,	// ForResize
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -237,6 +265,8 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x2d0ca,	// fEnableExtensions
 	0x3ae04,	// fDumpTokens
 	0x3ae05,	// fDumpParse
+	0x10562,	// ForMkstr
+	0x105c0,	// ForResize
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -251,6 +281,8 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x2e0ca,	// fEnableExtensions
 	0x3bd84,	// fDumpTokens
 	0x3bd85,	// fDumpParse
+	0x0febc,	// ForMkstr
+	0x0ff1a,	// ForResize
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -265,6 +297,8 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x2e0ca,	// fEnableExtensions
 	0x3bd84,	// fDumpTokens
 	0x3bd85,	// fDumpParse
+	0x0febc,	// ForMkstr
+	0x0ff1a,	// ForResize
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -279,6 +313,8 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x3c094,	// fEnableExtensions
 	0x4d351,	// fDumpTokens
 	0x4d350,	// fDumpParse
+	0x0ef23,	// ForMkstr
+	0x0ef95,	// ForResize
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -293,6 +329,8 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x380d4,	// fEnableExtensions
 	0x496e1,	// fDumpTokens
 	0x496e0,	// fDumpParse
+	0x1102a,	// ForMkstr
+	0x1109b,	// ForResize
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -307,6 +345,8 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x2e094,	// fEnableExtensions
 	0x3f489,	// fDumpTokens
 	0x3f488,	// fDumpParse
+	0x0dcef,	// ForMkstr
+	0x0dd45,	// ForResize
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -321,6 +361,8 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x2f78a,	// fEnableExtensions
 	0x34024,	// fDumpTokens
 	0x33f08,	// fDumpParse
+	0x092b9,	// ForMkstr
+	0x0931d,	// ForResize
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -335,6 +377,8 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x2c78a,	// fEnableExtensions
 	0x30b04,	// fDumpTokens
 	0x309e8,	// fDumpParse
+	0x14b4f,	// ForMkstr
+	0x14ba5,	// ForResize
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -349,6 +393,8 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x2d094,	// fEnableExtensions
 	0x3e379,	// fDumpTokens
 	0x3e378,	// fDumpParse
+	0x0dc33,	// ForMkstr
+	0x0dc89,	// ForResize
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -363,6 +409,8 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x2e014,	// fEnableExtensions
 	0x3f420,	// fDumpTokens
 	0x3f200,	// fDumpParse
+	0x0fde1,	// ForMkstr
+	0x0fe37,	// ForResize
 
 };
 
@@ -380,6 +428,8 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x3c9d6,	// fEnableExtensions
 	0x256c4,	// fDumpTokens
 	0x2559c,	// fDumpParse
+	0x03cc7,	// ForMkstr
+	0x03d17,	// ForResize
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -394,6 +444,8 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x3d9d6,	// fEnableExtensions
 	0x266c4,	// fDumpTokens
 	0x2659c,	// fDumpParse
+	0x042b7,	// ForMkstr
+	0x04307,	// ForResize
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -408,6 +460,8 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x3d7b5,	// fEnableExtensions
 	0x3d684,	// fDumpTokens
 	0x3d798,	// fDumpParse
+	0x04307,	// ForMkstr
+	0x04357,	// ForResize
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -422,6 +476,8 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x43cd9,	// fEnableExtensions
 	0x3f994,	// fDumpTokens
 	0x3fa98,	// fDumpParse
+	0x09b6e,	// ForMkstr
+	0x09bbe,	// ForResize
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -436,6 +492,8 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x41c4d,	// fEnableExtensions
 	0x3d8f4,	// fDumpTokens
 	0x3da04,	// fDumpParse
+	0x1835d,	// ForMkstr
+	0x183ad,	// ForResize
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -450,6 +508,8 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x43cc9,	// fEnableExtensions
 	0x3f984,	// fDumpTokens
 	0x3fa88,	// fDumpParse
+	0x08094,	// ForMkstr
+	0x080e4,	// ForResize
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -464,6 +524,8 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x35745,	// fEnableExtensions
 	0x48045,	// fDumpTokens
 	0x48046,	// fDumpParse
+	0x06942,	// ForMkstr
+	0x06992,	// ForResize
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -478,6 +540,8 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x35745,	// fEnableExtensions
 	0x48045,	// fDumpTokens
 	0x48046,	// fDumpParse
+	0x06f3b,	// ForMkstr
+	0x06f8b,	// ForResize
 };
 
 const DWORD cmd_5_0_2144_1[] = {
@@ -492,6 +556,8 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x1cf7c,	// fEnableExtensions
 	0x1faec,	// fDumpTokens
 	0x1f9d8,	// fDumpParse
+	0x03a2a,	// ForMkstr
+	0x03a83,	// ForResize
 };
 
 const DWORD cmd_5_0_2195_1600[] = {
@@ -506,6 +572,8 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x1cf7c,	// fEnableExtensions
 	0x1faec,	// fDumpTokens
 	0x1f9d8,	// fDumpParse
+	0x03a2f,	// ForMkstr
+	0x03a88,	// ForResize
 };
 
 const DWORD cmd_5_0_2195_2104[] = {
@@ -520,6 +588,8 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x1cf7c,	// fEnableExtensions
 	0x1faec,	// fDumpTokens
 	0x1f9d8,	// fDumpParse
+	0x03a2f,	// ForMkstr
+	0x03a88,	// ForResize
 };
 
 const DWORD cmd_5_0_2195_4803[] = {
@@ -534,6 +604,8 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x1cf7c,	// fEnableExtensions
 	0x1faec,	// fDumpTokens
 	0x1f9d8,	// fDumpParse
+	0x03a2f,	// ForMkstr
+	0x03a88,	// ForResize
 };
 
 const DWORD cmd_5_0_2195_6656[] = {
@@ -548,6 +620,8 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x1cf7c,	// fEnableExtensions
 	0x1faec,	// fDumpTokens
 	0x1f9d8,	// fDumpParse
+	0x03a3f,	// ForMkstr
+	0x03a98,	// ForResize
 };
 
 const DWORD cmd_5_0_2195_6995[] = {
@@ -562,6 +636,8 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x1cf7c,	// fEnableExtensions
 	0x1faec,	// fDumpTokens
 	0x1f9d8,	// fDumpParse
+	0x03af6,	// ForMkstr
+	0x03b4f,	// ForResize
 };
 
 const DWORD cmd_5_1_2600_0[] = {
@@ -576,6 +652,8 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x2ca64,	// fEnableExtensions
 	0x31688,	// fDumpTokens
 	0x31704,	// fDumpParse
+	0x0e8c2,	// ForMkstr
+	0x0e786,	// ForResize
 };
 
 const DWORD cmd_5_1_2600_2180[] = {
@@ -590,6 +668,8 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x2fa64,	// fEnableExtensions
 	0x346c8,	// fDumpTokens
 	0x346c9,	// fDumpParse
+	0x0d84b,	// ForMkstr
+	0x0d8b5,	// ForResize
 };
 
 const DWORD cmd_5_1_2600_3311[] = {
@@ -604,6 +684,8 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x2fa64,	// fEnableExtensions
 	0x346c8,	// fDumpTokens
 	0x346c9,	// fDumpParse
+	0x0e130,	// ForMkstr
+	0x0e19a,	// ForResize
 };
 
 const DWORD cmd_5_1_2600_5512[] = {
@@ -618,6 +700,8 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x2fa64,	// fEnableExtensions
 	0x346c8,	// fDumpTokens
 	0x346c9,	// fDumpParse
+	0x0e130,	// ForMkstr
+	0x0e19a,	// ForResize
 };
 
 const DWORD cmd_5_2_3790_0[] = {
@@ -632,6 +716,8 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x20041,	// fEnableExtensions
 	0x28d80,	// fDumpTokens
 	0x28db4,	// fDumpParse
+	0x10e69,	// ForMkstr
+	0x10ee2,	// ForResize
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -646,6 +732,8 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x2fa24,	// fEnableExtensions
 	0x346c1,	// fDumpTokens
 	0x346c0,	// fDumpParse
+	0x0ed53,	// ForMkstr
+	0x0ebe8,	// ForResize
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -660,6 +748,8 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x2fa24,	// fEnableExtensions
 	0x34455,	// fDumpTokens
 	0x34454,	// fDumpParse
+	0x1183d,	// ForMkstr
+	0x118a7,	// ForResize
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -674,6 +764,8 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x24041,	// fEnableExtensions
 	0x40660,	// fDumpTokens
 	0x40661,	// fDumpParse
+	0x13272,	// ForMkstr
+	0x132c5,	// ForResize
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -688,6 +780,8 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x24041,	// fEnableExtensions
 	0x40601,	// fDumpTokens
 	0x40600,	// fDumpParse
+	0x1144c,	// ForMkstr
+	0x1132a,	// ForResize
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -702,6 +796,8 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x24081,	// fEnableExtensions
 	0x40618,	// fDumpTokens
 	0x40619,	// fDumpParse
+	0x10035,	// ForMkstr
+	0x1007f,	// ForResize
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -716,6 +812,8 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x24081,	// fEnableExtensions
 	0x40618,	// fDumpTokens
 	0x40619,	// fDumpParse
+	0x10245,	// ForMkstr
+	0x10122,	// ForResize
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -730,6 +828,8 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x24081,	// fEnableExtensions
 	0x40658,	// fDumpTokens
 	0x40660,	// fDumpParse
+	0x0ffed,	// ForMkstr
+	0x0feca,	// ForResize
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -744,6 +844,8 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x24081,	// fEnableExtensions
 	0x40658,	// fDumpTokens
 	0x40660,	// fDumpParse
+	0x0ffed,	// ForMkstr
+	0x0feca,	// ForResize
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -758,6 +860,8 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x30044,	// fEnableExtensions
 	0x4ba70,	// fDumpTokens
 	0x4ba71,	// fDumpParse
+	0x0ee69,	// ForMkstr
+	0x0ec8d,	// ForResize
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -772,6 +876,8 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x2e084,	// fEnableExtensions
 	0x49ad0,	// fDumpTokens
 	0x49ad1,	// fDumpParse
+	0x0f23b,	// ForMkstr
+	0x0f0cd,	// ForResize
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -786,6 +892,8 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x25044,	// fEnableExtensions
 	0x40851,	// fDumpTokens
 	0x40850,	// fDumpParse
+	0x0d735,	// ForMkstr
+	0x0d785,	// ForResize
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -800,6 +908,8 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x284b6,	// fEnableExtensions
 	0x2ca04,	// fDumpTokens
 	0x2c8dc,	// fDumpParse
+	0x085eb,	// ForMkstr
+	0x0863b,	// ForResize
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -814,6 +924,8 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x25496,	// fEnableExtensions
 	0x297c4,	// fDumpTokens
 	0x2969c,	// fDumpParse
+	0x10f19,	// ForMkstr
+	0x10f69,	// ForResize
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -828,6 +940,8 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x25044,	// fEnableExtensions
 	0x40851,	// fDumpTokens
 	0x40850,	// fDumpParse
+	0x0f39f,	// ForMkstr
+	0x0f3ef,	// ForResize
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -842,6 +956,8 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x26004,	// fEnableExtensions
 	0x41811,	// fDumpTokens
 	0x41810,	// fDumpParse
+	0x0f334,	// ForMkstr
+	0x0f384,	// ForResize
 };
 
 #endif

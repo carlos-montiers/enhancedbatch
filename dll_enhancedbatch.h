@@ -85,5 +85,7 @@ DWORD getBatchLine();
 #define pfEnableExtensions	cmd_addrs[8]
 #define pfDumpTokens		cmd_addrs[9]
 #define pfDumpParse 		cmd_addrs[10]
+#define pForMkstr			cmd_addrs[11]	// storage for FOR wildcard matches
+#define pForResize			cmd_addrs[12]	// prevent resizing it
 
-#define OFFSETS 11
+#define OFFSETS 13
