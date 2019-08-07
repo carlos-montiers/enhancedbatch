@@ -2,7 +2,7 @@
 layout: default
 title: UTF-8 Bugfixes
 parent: Behaviors
-nav_order: 8
+nav_order: 9
 ---
 
 # UTF-8 Bugfixes

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/carlos-montiers/rouge.git
-  revision: b35832490c1ea8cf1cdd4b7208492226d0e2c7ae
+  revision: b8dc740ac54386fc7f97f938604b7205803c0b18
   specs:
     rouge (3.7.0)
 

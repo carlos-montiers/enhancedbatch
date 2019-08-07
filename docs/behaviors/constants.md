@@ -2,7 +2,7 @@
 layout: default
 title: Constants
 parent: Behaviors
-nav_order: 9
+nav_order: 10
 ---
 
 # Constants
@@ -18,27 +18,27 @@ nav_order: 9
 
 You can use the next constant alias variables for characters:
 
-- TAB `!$TAB!`
-- BACKSPACE `!$BS!`
-- CARRIAGE RETURN `!$CR!`
-- LINE FEED `!$LF!`
-- WINDOWS NEW LINE `!$CRLF!`
-- EXCLAMATION `!$EXCL!`
-- QUOTE `!$QUOT!`
-- AMPERSAND `!$AMP!`
-- PIPE `!$BAR!`
-- GREAT THAN `!$GT!`
-- LOWER THAN `!$LT!`
-- OPENING PARENTHESIS `!$OPAR!`
-- CLOSING PARENTHESIS `!$CPAR!`
-- OPENING BRACE CURLY `!$OBRC!`
-- CLOSING BRACE CURLY  `!$CBRC!`
-- ASTERISK `!$STAR!`
+- Tab `!$TAB!`
+- Backspace `!$BS!`
+- Carriage return `!$CR!`
+- Line feed `!$LF!`
+- New Line `!$CRLF!`
+- Exclamation `!$EXCL!`
+- Quote `!$QUOT!`
+- Ampersand `!$AMP!`
+- Pipie `!$BAR!`
+- Great than `!$GT!`
+- Lower than `!$LT!`
+- Opening parenthesis `!$OPAR!`
+- Closing parenthesis `!$CPAR!`
+- Opening brace curly `!$OBRC!`
+- Closing brace curly  `!$CBRC!`
+- Asterisk `!$STAR!`
 - ? `!$QUES!`
 - $ `!$DOLLAR!`
 - ; `!$SEMI!`
 - , `!$COMMA!`
 - = `!$EQ!`
-- ESCAPE: `!$ESC!`
+- Escape `!$ESC!`
 
 {: .fs-6 .fw-300 }

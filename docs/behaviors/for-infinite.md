@@ -18,8 +18,6 @@ nav_order: 2
 
 The infinite for `:*` allows you run an infinite loop, with the possibility of stop in the next iteration using `set @next=`
 
-## Example
-
 ```
 for %%j in (:*) do (
   echo j = %%j press a key for stop

@@ -2,7 +2,7 @@
 layout: default
 title: Popen
 parent: Behaviors
-nav_order: 5
+nav_order: 6
 ---
 
 # Popen
@@ -16,6 +16,7 @@ nav_order: 5
 
 ---
 
+## Popen
 You can execute a command an save the output of it to a variable using `@@`
 
 ```

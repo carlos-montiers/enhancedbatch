@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Help Debug
+title: Debug
 parent: Behaviors
-nav_order: 6
+nav_order: 7
 ---
 
-# Help Debug
+# Debug
 {: .no_toc }
 
 ## Table of contents
@@ -16,8 +16,7 @@ nav_order: 6
 
 ---
 
-EnhancedBatch prints automatically the name of the batch file and line number
-when an error occurs.
+EnhancedBatch helps to find errors printing automatically the name of the batch file and line number when an error occurs.
 
 See the extensions `@batchfile` and `@batchline`.
 

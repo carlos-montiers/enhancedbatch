@@ -58,15 +58,16 @@ Set "@unicode=1"
 1. Just download the DLLs from the release and run the following command at the start of your batch script:
 
 ```
-rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
+rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
 ```
 
 2. Verify the result of the previous step:
 
 ```
-If Not Defined @enhancedbatch (
-Echo Something failed
-Goto :Eof
+if not defined @enhancedbatch (
+echo something failed
+pause
+exit
 )
 ```
 
