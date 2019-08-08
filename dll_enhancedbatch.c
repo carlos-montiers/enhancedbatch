@@ -33,10 +33,10 @@
  * 24 February, 2019 : Carlos Montiers A. Add code for save the variables in heap using linked list.
  * 25 February, 2019 : Jason Hood. Replaced the linked list with generic hash table.
  * 3 March, 2019     : Carlos Montiers A. Add extensions: reply, position, color.
- * April, 2019       : Jason Hood. Bunch of extensions and low level behaviors.
- * 9 April, 2019     : Jason Hood. Add cool for behavior: range.
+ * April, 2019       : Jason Hood. Bunch of extensions, filters and low level behaviors.
+ * 9 April, 2019     : Jason Hood. Add cool behavior: for range.
  * 12 May, 2019      : Jason Hood and Carlos Montiers A. Extension: opacity.
- * 13 July, 2019     : Carlos Montiers A. Add for behavior: infinite.
+ * 13 July, 2019     : Carlos Montiers A. Add behavior: for infinite.
  */
 
 #include "dll_enhancedbatch.h"
