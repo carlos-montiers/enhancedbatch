@@ -1,0 +1,44 @@
+#include <winver.h>
+
+#define APP_VS           1,0,0,0
+#define APP_VERSION      "1.0.0.0"
+#define APP_BUILD        "August 2019"
+#define APP_COPYRIGHT    "(C) 2019 Carlos Montiers A. (C) 2019 Jason Hood"
+#define APP_NAME         "EnhancedBatch"
+#define APP_INTERNALNAME "EnhancedBatch"
+#define APP_DESCRIPTION  "Improve the functionality of your classic Windows batch files"
+#define APP_COMMENT      "https://www.enhancedbatch.com"
+#define APP_FILENAME     "enhancedbatch_[target].dll"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION      APP_VS
+PRODUCTVERSION   APP_VS
+#ifdef _DEBUG
+FILEFLAGS        VS_FF_DEBUG|VS_FF_PRIVATEBUILD|VS_FF_PRERELEASE
+#else
+FILEFLAGS        0x0L  // final version
+#endif
+FILEOS           VOS_NT_WINDOWS32
+FILETYPE         VFT_DLL
+FILESUBTYPE      VFT2_UNKNOWN // not used
+{
+  BLOCK "StringFileInfo"
+  {
+    BLOCK "040904E4" // Lang=US English, CharSet=Windows 1252
+    {
+      VALUE "Build",            APP_BUILD
+      VALUE "Comments",         APP_COMMENT
+	  VALUE "FileDescription",  APP_DESCRIPTION
+      VALUE "FileVersion",      APP_VERSION
+      VALUE "InternalName",     APP_INTERNALNAME
+      VALUE "LegalCopyright",   APP_COPYRIGHT
+      VALUE "OriginalFilename", APP_FILENAME
+      VALUE "ProductName",      APP_NAME
+      VALUE "ProductVersion",   APP_VERSION
+    }
+  }
+  BLOCK "VarFileInfo"
+  {
+    VALUE "Translation", 0x0409, 0x04E4
+  }
+}
