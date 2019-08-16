@@ -32,6 +32,9 @@
 
 extern LPVOID cmd_end;
 
+extern BOOL onWindowsTerminal;
+extern HWND consoleHwnd;
+
 static DWORD toString(DWORD num, LPWSTR buffer, DWORD size) {
 	return snwprintf(buffer, size, L"%d", num);
 }
@@ -371,6 +374,38 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
 	return toString(-1, buffer, size);
 }
 
+// Based on old method for retrieve console window handle:
+// https://web.archive.org/web/20070116020857/http://support.microsoft.com/kb/124103
+HWND LegacyGetConsoleWindow(void) {
+	#define MY_BUFSIZE 1001
+	#define MY_STAMPSIZE 22 //_4294967295_4294967295
+	HWND hwndFound;
+	WCHAR pszOldWindowTitle[MY_BUFSIZE + 1];
+	WCHAR pszNewWindowTitle[MY_BUFSIZE + MY_STAMPSIZE + 1];
+	WCHAR pszStamp[MY_STAMPSIZE + 1];
+
+	GetConsoleTitleW(pszOldWindowTitle, lenof(pszOldWindowTitle));
+	wsprintf(pszStamp, L"_%lu_%lu", GetTickCount(), GetCurrentProcessId());
+	wsprintf(pszNewWindowTitle, L"%ls%ls", pszOldWindowTitle, pszStamp);
+	SetConsoleTitleW(pszNewWindowTitle);
+	Sleep(40); // Ensure window title has been updated.
+	hwndFound = FindWindowW(NULL, pszNewWindowTitle);
+	SetConsoleTitleW(pszOldWindowTitle);
+	return(hwndFound);
+}
+
+HWND GetConsoleHwnd(void)
+{
+	if (!consoleHwnd) {
+		if (onWindowsTerminal) {
+			consoleHwnd = LegacyGetConsoleWindow();
+		} else {
+			consoleHwnd = GetConsoleWindow();
+		}
+	}
+	return consoleHwnd;
+}
+
 BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 
 	int pc;
@@ -379,6 +414,11 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 	LONG_PTR exstyle;
 
 	if (argc != 1) {
+		return FALSE;
+	}
+
+	hwnd = GetConsoleHwnd();
+	if (!hwnd) {
 		return FALSE;
 	}
 
@@ -391,8 +431,6 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 		alpha = (MAX_OPACITY_ALPHA * pc + MAX_OPACITY_PERCENT - 1)
 				/ MAX_OPACITY_PERCENT;
 	}
-
-	hwnd = GetConsoleWindow();
 
 	if (LOBYTE(GetVersion()) >= 10) { // is Windows 10 or greater
 		// Simulate wheel movements to keep the properties dialog in sync
@@ -419,18 +457,17 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 		exstyle |= WS_EX_LAYERED;
 		SetWindowLongPtr(hwnd, GWL_EXSTYLE, exstyle);
 	}
+
 	return SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
 }
 
 DWORD GetOpacity(LPWSTR buffer, DWORD size) {
 
-	HANDLE hwnd = GetConsoleWindow();
+	HANDLE hwnd = GetConsoleHwnd();
+	DWORD pc = MAX_OPACITY_PERCENT;
 	BYTE alpha;
-	DWORD pc;
 
-	if (!GetLayeredWindowAttributes(hwnd, NULL, &alpha, NULL)) {
-		pc = MAX_OPACITY_PERCENT;
-	} else {
+	if (hwnd && GetLayeredWindowAttributes(hwnd, NULL, &alpha, NULL)) {
 		pc = MAX_OPACITY_PERCENT * alpha / MAX_OPACITY_ALPHA;
 	}
 
