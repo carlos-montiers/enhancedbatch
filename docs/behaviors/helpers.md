@@ -2,7 +2,7 @@
 layout: default
 title: Helpers
 parent: Behaviors
-nav_order: 5
+nav_order: 6
 ---
 
 # Helpers
