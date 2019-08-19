@@ -30,4 +30,4 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Performance-booster for watching directories on Windows
 gem "wdm", "~> 0.1.0" if Gem.win_platform?
 
-gem 'rouge', :git => 'https://github.com/carlos-montiers/rouge.git'
+gem 'rouge', "~> 3.8.0"
