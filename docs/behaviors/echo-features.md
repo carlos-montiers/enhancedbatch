@@ -16,7 +16,7 @@ nav_order: 4
 
 ---
 
-EnhancedBatch add features to the echo command.
+Enhanced Batch add features to the echo command.
 
 ## Echo without new line
 Use the `;` character as separator of the echo command for not print a new line at the end

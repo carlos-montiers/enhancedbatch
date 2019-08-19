@@ -16,7 +16,7 @@ nav_order: 7
 
 ---
 
-EnhancedBatch helps to find errors printing automatically the name of the batch file and line number when an error occurs.
+Enhanced Batch helps to find errors printing automatically the name of the batch file and line number when an error occurs.
 
 See the extensions `@batchfile` and `@batchline`.
 

@@ -20,7 +20,7 @@ In Batch you can pass to a subroutine more than 9 parameters.
 
 If you want count the total number of parameters, or get a parameter after the index 9 is quick way of do it.
 
-EnhancedBatch provides helpers for that.
+Enhanced Batch provides helpers for that.
 
 ## Parameters Helpers
 `$#` returns the count of parameters.
@@ -46,7 +46,7 @@ Press any key to continue . . .
 ## Module Filename Helper
 Cmd provides the `%~f0` for get the module filename. But it can return wrong data in certain conditions if your batch script was executed enclosed in quotes. For example, if you change the current drive inside your script and after it you try get the module filename, it will use the current drive as the drive of the filename, that is wrong.
 
-EnhancedBatch provides reliably helpers:
+Enhanced Batch provides reliably helpers:
 
 - `$0;~` returns the module filename.
 - `$0;~x` returns the module extension.

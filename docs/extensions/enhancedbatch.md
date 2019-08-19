@@ -17,12 +17,12 @@ parent: Extensions
 
 ## get @enhancedbatch
 
-Retrieves a single integer number, such as `1`, with the purpose of test if the EnhancedBatch present is capable of running the batch file.
+Retrieves a single integer number, such as `1`, with the purpose of test if the Enhanced Batch present is capable of running the batch file.
 
 If the variable is not defined means the dll was not succesfully loaded.
 ```
 if not defined @enhancedbatch (
-echo EnhancedBatch was not loaded successfully
+echo Enhanced Batch was not loaded successfully
 goto :eof
 )
 ```
@@ -33,7 +33,7 @@ It will remain `1` if there's only bug fixes or a new version of CMD. It will be
 
 ```
 if %@enhancedbatch% lss 2 (
-echo Need new EnhancedBatch
+echo Need new Enhanced Batch
 goto :eof
 )
 ```

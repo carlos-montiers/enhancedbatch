@@ -13,10 +13,10 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: EnhancedBatch
+title: Enhanced Batch
 #email: cmontiers@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  EnhancedBatch is a solution to improve the functionality of your classic Windows batch files.
+  Enhanced Batch is a solution to improve the functionality of your classic Windows batch files.
 #baseurl: "/enhancedbatch" # the subpath of your site, e.g. /blog
 #url: "https://carlos-montiers.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 baseurl: "" # the subpath of your site, e.g. /blog

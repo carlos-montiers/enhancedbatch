@@ -7,7 +7,7 @@ nav_order: 5
 # Compatibility
 {: .no_toc }
 
-EnhancedBatch is compatible with almost all released `cmd.exe` versions.
+Enhanced Batch is compatible with almost all released `cmd.exe` versions.
 
 {: .fs-6 .fw-300 }
 

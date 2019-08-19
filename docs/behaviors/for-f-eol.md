@@ -18,7 +18,7 @@ nav_order: 8
 
 In For /F the default EOL or end of line character is `;`.
 
-EnhancedBatch sets it to NUL.
+Enhanced Batch sets it to NUL.
 
 This allow read by default all the lines of a text file.
 

@@ -2,14 +2,14 @@
 layout: default
 title: Home
 nav_order: 1
-description: "EnhancedBatch is a solution to improve the functionality of your classic Windows batch files."
+description: "Enhanced Batch is a solution to improve the functionality of your classic Windows batch files."
 permalink: /
 ---
 
-# EnhancedBatch
+# Enhanced Batch
 {: .fs-9 }
 
-EnhancedBatch is a solution to improve the functionality of your classic Windows batch files.
+Enhanced Batch is a solution to improve the functionality of your classic Windows batch files.
 {: .fs-6 .fw-300 }
 
 [Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/carlos-montiers/enhancedbatch){: .btn .fs-5 .mb-4 .mb-md-0 }
@@ -73,13 +73,13 @@ exit
 
 ### Dependencies
 
-EnhancedBatch requires the command interpreter for Windows (`cmd.exe`).
+Enhanced Batch requires the command interpreter for Windows (`cmd.exe`).
 
 ---
 
 ### About the project
 
-EnhancedBatch is:
+Enhanced Batch is:
 
 &copy; 2019 by [Carlos Montiers A.](https://github.com/carlos-montiers)
 
@@ -93,7 +93,7 @@ EnhancedBatch is:
 
 ### License
 
-EnhancedBatch is distributed by an [zlib license](https://github.com/carlos-montiers/enhancedbatch/blob/master/LICENSE.txt).
+Enhanced Batch is distributed by an [zlib license](https://github.com/carlos-montiers/enhancedbatch/blob/master/LICENSE.txt).
 
 ### Contributing
 

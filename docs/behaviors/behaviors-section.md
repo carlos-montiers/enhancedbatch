@@ -10,5 +10,5 @@ nav_order: 2
 {: .no_toc }
 
 
-EnhancedBatch changes some behaviors of the command interpreter.
+Enhanced Batch changes some behaviors of the command interpreter.
 {: .fs-6 .fw-300 }

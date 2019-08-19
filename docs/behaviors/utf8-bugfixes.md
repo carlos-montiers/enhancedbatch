@@ -22,6 +22,6 @@ Cmd have the next bugs using the utf-8 codepage:
 
 - You cannot run a batch file using utf-8 on windows xp.
 
-These bugs are fixed if you use enhancedbatch.
+These bugs are fixed if you use Enhanced Batch.
 
 {: .fs-6 .fw-300 }
