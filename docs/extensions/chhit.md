@@ -17,7 +17,7 @@ parent: Extensions
 
 ## get @chhit
 Get a key from the input keyboard buffer and return the character of it.
-If no key is found return 0
+If no key is found return -1.
 
 ```
 set "lastchar=!@chhit!"

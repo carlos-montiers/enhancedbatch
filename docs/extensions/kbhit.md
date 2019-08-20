@@ -17,7 +17,7 @@ parent: Extensions
 
 ## get @kbhit
 Get a key from the input keyboard buffer and return the code of it.
-If no key is found return -1
+If no key is found return -1.
 
 ```
 set "lastcode=!@kbhit!"
