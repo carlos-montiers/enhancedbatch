@@ -1,6 +1,6 @@
 @echo off
 
-@rundll32.exe enhancedbatch_%processor_architecture%.dll,load
+rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
 If Not "%@enhancedbatch%"=="2" (
 Echo Something failed
 Goto :Eof
