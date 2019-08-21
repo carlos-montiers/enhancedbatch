@@ -386,7 +386,7 @@ BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
 
 // Based on old method for retrieve console window handle:
 // https://web.archive.org/web/20070116020857/http://support.microsoft.com/kb/124103
-HWND LegacyGetConsoleWindow(void) {
+HWND GetConsoleWindowInTab(void) {
 	#define MY_BUFSIZE 1016
 	#define MY_STAMPSIZE 7	// digits required for 2**32 in base 32
 	HWND hwndFound;
@@ -417,7 +417,7 @@ HWND GetConsoleHwnd(void)
 {
 	if (!consoleHwnd) {
 		if (onWindowsTerminal) {
-			consoleHwnd = LegacyGetConsoleWindow();
+			consoleHwnd = GetConsoleWindowInTab();
 		} else {
 			consoleHwnd = GetConsoleWindow();
 		}
