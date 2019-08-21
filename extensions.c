@@ -32,6 +32,9 @@
 
 extern LPVOID cmd_end;
 
+extern BOOL onWindowsTerminal;
+extern HWND consoleHwnd;
+
 static DWORD toString(DWORD num, LPWSTR buffer, DWORD size) {
 	return snwprintf(buffer, size, L"%d", num);
 }
@@ -371,6 +374,57 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
 	return toString(-1, buffer, size);
 }
 
+BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
+	WCHAR buf[MAX_PATH];
+	GetClassName(hwnd, buf, MAX_PATH);
+	if (wcscmp(buf, L"Windows.UI.Composition.DesktopWindowContentBridge") == 0) {
+		*(HWND *) lParam = hwnd;
+		return FALSE;
+	}
+	return TRUE;
+}
+
+// Based on old method for retrieve console window handle:
+// https://web.archive.org/web/20070116020857/http://support.microsoft.com/kb/124103
+HWND LegacyGetConsoleWindow(void) {
+	#define MY_BUFSIZE 1016
+	#define MY_STAMPSIZE 7	// digits required for 2**32 in base 32
+	HWND hwndFound;
+	WCHAR pszWindowTitle[MY_BUFSIZE + MY_STAMPSIZE + 1];
+	DWORD oldlen, newlen, pid;
+
+	newlen = oldlen = GetConsoleTitle(pszWindowTitle, MY_BUFSIZE);
+	pid = GetCurrentProcessId();
+	// Generate a unique title by converting the PID to base 32,
+	// using characters U+0080..U+009F, which are not displayed.
+	do {
+		pszWindowTitle[newlen++] = (pid % 32) + 0x80;
+		pid /= 32;
+	} while (pid != 0);
+	pszWindowTitle[newlen++] = L'\0';
+	SetConsoleTitle(pszWindowTitle);
+	Sleep(40);	// Ensure window title has been updated.
+	hwndFound = FindWindow(NULL, pszWindowTitle);
+	pszWindowTitle[oldlen++] = L'\0';
+	SetConsoleTitle(pszWindowTitle);
+	if (hwndFound) {
+		EnumChildWindows(hwndFound, EnumChildProc, (LPARAM) &hwndFound);
+	}
+	return hwndFound;
+}
+
+HWND GetConsoleHwnd(void)
+{
+	if (!consoleHwnd) {
+		if (onWindowsTerminal) {
+			consoleHwnd = LegacyGetConsoleWindow();
+		} else {
+			consoleHwnd = GetConsoleWindow();
+		}
+	}
+	return consoleHwnd;
+}
+
 BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 
 	int pc;
@@ -379,6 +433,11 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 	LONG_PTR exstyle;
 
 	if (argc != 1) {
+		return FALSE;
+	}
+
+	hwnd = GetConsoleHwnd();
+	if (!hwnd) {
 		return FALSE;
 	}
 
@@ -391,8 +450,6 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 		alpha = (MAX_OPACITY_ALPHA * pc + MAX_OPACITY_PERCENT - 1)
 				/ MAX_OPACITY_PERCENT;
 	}
-
-	hwnd = GetConsoleWindow();
 
 	if (LOBYTE(GetVersion()) >= 10) { // is Windows 10 or greater
 		// Simulate wheel movements to keep the properties dialog in sync
@@ -419,18 +476,17 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 		exstyle |= WS_EX_LAYERED;
 		SetWindowLongPtr(hwnd, GWL_EXSTYLE, exstyle);
 	}
+
 	return SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
 }
 
 DWORD GetOpacity(LPWSTR buffer, DWORD size) {
 
-	HANDLE hwnd = GetConsoleWindow();
+	HANDLE hwnd = GetConsoleHwnd();
+	DWORD pc = MAX_OPACITY_PERCENT;
 	BYTE alpha;
-	DWORD pc;
 
-	if (!GetLayeredWindowAttributes(hwnd, NULL, &alpha, NULL)) {
-		pc = MAX_OPACITY_PERCENT;
-	} else {
+	if (hwnd && GetLayeredWindowAttributes(hwnd, NULL, &alpha, NULL)) {
 		pc = MAX_OPACITY_PERCENT * alpha / MAX_OPACITY_ALPHA;
 	}
 

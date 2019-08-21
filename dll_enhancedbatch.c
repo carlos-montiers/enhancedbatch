@@ -67,6 +67,8 @@ DWORD eb_value; 		// 1 for basic, 2 for full
 BOOL global;			// launched outside of a batch
 LPSTR AnsiBuf;			// batch file buffer
 LPVOID cmd_end; 		// end of the CMD.EXE image
+BOOL onWindowsTerminal; 		// running on Windows Terminal
+HWND consoleHwnd; 		// Hwnd of the console
 
 #define STRINGBUFFERMAX 32768
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
@@ -1569,6 +1571,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 		}
 		setChars();
 		hookCmd();
+		onWindowsTerminal = _wgetenv(L"WT_SESSION") != NULL;
 		DisableThreadLibraryCalls(hInstance);
 	} else if (dwReason == DLL_PROCESS_DETACH && variables != NULL) {
 		unhook();
