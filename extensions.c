@@ -374,24 +374,43 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
 	return toString(-1, buffer, size);
 }
 
+BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
+	WCHAR buf[MAX_PATH];
+	GetClassName(hwnd, buf, MAX_PATH);
+	if (wcscmp(buf, L"Windows.UI.Composition.DesktopWindowContentBridge") == 0) {
+		*(HWND *) lParam = hwnd;
+		return FALSE;
+	}
+	return TRUE;
+}
+
 // Based on old method for retrieve console window handle:
 // https://web.archive.org/web/20070116020857/http://support.microsoft.com/kb/124103
 HWND LegacyGetConsoleWindow(void) {
-	#define MY_BUFSIZE 1001
-	#define MY_STAMPSIZE 22 //_4294967295_4294967295
+	#define MY_BUFSIZE 1016
+	#define MY_STAMPSIZE 7	// digits required for 2**32 in base 32
 	HWND hwndFound;
-	WCHAR pszOldWindowTitle[MY_BUFSIZE + 1];
-	WCHAR pszNewWindowTitle[MY_BUFSIZE + MY_STAMPSIZE + 1];
-	WCHAR pszStamp[MY_STAMPSIZE + 1];
+	WCHAR pszWindowTitle[MY_BUFSIZE + MY_STAMPSIZE + 1];
+	DWORD oldlen, newlen, pid;
 
-	GetConsoleTitleW(pszOldWindowTitle, lenof(pszOldWindowTitle));
-	wsprintf(pszStamp, L"_%lu_%lu", GetTickCount(), GetCurrentProcessId());
-	wsprintf(pszNewWindowTitle, L"%ls%ls", pszOldWindowTitle, pszStamp);
-	SetConsoleTitleW(pszNewWindowTitle);
-	Sleep(40); // Ensure window title has been updated.
-	hwndFound = FindWindowW(NULL, pszNewWindowTitle);
-	SetConsoleTitleW(pszOldWindowTitle);
-	return(hwndFound);
+	newlen = oldlen = GetConsoleTitle(pszWindowTitle, MY_BUFSIZE);
+	pid = GetCurrentProcessId();
+	// Generate a unique title by converting the PID to base 32,
+	// using characters U+0080..U+009F, which are not displayed.
+	do {
+		pszWindowTitle[newlen++] = (pid % 32) + 0x80;
+		pid /= 32;
+	} while (pid != 0);
+	pszWindowTitle[newlen++] = L'\0';
+	SetConsoleTitle(pszWindowTitle);
+	Sleep(40);	// Ensure window title has been updated.
+	hwndFound = FindWindow(NULL, pszWindowTitle);
+	pszWindowTitle[oldlen++] = L'\0';
+	SetConsoleTitle(pszWindowTitle);
+	if (hwndFound) {
+		EnumChildWindows(hwndFound, EnumChildProc, (LPARAM) &hwndFound);
+	}
+	return hwndFound;
 }
 
 HWND GetConsoleHwnd(void)
