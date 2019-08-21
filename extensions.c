@@ -90,7 +90,7 @@ DWORD Kbhit(LPWSTR buffer, DWORD size) {
 	if (_kbhit()) {
 		return Getkb(buffer, size);
 	} else {
-		return toString(0, buffer, size);
+		return toString(-1, buffer, size);
 	}
 }
 
