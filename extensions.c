@@ -487,17 +487,17 @@ DWORD GetConsoleCursor(LPWSTR buffer, DWORD size) {
 	}
 }
 
-DWORD GetCodePage(LPWSTR buffer, DWORD size) {
+DWORD GetOutputCodePage(LPWSTR buffer, DWORD size) {
 	return toString(GetConsoleOutputCP(), buffer, size);
 }
 
-BOOL SetCodePage(int argc, LPCWSTR argv[]) {
+DWORD GetInputCodePage(LPWSTR buffer, DWORD size) {
+	return toString(GetConsoleCP(), buffer, size);
+}
+
+int cpFromCommandLine(int argc, LPCWSTR argv[]) {
 
 	int cp;
-
-	if (argc > 1) {
-		return FALSE;
-	}
 
 	if (argc == 0 || _wcsicmp(*argv, L"oem") == 0) {
 		cp = GetOEMCP();
@@ -510,6 +510,46 @@ BOOL SetCodePage(int argc, LPCWSTR argv[]) {
 	} else {
 		toNumber(&cp, 1, argv);
 	}
+
+	return cp;
+}
+
+BOOL SetOutputCodePage(int argc, LPCWSTR argv[]) {
+
+	int cp;
+
+	if (argc > 1) {
+		return FALSE;
+	}
+
+	cp = cpFromCommandLine(argc, argv);
+
+	return SetConsoleOutputCP(cp);
+}
+
+BOOL SetInputCodePage(int argc, LPCWSTR argv[]) {
+
+	int cp;
+
+	if (argc > 1) {
+		return FALSE;
+	}
+
+	cp = cpFromCommandLine(argc, argv);
+
+	return SetConsoleCP(cp);
+}
+
+BOOL SetCodePage(int argc, LPCWSTR argv[]) {
+
+	int cp;
+
+	if (argc > 1) {
+		return FALSE;
+	}
+
+	cp = cpFromCommandLine(argc, argv);
+
 	if (!SetConsoleOutputCP(cp)) {
 		return FALSE;
 	}
