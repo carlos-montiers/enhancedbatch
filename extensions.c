@@ -374,7 +374,10 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
 	return toString(-1, buffer, size);
 }
 
-BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
+// Search the Terminal windows for the tab window itself.  This lets us make
+// CMD transparent, but not Terminal as a whole.  It does, unfortunately (or
+// fortunately, depending on your point of view), apply to all tabs, though.
+BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam) {
 	WCHAR buf[MAX_PATH];
 	GetClassName(hwnd, buf, MAX_PATH);
 	if (wcscmp(buf, L"Windows.UI.Composition.DesktopWindowContentBridge") == 0) {
@@ -408,7 +411,7 @@ HWND GetConsoleWindowInTab(void) {
 	pszWindowTitle[oldlen++] = L'\0';
 	SetConsoleTitle(pszWindowTitle);
 	if (hwndFound) {
-		EnumChildWindows(hwndFound, EnumChildProc, (LPARAM) &hwndFound);
+		EnumChildWindows(hwndFound, FindTabWindow, (LPARAM) &hwndFound);
 	}
 	return hwndFound;
 }
