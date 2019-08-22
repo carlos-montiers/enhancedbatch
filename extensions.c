@@ -1133,7 +1133,7 @@ DWORD getVersionRevision(void)
 
 DWORD GetEBVersion(LPWSTR buffer, DWORD size)
 {
-	return toString(BEVERSION, buffer, size);
+	return toString(EBVERSION, buffer, size);
 }
 
 DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size)

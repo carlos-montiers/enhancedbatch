@@ -25,7 +25,7 @@
 
 */
 
-#define BEVERSION 1
+#define EBVERSION 1
 
 #ifndef UNICODE
 #define UNICODE
