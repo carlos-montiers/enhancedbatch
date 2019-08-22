@@ -227,8 +227,8 @@ struct sSetExt setExtensionList[] = {
 	{ NULL, 				NULL, 0 }
 };
 
-void setVar(LPCWSTR var, LPCWSTR val) {
-
+void setVar(LPCWSTR var, LPCWSTR val)
+{
 	khint_t k;
 	int absent;
 
@@ -241,7 +241,8 @@ void setVar(LPCWSTR var, LPCWSTR val) {
 	kh_val(variables, k) = _wcsdup(val);
 }
 
-void setChars(void) {
+void setChars(void)
+{
 	setVar(L"$LF",	   L"\n");
 	setVar(L"$CR",	   L"\r");
 	setVar(L"$CRLF",   L"\r\n");
@@ -266,7 +267,8 @@ void setChars(void) {
 	setVar(L"$EQ",	   L"=");
 }
 
-DWORD getVar(LPCWSTR lpName) {
+DWORD getVar(LPCWSTR lpName)
+{
 	if (lpName == NULL) {
 		SetLastError(ERROR_ENVVAR_NOT_FOUND);
 		return 0;
@@ -358,7 +360,8 @@ DWORD getVar(LPCWSTR lpName) {
 	return GetEnvironmentVariable(lpName, stringBuffer, STRINGBUFFERMAX);
 }
 
-DWORD ltrim(DWORD length, LPCWSTR delim) {
+DWORD ltrim(DWORD length, LPCWSTR delim)
+{
 	if (length) {
 		LPWSTR p = stringBuffer, end = p + length;
 		while (wcschr(delim, *p)) {
@@ -375,7 +378,8 @@ DWORD ltrim(DWORD length, LPCWSTR delim) {
 	return length;
 }
 
-DWORD rtrim(DWORD length, LPCWSTR delim) {
+DWORD rtrim(DWORD length, LPCWSTR delim)
+{
 	LPWSTR p = stringBuffer;
 	while (length > 0 && wcschr(delim, p[length-1])) {
 		--length;
@@ -385,8 +389,8 @@ DWORD rtrim(DWORD length, LPCWSTR delim) {
 }
 
 DWORD WINAPI
-MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize) {
-
+MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
+{
 	DWORD length, pad, size;
 	BOOL zero, right;
 	LPWSTR mod, end, var, varcpy, spad, padend;
@@ -570,7 +574,8 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize) {
 }
 
 BOOL WINAPI
-MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue) {
+MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
+{
 	if (lpName != NULL) {
 
 		if (lpValue && *lpValue == '@') {
@@ -636,7 +641,8 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue) {
 	return SetEnvironmentVariable(lpName, lpValue);
 }
 
-void WriteMemory(LPVOID dst, LPVOID src, int size) {
+void WriteMemory(LPVOID dst, LPVOID src, int size)
+{
 	DWORD protect;
 	VirtualProtect(dst, size, PAGE_READWRITE, &protect);
 	if ((DWORD_PTR) src < 256) {
@@ -647,8 +653,8 @@ void WriteMemory(LPVOID dst, LPVOID src, int size) {
 	VirtualProtect(dst, size, protect, &protect);
 }
 
-DWORD WINAPI MyEcho(struct cmdnode *node) {
-
+DWORD WINAPI MyEcho(struct cmdnode *node)
+{
 	BOOL modified_newline = FALSE;
 	BOOL suppressed_quotes = FALSE;
 	int  arg_ofs;
@@ -690,8 +696,8 @@ DWORD WINAPI MyEcho(struct cmdnode *node) {
 	return ret;
 }
 
-BOOL DwFlagsForCodepageMustBeZero(UINT CodePage) {
-
+BOOL DwFlagsForCodepageMustBeZero(UINT CodePage)
+{
 	if (!CodePage) {
 		CodePage = GetACP();
 	}
@@ -724,8 +730,8 @@ BOOL DwFlagsForCodepageMustBeZero(UINT CodePage) {
 
 int WINAPI
 MyMultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCCH lpMultiByteStr,
-	int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar) {
-
+	int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar)
+{
 	if (dwFlags != 0 && DwFlagsForCodepageMustBeZero(CodePage)) {
 		dwFlags = 0;
 	}
@@ -734,8 +740,8 @@ MyMultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCCH lpMultiByteStr,
 		lpWideCharStr, cchWideChar);
 }
 
-UINT MyLexText(void) {
-
+UINT MyLexText(void)
+{
 	LPWSTR buf = pTmpBuf;
 
 	for (;;) {
@@ -765,14 +771,15 @@ UINT MyLexText(void) {
 }
 
 #ifndef _WIN64
-void MyLexTextESI(void) {
+void MyLexTextESI(void)
+{
 	asm("call _MyLexText");
 	asm("movl %eax,%esi");
 }
 #endif
 
-void setBatchLine(DWORD pos) {
-
+void setBatchLine(DWORD pos)
+{
 	khint_t k;
 	int absent;
 
@@ -783,8 +790,8 @@ void setBatchLine(DWORD pos) {
 	}
 }
 
-DWORD getBatchLine() {
-
+DWORD getBatchLine()
+{
 	khint_t k;
 	DWORD pos, lnum;
 	HANDLE hFile, hMap;
@@ -830,7 +837,8 @@ DWORD getBatchLine() {
 	return lnum;
 }
 
-int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d) {
+int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
+{
 	DWORD lnum = (batchfile) ? getBatchLine() : 0;
 	if (lnum && (lnum != last_lnum || last_bat != *pCurrentBatchFile)) {
 		LPVOID args = &stringBuffer;
@@ -873,23 +881,26 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d) {
 }
 
 #ifndef _WIN64
-int __stdcall stdPutStdErrMsg(UINT a, int b, UINT c, va_list *d) {
+int __stdcall stdPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
+{
 	return MyPutStdErrMsg(a, b, c, d);
 }
 
-int __fastcall fastPutStdErrMsg(UINT a, int b, UINT c, va_list *d) {
+int __fastcall fastPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
+{
 	return MyPutStdErrMsg(a, b, c, d);
 }
 
-int __fastcall fastPutStdErrMsg62(int b, va_list *d, UINT a, UINT c) {
+int __fastcall fastPutStdErrMsg62(int b, va_list *d, UINT a, UINT c)
+{
 	return MyPutStdErrMsg(a, b, c, d);
 }
 #endif
 
 BOOL WINAPI
 MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
-		   LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped) {
-
+		   LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)
+{
 	BOOL ret, utf8file;
 
 	if (!AnsiBuf) {
@@ -975,8 +986,8 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 	return ret;
 }
 
-BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
-
+BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
+{
 	if (_wcsnicmp(lpFileName, L":range*", 7) == 0) {
 		LPCWSTR paramsLine = lpFileName + 7;
 		int args, arg[3];
@@ -1015,8 +1026,8 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 	return FALSE;
 }
 
-BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
-
+BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
+{
 	if (wcscmp(lpFileName, L":*") == 0) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 		findForStack[++findForStackTop] = lpFindFileData;
@@ -1029,7 +1040,8 @@ BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 	return FALSE;
 }
 
-BOOL findFor(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
+BOOL findFor(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
+{
 	if (*lpFileName == L':' && findForStackTop < FINDSTACKMAX - 1) {
 		if (findInfinite(lpFileName, lpFindFileData)) {
 			return TRUE;
@@ -1047,7 +1059,8 @@ MyFindFirstFileExW(LPCWSTR lpFileName,
 				   LPVOID lpFindFileData,
 				   FINDEX_SEARCH_OPS fSearchOp,
 				   LPVOID lpSearchFilter,
-				   DWORD dwAdditionalFlags) {
+				   DWORD dwAdditionalFlags)
+{
 	if (findFor(lpFileName, lpFindFileData)) {
 		return (HANDLE) 1;
 	}
@@ -1056,7 +1069,8 @@ MyFindFirstFileExW(LPCWSTR lpFileName,
 }
 
 HANDLE WINAPI
-MyFindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
+MyFindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
+{
 	if (findFor(lpFileName, lpFindFileData)) {
 		return (HANDLE) 1;
 	}
@@ -1064,8 +1078,8 @@ MyFindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) {
 }
 
 BOOL WINAPI
-MyFindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData) {
-
+MyFindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData)
+{
 	if (findForStackTop >= 0 && lpFindFileData == findForStack[findForStackTop]) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 
@@ -1093,7 +1107,8 @@ MyFindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData) {
 	return FindNextFileW(hFindFile, lpFindFileData);
 }
 
-BOOL Next(int argc, LPCWSTR argv[]) {
+BOOL Next(int argc, LPCWSTR argv[])
+{
 	if (findForStackTop == -1) {
 		return FALSE;
 	}
@@ -1111,19 +1126,22 @@ BOOL Next(int argc, LPCWSTR argv[]) {
 }
 
 DWORD WINAPI
-FreeLibraryThread(LPVOID param) {
+FreeLibraryThread(LPVOID param)
+{
 	FreeLibraryAndExitThread(hDllInstance, 0);
 	return 0;
 }
 
-BOOL Unload(int argc, LPCWSTR argv[]) {
+BOOL Unload(int argc, LPCWSTR argv[])
+{
 	unhook();
 	CloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
 	return TRUE;
 }
 
 BOOL WINAPI
-MyCmdBatNotification(BOOL start) {
+MyCmdBatNotification(BOOL start)
+{
 	BOOL rc = CmdBatNotification(start);
 
 	if (start) {
@@ -1157,7 +1175,8 @@ typedef struct {
 void HookThunks(PHookFn Hooks,
 				PIMAGE_DOS_HEADER pDosHeader,
 				PIMAGE_THUNK_DATA pThunk,
-				PIMAGE_THUNK_DATA pNameThunk) {
+				PIMAGE_THUNK_DATA pNameThunk)
+{
 	PHookFn hook;
 
 	// Blast through the table of import names
@@ -1200,8 +1219,8 @@ void HookThunks(PHookFn Hooks,
 //-----------------------------------------------------------------------------
 
 BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept calls from
-		PHookFn Hooks	// Functions to replace
-		) {
+				   PHookFn Hooks)		// Functions to replace
+{
 	PIMAGE_DOS_HEADER pDosHeader;
 	PIMAGE_NT_HEADERS pNTHeader;
 	PIMAGE_IMPORT_DESCRIPTOR pImportDesc;
@@ -1241,8 +1260,8 @@ BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 }
 
 BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept calls from
-		PHookFn Hooks	// Functions to replace
-		) {
+					 PHookFn Hooks) 	  // Functions to replace
+{
 	PIMAGE_DOS_HEADER pDosHeader;
 	PIMAGE_NT_HEADERS pNTHeader;
 	PIMAGE_DELAYLOAD_DESCRIPTOR pImportDesc;
@@ -1301,8 +1320,8 @@ DelayedHooks[] = {
 	{ NULL, 0, 0 },
 };
 
-void hookCmd(void) {
-
+void hookCmd(void)
+{
 	PIMAGE_DOS_HEADER pDosHeader;
 	PIMAGE_NT_HEADERS pNTHeader;
 	LPBYTE cmd;
@@ -1547,7 +1566,8 @@ void hookCmd(void) {
 //-----------------------------------------------------------------------------
 
 BOOL WINAPI
-DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+{
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		variables = kh_init(wstr);
 		batch_lnums = kh_init(line);
@@ -1580,7 +1600,8 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 	return TRUE;
 }
 
-void unhook(void) {
+void unhook(void)
+{
 	khint_t k;
 
 	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
@@ -1616,7 +1637,8 @@ void unhook(void) {
 
 // Search each process in the snapshot for id.
 BOOL find_proc_id(HANDLE snap, DWORD id, LPPROCESSENTRY32 pe,
-		LPPROCESSENTRY32 ppe) {
+		LPPROCESSENTRY32 ppe)
+{
 	BOOL fOk;
 
 	pe->dwSize = sizeof(PROCESSENTRY32);
@@ -1630,7 +1652,8 @@ BOOL find_proc_id(HANDLE snap, DWORD id, LPPROCESSENTRY32 pe,
 }
 
 // Obtain the process identifier of the parent process; verify the architecture.
-DWORD GetParentProcessId() {
+DWORD GetParentProcessId()
+{
 	HANDLE hSnap, ph;
 	PROCESSENTRY32 pe, ppe;
 	BOOL parent_wow64, me_wow64;
@@ -1675,7 +1698,8 @@ DWORD GetParentProcessId() {
 }
 
 // Determine if ENV is already installed in the parent.
-HMODULE IsInstalled(DWORD id) {
+HMODULE IsInstalled(DWORD id)
+{
 	HANDLE hModuleSnap;
 	MODULEENTRY32 me;
 	BOOL fOk;
@@ -1706,7 +1730,8 @@ HMODULE IsInstalled(DWORD id) {
 }
 
 // Inject code into the target process to load our DLL.
-void Inject(HANDLE hProcess) {
+void Inject(HANDLE hProcess)
+{
 	DWORD len;
 	LPVOID mem;
 	LPVOID LLW;
@@ -1724,7 +1749,8 @@ void Inject(HANDLE hProcess) {
 }
 
 BOOL WINAPI
-_dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved) {
+_dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
+{
 	BOOL bRet;
 	LPWSTR name;
 
@@ -1740,7 +1766,8 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved) {
 }
 
 __declspec(dllexport)
-void Load(void) {
+void Load(void)
+{
 	DWORD cmdpid = GetParentProcessId();
 
 	if (cmdpid != 0 && IsInstalled(cmdpid) == NULL) {
@@ -1753,6 +1780,7 @@ void Load(void) {
 }
 
 __declspec(dllexport)
-void load(void) {
+void load(void)
+{
 	Load();
 }

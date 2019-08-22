@@ -35,18 +35,20 @@ extern LPVOID cmd_end;
 extern BOOL onWindowsTerminal;
 extern HWND consoleHwnd;
 
-static DWORD toString(DWORD num, LPWSTR buffer, DWORD size) {
+static DWORD toString(DWORD num, LPWSTR buffer, DWORD size)
+{
 	return snwprintf(buffer, size, L"%d", num);
 }
 
-static void toNumber(int *num, int argc, LPCWSTR argv[]) {
+static void toNumber(int *num, int argc, LPCWSTR argv[])
+{
 	while (argc-- > 0) {
 		*num++ = (int) wcstol(*argv++, NULL, 10);
 	}
 }
 
-DWORD Getch(LPWSTR buffer, DWORD size) {
-
+DWORD Getch(LPWSTR buffer, DWORD size)
+{
 	int code;
 
 	while (!(code = _getwch()) || (0xE0 == code)) {
@@ -58,8 +60,8 @@ DWORD Getch(LPWSTR buffer, DWORD size) {
 	return 1;
 }
 
-DWORD Chhit(LPWSTR buffer, DWORD size) {
-
+DWORD Chhit(LPWSTR buffer, DWORD size)
+{
 	int code;
 
 	if (_kbhit()) {
@@ -75,8 +77,8 @@ DWORD Chhit(LPWSTR buffer, DWORD size) {
 	}
 }
 
-DWORD Getkb(LPWSTR buffer, DWORD size) {
-
+DWORD Getkb(LPWSTR buffer, DWORD size)
+{
 	int code;
 
 	code = _getwch();
@@ -88,8 +90,8 @@ DWORD Getkb(LPWSTR buffer, DWORD size) {
 	return toString(code, buffer, size);
 }
 
-DWORD Kbhit(LPWSTR buffer, DWORD size) {
-
+DWORD Kbhit(LPWSTR buffer, DWORD size)
+{
 	if (_kbhit()) {
 		return Getkb(buffer, size);
 	} else {
@@ -97,8 +99,8 @@ DWORD Kbhit(LPWSTR buffer, DWORD size) {
 	}
 }
 
-void setPosition(int row, int column) {
-
+void setPosition(int row, int column)
+{
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	HANDLE hOut;
 	COORD screen_max;
@@ -136,8 +138,8 @@ void setPosition(int row, int column) {
 	CloseHandle(hOut);
 }
 
-BOOL SetPosition(int argc, LPCWSTR argv[]) {
-
+BOOL SetPosition(int argc, LPCWSTR argv[])
+{
 	int num[2];
 
 	if (argc != 2) {
@@ -150,8 +152,8 @@ BOOL SetPosition(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-COORD getPosition(void) {
-
+COORD getPosition(void)
+{
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	HANDLE hOut;
 
@@ -166,16 +168,16 @@ COORD getPosition(void) {
 	return csbi.dwCursorPosition;
 }
 
-DWORD GetPosition(LPWSTR buffer, DWORD size) {
-
+DWORD GetPosition(LPWSTR buffer, DWORD size)
+{
 	COORD position;
 
 	position = getPosition();
 	return snwprintf(buffer, size, L"%d %d", position.Y, position.X);
 }
 
-BOOL SetRow(int argc, LPCWSTR argv[]) {
-
+BOOL SetRow(int argc, LPCWSTR argv[])
+{
 	COORD cur;
 	int row;
 
@@ -190,12 +192,13 @@ BOOL SetRow(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetRow(LPWSTR buffer, DWORD size) {
+DWORD GetRow(LPWSTR buffer, DWORD size)
+{
 	return toString(getPosition().Y, buffer, size);
 }
 
-BOOL SetColumn(int argc, LPCWSTR argv[]) {
-
+BOOL SetColumn(int argc, LPCWSTR argv[])
+{
 	COORD cur;
 	int column;
 
@@ -210,12 +213,13 @@ BOOL SetColumn(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetColumn(LPWSTR buffer, DWORD size) {
+DWORD GetColumn(LPWSTR buffer, DWORD size)
+{
 	return toString(getPosition().X, buffer, size);
 }
 
-COORD getSize(void) {
-
+COORD getSize(void)
+{
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	HANDLE hOut;
 	COORD size;
@@ -230,24 +234,26 @@ COORD getSize(void) {
 	return size;
 }
 
-DWORD GetSize(LPWSTR buffer, DWORD size) {
-
+DWORD GetSize(LPWSTR buffer, DWORD size)
+{
 	COORD csize;
 
 	csize = getSize();
 	return snwprintf(buffer, size, L"%d %d", csize.Y, csize.X);
 }
 
-DWORD GetHeight(LPWSTR buffer, DWORD size) {
+DWORD GetHeight(LPWSTR buffer, DWORD size)
+{
 	return toString(getSize().Y, buffer, size);
 }
 
-DWORD GetWidth(LPWSTR buffer, DWORD size) {
+DWORD GetWidth(LPWSTR buffer, DWORD size)
+{
 	return toString(getSize().X, buffer, size);
 }
 
-BOOL SetColor(int argc, LPCWSTR argv[]) {
-
+BOOL SetColor(int argc, LPCWSTR argv[])
+{
 	HANDLE hOut;
 	WORD value;
 	BOOL ret;
@@ -266,8 +272,8 @@ BOOL SetColor(int argc, LPCWSTR argv[]) {
 	return ret;
 }
 
-DWORD GetColor(LPWSTR buffer, DWORD size) {
-
+DWORD GetColor(LPWSTR buffer, DWORD size)
+{
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	HANDLE hOut;
 
@@ -279,8 +285,8 @@ DWORD GetColor(LPWSTR buffer, DWORD size) {
 	return snwprintf(buffer, size, L"%X", csbi.wAttributes);
 }
 
-BOOL WaitMilliseconds(int argc, LPCWSTR argv[]) {
-
+BOOL WaitMilliseconds(int argc, LPCWSTR argv[])
+{
 	int milliseconds;
 
 	if (argc != 1) {
@@ -302,7 +308,8 @@ static LARGE_INTEGER hi_timer_begin, hi_timer_end, hi_frequency;
 static BOOL lo_timer_running, hi_timer_running;
 static BOOL lo_timer_started, hi_timer_started;
 
-BOOL SetLoTimer(int argc, LPCWSTR argv[]) {
+BOOL SetLoTimer(int argc, LPCWSTR argv[])
+{
 	if (argc > 1) {
 		return FALSE;
 	}
@@ -322,7 +329,8 @@ BOOL SetLoTimer(int argc, LPCWSTR argv[]) {
 	return FALSE;
 }
 
-BOOL SetHiTimer(int argc, LPCWSTR argv[]) {
+BOOL SetHiTimer(int argc, LPCWSTR argv[])
+{
 	if (argc > 1) {
 		return FALSE;
 	}
@@ -351,7 +359,8 @@ BOOL SetHiTimer(int argc, LPCWSTR argv[]) {
 	return FALSE;
 }
 
-DWORD GetTimer(LPWSTR buffer, DWORD size) {
+DWORD GetTimer(LPWSTR buffer, DWORD size)
+{
 	if (lo_timer_started) {
 		DWORD end = lo_timer_running ? GetTickCount() : lo_timer_end;
 		return toString(end - lo_timer_begin, buffer, size);
@@ -359,7 +368,8 @@ DWORD GetTimer(LPWSTR buffer, DWORD size) {
 	return toString(-1, buffer, size);
 }
 
-DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
+DWORD GetHiTimer(LPWSTR buffer, DWORD size)
+{
 	if (hi_timer_started) {
 		LARGE_INTEGER end;
 		if (hi_timer_running) {
@@ -377,7 +387,8 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size) {
 // Search the Terminal windows for the tab window itself.  This lets us make
 // CMD transparent, but not Terminal as a whole.  It does, unfortunately (or
 // fortunately, depending on your point of view), apply to all tabs, though.
-BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam) {
+BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam)
+{
 	WCHAR buf[MAX_PATH];
 	GetClassName(hwnd, buf, MAX_PATH);
 	if (wcscmp(buf, L"Windows.UI.Composition.DesktopWindowContentBridge") == 0) {
@@ -389,7 +400,8 @@ BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam) {
 
 // Based on old method for retrieve console window handle:
 // https://web.archive.org/web/20070116020857/http://support.microsoft.com/kb/124103
-HWND GetConsoleWindowInTab(void) {
+HWND GetConsoleWindowInTab(void)
+{
 	#define MY_BUFSIZE 1016
 	#define MY_STAMPSIZE 7	// digits required for 2**32 in base 32
 	HWND hwndFound;
@@ -428,8 +440,8 @@ HWND GetConsoleHwnd(void)
 	return consoleHwnd;
 }
 
-BOOL SetOpacity(int argc, LPCWSTR argv[]) {
-
+BOOL SetOpacity(int argc, LPCWSTR argv[])
+{
 	int pc;
 	BYTE alpha;
 	HANDLE hwnd;
@@ -483,8 +495,8 @@ BOOL SetOpacity(int argc, LPCWSTR argv[]) {
 	return SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
 }
 
-DWORD GetOpacity(LPWSTR buffer, DWORD size) {
-
+DWORD GetOpacity(LPWSTR buffer, DWORD size)
+{
 	HANDLE hwnd = GetConsoleHwnd();
 	DWORD pc = MAX_OPACITY_PERCENT;
 	BYTE alpha;
@@ -496,8 +508,8 @@ DWORD GetOpacity(LPWSTR buffer, DWORD size) {
 	return toString(pc, buffer, size);
 }
 
-BOOL SetConsoleCursor(int argc, LPCWSTR argv[]) {
-
+BOOL SetConsoleCursor(int argc, LPCWSTR argv[])
+{
 	CONSOLE_CURSOR_INFO cci;
 	HANDLE hOut;
 	int iValue;
@@ -529,8 +541,8 @@ BOOL SetConsoleCursor(int argc, LPCWSTR argv[]) {
 	return ret;
 }
 
-DWORD GetConsoleCursor(LPWSTR buffer, DWORD size) {
-
+DWORD GetConsoleCursor(LPWSTR buffer, DWORD size)
+{
 	CONSOLE_CURSOR_INFO cci;
 	HANDLE hOut;
 
@@ -546,16 +558,18 @@ DWORD GetConsoleCursor(LPWSTR buffer, DWORD size) {
 	}
 }
 
-DWORD GetOutputCodePage(LPWSTR buffer, DWORD size) {
+DWORD GetOutputCodePage(LPWSTR buffer, DWORD size)
+{
 	return toString(GetConsoleOutputCP(), buffer, size);
 }
 
-DWORD GetInputCodePage(LPWSTR buffer, DWORD size) {
+DWORD GetInputCodePage(LPWSTR buffer, DWORD size)
+{
 	return toString(GetConsoleCP(), buffer, size);
 }
 
-int cpFromCommandLine(int argc, LPCWSTR argv[]) {
-
+int cpFromCommandLine(int argc, LPCWSTR argv[])
+{
 	int cp;
 
 	if (argc == 0 || _wcsicmp(*argv, L"oem") == 0) {
@@ -573,8 +587,8 @@ int cpFromCommandLine(int argc, LPCWSTR argv[]) {
 	return cp;
 }
 
-BOOL SetOutputCodePage(int argc, LPCWSTR argv[]) {
-
+BOOL SetOutputCodePage(int argc, LPCWSTR argv[])
+{
 	int cp;
 
 	if (argc > 1) {
@@ -586,8 +600,8 @@ BOOL SetOutputCodePage(int argc, LPCWSTR argv[]) {
 	return SetConsoleOutputCP(cp);
 }
 
-BOOL SetInputCodePage(int argc, LPCWSTR argv[]) {
-
+BOOL SetInputCodePage(int argc, LPCWSTR argv[])
+{
 	int cp;
 
 	if (argc > 1) {
@@ -599,8 +613,8 @@ BOOL SetInputCodePage(int argc, LPCWSTR argv[]) {
 	return SetConsoleCP(cp);
 }
 
-BOOL SetCodePage(int argc, LPCWSTR argv[]) {
-
+BOOL SetCodePage(int argc, LPCWSTR argv[])
+{
 	int cp;
 
 	if (argc > 1) {
@@ -615,8 +629,8 @@ BOOL SetCodePage(int argc, LPCWSTR argv[]) {
 	return SetConsoleCP(cp);
 }
 
-DWORD GetArgCount(LPWSTR buffer, DWORD size) {
-
+DWORD GetArgCount(LPWSTR buffer, DWORD size)
+{
 	LPWSTR *argv, rest;
 	DWORD argc;
 
@@ -664,8 +678,8 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size) {
 	return toString(argc - 1, buffer, size);
 }
 
-DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size) {
-
+DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
+{
 	LPWSTR *argv, rest;
 	DWORD argc, *arglen;
 
@@ -743,8 +757,8 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size) {
 	return size;
 }
 
-BOOL SetUnicode(int argc, LPCWSTR argv[]) {
-
+BOOL SetUnicode(int argc, LPCWSTR argv[])
+{
 	int unicode;
 
 	if (argc != 1 || !pfOutputUnicode) {
@@ -756,15 +770,16 @@ BOOL SetUnicode(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetUnicode(LPWSTR buffer, DWORD size) {
+DWORD GetUnicode(LPWSTR buffer, DWORD size)
+{
 	if (!pfOutputUnicode) {
 		return toString(-1, buffer, size);
 	}
 	return toString(*pfOutputUnicode, buffer, size);
 }
 
-BOOL SetDelayedExpansion(int argc, LPCWSTR argv[]) {
-
+BOOL SetDelayedExpansion(int argc, LPCWSTR argv[])
+{
 	int flag;
 
 	if (argc != 1 || !pfDelayedExpansion) {
@@ -776,15 +791,16 @@ BOOL SetDelayedExpansion(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size) {
+DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size)
+{
 	if (!pfDelayedExpansion) {
 		return toString(-1, buffer, size);
 	}
 	return toString(*pfDelayedExpansion, buffer, size);
 }
 
-BOOL SetExtensions(int argc, LPCWSTR argv[]) {
-
+BOOL SetExtensions(int argc, LPCWSTR argv[])
+{
 	int flag;
 
 	if (argc != 1 || !pfEnableExtensions) {
@@ -796,15 +812,16 @@ BOOL SetExtensions(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetExtensions(LPWSTR buffer, DWORD size) {
+DWORD GetExtensions(LPWSTR buffer, DWORD size)
+{
 	if (!pfEnableExtensions) {
 		return toString(-1, buffer, size);
 	}
 	return toString(*pfEnableExtensions, buffer, size);
 }
 
-DWORD GetTransient(LPWSTR buffer, DWORD size) {
-
+DWORD GetTransient(LPWSTR buffer, DWORD size)
+{
 	static int transient = -1;
 
 	if (transient == -1) {
@@ -825,31 +842,36 @@ DWORD GetTransient(LPWSTR buffer, DWORD size) {
 	return toString(transient, buffer, size);
 }
 
-DWORD getStd(DWORD handle, LPWSTR buffer, DWORD size) {
+DWORD getStd(DWORD handle, LPWSTR buffer, DWORD size)
+{
 	DWORD mode;
 	return toString(GetConsoleMode(GetStdHandle(handle), &mode), buffer, size);
 }
 
-DWORD GetStdin(LPWSTR buffer, DWORD size) {
+DWORD GetStdin(LPWSTR buffer, DWORD size)
+{
 	return getStd(STD_INPUT_HANDLE, buffer, size);
 }
 
-DWORD GetStdout(LPWSTR buffer, DWORD size) {
+DWORD GetStdout(LPWSTR buffer, DWORD size)
+{
 	return getStd(STD_OUTPUT_HANDLE, buffer, size);
 }
 
-DWORD GetStderr(LPWSTR buffer, DWORD size) {
+DWORD GetStderr(LPWSTR buffer, DWORD size)
+{
 	return getStd(STD_ERROR_HANDLE, buffer, size);
 }
 
-DWORD GetUnique(LPWSTR buffer, DWORD size) {
+DWORD GetUnique(LPWSTR buffer, DWORD size)
+{
 	*buffer = L'\0';
 	GetTempFileName(L".", L"eb-", 0, buffer);
 	return wcslen(buffer);
 }
 
-DWORD GetTempFile(LPWSTR buffer, DWORD size) {
-
+DWORD GetTempFile(LPWSTR buffer, DWORD size)
+{
 	WCHAR temp[MAX_PATH];
 
 	GetTempPath(MAX_PATH, temp);
@@ -858,7 +880,8 @@ DWORD GetTempFile(LPWSTR buffer, DWORD size) {
 	return wcslen(buffer);
 }
 
-DWORD GetTempDir(LPWSTR buffer, DWORD size) {
+DWORD GetTempDir(LPWSTR buffer, DWORD size)
+{
 	size = GetTempFile(buffer, size);
 	if (size) {
 		if (!DeleteFile(buffer) || !CreateDirectory(buffer, NULL)) {
@@ -881,7 +904,8 @@ static const LPCWSTR DayNames[] = {
 	L"Thursday", L"Friay", L"Saturday"
 };
 
-WCHAR getPoint(void) {
+WCHAR getPoint(void)
+{
 	if (!point) {
 		WCHAR buf[5];
 		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, buf, 5);
@@ -890,7 +914,8 @@ WCHAR getPoint(void) {
 	return point;
 }
 
-void getDate(void) {
+void getDate(void)
+{
 	DWORD ticks = GetTickCount();
 	if (ticks - time_retrieved >= 1000) {
 		GetLocalTime(&st);
@@ -898,49 +923,58 @@ void getDate(void) {
 	}
 }
 
-DWORD GetDate(LPWSTR buffer, DWORD size) {
+DWORD GetDate(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return snwprintf(buffer, size, L"%d-%02d-%02d",
 					 st.wYear, st.wMonth, st.wDay);
 }
 
-DWORD GetTime(LPWSTR buffer, DWORD size) {
+DWORD GetTime(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return snwprintf(buffer, size, L"%02d:%02d:%02d",
 					 st.wHour, st.wMinute, st.wSecond);
 }
 
-DWORD GetTimems(LPWSTR buffer, DWORD size) {
+DWORD GetTimems(LPWSTR buffer, DWORD size)
+{
 	DWORD len = GetTime(buffer, size);
 	return len + snwprintf(buffer + len, size - len, L"%c%03d",
 						   getPoint(), st.wMilliseconds);
 }
 
-DWORD getDateTime(fnGetExt tfn, LPWSTR buffer, DWORD size) {
+DWORD getDateTime(fnGetExt tfn, LPWSTR buffer, DWORD size)
+{
 	DWORD len = GetDate(buffer, size);
 	buffer[len++] = L' ';
 	return len + tfn(buffer + len, size - len);
 }
 
-DWORD GetDateTime(LPWSTR buffer, DWORD size) {
+DWORD GetDateTime(LPWSTR buffer, DWORD size)
+{
 	return getDateTime(GetTime, buffer, size);
 }
 
-DWORD GetDateTimems(LPWSTR buffer, DWORD size) {
+DWORD GetDateTimems(LPWSTR buffer, DWORD size)
+{
 	return getDateTime(GetTimems, buffer, size);
 }
 
-DWORD GetYear(LPWSTR buffer, DWORD size) {
+DWORD GetYear(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wYear, buffer, size);
 }
 
-DWORD GetMonth(LPWSTR buffer, DWORD size) {
+DWORD GetMonth(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wMonth, buffer, size);
 }
 
-DWORD GetMonthName(LPWSTR buffer, DWORD size) {
+DWORD GetMonthName(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	if (english) {
 		return snwprintf(buffer, size, L"%s", MonthNames[st.wMonth-1]);
@@ -949,7 +983,8 @@ DWORD GetMonthName(LPWSTR buffer, DWORD size) {
 						 buffer, size);
 }
 
-DWORD GetMonthShort(LPWSTR buffer, DWORD size) {
+DWORD GetMonthShort(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	if (english) {
 		return snwprintf(buffer, size, L"%.3s", MonthNames[st.wMonth-1]);
@@ -958,12 +993,14 @@ DWORD GetMonthShort(LPWSTR buffer, DWORD size) {
 						 buffer, size);
 }
 
-DWORD GetDay(LPWSTR buffer, DWORD size) {
+DWORD GetDay(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wDay, buffer, size);
 }
 
-DWORD GetDayName(LPWSTR buffer, DWORD size) {
+DWORD GetDayName(LPWSTR buffer, DWORD size)
+{
 	int day;
 	getDate();
 	if (english) {
@@ -974,7 +1011,8 @@ DWORD GetDayName(LPWSTR buffer, DWORD size) {
 						 buffer, size);
 }
 
-DWORD GetDayShort(LPWSTR buffer, DWORD size) {
+DWORD GetDayShort(LPWSTR buffer, DWORD size)
+{
 	int day;
 	getDate();
 	if (english) {
@@ -985,36 +1023,43 @@ DWORD GetDayShort(LPWSTR buffer, DWORD size) {
 						 buffer, size);
 }
 
-DWORD GetDayOfWeek(LPWSTR buffer, DWORD size) {
+DWORD GetDayOfWeek(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wDayOfWeek, buffer, size);
 }
 
-DWORD GetHour(LPWSTR buffer, DWORD size) {
+DWORD GetHour(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wHour, buffer, size);
 }
 
-DWORD GetMinute(LPWSTR buffer, DWORD size) {
+DWORD GetMinute(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wMinute, buffer, size);
 }
 
-DWORD GetSecond(LPWSTR buffer, DWORD size) {
+DWORD GetSecond(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wSecond, buffer, size);
 }
 
-DWORD GetMilliseconds(LPWSTR buffer, DWORD size) {
+DWORD GetMilliseconds(LPWSTR buffer, DWORD size)
+{
 	getDate();
 	return toString(st.wMilliseconds, buffer, size);
 }
 
-DWORD GetEnglish(LPWSTR buffer, DWORD size) {
+DWORD GetEnglish(LPWSTR buffer, DWORD size)
+{
 	return toString(english, buffer, size);
 }
 
-BOOL SetEnglish(int argc, LPCWSTR argv[]) {
+BOOL SetEnglish(int argc, LPCWSTR argv[])
+{
 	if (argc != 1) {
 		return FALSE;
 	}
@@ -1022,13 +1067,15 @@ BOOL SetEnglish(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetDecSep(LPWSTR buffer, DWORD size) {
+DWORD GetDecSep(LPWSTR buffer, DWORD size)
+{
 	*buffer = getPoint();
 	buffer[1] = L'\0';
 	return 1;
 }
 
-BOOL SetDecSep(int argc, LPCWSTR argv[]) {
+BOOL SetDecSep(int argc, LPCWSTR argv[])
+{
 	if (argc == 0) {
 		point = L'\0';
 	} else {
@@ -1037,15 +1084,18 @@ BOOL SetDecSep(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD GetBatchLine(LPWSTR buffer, DWORD size) {
+DWORD GetBatchLine(LPWSTR buffer, DWORD size)
+{
 	return toString(getBatchLine(), buffer, size);
 }
 
-DWORD GetBatchFile(LPWSTR buffer, DWORD size) {
+DWORD GetBatchFile(LPWSTR buffer, DWORD size)
+{
 	return toString(batchfile, buffer, size);
 }
 
-BOOL SetBatchFile(int argc, LPCWSTR argv[]) {
+BOOL SetBatchFile(int argc, LPCWSTR argv[])
+{
 	if (argc != 1) {
 		return FALSE;
 	}
@@ -1053,7 +1103,8 @@ BOOL SetBatchFile(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-DWORD getVersionRevision(void) {
+DWORD getVersionRevision(void)
+{
 	HKEY curver;
 	DWORD revision = 0;
 	LONG rc;
@@ -1080,46 +1131,54 @@ DWORD getVersionRevision(void) {
 	return revision;
 }
 
-DWORD GetEBVersion(LPWSTR buffer, DWORD size) {
+DWORD GetEBVersion(LPWSTR buffer, DWORD size)
+{
 	return toString(BEVERSION, buffer, size);
 }
 
-DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size) {
+DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size)
+{
 	return toString(eb_value, buffer, size);
 }
 
-DWORD GetOSVersion(LPWSTR buffer, DWORD size) {
+DWORD GetOSVersion(LPWSTR buffer, DWORD size)
+{
 	DWORD ver = GetVersion();
 	return snwprintf(buffer, size, L"%d.%d.%d.%d",
 					 LOBYTE(LOWORD(ver)), HIBYTE(LOWORD(ver)), HIWORD(ver),
 					 getVersionRevision());
 }
 
-DWORD GetOSMajor(LPWSTR buffer, DWORD size) {
+DWORD GetOSMajor(LPWSTR buffer, DWORD size)
+{
 	return toString(LOBYTE(LOWORD(GetVersion())), buffer, size);
 }
 
-DWORD GetOSMinor(LPWSTR buffer, DWORD size) {
+DWORD GetOSMinor(LPWSTR buffer, DWORD size)
+{
 	return toString(HIBYTE(LOWORD(GetVersion())), buffer, size);
 }
 
-DWORD GetOSBuild(LPWSTR buffer, DWORD size) {
+DWORD GetOSBuild(LPWSTR buffer, DWORD size)
+{
 	return toString(HIWORD(GetVersion()), buffer, size);
 }
 
-DWORD GetOSRevision(LPWSTR buffer, DWORD size) {
+DWORD GetOSRevision(LPWSTR buffer, DWORD size)
+{
 	return toString(getVersionRevision(), buffer, size);
 }
 
-DWORD GetCmdVersion(LPWSTR buffer, DWORD size) {
+DWORD GetCmdVersion(LPWSTR buffer, DWORD size)
+{
 	return snwprintf(buffer, size, L"%d.%d.%d.%d%s",
 					 HIWORD(cmdFileVersionMS), LOWORD(cmdFileVersionMS),
 					 HIWORD(cmdFileVersionLS), LOWORD(cmdFileVersionLS),
 					 cmdDebug ? L" [debug]" : L"");
 }
 
-DWORD GetTitle(LPWSTR buffer, DWORD size) {
-
+DWORD GetTitle(LPWSTR buffer, DWORD size)
+{
 	WCHAR admin[128];
 	DWORD tsize, asize;
 
@@ -1155,8 +1214,8 @@ DWORD GetTitle(LPWSTR buffer, DWORD size) {
 }
 
 
-DWORD GetElevated(LPWSTR buffer, DWORD size) {
-
+DWORD GetElevated(LPWSTR buffer, DWORD size)
+{
 	static int isElevated = -1;
 
 	if (isElevated == -1) {
@@ -1170,8 +1229,8 @@ DWORD GetElevated(LPWSTR buffer, DWORD size) {
 	return toString(isElevated, buffer, size);
 }
 
-DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size) {
-
+DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)
+{
 	FILE *pipe;
 	DWORD len, r;
 	char *buf, *pos;
@@ -1214,8 +1273,8 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size) {
 	return len;
 }
 
-BOOL SetDumpTokens(int argc, LPCWSTR argv[]) {
-
+BOOL SetDumpTokens(int argc, LPCWSTR argv[])
+{
 	int dump;
 
 	if (argc != 1 || !pfDumpTokens) {
@@ -1227,8 +1286,8 @@ BOOL SetDumpTokens(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-BOOL SetDumpParse(int argc, LPCWSTR argv[]) {
-
+BOOL SetDumpParse(int argc, LPCWSTR argv[])
+{
 	int dump;
 
 	if (argc != 1 || !pfDumpParse) {
@@ -1240,8 +1299,8 @@ BOOL SetDumpParse(int argc, LPCWSTR argv[]) {
 	return TRUE;
 }
 
-HANDLE getOutputHandle(void) {
-
+HANDLE getOutputHandle(void)
+{
 	HANDLE hOut;
 
 	hOut = CreateFileW(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
