@@ -1,3 +1,5 @@
+# Enhanced Batch makefile using TDM GCC MinGW-w64.
+
 CC=gcc
 CFLAGS=-O3 -Wall
 LDFLAGS=-nostartfiles -s -shared
