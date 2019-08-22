@@ -41,6 +41,11 @@
 #define WSZ(len) ((len) * sizeof(WCHAR))	// byte size of a wide string
 #define lenof(a) (sizeof(a) / sizeof(*a))	// elements in a static array
 
+// Macro to convert a relative virtual address into a virtual address.
+// Requires pDosHeader to point to the base.
+#define MakeVA(cast, addValue) \
+	(cast)((DWORD_PTR)pDosHeader + (DWORD_PTR)(addValue))
+
 struct sCMD {
 	DWORD verMS, verLS;
 	const DWORD *offsets;
@@ -50,8 +55,24 @@ extern const struct sCMD cmd_versions[];
 
 extern DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 extern DWORD eb_value;
+extern LPVOID cmd_end;
 
 extern LPBYTE cmd_addrs[];
+
+struct cmdnode {		// partial definition
+	LPVOID stuff[14];
+	LPWSTR cmd;
+	LPWSTR arg;
+};
+
+typedef DWORD (WINAPI *fnCmdFunc)(struct cmdnode *node);
+
+extern fnCmdFunc *peEcho, eEcho;
+extern LPWSTR Fmt17;
+
+DWORD WINAPI MyEcho(struct cmdnode *node);
+int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d);
+UINT MyLexText(void);
 
 #ifdef _WIN64
 typedef int (*fnPutMsg)(UINT, int, UINT, va_list *);
@@ -68,7 +89,10 @@ typedef LPWSTR (__fastcall *fastMSCmdVar62)(LPCWSTR, LPVOID, LPCWSTR, int *, LPW
 #endif
 extern int batchfile;
 
+void WriteMemory(LPVOID dst, LPVOID src, int size);
 DWORD getBatchLine();
+void hookCmd(void);
+void unhookCmd(void);
 
 #define peol				cmd_addrs[0]			// expected first!
 #ifdef _WIN64
