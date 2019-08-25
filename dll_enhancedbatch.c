@@ -1337,7 +1337,6 @@ void unhook(void)
 	kh_destroy(line, batch_lnums);
 
 	unhookCmd();
-
 }
 
 // Search each process in the snapshot for id.
@@ -1362,9 +1361,7 @@ DWORD GetParentProcessId()
 	HANDLE hSnap, ph;
 	PROCESSENTRY32 pe, ppe;
 	BOOL parent_wow64, me_wow64;
-	typedef
-	BOOL(WINAPI * LPFN_ISWOW64PROCESS)
-	(HANDLE, PBOOL);
+	typedef BOOL (WINAPI * LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
 	LPFN_ISWOW64PROCESS fnIsWow64Process;
 
 	hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -1402,8 +1399,8 @@ DWORD GetParentProcessId()
 	return pe.th32ProcessID;
 }
 
-// Determine if ENV is already installed in the parent.
-HMODULE IsInstalled(DWORD id)
+// Determine if EB is already installed in the parent.
+BOOL IsInstalled(DWORD id, LPWSTR name, PBYTE *base)
 {
 	HANDLE hModuleSnap;
 	MODULEENTRY32 me;
@@ -1414,7 +1411,7 @@ HMODULE IsInstalled(DWORD id)
 	hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, id);
 
 	if (hModuleSnap == INVALID_HANDLE_VALUE) {
-		return NULL;
+		return FALSE;
 	}
 	// Fill the size of the structure before using it.
 	me.dwSize = sizeof(MODULEENTRY32);
@@ -1422,16 +1419,21 @@ HMODULE IsInstalled(DWORD id)
 	// Get the name of the DLL.
 	enh_name = wcsrchr(enh_dll, '\\') + 1;
 
-	// Walk the module list of the modules
-	for (fOk = Module32First(hModuleSnap, &me); fOk;
-			fOk = Module32Next(hModuleSnap, &me)) {
-		if (_wcsicmp(me.szModule, enh_name) == 0) {
-			break;
+	// Walk the module list of the modules.
+	fOk = Module32First(hModuleSnap, &me);
+	if (fOk) {
+		// First module is the process, get its details.
+		wcscpy(name, me.szExePath);
+		*base = me.modBaseAddr;
+		while ((fOk = Module32Next(hModuleSnap, &me))) {
+			if (_wcsicmp(me.szModule, enh_name) == 0) {
+				break;
+			}
 		}
 	}
 	CloseHandle(hModuleSnap);
 
-	return fOk ? me.hModule : NULL;
+	return fOk;
 }
 
 // Inject code into the target process to load our DLL.
@@ -1470,15 +1472,46 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 	return bRet;
 }
 
+BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
+{
+	const struct sCMD *ver;
+	WCHAR eol;
+	VS_FIXEDFILEINFO *pfi;
+	char vi[256+sizeof(*pfi)];
+	UINT len;
+	SIZE_T written;
+
+	if (!GetFileVersionInfo(name, 0, sizeof(vi), vi)
+		|| !VerQueryValue(vi, L"\\", (LPVOID *) &pfi, &len)) {
+		return FALSE;
+	}
+	for (ver = cmd_versions; ver->offsets; ++ver) {
+		if (ver->verMS == pfi->dwFileVersionMS
+			&& ver->verLS == pfi->dwFileVersionLS
+			&& ReadProcessMemory(ph, base + *ver->offsets, &eol, 2, &written)
+			&& eol == L';') {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
 __declspec(dllexport)
 void Load(void)
 {
 	DWORD cmdpid = GetParentProcessId();
+	WCHAR cmdname[MAX_PATH];
+	PBYTE cmdbase = NULL;	// remove a gcc warning
 
-	if (cmdpid != 0 && IsInstalled(cmdpid) == NULL) {
+	if (cmdpid != 0 && !IsInstalled(cmdpid, cmdname, &cmdbase)) {
 		HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, cmdpid);
 		if (ph != NULL) {
-			Inject(ph);
+			if (IsSupported(ph, cmdname, cmdbase)) {
+				Inject(ph);
+			} else {
+				MessageBox(NULL, L"This version of CMD is not supported.",
+						   L"Enhanced Batch", MB_OK | MB_ICONERROR);
+			}
 			CloseHandle(ph);
 		}
 	}

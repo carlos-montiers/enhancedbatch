@@ -3,6 +3,7 @@
 CC=gcc
 CFLAGS=-O3 -Wall
 LDFLAGS=-nostartfiles -s -shared
+LIBS=-lversion
 RC ?= windres
 
 SRC := $(wildcard *.c)
@@ -24,10 +25,10 @@ all: enhancedbatch_amd64.dll enhancedbatch_x86.dll
 	$(RC) -F pe-i386 $< -o $@
 
 enhancedbatch_amd64.dll: $(X64OBJ)
-	$(CC) -m64 $(LDFLAGS) -Wl,-e,_dllstart $^ -o $@
+	$(CC) -m64 $(LDFLAGS) -Wl,-e,_dllstart $^ -o $@ $(LIBS)
 	
 enhancedbatch_x86.dll: $(X86OBJ)
-	$(CC) -m32 $(LDFLAGS) -Wl,-e,__dllstart,--enable-stdcall-fixup $^ -o $@
+	$(CC) -m32 $(LDFLAGS) -Wl,-e,__dllstart,--enable-stdcall-fixup $^ -o $@ $(LIBS)
 
 clean:
 	-del *.o
