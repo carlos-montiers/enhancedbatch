@@ -3,6 +3,11 @@ rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
 if not %@enhancedbatch% == 2 echo Enhanced batch failed to hook CMD %@cmdversion%.&goto :eof
 set $temp=@tempfile
+>>%$temp% echo /?
+>>%$temp% echo on
+>>%$temp% echo
+>>%$temp% echo off
+>>%$temp% call :echo
 set @extensions=0
 >>%$temp% echo Extensions off, colon part of variable: %OS:_= %
 >>%$temp% echo Tilde expansion: %$0;~nx%.
@@ -64,6 +69,14 @@ echo first 3: %$-3%
 echo from 4: %$4-%
 echo 5-7: %$5-7%
 echo twelfth: [%$12%]
+goto :eof
+
+:echo
+set $prompt=%PROMPT%
+prompt $G
+set @echo=1
+set @echo=0
+prompt %$prompt%
 goto :eof
 
 :dumpparse

@@ -41,7 +41,7 @@ LPBYTE redirect;
 #endif
 
 int iPutMsg;
-BYTE oldLexText[5];
+BYTE oldLexText[5], oldEchoOnOff[5];
 
 
 #ifndef _WIN64
@@ -127,6 +127,58 @@ void hookCmd(void)
 
 			// Remove the default "eol=;".
 			WriteMemory(peol, 0, 1);
+
+			// Patch ECHO to always echo, ignoring help & state.
+			WriteMemory(pStartHelp, (LPVOID) 9, 1);
+			memcpy(oldEchoOnOff, pEchoOnOff, 5);
+#ifdef _WIN64
+			if (cmdFileVersionMS == 0x50002) {
+				// 5.2.*.*
+				WriteMemory(pEchoOnOff, "\x6A\x03"  // push 3
+										"\x59"      // pop rcx
+										, 3);
+			} else if (cmdFileVersionMS == 0x60002) {
+				// 6.2.*.*
+				WriteMemory(pEchoOnOff, "\x31\xC9"      // xor ecx,ecx
+										"\x83\xC9\x01"  // or ecx,1
+										, 5);
+			} else {
+				// 6.0.*.*
+				// 6.1.*.*
+				// 6.3.*.*
+				// 10.*.*.*
+				WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+			}
+#else
+			if (cmdFileVersionMS < 0x60002)  {
+				// 5.*.*.*
+				// 6.0.*.*
+				// 6.1.*.*
+				WriteMemory(pEchoOnOff, "\x58"      // pop eax
+										"\x58"      // pop eax
+										"\x6A\x03"  // push 3
+										"\x58"      // pop eax
+										, 5);
+			} else if (cmdFileVersionMS == 0x60002) {
+				if (cmdFileVersionLS == 0x1FA60000) {
+					// 6.2.8102.0
+					WriteMemory(pEchoOnOff, "\x90"      // nop
+											"\x58"      // pop eax
+											"\x6A\x03"  // push 3
+											"\x58"      // pop eax
+											, 5);
+				} else {
+					// 6.2.9200.16384
+					WriteMemory(pEchoOnOff, "\x33\xC0"      // xor eax,eax
+											"\x83\xC8\x01"  // or eax,1
+											, 5);
+				}
+			} else {
+				// 6.3.*.*
+				// 10.*.*.*
+				WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+			}
+#endif
 
 			// Patch FOR to fix a bug with wildcard expansion - each name
 			// accumulates, resizing bigger and bigger (this patch is not
@@ -317,6 +369,8 @@ void unhookCmd(void)
 		WriteMemory(peol, (LPVOID) ';', 1);
 		WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
 		WriteMemory(pLexText, oldLexText, 5);
+		WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
+		WriteMemory(pStartHelp, (LPVOID) 31, 1);
 		*pfDumpTokens = 0;
 		*pfDumpParse = 0;
 	}

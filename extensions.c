@@ -757,6 +757,27 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	return size;
 }
 
+BOOL SetEcho(int argc, LPCWSTR argv[])
+{
+	int echo;
+
+	if (argc != 1 || !pEchoFlag) {
+		return FALSE;
+	}
+
+	toNumber(&echo, 1, argv);
+	*pEchoFlag = (BYTE) echo;
+	return TRUE;
+}
+
+DWORD GetEcho(LPWSTR buffer, DWORD size)
+{
+	if (!pEchoFlag) {
+		return toString(-1, buffer, size);
+	}
+	return toString(*pEchoFlag, buffer, size);
+}
+
 BOOL SetUnicode(int argc, LPCWSTR argv[])
 {
 	int unicode;

@@ -80,10 +80,12 @@ DWORD GetInputCodePage(LPWSTR buffer, DWORD size);
 DWORD GetArgCount(LPWSTR buffer, DWORD size);
 DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size);
 
+BOOL SetEcho(int argc, LPCWSTR argv[]);
 BOOL SetUnicode(int argc, LPCWSTR argv[]);
 BOOL SetDelayedExpansion(int argc, LPCWSTR argv[]);
 BOOL SetExtensions(int argc, LPCWSTR argv[]);
 
+DWORD GetEcho(LPWSTR buffer, DWORD size);
 DWORD GetUnicode(LPWSTR buffer, DWORD size);
 DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size);
 DWORD GetExtensions(LPWSTR buffer, DWORD size);

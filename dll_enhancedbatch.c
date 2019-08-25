@@ -129,6 +129,7 @@ struct sGetExt getExtensionList[] = {
 	{ L"@cursor",			GetConsoleCursor },
 	{ L"@outputcp", 		GetOutputCodePage },
 	{ L"@inputcp", 		 	GetInputCodePage },
+	{ L"@echo", 			GetEcho },
 	{ L"@unicode",			GetUnicode },
 	{ L"@delayedexpansion", GetDelayedExpansion },
 	{ L"@extensions",		GetExtensions },
@@ -197,6 +198,7 @@ struct sSetExt setExtensionList[] = {
 	{ L"@timerhi",			SetHiTimer, 0 },
 	{ L"@sleep",			WaitMilliseconds, 1 },
 	{ L"@next", 			Next, 0 },
+	{ L"@echo", 			SetEcho, 1 },
 	{ L"@unicode",			SetUnicode, 1 },
 	{ L"@delayedexpansion", SetDelayedExpansion, 1 },
 	{ L"@extensions",		SetExtensions, 1 },
@@ -641,7 +643,11 @@ DWORD WINAPI MyEcho(struct cmdnode *node)
 	DWORD ret;
 
 	if (!node->arg) {
-		return eEcho(node);
+		static WCHAR space[] = L" ";
+		node->arg = space;
+		ret = eEcho(node);
+		node->arg = NULL;
+		return ret;
 	}
 
 	if (*node->arg == L';') {
