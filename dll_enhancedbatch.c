@@ -63,7 +63,6 @@ khash_t(wstr) *variables;
 khash_t(line) *batch_lnums;
 
 HMODULE hDllInstance;
-DWORD eb_value; 		// 1 for basic, 2 for full
 BOOL global;			// launched outside of a batch
 LPSTR AnsiBuf;			// batch file buffer
 LPVOID cmd_end; 		// end of the CMD.EXE image
@@ -776,7 +775,7 @@ DWORD getBatchLine()
 	HANDLE hFile, hMap;
 	LPBYTE mem, p;
 
-	if (!pCurrentBatchFile || !*pCurrentBatchFile) {
+	if (!*pCurrentBatchFile) {
 		return 0;
 	}
 

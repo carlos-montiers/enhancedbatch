@@ -113,7 +113,6 @@ void hookCmd(void)
 		++data;
 	}
 
-	eb_value = 1;
 	for (ver = cmd_versions; ver->offsets; ++ver) {
 		if (ver->verMS == cmdFileVersionMS &&
 			ver->verLS == cmdFileVersionLS &&
@@ -123,7 +122,6 @@ void hookCmd(void)
 			for (i = 0; i < OFFSETS; ++i) {
 				cmd_addrs[i] = cmd + ver->offsets[i];
 			}
-			eb_value = 2;
 
 			// Remove the default "eol=;".
 			WriteMemory(peol, 0, 1);
@@ -362,22 +360,16 @@ void hookCmd(void)
 
 void unhookCmd(void)
 {
-	if (eEcho) {
-		WriteMemory(peEcho, &eEcho, sizeof(eEcho));
-	}
-	if (peol) {
-		WriteMemory(peol, (LPVOID) ';', 1);
-		WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
-		WriteMemory(pLexText, oldLexText, 5);
-		WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
-		WriteMemory(pStartHelp, (LPVOID) 31, 1);
-		*pfDumpTokens = 0;
-		*pfDumpParse = 0;
-	}
+	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
+	WriteMemory(peol, (LPVOID) ';', 1);
+	WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
+	WriteMemory(pLexText, oldLexText, 5);
+	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
+	WriteMemory(pStartHelp, (LPVOID) 31, 1);
+	*pfDumpTokens = 0;
+	*pfDumpParse = 0;
 
 #ifdef _WIN64
-	if (redirect) {
-		VirtualFree(redirect, 0, MEM_RELEASE);
-	}
+	VirtualFree(redirect, 0, MEM_RELEASE);
 #endif
 }

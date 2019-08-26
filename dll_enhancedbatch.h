@@ -25,7 +25,7 @@
 
 */
 
-#define EBVERSION 1
+#define EBVERSION 0
 
 #ifndef UNICODE
 #define UNICODE
@@ -54,7 +54,6 @@ struct sCMD {
 extern const struct sCMD cmd_versions[];
 
 extern DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
-extern DWORD eb_value;
 extern LPVOID cmd_end;
 
 extern LPBYTE cmd_addrs[];

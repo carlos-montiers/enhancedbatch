@@ -1,7 +1,6 @@
 @echo off
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
-if not %@enhancedbatch% == 2 echo Enhanced batch failed to hook CMD %@cmdversion%.&goto :eof
 set $temp=@tempfile
 >>%$temp% echo /?
 >>%$temp% echo on

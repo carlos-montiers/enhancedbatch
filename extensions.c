@@ -634,7 +634,7 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size)
 	LPWSTR *argv, rest;
 	DWORD argc;
 
-	if (!pCurrentBatchFile || !*pCurrentBatchFile) {
+	if (!*pCurrentBatchFile) {
 		return toString(-1, buffer, size);
 	}
 
@@ -683,7 +683,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	LPWSTR *argv, rest;
 	DWORD argc, *arglen;
 
-	if (!pCurrentBatchFile || !*pCurrentBatchFile) {
+	if (!*pCurrentBatchFile) {
 		return 0;
 	}
 
@@ -761,7 +761,7 @@ BOOL SetEcho(int argc, LPCWSTR argv[])
 {
 	int echo;
 
-	if (argc != 1 || !pEchoFlag) {
+	if (argc != 1) {
 		return FALSE;
 	}
 
@@ -772,9 +772,6 @@ BOOL SetEcho(int argc, LPCWSTR argv[])
 
 DWORD GetEcho(LPWSTR buffer, DWORD size)
 {
-	if (!pEchoFlag) {
-		return toString(-1, buffer, size);
-	}
 	return toString(*pEchoFlag, buffer, size);
 }
 
@@ -782,7 +779,7 @@ BOOL SetUnicode(int argc, LPCWSTR argv[])
 {
 	int unicode;
 
-	if (argc != 1 || !pfOutputUnicode) {
+	if (argc != 1) {
 		return FALSE;
 	}
 
@@ -793,9 +790,6 @@ BOOL SetUnicode(int argc, LPCWSTR argv[])
 
 DWORD GetUnicode(LPWSTR buffer, DWORD size)
 {
-	if (!pfOutputUnicode) {
-		return toString(-1, buffer, size);
-	}
 	return toString(*pfOutputUnicode, buffer, size);
 }
 
@@ -803,7 +797,7 @@ BOOL SetDelayedExpansion(int argc, LPCWSTR argv[])
 {
 	int flag;
 
-	if (argc != 1 || !pfDelayedExpansion) {
+	if (argc != 1) {
 		return FALSE;
 	}
 
@@ -814,9 +808,6 @@ BOOL SetDelayedExpansion(int argc, LPCWSTR argv[])
 
 DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size)
 {
-	if (!pfDelayedExpansion) {
-		return toString(-1, buffer, size);
-	}
 	return toString(*pfDelayedExpansion, buffer, size);
 }
 
@@ -824,7 +815,7 @@ BOOL SetExtensions(int argc, LPCWSTR argv[])
 {
 	int flag;
 
-	if (argc != 1 || !pfEnableExtensions) {
+	if (argc != 1) {
 		return FALSE;
 	}
 
@@ -835,9 +826,6 @@ BOOL SetExtensions(int argc, LPCWSTR argv[])
 
 DWORD GetExtensions(LPWSTR buffer, DWORD size)
 {
-	if (!pfEnableExtensions) {
-		return toString(-1, buffer, size);
-	}
 	return toString(*pfEnableExtensions, buffer, size);
 }
 
@@ -1154,12 +1142,12 @@ DWORD getVersionRevision(void)
 
 DWORD GetEBVersion(LPWSTR buffer, DWORD size)
 {
-	return toString(EBVERSION, buffer, size);
+	return snwprintf(buffer, size, L"%S", __DATE__);
 }
 
 DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size)
 {
-	return toString(eb_value, buffer, size);
+	return toString(EBVERSION, buffer, size);
 }
 
 DWORD GetOSVersion(LPWSTR buffer, DWORD size)
@@ -1298,7 +1286,7 @@ BOOL SetDumpTokens(int argc, LPCWSTR argv[])
 {
 	int dump;
 
-	if (argc != 1 || !pfDumpTokens) {
+	if (argc != 1) {
 		return FALSE;
 	}
 
@@ -1311,7 +1299,7 @@ BOOL SetDumpParse(int argc, LPCWSTR argv[])
 {
 	int dump;
 
-	if (argc != 1 || !pfDumpParse) {
+	if (argc != 1) {
 		return FALSE;
 	}
 
