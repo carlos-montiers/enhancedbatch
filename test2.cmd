@@ -73,19 +73,19 @@ goto :eof
 :echo
 set $prompt=%PROMPT%
 prompt $G
-set @echo=1
-set @echo=0
+set @echo=on
+set @echo=off
 prompt %$prompt%
 goto :eof
 
 :dumpparse
-set @dumpparse=1
-set @dumpparse=0
+set @dumpparse=true
+set @dumpparse=false
 goto :eof
 
 :dumptokens
 set @dumptokens=1
-set @dumptokens=0
+set @dumptokens=
 goto :eof
 
 :out

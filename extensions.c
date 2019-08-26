@@ -757,17 +757,27 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	return size;
 }
 
+static BOOL setBoolean(LPBYTE var, LPCWSTR arg)
+{
+	if (arg == NULL
+		|| (arg[0] == L'0' && arg[1] == L'\0')
+		|| _wcsicmp(arg, L"off") == 0
+		|| _wcsicmp(arg, L"false") == 0) {
+		*var = FALSE;
+		return TRUE;
+	}
+	if ((arg[0] == L'1' && arg[1] == L'\0')
+		|| _wcsicmp(arg, L"on") == 0
+		|| _wcsicmp(arg, L"true") == 0) {
+		*var = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 BOOL SetEcho(int argc, LPCWSTR argv[])
 {
-	int echo;
-
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	toNumber(&echo, 1, argv);
-	*pEchoFlag = (BYTE) echo;
-	return TRUE;
+	return setBoolean(pEchoFlag, *argv);
 }
 
 DWORD GetEcho(LPWSTR buffer, DWORD size)
@@ -777,15 +787,7 @@ DWORD GetEcho(LPWSTR buffer, DWORD size)
 
 BOOL SetUnicode(int argc, LPCWSTR argv[])
 {
-	int unicode;
-
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	toNumber(&unicode, 1, argv);
-	*pfOutputUnicode = (BYTE) unicode;
-	return TRUE;
+	return setBoolean(pfOutputUnicode, *argv);
 }
 
 DWORD GetUnicode(LPWSTR buffer, DWORD size)
@@ -795,15 +797,7 @@ DWORD GetUnicode(LPWSTR buffer, DWORD size)
 
 BOOL SetDelayedExpansion(int argc, LPCWSTR argv[])
 {
-	int flag;
-
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	toNumber(&flag, 1, argv);
-	*pfDelayedExpansion = (BYTE) flag;
-	return TRUE;
+	return setBoolean(pfDelayedExpansion, *argv);
 }
 
 DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size)
@@ -813,15 +807,7 @@ DWORD GetDelayedExpansion(LPWSTR buffer, DWORD size)
 
 BOOL SetExtensions(int argc, LPCWSTR argv[])
 {
-	int flag;
-
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	toNumber(&flag, 1, argv);
-	*pfEnableExtensions = (BYTE) flag;
-	return TRUE;
+	return setBoolean(pfEnableExtensions, *argv);
 }
 
 DWORD GetExtensions(LPWSTR buffer, DWORD size)
@@ -1284,28 +1270,12 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)
 
 BOOL SetDumpTokens(int argc, LPCWSTR argv[])
 {
-	int dump;
-
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	toNumber(&dump, 1, argv);
-	*pfDumpTokens = (BYTE) dump;
-	return TRUE;
+	return setBoolean(pfDumpTokens, *argv);
 }
 
 BOOL SetDumpParse(int argc, LPCWSTR argv[])
 {
-	int dump;
-
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	toNumber(&dump, 1, argv);
-	*pfDumpParse = (BYTE) dump;
-	return TRUE;
+	return setBoolean(pfDumpParse, *argv);
 }
 
 HANDLE getOutputHandle(void)
