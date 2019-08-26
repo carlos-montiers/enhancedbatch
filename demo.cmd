@@ -1,7 +1,7 @@
 @echo off
 
 rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
-If Not "%@enhancedbatch%"=="2" (
+If Not defined @enhancedbatch (
 Echo Something failed
 Goto :Eof
 )
