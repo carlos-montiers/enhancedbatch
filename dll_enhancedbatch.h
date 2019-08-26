@@ -113,5 +113,6 @@ void unhookCmd(void);
 #define pEchoOnOff			cmd_addrs[13]
 #define pEchoFlag			cmd_addrs[14]
 #define pStartHelp			cmd_addrs[15]
+#define pEchoHelp			cmd_addrs[16]
 
-#define OFFSETS 16
+#define OFFSETS 17

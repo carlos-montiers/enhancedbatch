@@ -126,8 +126,11 @@ void hookCmd(void)
 			// Remove the default "eol=;".
 			WriteMemory(peol, 0, 1);
 
-			// Patch ECHO to always echo, ignoring help & state.
+			// Swap START & ECHO's help tests, so ECHO has no help and START
+			// only looks at its first argument.
 			WriteMemory(pStartHelp, (LPVOID) 9, 1);
+			WriteMemory(pEchoHelp, (LPVOID) 31, 1);
+			// Patch ECHO to always echo, ignoring state.
 			memcpy(oldEchoOnOff, pEchoOnOff, 5);
 #ifdef _WIN64
 			if (cmdFileVersionMS == 0x50002) {
@@ -366,6 +369,7 @@ void unhookCmd(void)
 	WriteMemory(pLexText, oldLexText, 5);
 	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
 	WriteMemory(pStartHelp, (LPVOID) 31, 1);
+	WriteMemory(pEchoHelp, (LPVOID) 9, 1);
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;
 

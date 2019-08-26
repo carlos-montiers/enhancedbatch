@@ -44,6 +44,7 @@ LPBYTE cmd_addrs[] = {
 	0,			// eEcho:CheckOnOff
 	0,			// EchoFlag
 	0,			// START /?
+	0,			// ECHO /?
 };
 
 #ifdef _WIN64
@@ -65,6 +66,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x0c6b3,	// eEcho:CheckOnOff
 	0x53820,	// EchoFlag
 	0x0223a,	// START /?
+	0x05849,	// ECHO /?
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -84,6 +86,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x0c6d3,	// eEcho:CheckOnOff
 	0x53820,	// EchoFlag
 	0x0225a,	// START /?
+	0x05869,	// ECHO /?
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -103,6 +106,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x06baf,	// eEcho:CheckOnOff
 	0x2e0a8,	// EchoFlag
 	0x038ff,	// START /?
+	0x044b1,	// ECHO /?
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -122,6 +126,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x0407b,	// eEcho:CheckOnOff
 	0x2e0a4,	// EchoFlag
 	0x019d7,	// START /?
+	0x014ad,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -141,6 +146,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x05fc3,	// eEcho:CheckOnOff
 	0x2d0e8,	// EchoFlag
 	0x02ad7,	// START /?
+	0x04f2e,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -160,6 +166,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x05ccb,	// eEcho:CheckOnOff
 	0x2d0e8,	// EchoFlag
 	0x028cf,	// START /?
+	0x039ba,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -179,6 +186,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x0610b,	// eEcho:CheckOnOff
 	0x2e0e8,	// EchoFlag
 	0x0199f,	// START /?
+	0x035b2,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -198,6 +206,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x0610b,	// eEcho:CheckOnOff
 	0x2e0e8,	// EchoFlag
 	0x0199f,	// START /?
+	0x035b2,	// ECHO /?
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -217,6 +226,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x0798b,	// eEcho:CheckOnOff
 	0x3c09c,	// EchoFlag
 	0x013e6,	// START /?
+	0x0ee1e,	// ECHO /?
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -236,6 +246,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x08c4d,	// eEcho:CheckOnOff
 	0x380dc,	// EchoFlag
 	0x01766,	// START /?
+	0x0e2da,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -255,6 +266,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x0827b,	// eEcho:CheckOnOff
 	0x2e0a8,	// EchoFlag
 	0x0117c,	// START /?
+	0x07645,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -274,6 +286,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x07de3,	// eEcho:CheckOnOff
 	0x2f018,	// EchoFlag
 	0x18210,	// START /?
+	0x2362c,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -293,6 +306,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x1088b,	// eEcho:CheckOnOff
 	0x2c018,	// EchoFlag
 	0x0da2c,	// START /?
+	0x0e501,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -312,6 +326,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x081a7,	// eEcho:CheckOnOff
 	0x2d0a8,	// EchoFlag
 	0x0117c,	// START /?
+	0x07625,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -331,6 +346,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x086ef,	// eEcho:CheckOnOff
 	0x2e028,	// EchoFlag
 	0x0116c,	// START /?
+	0x074b0,	// ECHO /?
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -350,6 +366,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x1000f,	// eEcho:CheckOnOff
 	0x2f020,	// EchoFlag
 	0x0795b,	// START /?
+	0x07f3c,	// ECHO /?
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -369,6 +386,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0dccf,	// eEcho:CheckOnOff
 	0x30020,	// EchoFlag
 	0x0b51b,	// START /?
+	0x0bafc,	// ECHO /?
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -388,6 +406,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0eacf,	// eEcho:CheckOnOff
 	0x2f020,	// EchoFlag
 	0x0c86b,	// START /?
+	0x0ce3c,	// ECHO /?
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -407,6 +426,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x1184f,	// eEcho:CheckOnOff
 	0x39118,	// EchoFlag
 	0x0f670,	// START /?
+	0x101e4,	// ECHO /?
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -426,6 +446,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x11acf,	// eEcho:CheckOnOff
 	0x39118,	// EchoFlag
 	0x0f8e9,	// START /?
+	0x10460,	// ECHO /?
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -445,6 +466,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x122ff,	// eEcho:CheckOnOff
 	0x39118,	// EchoFlag
 	0x10119,	// START /?
+	0x10c97,	// ECHO /?
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -464,6 +486,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x135bf,	// eEcho:CheckOnOff
 	0x3b110,	// EchoFlag
 	0x0cf19,	// START /?
+	0x0c7ff,	// ECHO /?
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -483,6 +506,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x1263f,	// eEcho:CheckOnOff
 	0x3b110,	// EchoFlag
 	0x0be69,	// START /?
+	0x0b4c3,	// ECHO /?
 };
 
 #else
@@ -504,6 +528,7 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x02bbe,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0cd97,	// START /?
+	0x14a07,	// ECHO /?
 };
 
 const DWORD cmd_5_0_2195_1600[] = {
@@ -523,6 +548,7 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x02bbe,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0cd8b,	// START /?
+	0x149fb,	// ECHO /?
 };
 
 const DWORD cmd_5_0_2195_2104[] = {
@@ -542,6 +568,7 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x02bbe,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0cd87,	// START /?
+	0x149f7,	// ECHO /?
 };
 
 const DWORD cmd_5_0_2195_4803[] = {
@@ -561,6 +588,7 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x02bbe,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0cdde,	// START /?
+	0x1414e,	// ECHO /?
 };
 
 const DWORD cmd_5_0_2195_6656[] = {
@@ -580,6 +608,7 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x02bce,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0ce12,	// START /?
+	0x14a7d,	// ECHO /?
 };
 
 const DWORD cmd_5_0_2195_6995[] = {
@@ -599,6 +628,7 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x02bce,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0ced0,	// START /?
+	0x14b3b,	// ECHO /?
 };
 
 const DWORD cmd_5_1_2600_0[] = {
@@ -618,6 +648,7 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x03cd0,	// eEcho:CheckOnOff
 	0x2cac8,	// EchoFlag
 	0x03a77,	// START /?
+	0x01f90,	// ECHO /?
 };
 
 const DWORD cmd_5_1_2600_2180[] = {
@@ -637,6 +668,7 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x10608,	// eEcho:CheckOnOff
 	0x2fac8,	// EchoFlag
 	0x05b2a,	// START /?
+	0x05c68,	// ECHO /?
 };
 
 const DWORD cmd_5_1_2600_3311[] = {
@@ -656,6 +688,7 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x0895d,	// eEcho:CheckOnOff
 	0x2fac8,	// EchoFlag
 	0x05b1a,	// START /?
+	0x05c58,	// ECHO /?
 };
 
 const DWORD cmd_5_1_2600_5512[] = {
@@ -675,6 +708,7 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x0895d,	// eEcho:CheckOnOff
 	0x2fac8,	// EchoFlag
 	0x05b1a,	// START /?
+	0x05c58,	// ECHO /?
 };
 
 const DWORD cmd_5_2_3790_0[] = {
@@ -694,6 +728,7 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x02da5,	// eEcho:CheckOnOff
 	0x20064,	// EchoFlag
 	0x02005,	// START /?
+	0x01c20,	// ECHO /?
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -713,6 +748,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x08975,	// eEcho:CheckOnOff
 	0x2fa80,	// EchoFlag
 	0x05306,	// START /?
+	0x0552e,	// ECHO /?
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -732,6 +768,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x05770,	// eEcho:CheckOnOff
 	0x2fa80,	// EchoFlag
 	0x01815,	// START /?
+	0x045a6,	// ECHO /?
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -751,6 +788,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x06ffd,	// eEcho:CheckOnOff
 	0x2404c,	// EchoFlag
 	0x028d7,	// START /?
+	0x0313e,	// ECHO /?
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -770,6 +808,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x04e83,	// eEcho:CheckOnOff
 	0x2404c,	// EchoFlag
 	0x02297,	// START /?
+	0x03258,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -789,6 +828,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x067bd,	// eEcho:CheckOnOff
 	0x2408c,	// EchoFlag
 	0x02597,	// START /?
+	0x04cf2,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -808,6 +848,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x07409,	// eEcho:CheckOnOff
 	0x2408c,	// EchoFlag
 	0x02313,	// START /?
+	0x047c5,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -827,6 +868,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x0599d,	// eEcho:CheckOnOff
 	0x2408c,	// EchoFlag
 	0x0220e,	// START /?
+	0x041c4,	// ECHO /?
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -846,6 +888,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x0599d,	// eEcho:CheckOnOff
 	0x2408c,	// EchoFlag
 	0x0220e,	// START /?
+	0x041c4,	// ECHO /?
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -865,6 +908,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x0833b,	// eEcho:CheckOnOff
 	0x30050,	// EchoFlag
 	0x01667,	// START /?
+	0x016a5,	// ECHO /?
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -884,6 +928,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x07d80,	// eEcho:CheckOnOff (inline)
 	0x2e090,	// EchoFlag
 	0x011a1,	// START /?
+	0x011e2,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -903,6 +948,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x06b7b,	// eEcho:CheckOnOff
 	0x2505c,	// EchoFlag
 	0x01920,	// START /?
+	0x0576f,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -922,6 +968,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x073f3,	// eEcho:CheckOnOff
 	0x2800c,	// EchoFlag
 	0x15305,	// START /?
+	0x1eb93,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -941,6 +988,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x0dfe6,	// eEcho:CheckOnOff
 	0x2500c,	// EchoFlag
 	0x0bd6f,	// START /?
+	0x0c6df,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -960,6 +1008,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x06ff7,	// eEcho:CheckOnOff
 	0x2505c,	// EchoFlag
 	0x0126c,	// START /?
+	0x052e3,	// ECHO /?
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -979,6 +1028,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x066b0,	// eEcho:CheckOnOff
 	0x2601c,	// EchoFlag
 	0x0148b,	// START /?
+	0x058ef,	// ECHO /?
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -998,6 +1048,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x0f070,	// eEcho:CheckOnOff
 	0x25010,	// EchoFlag
 	0x08d4f,	// START /?
+	0x08260,	// ECHO /?
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -1017,6 +1068,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0e560,	// eEcho:CheckOnOff
 	0x26010,	// EchoFlag
 	0x0ca1e,	// START /?
+	0x0878f,	// ECHO /?
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -1036,6 +1088,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0e270,	// eEcho:CheckOnOff
 	0x26010,	// EchoFlag
 	0x0c68f,	// START /?
+	0x084ce,	// ECHO /?
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -1055,6 +1108,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x0c610,	// eEcho:CheckOnOff
 	0x2d0c8,	// EchoFlag
 	0x0d3fa,	// START /?
+	0x0cc7f,	// ECHO /?
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -1074,6 +1128,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x0d47e,	// eEcho:CheckOnOff
 	0x2b0c0,	// EchoFlag
 	0x092b3,	// START /?
+	0x05162,	// ECHO /?
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -1093,6 +1148,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x12370,	// eEcho:CheckOnOff
 	0x2d0c8,	// EchoFlag
 	0x108f3,	// START /?
+	0x0dd6c,	// ECHO /?
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -1112,6 +1168,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0eb70,	// eEcho:CheckOnOff
 	0x2d0c0,	// EchoFlag
 	0x0d283,	// START /?
+	0x08dc8,	// ECHO /?
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -1131,6 +1188,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x09bc0,	// eEcho:CheckOnOff
 	0x2d0c0,	// EchoFlag
 	0x0ac63,	// START /?
+	0x0a638,	// ECHO /?
 };
 
 #endif
