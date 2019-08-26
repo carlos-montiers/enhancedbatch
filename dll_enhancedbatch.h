@@ -56,6 +56,10 @@ extern const struct sCMD cmd_versions[];
 extern DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 extern LPVOID cmd_end;
 
+extern BOOL onWindowsTerminal;
+extern HWND consoleHwnd;
+extern HANDLE consoleOutput;
+
 extern LPBYTE cmd_addrs[];
 
 struct cmdnode {		// partial definition

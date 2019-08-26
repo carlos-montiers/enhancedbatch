@@ -30,11 +30,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern LPVOID cmd_end;
-
-extern BOOL onWindowsTerminal;
-extern HWND consoleHwnd;
-
 static DWORD toString(DWORD num, LPWSTR buffer, DWORD size)
 {
 	return snwprintf(buffer, size, L"%d", num);
@@ -99,21 +94,23 @@ DWORD Kbhit(LPWSTR buffer, DWORD size)
 	}
 }
 
-void setPosition(int row, int column)
+BOOL setPosition(int row, int column)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	HANDLE hOut;
 	COORD screen_max;
 	COORD coord;
 	SHORT x, y;
 
-	x = column;
-	y = row;
+	if (!getOutputHandle()) {
+		return FALSE;
+	}
 
-	hOut = getOutputHandle();
-	GetConsoleScreenBufferInfo(hOut, &csbi);
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 	screen_max.X = csbi.srWindow.Right - csbi.srWindow.Left;
 	screen_max.Y = csbi.srWindow.Bottom - csbi.srWindow.Top;
+
+	x = column;
+	y = row;
 
 	if (x < 0) {
 		x = 0;
@@ -134,8 +131,7 @@ void setPosition(int row, int column)
 	coord.X = x + csbi.srWindow.Left;
 	coord.Y = y + csbi.srWindow.Top;
 
-	SetConsoleCursorPosition(hOut, coord);
-	CloseHandle(hOut);
+	return SetConsoleCursorPosition(consoleOutput, coord);
 }
 
 BOOL SetPosition(int argc, LPCWSTR argv[])
@@ -147,23 +143,20 @@ BOOL SetPosition(int argc, LPCWSTR argv[])
 	}
 
 	toNumber(num, 2, argv);
-	setPosition(num[0], num[1]);
-
-	return TRUE;
+	return setPosition(num[0], num[1]);
 }
 
 COORD getPosition(void)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	HANDLE hOut;
 
-	hOut = getOutputHandle();
-	GetConsoleScreenBufferInfo(hOut, &csbi);
-
-	CloseHandle(hOut);
-
-	csbi.dwCursorPosition.X -= csbi.srWindow.Left;
-	csbi.dwCursorPosition.Y -= csbi.srWindow.Top;
+	if (getOutputHandle()) {
+		GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+		csbi.dwCursorPosition.X -= csbi.srWindow.Left;
+		csbi.dwCursorPosition.Y -= csbi.srWindow.Top;
+	} else {
+		csbi.dwCursorPosition.X = csbi.dwCursorPosition.Y = -1;
+	}
 
 	return csbi.dwCursorPosition;
 }
@@ -187,9 +180,7 @@ BOOL SetRow(int argc, LPCWSTR argv[])
 
 	toNumber(&row, 1, argv);
 	cur = getPosition();
-	setPosition(row, cur.X);
-
-	return TRUE;
+	return setPosition(row, cur.X);
 }
 
 DWORD GetRow(LPWSTR buffer, DWORD size)
@@ -208,9 +199,7 @@ BOOL SetColumn(int argc, LPCWSTR argv[])
 
 	toNumber(&column, 1, argv);
 	cur = getPosition();
-	setPosition(cur.Y, column);
-
-	return TRUE;
+	return setPosition(cur.Y, column);
 }
 
 DWORD GetColumn(LPWSTR buffer, DWORD size)
@@ -221,15 +210,15 @@ DWORD GetColumn(LPWSTR buffer, DWORD size)
 COORD getSize(void)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	HANDLE hOut;
 	COORD size;
 
-	hOut = getOutputHandle();
-	GetConsoleScreenBufferInfo(hOut, &csbi);
-	size.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-	size.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-	CloseHandle(hOut);
+	if (getOutputHandle()) {
+		GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+		size.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+		size.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+	} else {
+		csbi.dwCursorPosition.X = csbi.dwCursorPosition.Y = -1;
+	}
 
 	return size;
 }
@@ -254,33 +243,26 @@ DWORD GetWidth(LPWSTR buffer, DWORD size)
 
 BOOL SetColor(int argc, LPCWSTR argv[])
 {
-	HANDLE hOut;
 	WORD value;
-	BOOL ret;
 
-	if (argc != 1) {
+	if (argc != 1 || !getOutputHandle()) {
 		return FALSE;
 	}
 
-	hOut = getOutputHandle();
-
 	value = (WORD) wcstol(argv[0], NULL, 16);
 
-	ret = SetConsoleTextAttribute(hOut, value);
-	CloseHandle(hOut);
-
-	return ret;
+	return SetConsoleTextAttribute(consoleOutput, value);
 }
 
 DWORD GetColor(LPWSTR buffer, DWORD size)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	HANDLE hOut;
 
-	hOut = getOutputHandle();
-	GetConsoleScreenBufferInfo(hOut, &csbi);
+	if (!getOutputHandle()) {
+		return toString(-1, buffer, size);
+	}
 
-	CloseHandle(hOut);
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 
 	return snwprintf(buffer, size, L"%X", csbi.wAttributes);
 }
@@ -511,16 +493,13 @@ DWORD GetOpacity(LPWSTR buffer, DWORD size)
 BOOL SetConsoleCursor(int argc, LPCWSTR argv[])
 {
 	CONSOLE_CURSOR_INFO cci;
-	HANDLE hOut;
 	int iValue;
-	BOOL ret;
 
-	if (argc != 1) {
+	if (argc != 1 || !getOutputHandle()) {
 		return FALSE;
 	}
 
-	hOut = getOutputHandle();
-	GetConsoleCursorInfo(hOut, &cci);
+	GetConsoleCursorInfo(consoleOutput, &cci);
 
 	toNumber(&iValue, 1, argv);
 	if (iValue < 0) {
@@ -535,21 +514,18 @@ BOOL SetConsoleCursor(int argc, LPCWSTR argv[])
 		cci.bVisible = TRUE;
 	}
 
-	ret = SetConsoleCursorInfo(hOut, &cci);
-	CloseHandle(hOut);
-
-	return ret;
+	return SetConsoleCursorInfo(consoleOutput, &cci);
 }
 
 DWORD GetConsoleCursor(LPWSTR buffer, DWORD size)
 {
 	CONSOLE_CURSOR_INFO cci;
-	HANDLE hOut;
 
-	hOut = getOutputHandle();
-	GetConsoleCursorInfo(hOut, &cci);
+	if (!getOutputHandle()) {
+		return toString(-1, buffer, size);
+	}
 
-	CloseHandle(hOut);
+	GetConsoleCursorInfo(consoleOutput, &cci);
 
 	if (!cci.bVisible) {
 		return toString(0, buffer, size);
@@ -1278,12 +1254,14 @@ BOOL SetDumpParse(int argc, LPCWSTR argv[])
 	return setBoolean(pfDumpParse, *argv);
 }
 
-HANDLE getOutputHandle(void)
+BOOL getOutputHandle(void)
 {
-	HANDLE hOut;
-
-	hOut = CreateFileW(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
+	if (!consoleOutput) {
+		// If this fails nothing will change to make it succeed, so there's no
+		// need to keep trying.
+		consoleOutput = CreateFile(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
 			(FILE_SHARE_READ | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, 0, NULL);
+	}
 
-	return hOut;
+	return consoleOutput != INVALID_HANDLE_VALUE;
 }

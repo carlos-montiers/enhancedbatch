@@ -68,6 +68,7 @@ LPSTR AnsiBuf;			// batch file buffer
 LPVOID cmd_end; 		// end of the CMD.EXE image
 BOOL onWindowsTerminal; 		// running on Windows Terminal
 HWND consoleHwnd; 		// Hwnd of the console
+HANDLE consoleOutput;
 
 #define STRINGBUFFERMAX 32768
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
@@ -1336,6 +1337,10 @@ void unhook(void)
 	kh_destroy(line, batch_lnums);
 
 	unhookCmd();
+
+	if (consoleOutput != NULL && consoleOutput != INVALID_HANDLE_VALUE) {
+		CloseHandle(consoleOutput);
+	}
 }
 
 // Search each process in the snapshot for id.

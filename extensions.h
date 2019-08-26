@@ -158,4 +158,4 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size);
 BOOL SetDumpTokens(int argc, LPCWSTR argv[]);
 BOOL SetDumpParse(int argc, LPCWSTR argv[]);
 
-HANDLE getOutputHandle(void);
+BOOL getOutputHandle(void);
