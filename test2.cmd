@@ -2,31 +2,7 @@
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
 set $temp=@tempfile
->>%$temp% echo /?
->>%$temp% echo on
->>%$temp% echo
->>%$temp% echo off
->>%$temp% call :echo
-set @extensions=0
->>%$temp% echo Extensions off, colon part of variable: %OS:_= %
->>%$temp% echo Tilde expansion: %$0;~nx%.
-set @extensions=1
->>%$temp% echo Extensions on, replace underscore with space: %OS:_= %
-set @delayedexpansion=1
->>%$temp% echo Delayed expansion on, expand variable: !OS!
-set @delayedexpansion=0
->>%$temp% echo Delayed expansion off, literal text: !OS!
->>%$temp% echo Use character expansion!U+D!!U+A!for a new line.
-for /f "usebackq eol=!U+22!" %%A in ('"skip"!U+A!token') do >>%$temp% echo %%A
-for /f %%A in (";token") do >>%$temp% echo %%A
->>%$temp% echo This is line %@batchline%.
->>%$temp% call :args 1 2 3 4 5 6 7 8 9 10 11
->>%$temp% call :dumpparse
->>%$temp% call :dumptokens
-set @unicode=1
->>%$temp% echo;Unicode
-set @unicode=0
->>%$temp% echo.
+>>%$temp% call :test
 ::copy %$temp% test2.out
 fc >nul test2.out %$temp% || (
   echo CMD %@cmdversion% failed.
@@ -48,11 +24,47 @@ findstr >nul 0x2371 %$temp2% && goto :out
 echo CMD %@cmdversion% failed.
 echo;~"Expected: "
 type %$temp%
-echo.
+echo
 echo;~"Actual:   "
 type %$temp2%
-echo.
-goto :out
+echo
+:out
+del %$temp% %$temp2%
+goto :eof
+
+:test
+echo /?
+echo on
+echo
+echo off
+set $prompt=%PROMPT%
+prompt $G
+set @echo=on
+set @echo=off
+prompt %$prompt%
+set @extensions=0
+echo Extensions off, colon part of variable: %OS:_= %
+echo Tilde expansion: %$0;~nx%.
+set @extensions=1
+echo Extensions on, replace underscore with space: %OS:_= %
+set @delayedexpansion=1
+echo Delayed expansion on, expand variable: !OS!
+set @delayedexpansion=0
+echo Delayed expansion off, literal text: !OS!
+echo Use character expansion!U+D!!U+A!for a new line.
+for /f "usebackq eol=!U+22!" %%A in ('"skip"!U+A!token') do echo %%A
+for /f %%A in (";token") do echo %%A
+echo This is line %@batchline%.
+call :args 1 2 3 4 5 6 7 8 9 10 11
+set @dumpparse=true
+set @dumpparse=false
+set @dumptokens=1
+set @dumptokens=
+set @unicode=1
+echo;Unicode
+set @unicode=0
+echo
+goto :eof
 
 :args
 echo Initial args: %$#%: %$-%
@@ -69,24 +81,3 @@ echo from 4: %$4-%
 echo 5-7: %$5-7%
 echo twelfth: [%$12%]
 goto :eof
-
-:echo
-set $prompt=%PROMPT%
-prompt $G
-set @echo=on
-set @echo=off
-prompt %$prompt%
-goto :eof
-
-:dumpparse
-set @dumpparse=true
-set @dumpparse=false
-goto :eof
-
-:dumptokens
-set @dumptokens=1
-set @dumptokens=
-goto :eof
-
-:out
-del %$temp% %$temp2%

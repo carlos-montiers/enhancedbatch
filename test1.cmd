@@ -8,9 +8,6 @@ set $var=1
 2>nul set $var && (echo Failed: $var is in the environment.&goto :eof)
 if not defined $var echo Failed: $var is not defined.&goto :eof
 
-set $temp=@tempfile
-if not exist %$temp% echo Failed: temporary file doesn't exist.&goto :eof
-
 set @timer=start
 set @timerhi=start
 set @sleep=45
@@ -18,90 +15,95 @@ set @timerhi=
 set @timer=
 set $hi=@timerhi
 set $lo=@timer
+:: These aren't as good as they could be due to testing in virtual machines.
 if %$lo% lss 30 echo Failed: low timer too short (%$lo% ^< 45).&goto :eof
 if %$hi% lss 30000 echo Failed: high timer too short (%$hi% ^< 45000).&goto :eof
 
+set $temp=@tempfile
+if not exist %$temp% echo Failed: temporary file doesn't exist.&goto :eof
+>>%$temp% call :test
+::copy %$temp% test1.out
+fc >nul /b test1.out %$temp% || (
+  echo Failed.
+  fc /n test1.out %$temp%
+)
+del %$temp%
+goto :eof
+
+:test
 set $A=1
 set $a=2
->>%$temp% echo $A=%$A% $a=%$a%
+echo $A=%$A% $a=%$a%
 
->>%$temp% echo Left aligned:  !$A;-5!.
->>%$temp% echo Right aligned: !$A;5!.
->>%$temp% echo Zero padded:   !$A;05!.
+echo Left aligned:  !$A;-5!.
+echo Right aligned: !$A;5!.
+echo Zero padded:   !$A;05!.
 
 set "$var= oKay "
->>%$temp% echo Default:   !$no-var;'undefined'!.
->>%$temp% echo Invalid:   !$var;invalid!.
->>%$temp% echo Upper:     !$var;upper!.
->>%$temp% echo Lower:     !$var;lower!.
->>%$temp% echo Capital:   !$var;capital!.
->>%$temp% echo Length:    !$var;length!.
->>%$temp% echo Trim:      !$var;trim!.
->>%$temp% echo LTrim:     !$var;ltrim!.
->>%$temp% echo RTrim:     !$var;rtrim!.
->>%$temp% echo Trim[ oy]: !$var;trim[ oy]!.
->>%$temp% echo LTrim[ o]: !$var;ltrim[ o]!.
->>%$temp% echo RTrim[ y]: !$var;rtrim[ y]!.
->>%$temp% echo Trim,Cap:  !$var;trim,capital!.
+echo Default:   !$no-var;'undefined'!.
+echo Invalid:   !$var;invalid!.
+echo Upper:     !$var;upper!.
+echo Lower:     !$var;lower!.
+echo Capital:   !$var;capital!.
+echo Length:    !$var;length!.
+echo Trim:      !$var;trim!.
+echo LTrim:     !$var;ltrim!.
+echo RTrim:     !$var;rtrim!.
+echo Trim[ oy]: !$var;trim[ oy]!.
+echo LTrim[ o]: !$var;ltrim[ o]!.
+echo RTrim[ y]: !$var;rtrim[ y]!.
+echo Trim,Cap:  !$var;trim,capital!.
 
->>%$temp% echo Character TAB:!$TAB!.
->>%$temp% echo Character ESC:!$ESC!.
->>%$temp% echo Character BS:!$BS!.
->>%$temp% echo Character CR+LF:!$CR!!$LF!.
->>%$temp% echo Character CRLF:!$CRLF!.
->>%$temp% echo Character EXCL:!$EXCL!.
->>%$temp% echo Character QUOT:!$QUOT!.
->>%$temp% echo Character AMP:!$AMP!.
->>%$temp% echo Character BAR:!$BAR!.
->>%$temp% echo Character GT:!$GT!.
->>%$temp% echo Character LT:!$LT!.
->>%$temp% echo Character OPAR:!$OPAR!.
->>%$temp% echo Character CPAR:!$CPAR!.
->>%$temp% echo Character OBRC:!$OBRC!.
->>%$temp% echo Character CBRC:!$CBRC!.
->>%$temp% echo Character STAR:!$STAR!.
->>%$temp% echo Character QUES:!$QUES!.
->>%$temp% echo Character DOLLAR:!$DOLLAR!.
->>%$temp% echo Character SEMI:!$SEMI!.
->>%$temp% echo Character COMMA:!$COMMA!.
->>%$temp% echo Character EQ:!$EQ!.
+echo Character TAB:!$TAB!.
+echo Character ESC:!$ESC!.
+echo Character BS:!$BS!.
+echo Character CR+LF:!$CR!!$LF!.
+echo Character CRLF:!$CRLF!.
+echo Character EXCL:!$EXCL!.
+echo Character QUOT:!$QUOT!.
+echo Character AMP:!$AMP!.
+echo Character BAR:!$BAR!.
+echo Character GT:!$GT!.
+echo Character LT:!$LT!.
+echo Character OPAR:!$OPAR!.
+echo Character CPAR:!$CPAR!.
+echo Character OBRC:!$OBRC!.
+echo Character CBRC:!$CBRC!.
+echo Character STAR:!$STAR!.
+echo Character QUES:!$QUES!.
+echo Character DOLLAR:!$DOLLAR!.
+echo Character SEMI:!$SEMI!.
+echo Character COMMA:!$COMMA!.
+echo Character EQ:!$EQ!.
 
->>%$temp% echo;~"No quotes or newline."
->>%$temp% echo.
->>%$temp% echo,LF line.!$CR!
->>%$temp% echo "A long string "^
-               "spread across "^
-               "multiple lines."
+echo;~"No quotes or newline."
+echo.
+echo,LF line.!$CR!
+echo "A long string "^
+     "spread across "^
+     "multiple lines."
 
 for %%j in (:range*) do (
   for %%k in (:range*) do (
-    >>%$temp% echo %%j.%%k
+    echo %%j.%%k
     if %%k == 2 set @next=5
     if %%k == 6 set @next=
   )
   if %%j == 2 set @next=7
   if %%j == 8 set @next=
 )
-for %%j in (:range*3) do >>%$temp% echo %%j
-for %%j in (:range*4:6) do >>%$temp% echo %%j
-for %%j in (:range*1:5:2) do >>%$temp% echo %%j
-for %%j in (:range*-3) do >>%$temp% echo %%j
-for %%j in (:range*3:1) do >>%$temp% echo %%j
+for %%j in (:range*3) do echo %%j
+for %%j in (:range*4:6) do echo %%j
+for %%j in (:range*1:5:2) do echo %%j
+for %%j in (:range*-3) do echo %%j
+for %%j in (:range*3:1) do echo %%j
 
 set $j=1
 for %%_ in (:*) do (
-  >>%$temp% echo;!$j!..
+  echo;!$j!..
   if !$j! == 5 (
-    >>%$temp% echo Stop
+    echo Stop
     set @next=
   )
   set /a $j=!$j!+1
 )
-
-::copy %$temp% test1.out
-fc >nul /b test1.out %$temp% || (
-  echo Failed.
-  fc /n test1.out %$temp%
-)
-
-del %$temp%
