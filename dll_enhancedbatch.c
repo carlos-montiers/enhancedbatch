@@ -245,6 +245,14 @@ void setChars(void)
 	setVar(L"$SEMI",   L";");
 	setVar(L"$COMMA",  L",");
 	setVar(L"$EQ",	   L"=");
+
+	WCHAR yesno[8] = L"NY";
+	FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
+				  NULL, 0x2328, 0, yesno, lenof(yesno), NULL);
+	yesno[2] = L'\0';
+	setVar(L"$YES", yesno+1);
+	yesno[1] = yesno[0];
+	setVar(L"$NO", yesno+1);
 }
 
 int extcmp(const void *a, const void *b)
