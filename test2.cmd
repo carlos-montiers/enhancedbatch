@@ -42,10 +42,10 @@ prompt $G
 set @echo=on
 set @echo=off
 prompt %$prompt%
-set @extensions=0
+set @extensions=no
 echo Extensions off, colon part of variable: %OS:_= %
 echo Tilde expansion: %$0;~nx%.
-set @extensions=1
+set @extensions=yes
 echo Extensions on, replace underscore with space: %OS:_= %
 set @delayedexpansion=1
 echo Delayed expansion on, expand variable: !OS!

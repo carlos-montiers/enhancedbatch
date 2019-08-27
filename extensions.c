@@ -737,12 +737,14 @@ static BOOL setBoolean(LPBYTE var, LPCWSTR arg)
 {
 	if (arg == NULL
 		|| (arg[0] == L'0' && arg[1] == L'\0')
+		|| _wcsicmp(arg, L"no") == 0
 		|| _wcsicmp(arg, L"off") == 0
 		|| _wcsicmp(arg, L"false") == 0) {
 		*var = FALSE;
 		return TRUE;
 	}
 	if ((arg[0] == L'1' && arg[1] == L'\0')
+		|| _wcsicmp(arg, L"yes") == 0
 		|| _wcsicmp(arg, L"on") == 0
 		|| _wcsicmp(arg, L"true") == 0) {
 		*var = TRUE;
