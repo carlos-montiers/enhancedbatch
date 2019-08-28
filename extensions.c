@@ -101,7 +101,7 @@ BOOL setPosition(int row, int column)
 	COORD coord;
 	SHORT x, y;
 
-	if (!getOutputHandle()) {
+	if (!haveOutputHandle()) {
 		return FALSE;
 	}
 
@@ -150,7 +150,7 @@ COORD getPosition(void)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-	if (getOutputHandle()) {
+	if (haveOutputHandle()) {
 		GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 		csbi.dwCursorPosition.X -= csbi.srWindow.Left;
 		csbi.dwCursorPosition.Y -= csbi.srWindow.Top;
@@ -212,7 +212,7 @@ COORD getSize(void)
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	COORD size;
 
-	if (getOutputHandle()) {
+	if (haveOutputHandle()) {
 		GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 		size.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 		size.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
@@ -245,7 +245,7 @@ BOOL SetColor(int argc, LPCWSTR argv[])
 {
 	WORD value;
 
-	if (argc != 1 || !getOutputHandle()) {
+	if (argc != 1 || !haveOutputHandle()) {
 		return FALSE;
 	}
 
@@ -258,7 +258,7 @@ DWORD GetColor(LPWSTR buffer, DWORD size)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-	if (!getOutputHandle()) {
+	if (!haveOutputHandle()) {
 		return toString(-1, buffer, size);
 	}
 
@@ -495,7 +495,7 @@ BOOL SetConsoleCursor(int argc, LPCWSTR argv[])
 	CONSOLE_CURSOR_INFO cci;
 	int iValue;
 
-	if (argc != 1 || !getOutputHandle()) {
+	if (argc != 1 || !haveOutputHandle()) {
 		return FALSE;
 	}
 
@@ -521,7 +521,7 @@ DWORD GetConsoleCursor(LPWSTR buffer, DWORD size)
 {
 	CONSOLE_CURSOR_INFO cci;
 
-	if (!getOutputHandle()) {
+	if (!haveOutputHandle()) {
 		return toString(-1, buffer, size);
 	}
 
@@ -1274,7 +1274,7 @@ BOOL SetDumpParse(int argc, LPCWSTR argv[])
 	return setBoolean(pfDumpParse, *argv);
 }
 
-BOOL getOutputHandle(void)
+BOOL haveOutputHandle(void)
 {
 	if (!consoleOutput) {
 		// If this fails nothing will change to make it succeed, so there's no
