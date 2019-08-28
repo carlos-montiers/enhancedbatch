@@ -96,6 +96,7 @@ void WriteMemory(LPVOID dst, LPVOID src, int size);
 DWORD getBatchLine();
 void hookCmd(void);
 void unhookCmd(void);
+void hookCtrlCAborts(char aborts);
 
 #define peol				cmd_addrs[0]			// expected first!
 #ifdef _WIN64
@@ -118,5 +119,6 @@ void unhookCmd(void);
 #define pEchoFlag			cmd_addrs[14]
 #define pStartHelp			cmd_addrs[15]
 #define pEchoHelp			cmd_addrs[16]
+#define pCtrlCAborts		cmd_addrs[17]
 
-#define OFFSETS 17
+#define OFFSETS 18

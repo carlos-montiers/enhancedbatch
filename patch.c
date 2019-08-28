@@ -38,6 +38,9 @@ struct sCmdEntry {
 
 #ifdef _WIN64
 LPBYTE redirect;
+BYTE oldCtrlCAborts[7];
+#else
+BYTE oldCtrlCAborts[5];
 #endif
 
 int iPutMsg;
@@ -122,6 +125,8 @@ void hookCmd(void)
 			for (i = 0; i < OFFSETS; ++i) {
 				cmd_addrs[i] = cmd + ver->offsets[i];
 			}
+
+			memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
 
 			// Remove the default "eol=;".
 			WriteMemory(peol, 0, 1);
@@ -293,8 +298,28 @@ void hookCmd(void)
 			// CMD and the DLL could be more than 2GiB apart, so allocate some
 			// memory before CMD to near jump to, which then does an absolute
 			// jump to the DLL.
+			static const char redirect_code[] =
+			/*	0 */								// MyPutStdErrMsg
+			/*	8 */								// MyLexText
+
+			/* 16 */	"\xFF\x25\xEA\xFF\xFF\xFF"  // jmp [redirect]
+
+			/* 22 */	"\xBB\00\x40\x00\x00"       // mov ebx,0x4000
+			/* 27 */	"\xFF\x25\xE7\xFF\xFF\xFF"  // jmp [redirect+8]
+
+			/* 33 */	"\x81\xFA\x7B\x23\x00\x00"  // cmp edx,0x237b ;Terminate batch job?
+						"\x75\x05"                  // jne not_terminate
+			/* 41 */	"\xB8\x00\x00\x00\x00"      // mov eax,0 ;or 1
+						"\xC3"                      // ret
+						"\x58"                      // pop rax ;return address
+						"\x48\x83\xC0\x02"          // add rax,2 ;skip RET/NOP
+			/* 52 */	"???????"                   // original code
+						"\x50"                      // push rax
+						"\xC3"                      // ret
+			;
+
 			for (redirect = cmd - 0x1000;;) {
-				LPVOID mem = VirtualAlloc(redirect, 28,
+				LPVOID mem = VirtualAlloc(redirect, 16 + sizeof(redirect_code),
 										  MEM_COMMIT | MEM_RESERVE,
 										  PAGE_EXECUTE_READWRITE);
 				if (mem) {
@@ -307,10 +332,8 @@ void hookCmd(void)
 				}
 			}
 			((LPVOID *)redirect)[0] = MyPutStdErrMsg;
-			memcpy(redirect + 16, "\xFF\x25\xEA\xFF\xFF\xFF"    // jmp [redirect]
-								  "\xBB\00\x40\x00\x00"         // mov ebx,0x4000
-								  "\xFF\x25\xE7\xFF\xFF\xFF",   // jmp [redirect+8]
-								  17);
+			memcpy(redirect + 16, redirect_code, sizeof(redirect_code));
+			memcpy(redirect + 52, pCtrlCAborts, 7);
 #endif
 
 			// Hook PutStdErr to write the batch file name and line number.
@@ -361,6 +384,35 @@ void hookCmd(void)
 	}
 }
 
+void hookCtrlCAborts(char aborts)
+{
+	if (aborts == -1) {
+		WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
+	} else {
+#ifdef _WIN64
+		char code[7];
+		code[0] = 0xE8; 		// call redirect+33
+		*(int *)(code+1) = (DWORD_PTR)redirect+33 - ((DWORD_PTR)pCtrlCAborts+5);
+		code[5] = 0xC3; 		// ret
+		code[6] = 0x90; 		// nop
+		redirect[42] = aborts;
+#else
+		char code[5];
+		if (cmdFileVersionMS < 0x60003) {
+			code[0] = 0x58; 	// pop eax ;0
+			code[1] = 0x59; 	// pop ecx
+		} else {
+			code[0] = 0x33; 	// xor eax,eax
+			code[1] = 0xC0;
+		}
+		code[2] = 0x59; 		// pop ecx
+		code[3] = 0xB0; 		// mov al, aborts
+		code[4] = aborts;
+#endif
+		WriteMemory(pCtrlCAborts, code, sizeof(code));
+	}
+}
+
 void unhookCmd(void)
 {
 	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
@@ -370,6 +422,7 @@ void unhookCmd(void)
 	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
 	WriteMemory(pStartHelp, (LPVOID) 31, 1);
 	WriteMemory(pEchoHelp, (LPVOID) 9, 1);
+	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;
 

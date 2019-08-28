@@ -793,6 +793,24 @@ DWORD GetExtensions(LPWSTR buffer, DWORD size)
 	return toString(*pfEnableExtensions, buffer, size);
 }
 
+static char ctrlcaborts = -1;
+
+BOOL SetCtrlCAborts(int argc, LPCWSTR argv[])
+{
+	if (argc == 0) {
+		ctrlcaborts = -1;
+	} else if (!setBoolean((LPBYTE) &ctrlcaborts, *argv)) {
+		return FALSE;
+	}
+	hookCtrlCAborts(ctrlcaborts);
+	return TRUE;
+}
+
+DWORD GetCtrlCAborts(LPWSTR buffer, DWORD size)
+{
+	return toString(ctrlcaborts, buffer, size);
+}
+
 DWORD GetTransient(LPWSTR buffer, DWORD size)
 {
 	static int transient = -1;
