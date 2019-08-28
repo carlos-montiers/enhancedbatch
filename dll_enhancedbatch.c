@@ -725,6 +725,16 @@ BOOL DwFlagsForCodepageMustBeZero(UINT CodePage)
 	return FALSE;
 }
 
+BOOL SafeCloseHandle(HANDLE handle) {
+	if (handle != NULL
+		&& handle != INVALID_HANDLE_VALUE
+	) {
+		return CloseHandle(handle);
+	} else {
+		return FALSE;
+	}
+}
+
 int WINAPI
 MyMultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCCH lpMultiByteStr,
 	int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar)
@@ -1107,7 +1117,7 @@ FreeLibraryThread(LPVOID param)
 BOOL Unload(int argc, LPCWSTR argv[])
 {
 	unhook();
-	CloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
+	SafeCloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
 	return TRUE;
 }
 
@@ -1120,7 +1130,7 @@ MyCmdBatNotification(BOOL start)
 		global = TRUE;
 	} else if (!global) {
 		unhook();
-		CloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
+		SafeCloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
 	} else {
 		kh_clear(line, batch_lnums);
 	}
@@ -1348,9 +1358,7 @@ void unhook(void)
 
 	unhookCmd();
 
-	if (consoleOutput != NULL && consoleOutput != INVALID_HANDLE_VALUE) {
-		CloseHandle(consoleOutput);
-	}
+	SafeCloseHandle(consoleOutput);
 }
 
 // Search each process in the snapshot for id.

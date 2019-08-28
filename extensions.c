@@ -1276,7 +1276,8 @@ BOOL SetDumpParse(int argc, LPCWSTR argv[])
 
 BOOL haveOutputHandle(void)
 {
-	if (!consoleOutput) {
+	// If is not initialized
+	if (consoleOutput == NULL) {
 		// If this fails nothing will change to make it succeed, so there's no
 		// need to keep trying.
 		consoleOutput = CreateFile(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
