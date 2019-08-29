@@ -45,7 +45,7 @@ LPBYTE cmd_addrs[] = {
 	0,			// EchoFlag
 	0,			// START /?
 	0,			// ECHO /?
-	0,			// (CtrlCAborts:)PromptUser
+	0,			// (CtrlCAbort:)PromptUser
 };
 
 #ifdef _WIN64
@@ -553,7 +553,7 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x1c010,	// EchoFlag
 	0x0cd97,	// START /?
 	0x14a07,	// ECHO /?
-	0x12d0d,	// CtrlCAborts:PromptUser
+	0x12d0d,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_0_2195_1600[] = {
@@ -574,7 +574,7 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x1c010,	// EchoFlag
 	0x0cd8b,	// START /?
 	0x149fb,	// ECHO /?
-	0x12d01,	// CtrlCAborts:PromptUser
+	0x12d01,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_0_2195_2104[] = {
@@ -595,7 +595,7 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x1c010,	// EchoFlag
 	0x0cd87,	// START /?
 	0x149f7,	// ECHO /?
-	0x12cfd,	// CtrlCAborts:PromptUser
+	0x12cfd,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_0_2195_4803[] = {
@@ -616,7 +616,7 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x1c010,	// EchoFlag
 	0x0cdde,	// START /?
 	0x1414e,	// ECHO /?
-	0x12d54,	// CtrlCAborts:PromptUser
+	0x12d54,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_0_2195_6656[] = {
@@ -637,7 +637,7 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x1c010,	// EchoFlag
 	0x0ce12,	// START /?
 	0x14a7d,	// ECHO /?
-	0x12d88,	// CtrlCAborts:PromptUser
+	0x12d88,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_0_2195_6995[] = {
@@ -658,7 +658,7 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x1c010,	// EchoFlag
 	0x0ced0,	// START /?
 	0x14b3b,	// ECHO /?
-	0x12e46,	// CtrlCAborts:PromptUser
+	0x12e46,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_1_2600_0[] = {
@@ -679,7 +679,7 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x2cac8,	// EchoFlag
 	0x03a77,	// START /?
 	0x01f90,	// ECHO /?
-	0x1b30e,	// CtrlCAborts:PromptUser
+	0x1b30e,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_1_2600_2180[] = {
@@ -700,7 +700,7 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x2fac8,	// EchoFlag
 	0x05b2a,	// START /?
 	0x05c68,	// ECHO /?
-	0x0c60c,	// CtrlCAborts:PromptUser
+	0x0c60c,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_1_2600_3311[] = {
@@ -721,7 +721,7 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x2fac8,	// EchoFlag
 	0x05b1a,	// START /?
 	0x05c58,	// ECHO /?
-	0x10a9f,	// CtrlCAborts:PromptUser
+	0x10a9f,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_1_2600_5512[] = {
@@ -742,7 +742,7 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x2fac8,	// EchoFlag
 	0x05b1a,	// START /?
 	0x05c58,	// ECHO /?
-	0x10a9f,	// CtrlCAborts:PromptUser
+	0x10a9f,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_2_3790_0[] = {
@@ -763,7 +763,7 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x20064,	// EchoFlag
 	0x02005,	// START /?
 	0x01c20,	// ECHO /?
-	0x1cf1f,	// CtrlCAborts:PromptUser
+	0x1cf1f,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -784,7 +784,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x2fa80,	// EchoFlag
 	0x05306,	// START /?
 	0x0552e,	// ECHO /?
-	0x1ab43,	// CtrlCAborts:PromptUser
+	0x1ab43,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -805,7 +805,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x2fa80,	// EchoFlag
 	0x01815,	// START /?
 	0x045a6,	// ECHO /?
-	0x11c16,	// CtrlCAborts:PromptUser
+	0x11c16,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -826,7 +826,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x2404c,	// EchoFlag
 	0x028d7,	// START /?
 	0x0313e,	// ECHO /?
-	0x14c7f,	// CtrlCAborts:PromptUser
+	0x14c7f,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -847,7 +847,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x2404c,	// EchoFlag
 	0x02297,	// START /?
 	0x03258,	// ECHO /?
-	0x1f312,	// CtrlCAborts:PromptUser
+	0x1f312,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -868,7 +868,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x2408c,	// EchoFlag
 	0x02597,	// START /?
 	0x04cf2,	// ECHO /?
-	0x1fa56,	// CtrlCAborts:PromptUser
+	0x1fa56,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -889,7 +889,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x2408c,	// EchoFlag
 	0x02313,	// START /?
 	0x047c5,	// ECHO /?
-	0x1fab6,	// CtrlCAborts:PromptUser
+	0x1fab6,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -910,7 +910,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x2408c,	// EchoFlag
 	0x0220e,	// START /?
 	0x041c4,	// ECHO /?
-	0x1fcce,	// CtrlCAborts:PromptUser
+	0x1fcce,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -931,7 +931,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x2408c,	// EchoFlag
 	0x0220e,	// START /?
 	0x041c4,	// ECHO /?
-	0x1fcce,	// CtrlCAborts:PromptUser
+	0x1fcce,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -952,7 +952,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x30050,	// EchoFlag
 	0x01667,	// START /?
 	0x016a5,	// ECHO /?
-	0x22ed6,	// CtrlCAborts:PromptUser
+	0x22ed6,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -973,7 +973,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x2e090,	// EchoFlag
 	0x011a1,	// START /?
 	0x011e2,	// ECHO /?
-	0x18660,	// CtrlCAborts:PromptUser
+	0x18660,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -994,7 +994,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x2505c,	// EchoFlag
 	0x01920,	// START /?
 	0x0576f,	// ECHO /?
-	0x23078,	// CtrlCAborts:PromptUser
+	0x23078,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -1015,7 +1015,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x2800c,	// EchoFlag
 	0x15305,	// START /?
 	0x1eb93,	// ECHO /?
-	0x1c976,	// CtrlCAborts:PromptUser
+	0x1c976,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -1036,7 +1036,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x2500c,	// EchoFlag
 	0x0bd6f,	// START /?
 	0x0c6df,	// ECHO /?
-	0x224db,	// CtrlCAborts:PromptUser
+	0x224db,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -1057,7 +1057,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x2505c,	// EchoFlag
 	0x0126c,	// START /?
 	0x052e3,	// ECHO /?
-	0x23008,	// CtrlCAborts:PromptUser
+	0x23008,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -1078,7 +1078,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x2601c,	// EchoFlag
 	0x0148b,	// START /?
 	0x058ef,	// ECHO /?
-	0x234fb,	// CtrlCAborts:PromptUser
+	0x234fb,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -1099,7 +1099,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x25010,	// EchoFlag
 	0x08d4f,	// START /?
 	0x08260,	// ECHO /?
-	0x219d4,	// CtrlCAborts:PromptUser
+	0x219d4,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -1120,7 +1120,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x26010,	// EchoFlag
 	0x0ca1e,	// START /?
 	0x0878f,	// ECHO /?
-	0x22849,	// CtrlCAborts:PromptUser
+	0x22849,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -1141,7 +1141,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x26010,	// EchoFlag
 	0x0c68f,	// START /?
 	0x084ce,	// ECHO /?
-	0x22a8f,	// CtrlCAborts:PromptUser
+	0x22a8f,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -1162,7 +1162,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x2d0c8,	// EchoFlag
 	0x0d3fa,	// START /?
 	0x0cc7f,	// ECHO /?
-	0x28ff7,	// CtrlCAborts:PromptUser
+	0x28ff7,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -1183,7 +1183,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x2b0c0,	// EchoFlag
 	0x092b3,	// START /?
 	0x05162,	// ECHO /?
-	0x24d99,	// CtrlCAborts:PromptUser
+	0x24d99,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -1204,7 +1204,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x2d0c8,	// EchoFlag
 	0x108f3,	// START /?
 	0x0dd6c,	// ECHO /?
-	0x29230,	// CtrlCAborts:PromptUser
+	0x29230,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -1225,7 +1225,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x2d0c0,	// EchoFlag
 	0x0d283,	// START /?
 	0x08dc8,	// ECHO /?
-	0x29b3b,	// CtrlCAborts:PromptUser
+	0x29b3b,	// CtrlCAbort:PromptUser
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -1246,7 +1246,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x2d0c0,	// EchoFlag
 	0x0ac63,	// START /?
 	0x0a638,	// ECHO /?
-	0x2970b,	// CtrlCAborts:PromptUser
+	0x2970b,	// CtrlCAbort:PromptUser
 };
 
 #endif
