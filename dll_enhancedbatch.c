@@ -1249,6 +1249,15 @@ BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept c
 	pDosHeader = (PIMAGE_DOS_HEADER) hFromModule;
 	pNTHeader = MakeVA(PIMAGE_NT_HEADERS, pDosHeader->e_lfanew);
 
+	// Only interested in CmdBatNotification, which is not delayed until 6.2.
+	// 5.0 uses virtual addresses (not relative), so avoid testing that by
+	// checking the OS version in the header (CMD version hasn't been set yet).
+	if (pNTHeader->OptionalHeader.MajorOperatingSystemVersion < 6 ||
+		(pNTHeader->OptionalHeader.MajorOperatingSystemVersion == 6 &&
+		 pNTHeader->OptionalHeader.MinorOperatingSystemVersion < 2)) {
+		return TRUE;
+	}
+
 	// Get a pointer to the module's imports section
 	rva = pNTHeader->OptionalHeader
 					 .DataDirectory[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT]
