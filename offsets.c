@@ -46,6 +46,13 @@ LPBYTE cmd_addrs[] = {
 	0,			// START /?
 	0,			// ECHO /?
 	0,			// (CtrlCAbort:)PromptUser
+	0,			// FreeStack
+	0,			// DCount
+	0,			// SFWork:mkstr
+	0,			// SFWork:resize
+#ifndef _WIN64
+	0,			// SFWork:passed (EBP offset to the text)
+#endif
 };
 
 #ifdef _WIN64
@@ -69,6 +76,10 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x0223a,	// START /?
 	0x05849,	// ECHO /?
 	0x32ac3,	// PromptUser
+	0x0b830,	// FreeStack
+	0x42c50,	// DCount
+	0x07d4d,	// SFWork:mkstr (inline)
+	0x07e0f,	// SFWork:resize
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -90,6 +101,10 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x0225a,	// START /?
 	0x05869,	// ECHO /?
 	0x32ad3,	// PromptUser
+	0x0b850,	// FreeStack
+	0x42c50,	// DCount
+	0x07d6d,	// SFWork:mkstr (inline)
+	0x07e2f,	// SFWork:resize
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -111,6 +126,10 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x038ff,	// START /?
 	0x044b1,	// ECHO /?
 	0x282d0,	// PromptUser
+	0x032e0,	// FreeStack
+	0x2e0e4,	// DCount
+	0x0b0c8,	// SFWork:mkstr
+	0x0b140,	// SFWork:resize
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -132,6 +151,10 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x019d7,	// START /?
 	0x014ad,	// ECHO /?
 	0x2353c,	// PromptUser
+	0x02e50,	// FreeStack
+	0x2e0e0,	// DCount
+	0x0b808,	// SFWork:mkstr
+	0x0b87c,	// SFWork:resize
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -153,6 +176,10 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x02ad7,	// START /?
 	0x04f2e,	// ECHO /?
 	0x24b00,	// PromptUser
+	0x02240,	// FreeStack
+	0x2d128,	// DCount
+	0x0d3a8,	// SFWork:mkstr
+	0x0d431,	// SFWork:resize
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -174,6 +201,10 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x028cf,	// START /?
 	0x039ba,	// ECHO /?
 	0x24b50,	// PromptUser
+	0x01360,	// FreeStack
+	0x2d128,	// DCount
+	0x0d3d4,	// SFWork:mkstr
+	0x0d45d,	// SFWork:resize
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -195,6 +226,10 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x0199f,	// START /?
 	0x035b2,	// ECHO /?
 	0x24de0,	// PromptUser
+	0x017e0,	// FreeStack
+	0x2e128,	// DCount
+	0x0da58,	// SFWork:mkstr
+	0x0dae1,	// SFWork:resize
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -216,6 +251,10 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x0199f,	// START /?
 	0x035b2,	// ECHO /?
 	0x24de0,	// PromptUser
+	0x017e0,	// FreeStack
+	0x2e128,	// DCount
+	0x0da58,	// SFWork:mkstr
+	0x0dae1,	// SFWork:resize
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -237,6 +276,10 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x013e6,	// START /?
 	0x0ee1e,	// ECHO /?
 	0x25818,	// PromptUser
+	0x0d020,	// FreeStack
+	0x3c1b8,	// DCount
+	0x0f228,	// SFWork:mkstr (inline)
+	0x0f31b,	// SFWork:resize (inline)
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -258,6 +301,10 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x01766,	// START /?
 	0x0e2da,	// ECHO /?
 	0x26640,	// PromptUser
+	0x07700,	// FreeStack
+	0x381f8,	// DCount
+	0x0d486,	// SFWork:mkstr (inline)
+	0x0d56c,	// SFWork:resize (inline)
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -279,6 +326,10 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x0117c,	// START /?
 	0x07645,	// ECHO /?
 	0x280a0,	// PromptUser
+	0x076e8,	// FreeStack
+	0x2e0ec,	// DCount
+	0x0bb26,	// SFWork:mkstr (inline)
+	0x0bc0c,	// SFWork:resize (inline)
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -300,6 +351,10 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x18210,	// START /?
 	0x2362c,	// ECHO /?
 	0x23252,	// PromptUser
+	0x1915c,	// FreeStack
+	0x33ce8,	// DCount
+	0x09642,	// SFWork:mkstr
+	0x09973,	// SFWork:resize
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -321,6 +376,10 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x0da2c,	// START /?
 	0x0e501,	// ECHO /?
 	0x26f34,	// PromptUser
+	0x11f44,	// FreeStack
+	0x2c7c0,	// DCount
+	0x105f6,	// SFWork:mkstr (inline)
+	0x106dc,	// SFWork:resize (inline)
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -342,6 +401,10 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x0117c,	// START /?
 	0x07625,	// ECHO /?
 	0x27fe0,	// PromptUser
+	0x076d4,	// FreeStack
+	0x2d0ec,	// DCount
+	0x0b9d6,	// SFWork:mkstr (inline)
+	0x0babc,	// SFWork:resize (inline)
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -363,6 +426,10 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x0116c,	// START /?
 	0x074b0,	// ECHO /?
 	0x2815c,	// PromptUser
+	0x02110,	// FreeStack
+	0x2e06c,	// DCount
+	0x0d9a3,	// SFWork:mkstr
+	0x0da21,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -384,6 +451,10 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x0795b,	// START /?
 	0x07f3c,	// ECHO /?
 	0x23dd4,	// PromptUser
+	0x0b960,	// FreeStack
+	0x4b138,	// DCount
+	0x08533,	// SFWork:mkstr
+	0x085b5,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -405,6 +476,10 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0b51b,	// START /?
 	0x0bafc,	// ECHO /?
 	0x24c2c,	// PromptUser
+	0x0ea60,	// FreeStack
+	0x4c158,	// DCount
+	0x071a3,	// SFWork:mkstr
+	0x07225,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -426,6 +501,10 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0c86b,	// START /?
 	0x0ce3c,	// ECHO /?
 	0x248fc,	// PromptUser
+	0x0bc30,	// FreeStack
+	0x46d58,	// DCount
+	0x0d15e,	// SFWork:mkstr (inline)
+	0x0d215,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -447,6 +526,10 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x0f670,	// START /?
 	0x101e4,	// ECHO /?
 	0x2af05,	// PromptUser
+	0x12984,	// FreeStack
+	0x502d0,	// DCount
+	0x04449,	// SFWork:mkstr (inline)
+	0x04504,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -468,6 +551,10 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x0f8e9,	// START /?
 	0x10460,	// ECHO /?
 	0x2b0d5,	// PromptUser
+	0x12c04,	// FreeStack
+	0x502d0,	// DCount
+	0x04599,	// SFWork:mkstr (inline)
+	0x0465b,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -489,6 +576,10 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x10119,	// START /?
 	0x10c97,	// ECHO /?
 	0x2b314,	// PromptUser
+	0x13438,	// FreeStack
+	0x502d0,	// DCount
+	0x03cce,	// SFWork:mkstr (inline)
+	0x03d97,	// SFWork:resize
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -510,6 +601,10 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0cf19,	// START /?
 	0x0c7ff,	// ECHO /?
 	0x2c5f0,	// PromptUser
+	0x12ef0,	// FreeStack
+	0x43ad0,	// DCount
+	0x11960,	// SFWork:mkstr (inline)
+	0x11a4c,	// SFWork:resize (inline)
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -531,6 +626,10 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0be69,	// START /?
 	0x0b4c3,	// ECHO /?
 	0x2c9ac,	// PromptUser
+	0x11f60,	// FreeStack
+	0x43ad0,	// DCount
+	0x10970,	// SFWork:mkstr (inline)
+	0x10a5c,	// SFWork:resize (inline)
 };
 
 #else
@@ -554,6 +653,11 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x0cd97,	// START /?
 	0x14a07,	// ECHO /?
 	0x12d0d,	// CtrlCAbort:PromptUser
+	0x0d883,	// FreeStack
+	0x1cfbc,	// DCount
+	0x03d6d,	// SFWork:mkstr
+	0x03ec8,	// SFWork:resize
+	0x03d33,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_1600[] = {
@@ -575,6 +679,11 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x0cd8b,	// START /?
 	0x149fb,	// ECHO /?
 	0x12d01,	// CtrlCAbort:PromptUser
+	0x0d877,	// FreeStack
+	0x1cfbc,	// DCount
+	0x03d72,	// SFWork:mkstr
+	0x03ecd,	// SFWork:resize
+	0x03d38,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_2104[] = {
@@ -596,6 +705,11 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x0cd87,	// START /?
 	0x149f7,	// ECHO /?
 	0x12cfd,	// CtrlCAbort:PromptUser
+	0x0d873,	// FreeStack
+	0x1cfbc,	// DCount
+	0x03d72,	// SFWork:mkstr
+	0x03ecd,	// SFWork:resize
+	0x03d38,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_4803[] = {
@@ -617,6 +731,11 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x0cdde,	// START /?
 	0x1414e,	// ECHO /?
 	0x12d54,	// CtrlCAbort:PromptUser
+	0x0d8ca,	// FreeStack
+	0x1cfbc,	// DCount
+	0x03d72,	// SFWork:mkstr
+	0x03ecd,	// SFWork:resize
+	0x03d38,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_6656[] = {
@@ -638,6 +757,11 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x0ce12,	// START /?
 	0x14a7d,	// ECHO /?
 	0x12d88,	// CtrlCAbort:PromptUser
+	0x0d8fe,	// FreeStack
+	0x1cfbc,	// DCount
+	0x03d82,	// SFWork:mkstr
+	0x03edd,	// SFWork:resize
+	0x03d48,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_6995[] = {
@@ -659,6 +783,11 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x0ced0,	// START /?
 	0x14b3b,	// ECHO /?
 	0x12e46,	// CtrlCAbort:PromptUser
+	0x0d9bc,	// FreeStack
+	0x1cfbc,	// DCount
+	0x03e39,	// SFWork:mkstr
+	0x03f94,	// SFWork:resize
+	0x03dff,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_0[] = {
@@ -680,6 +809,11 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x03a77,	// START /?
 	0x01f90,	// ECHO /?
 	0x1b30e,	// CtrlCAbort:PromptUser
+	0x01817,	// FreeStack
+	0x289f0,	// DCount
+	0x02880,	// SFWork:mkstr
+	0x028e7,	// SFWork:resize
+	0x0284e,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_2180[] = {
@@ -701,6 +835,11 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x05b2a,	// START /?
 	0x05c68,	// ECHO /?
 	0x0c60c,	// CtrlCAbort:PromptUser
+	0x014fd,	// FreeStack
+	0x2b9f0,	// DCount
+	0x101cd,	// SFWork:mkstr
+	0x10234,	// SFWork:resize
+	0x1019b,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_3311[] = {
@@ -722,6 +861,11 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x05b1a,	// START /?
 	0x05c58,	// ECHO /?
 	0x10a9f,	// CtrlCAbort:PromptUser
+	0x014f8,	// FreeStack
+	0x2b9f0,	// DCount
+	0x080b4,	// SFWork:mkstr
+	0x0811b,	// SFWork:resize
+	0x08082,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_5512[] = {
@@ -743,6 +887,11 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x05b1a,	// START /?
 	0x05c58,	// ECHO /?
 	0x10a9f,	// CtrlCAbort:PromptUser
+	0x014f8,	// FreeStack
+	0x2b9f0,	// DCount
+	0x080b4,	// SFWork:mkstr
+	0x0811b,	// SFWork:resize
+	0x08082,	// SFWork:passed
 };
 
 const DWORD cmd_5_2_3790_0[] = {
@@ -764,6 +913,11 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x02005,	// START /?
 	0x01c20,	// ECHO /?
 	0x1cf1f,	// CtrlCAbort:PromptUser
+	0x01b4f,	// FreeStack
+	0x20014,	// DCount
+	0x06588,	// SFWork:mkstr
+	0x065eb,	// SFWork:resize
+	0x06556,	// SFWork:passed
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -785,6 +939,11 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x05306,	// START /?
 	0x0552e,	// ECHO /?
 	0x1ab43,	// CtrlCAbort:PromptUser
+	0x01c6c,	// FreeStack
+	0x2b9b0,	// DCount
+	0x0a1bb,	// SFWork:mkstr
+	0x0a222,	// SFWork:resize
+	0x0a189,	// SFWork:passed
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -806,6 +965,11 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x01815,	// START /?
 	0x045a6,	// ECHO /?
 	0x11c16,	// CtrlCAbort:PromptUser
+	0x01fe6,	// FreeStack
+	0x2b9b0,	// DCount
+	0x0abd6,	// SFWork:mkstr
+	0x0ac2d,	// SFWork:resize
+	0x0aba4,	// SFWork:passed
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -827,6 +991,11 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x028d7,	// START /?
 	0x0313e,	// ECHO /?
 	0x14c7f,	// CtrlCAbort:PromptUser
+	0x022b7,	// FreeStack
+	0x240c8,	// DCount
+	0x08817,	// SFWork:mkstr
+	0x08879,	// SFWork:resize
+	0x087e5,	// SFWork:passed
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -848,6 +1017,11 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x02297,	// START /?
 	0x03258,	// ECHO /?
 	0x1f312,	// CtrlCAbort:PromptUser
+	0x03031,	// FreeStack
+	0x240bc,	// DCount
+	0x09d69,	// SFWork:mkstr
+	0x09dcb,	// SFWork:resize
+	0x09d37,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -869,6 +1043,11 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x02597,	// START /?
 	0x04cf2,	// ECHO /?
 	0x1fa56,	// CtrlCAbort:PromptUser
+	0x01963,	// FreeStack
+	0x240fc,	// DCount
+	0x0de31,	// SFWork:mkstr
+	0x0de93,	// SFWork:resize
+	0x0ddff,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -890,6 +1069,11 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x02313,	// START /?
 	0x047c5,	// ECHO /?
 	0x1fab6,	// CtrlCAbort:PromptUser
+	0x019aa,	// FreeStack
+	0x240fc,	// DCount
+	0x0e135,	// SFWork:mkstr
+	0x0e197,	// SFWork:resize
+	0x0e103,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -911,6 +1095,11 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x0220e,	// START /?
 	0x041c4,	// ECHO /?
 	0x1fcce,	// CtrlCAbort:PromptUser
+	0x01911,	// FreeStack
+	0x24104,	// DCount
+	0x0ddbe,	// SFWork:mkstr
+	0x0de20,	// SFWork:resize
+	0x0dd8c,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -932,6 +1121,11 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x0220e,	// START /?
 	0x041c4,	// ECHO /?
 	0x1fcce,	// CtrlCAbort:PromptUser
+	0x01911,	// FreeStack
+	0x24104,	// DCount
+	0x0ddbe,	// SFWork:mkstr
+	0x0de20,	// SFWork:resize
+	0x0dd8c,	// SFWork:passed
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -953,6 +1147,11 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x01667,	// START /?
 	0x016a5,	// ECHO /?
 	0x22ed6,	// CtrlCAbort:PromptUser
+	0x0c4d8,	// FreeStack
+	0x300b8,	// DCount
+	0x0df4c,	// SFWork:mkstr (inline)
+	0x0dff9,	// SFWork:resize (inline)
+	0x0df22,	// SFWork:passed
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -974,6 +1173,11 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x011a1,	// START /?
 	0x011e2,	// ECHO /?
 	0x18660,	// CtrlCAbort:PromptUser
+	0x06b67,	// FreeStack
+	0x2e0f8,	// DCount
+	0x0bff8,	// SFWork:mkstr (inline)
+	0x0c0a9,	// SFWork:resize (inline)
+	0x0bfce,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -995,6 +1199,11 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x01920,	// START /?
 	0x0576f,	// ECHO /?
 	0x23078,	// CtrlCAbort:PromptUser
+	0x057df,	// FreeStack
+	0x250bc,	// DCount
+	0x09910,	// SFWork:mkstr (inline)
+	0x099bf,	// SFWork:resize
+	0x098e6,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -1016,6 +1225,11 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x15305,	// START /?
 	0x1eb93,	// ECHO /?
 	0x1c976,	// CtrlCAbort:PromptUser
+	0x16019,	// FreeStack
+	0x284f4,	// DCount
+	0x088fe,	// SFWork:mkstr
+	0x08bd7,	// SFWork:resize
+	0x08890,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -1037,6 +1251,11 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x0bd6f,	// START /?
 	0x0c6df,	// ECHO /?
 	0x224db,	// CtrlCAbort:PromptUser
+	0x0e902,	// FreeStack
+	0x254c8,	// DCount
+	0x0dda8,	// SFWork:mkstr (inline)
+	0x0de53,	// SFWork:resize (inline)
+	0x0dd7e,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -1058,6 +1277,11 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x0126c,	// START /?
 	0x052e3,	// ECHO /?
 	0x23008,	// CtrlCAbort:PromptUser
+	0x05353,	// FreeStack
+	0x250bc,	// DCount
+	0x0a2b9,	// SFWork:mkstr (inline)
+	0x0a368,	// SFWork:resize (inline)
+	0x0a28f,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -1079,6 +1303,11 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x0148b,	// START /?
 	0x058ef,	// ECHO /?
 	0x234fb,	// CtrlCAbort:PromptUser
+	0x059a0,	// FreeStack
+	0x2607c,	// DCount
+	0x0d976,	// SFWork:mkstr
+	0x0d9dd,	// SFWork:resize
+	0x0d94e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -1100,6 +1329,11 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x08d4f,	// START /?
 	0x08260,	// ECHO /?
 	0x219d4,	// CtrlCAbort:PromptUser
+	0x0c410,	// FreeStack
+	0x3c9e4,	// DCount
+	0x09a06,	// SFWork:mkstr
+	0x09a7b,	// SFWork:resize
+	0x099de,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -1121,6 +1355,11 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0ca1e,	// START /?
 	0x0878f,	// ECHO /?
 	0x22849,	// CtrlCAbort:PromptUser
+	0x0f31b,	// FreeStack
+	0x3d9e4,	// DCount
+	0x08fd6,	// SFWork:mkstr
+	0x0904b,	// SFWork:resize
+	0x08fae,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -1142,6 +1381,11 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0c68f,	// START /?
 	0x084ce,	// ECHO /?
 	0x22a8f,	// CtrlCAbort:PromptUser
+	0x0bf40,	// FreeStack
+	0x3d7cc,	// DCount
+	0x08d36,	// SFWork:mkstr
+	0x08dab,	// SFWork:resize
+	0x08d0e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -1163,6 +1407,11 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x0d3fa,	// START /?
 	0x0cc7f,	// ECHO /?
 	0x28ff7,	// CtrlCAbort:PromptUser
+	0x11bd6,	// FreeStack
+	0x43ce8,	// DCount
+	0x09857,	// SFWork:mkstr
+	0x098b8,	// SFWork:resize
+	0x09830,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -1184,6 +1433,11 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x092b3,	// START /?
 	0x05162,	// ECHO /?
 	0x24d99,	// CtrlCAbort:PromptUser
+	0x096e0,	// FreeStack
+	0x41c68,	// DCount
+	0x1975a,	// SFWork:mkstr
+	0x198e5,	// SFWork:resize
+	0x19726,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -1205,6 +1459,11 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x108f3,	// START /?
 	0x0dd6c,	// ECHO /?
 	0x29230,	// CtrlCAbort:PromptUser
+	0x12a06,	// FreeStack
+	0x43cd8,	// DCount
+	0x07d66,	// SFWork:mkstr
+	0x07dd2,	// SFWork:resize
+	0x07d3e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -1226,6 +1485,11 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0d283,	// START /?
 	0x08dc8,	// ECHO /?
 	0x29b3b,	// CtrlCAbort:PromptUser
+	0x0fc2d,	// FreeStack
+	0x35768,	// DCount
+	0x09a68,	// SFWork:mkstr (inline)
+	0x09b06,	// SFWork:resize
+	0x09a3e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -1247,6 +1511,11 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0ac63,	// START /?
 	0x0a638,	// ECHO /?
 	0x2970b,	// CtrlCAbort:PromptUser
+	0x1179f,	// FreeStack
+	0x35768,	// DCount
+	0x0b3a6,	// SFWork:mkstr
+	0x0b418,	// SFWork:resize
+	0x0b37e,	// SFWork:passed
 };
 
 #endif

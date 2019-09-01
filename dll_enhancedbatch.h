@@ -120,5 +120,14 @@ void hookCtrlCAborts(char aborts);
 #define pStartHelp			cmd_addrs[15]
 #define pEchoHelp			cmd_addrs[16]
 #define pCtrlCAborts		cmd_addrs[17]
+#define pFreeStack			cmd_addrs[18]
+#define pDCount 			cmd_addrs[19]
+#define pSFWorkmkstr		cmd_addrs[20]
+#define pSFWorkresize		cmd_addrs[21]
 
-#define OFFSETS 18
+#ifdef _WIN64
+#define OFFSETS 22
+#else
+#define pSFWorkpassed		((char*)cmd_addrs[22])
+#define OFFSETS 23
+#endif

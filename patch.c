@@ -41,10 +41,19 @@ LPBYTE redirect;
 BYTE oldCtrlCAborts[7];
 #else
 BYTE oldCtrlCAborts[5];
+DWORD SFWork_esp;
+BYTE SFWork_stdcall;
+int SFWork_passed, SFWork_first;
 #endif
 
 int iPutMsg;
-BYTE oldLexText[5], oldEchoOnOff[5];
+BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
+
+DWORD_PTR SFWork_mkstr_org;
+DWORD_PTR FreeStack;
+LPDWORD gpDCount;
+DWORD loopDCount;
+BYTE SFWork_mkstr_reg;
 
 
 #ifndef _WIN64
@@ -68,6 +77,111 @@ int __fastcall fastPutStdErrMsg62(int b, va_list *d, UINT a, UINT c)
 {
 	return MyPutStdErrMsg(a, b, c, d);
 }
+
+void SFWork_mkstr(void)
+{
+	asm("mov _SFWork_first,%eax\n"
+		"cmpl $0,(%ebp,%eax)\n"
+		"jnz org\n"                 // first call is the normal mkstr
+		"mov _loopDCount,%eax\n"
+		"test %eax,%eax\n"
+		"jnz 1f\n"                  // third and later calls free allocations
+		"mov _gpDCount,%eax\n"      // second call remembers current allocations
+		"mov (%eax),%eax\n"
+		"mov %eax,_loopDCount\n"
+		"jmp 2f\n"
+		"org:\n"
+		"andl $0,_loopDCount\n"
+		"jmp *_SFWork_mkstr_org\n"
+		"1:\n"
+		"mov %eax,%ecx\n"           // 6.2 passes in eax
+		"mov %esp,_SFWork_esp\n"    // 6.2.8102.0 is stdcall, but mkstr is fast
+		"push %eax\n"
+		"call *_FreeStack\n"        // free everything allocated between loops
+		"mov _SFWork_esp,%esp\n"
+		"2:\n"
+		"mov _SFWork_passed,%eax\n"
+		"mov (%ebp,%eax),%eax\n"
+		"mov (%eax),%eax\n"         // reuse the original mkstr
+		"mov -8(%eax),%ecx\n"       // no terminator is added, reset to 0
+		"sub $8,%ecx\n"             // length that was requested
+		"push %eax\n"
+		"push %edi\n"
+		"mov %eax,%edi\n"
+		"xor %eax,%eax\n"
+		"rep stosb\n"
+		"pop %edi\n"
+		"pop %eax\n"
+		"mov _SFWork_mkstr_reg,%cl\n"
+		"test %cl,%cl\n"
+		"jnz 1f\n"                  // inline
+		"cmp %cl,_SFWork_stdcall\n"
+		"jz exit\n"                 // fastcall, just return
+		"ret $4\n"                  // stdcall, tidy up
+		"1:\n"
+		"addl $0x35,(%esp)\n"       // skip over all the inline code
+		"cmp $0xF6,%cl\n"           // select the register it uses
+		"jne 1f\n"
+		"mov %eax,%esi\n"
+		"2:\n"
+		"ret $8\n"
+		"1:\n"
+		"cmp $0xDB,%cl\n"
+		"jne 1f\n"
+		"mov %eax,%ebx\n"
+		"jmp 2b\n"
+		"1:\n"
+		"mov %eax,%edi\n"
+		"jmp 2b\n"
+		"exit:");
+}
+
+#else
+
+void SFWork_mkstr(void)
+{
+	asm("cmpb $0,cmdDebug(%rip)\n"      // debug version (only one, so far)
+		"cmovnz 0xB0(%rsp),%r9d\n"      // retrieve the values
+		"cmovnz %r12,%rdx\n"
+		"test %r9d,%r9d\n"
+		"jnz org\n"                     // first call is the normal mkstr
+		"mov loopDCount(%rip),%ecx\n"
+		"test %ecx,%ecx\n"
+		"jnz 1f\n"                      // third and later free allocations
+		"mov gpDCount(%rip),%rax\n"     // second remembers current allocations
+		"mov (%rax),%ecx\n"
+		"mov %ecx,loopDCount(%rip)\n"
+		"jmp 2f\n"
+		"org:\n"
+		"andl $0,loopDCount(%rip)\n"
+		"jmp *SFWork_mkstr_org(%rip)\n"
+		"1:\n"
+		"push %rdx\n"
+		"sub $32,%rsp\n"                // shadow space
+		"call *FreeStack(%rip)\n"       // free everything allocated between loops
+		"add $32,%rsp\n"
+		"pop %rdx\n"
+		"2:\n"
+		"mov (%rdx),%rax\n"             // reuse the original mkstr
+		"mov -16(%rax),%rcx\n"          // no terminator is added, reset to 0
+		"sub $16,%rcx\n"                // length that was requested
+		"push %rax\n"
+		"push %rdi\n"
+		"mov %rax,%rdi\n"
+		"xor %eax,%eax\n"
+		"rep stosb\n"
+		"pop %rdi\n"
+		"pop %rax\n"
+		"mov SFWork_mkstr_reg(%rip),%cl\n"
+		"test %cl,%cl\n"
+		"jz exit\n"
+		"addq $0x49,(%rsp)\n"           // skip over all the inline code
+		"cmp $0xFF,%cl\n"               // select the register it uses
+		"cmove %rax,%rdi\n"
+		"cmovne %rax,%rbx\n"
+		"exit:");
+}
+
 #endif
 
 
@@ -183,6 +297,68 @@ void hookCmd(void)
 				// 6.3.*.*
 				// 10.*.*.*
 				WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+			}
+#endif
+
+			// Patch FOR to fix a substitute bug - each one has its own memory.
+			// Allocate once and reuse it.	It also frees memory allocated
+			// during each loop.
+			memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
+			memcpy(oldSFWorkresize, pSFWorkresize, 6);
+			FreeStack = (DWORD_PTR) pFreeStack;
+			gpDCount = (LPDWORD) pDCount;
+#ifdef _WIN64
+			if (*pSFWorkmkstr == 0xFF) {
+				SFWork_mkstr_reg = pSFWorkmkstr[0x47];
+				SFWork_mkstr_org = *(DWORD_PTR*)((DWORD_PTR)pSFWorkmkstr+6 + *(int *)(pSFWorkmkstr+2));
+				WriteMemory(pSFWorkmkstr, (LPVOID) 0xE8, 1);	// call
+				WriteMemory(pSFWorkmkstr+5, (LPVOID) 0x90, 1);	// nop
+			} else {
+				SFWork_mkstr_org = (DWORD_PTR)pSFWorkmkstr+5 + *(int *)(pSFWorkmkstr+1);
+			}
+			if (*pSFWorkresize == 0xFF) {
+				WriteMemory(pSFWorkresize, "\x4C\x89\xC0"   // mov rax,r8
+										   "\x0F\x1F"       // nop
+										   , 6);			// include NUL
+			} else {
+				WriteMemory(pSFWorkresize, "\x48\x89\xC8"   // mov rax,rcx
+										   "\x66\x90"       // nop
+										   , 5);
+			}
+#else
+			SFWork_passed = *pSFWorkpassed;
+			SFWork_first = (cmdFileVersionMS >= 0x60002) ? 12 : 20;
+			if (*pSFWorkmkstr == 0xE8) {
+				SFWork_mkstr_org = (DWORD)pSFWorkmkstr+5 + *(int *)(pSFWorkmkstr+1);
+				if (pSFWorkmkstr[-5] == 0x68) {
+					SFWork_stdcall = 1;
+				}
+			} else {
+				SFWork_mkstr_org = **(LPDWORD*)(pSFWorkmkstr+2);
+				SFWork_mkstr_reg = pSFWorkmkstr[0x33];
+				WriteMemory(pSFWorkmkstr, (LPVOID) 0xE8, 1);	// call
+				WriteMemory(pSFWorkmkstr+5, (LPVOID) 0x90, 1);	// nop
+			}
+			i = (DWORD)SFWork_mkstr - ((DWORD)pSFWorkmkstr+5);
+			WriteMemory(pSFWorkmkstr+1, &i, 4);
+			if (*pSFWorkresize == 0xE8) {
+				if (SFWork_stdcall) {
+					WriteMemory(pSFWorkresize, "\x58"           // pop eax
+											   "\x59"           // pop ecx
+											   "\x66\x66\x90"   // nop
+											   , 5);
+				} else {
+					WriteMemory(pSFWorkresize, "\x89\xC8"       // mov eax,ecx
+											   "\x66\x66\x90"   // nop
+											   , 5);
+				}
+			} else {
+				WriteMemory(pSFWorkresize, "\x59"       // pop ecx
+										   "\x59"       // pop ecx
+										   "\x58"       // pop eax
+										   "\x59"       // pop ecx
+										   "\x66\x90"   // nop
+										   , 6);
 			}
 #endif
 
@@ -316,6 +492,9 @@ void hookCmd(void)
 			/* 52 */	"???????"                   // original code
 						"\x50"                      // push rax
 						"\xC3"                      // ret
+						"???"                       // alignment
+			/* 64 */	"????????"                  // SFWork_mkstr
+			/* 72 */	"\xFF\x25\xF2\xFF\xFF\xFF"  // jmp [redirect+64]
 			;
 
 			for (redirect = cmd - 0x1000;;) {
@@ -334,6 +513,9 @@ void hookCmd(void)
 			((LPVOID *)redirect)[0] = MyPutStdErrMsg;
 			memcpy(redirect + 16, redirect_code, sizeof(redirect_code));
 			memcpy(redirect + 52, pCtrlCAborts, 7);
+			((LPVOID *)redirect)[8] = SFWork_mkstr;
+			i = (DWORD_PTR)redirect + 72 - (DWORD_PTR)pSFWorkmkstr - 5;
+			WriteMemory(pSFWorkmkstr+1, &i, 4);
 #endif
 
 			// Hook PutStdErr to write the batch file name and line number.
@@ -423,6 +605,9 @@ void unhookCmd(void)
 	WriteMemory(pStartHelp, (LPVOID) 31, 1);
 	WriteMemory(pEchoHelp, (LPVOID) 9, 1);
 	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
+	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);
+	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
+
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;
 
