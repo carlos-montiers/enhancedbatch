@@ -1423,7 +1423,7 @@ DWORD GetParentProcessId()
 		CloseHandle(ph);
 
 		if (parent_wow64 != me_wow64) {
-			return 0;
+			return -1;
 		}
 	}
 
@@ -1508,7 +1508,13 @@ BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
 	const struct sCMD *ver;
 	WCHAR eol;
 	VS_FIXEDFILEINFO *pfi;
-	char vi[256+sizeof(*pfi)];
+	struct LANGANDCODEPAGE {
+		WORD language;
+		WORD codepage;
+	} *lang;
+	WCHAR subblock[64];
+	LPWSTR originalname;
+	char vi[4096];
 	UINT len;
 	SIZE_T written;
 
@@ -1524,6 +1530,17 @@ BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
 			return TRUE;
 		}
 	}
+	VerQueryValue(vi, L"\\VarFileInfo\\Translation", (LPVOID *) &lang, &len);
+	snwprintf(subblock, lenof(subblock),
+			  L"\\StringFileInfo\\%04x%04x\\OriginalFilename",
+			  lang->language, lang->codepage);
+	if (VerQueryValue(vi, subblock, (LPVOID *) &originalname, &len)
+		&& (wcscmp(originalname, L"Cmd.Exe") == 0 ||
+			wcscmp(originalname, L"Cmd.Exe.MUI") == 0)) {
+		cmdFileVersionMS = pfi->dwFileVersionMS;
+		cmdFileVersionLS = pfi->dwFileVersionLS;
+		cmdDebug = pfi->dwFileFlags & VS_FF_DEBUG;
+	}
 	return FALSE;
 }
 
@@ -1534,16 +1551,39 @@ void Load(void)
 	WCHAR cmdname[MAX_PATH];
 	PBYTE cmdbase = NULL;	// remove a gcc warning
 
-	if (cmdpid != 0 && !IsInstalled(cmdpid, cmdname, &cmdbase)) {
+	if (cmdpid == 0) {
+		MessageBox(NULL, L"The parent process cannot be accessed.",
+				   L"Enhanced Batch", MB_OK | MB_ICONERROR);
+	} else if (cmdpid == -1) {
+		MessageBox(NULL,
+#ifdef _WIN64
+				   L"The parent process is 32-bit, but this is the 64-bit (amd64) DLL.",
+#else
+				   L"The parent process is 64-bit, but this is the 32-bit (x86) DLL.",
+#endif
+				   L"Enhanced Batch",  MB_OK | MB_ICONERROR);
+	} else if (!IsInstalled(cmdpid, cmdname, &cmdbase)) {
 		HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, cmdpid);
 		if (ph != NULL) {
 			if (IsSupported(ph, cmdname, cmdbase)) {
 				Inject(ph);
 			} else {
-				MessageBox(NULL, L"This version of CMD is not supported.",
+				if (cmdFileVersionMS == 0) {
+					snwprintf(stringBuffer, STRINGBUFFERMAX,
+							  L"This process does not appear to be CMD.\n\n%s",
+							  cmdname);
+				} else {
+					GetCmdVersion(varBuffer, STRINGBUFFERMAX);
+					snwprintf(stringBuffer, STRINGBUFFERMAX,
+							  L"CMD version %s is not supported.", varBuffer);
+				}
+				MessageBox(NULL, stringBuffer,
 						   L"Enhanced Batch", MB_OK | MB_ICONERROR);
 			}
 			CloseHandle(ph);
+		} else {
+			MessageBox(NULL, L"The parent process cannot be accessed.",
+					   L"Enhanced Batch", MB_OK | MB_ICONERROR);
 		}
 	}
 }
