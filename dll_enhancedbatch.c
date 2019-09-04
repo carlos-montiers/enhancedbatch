@@ -1494,7 +1494,8 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 
 	GetModuleFileName(NULL, enh_dll, lenof(enh_dll));
 	name = wcsrchr(enh_dll, '\\') + 1;
-	if (_wcsicmp(name, L"rundll32.exe") == 0) {
+	if (_wcsicmp(name, L"rundll32.exe") == 0
+		|| _wcsicmp(name, L"regsvr32.exe") == 0) {
 		GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
 		return TRUE;
 	}
@@ -1544,6 +1545,29 @@ BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
 	return FALSE;
 }
 
+static BOOL quiet;
+
+void checkArgs(void)
+{
+	int nArgs = 0;
+	LPWSTR *szArglist = CommandLineToArgvW(GetCommandLine(), &nArgs);
+	if (NULL != szArglist) {
+		while (--nArgs > 0) {
+			if (_wcsicmp(szArglist[nArgs], L"/s") == 0) {
+				quiet = TRUE;
+				break;
+			}
+		}
+	}
+}
+
+void Info(LPCWSTR msg)
+{
+	if (!quiet) {
+		MessageBox(NULL, msg, L"Enhanced Batch", MB_OK | MB_ICONERROR);
+	}
+}
+
 __declspec(dllexport)
 void Load(void)
 {
@@ -1551,17 +1575,18 @@ void Load(void)
 	WCHAR cmdname[MAX_PATH];
 	PBYTE cmdbase = NULL;	// remove a gcc warning
 
+	checkArgs();
+
 	if (cmdpid == 0) {
-		MessageBox(NULL, L"The parent process cannot be accessed.",
-				   L"Enhanced Batch", MB_OK | MB_ICONERROR);
+		Info(L"The parent process cannot be accessed.");
 	} else if (cmdpid == -1) {
-		MessageBox(NULL,
+		Info(
 #ifdef _WIN64
-				   L"The parent process is 32-bit, but this is the 64-bit (amd64) DLL.",
+			 L"The parent process is 32-bit, but this is the 64-bit (amd64) DLL."
 #else
-				   L"The parent process is 64-bit, but this is the 32-bit (x86) DLL.",
+			 L"The parent process is 64-bit, but this is the 32-bit (x86) DLL."
 #endif
-				   L"Enhanced Batch",  MB_OK | MB_ICONERROR);
+			);
 	} else if (!IsInstalled(cmdpid, cmdname, &cmdbase)) {
 		HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, cmdpid);
 		if (ph != NULL) {
@@ -1577,13 +1602,11 @@ void Load(void)
 					snwprintf(stringBuffer, STRINGBUFFERMAX,
 							  L"CMD version %s is not supported.", varBuffer);
 				}
-				MessageBox(NULL, stringBuffer,
-						   L"Enhanced Batch", MB_OK | MB_ICONERROR);
+				Info(stringBuffer);
 			}
 			CloseHandle(ph);
 		} else {
-			MessageBox(NULL, L"The parent process cannot be accessed.",
-					   L"Enhanced Batch", MB_OK | MB_ICONERROR);
+			Info(L"The parent process cannot be accessed.");
 		}
 	}
 }
@@ -1592,4 +1615,11 @@ __declspec(dllexport)
 void load(void)
 {
 	Load();
+}
+
+__declspec(dllexport)
+HRESULT DllRegisterServer(void)
+{
+	Load();
+	return S_OK;
 }
