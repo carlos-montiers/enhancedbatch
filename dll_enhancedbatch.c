@@ -97,7 +97,6 @@ BOOL Unload(int argc, LPCWSTR argv[]);
 
 fnCmdFunc *peEcho, eEcho;
 LPWSTR Fmt17;
-LPBYTE peol;
 DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 #ifdef _WIN64
 fnPutMsg pPutMsg;

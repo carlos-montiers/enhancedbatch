@@ -98,7 +98,8 @@ void hookCmd(void);
 void unhookCmd(void);
 void hookCtrlCAborts(char aborts);
 
-#define peol				cmd_addrs[0]			// expected first!
+// The eol character is no longer modified, but still used to verify the version.
+//#define peol				cmd_addrs[0]			// expected first!
 #ifdef _WIN64
 #define pMSCmdVar			((fnMSCmdVar) cmd_addrs[1])
 #else

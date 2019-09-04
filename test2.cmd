@@ -52,8 +52,7 @@ echo Delayed expansion on, expand variable: !OS!
 set @delayedexpansion=0
 echo Delayed expansion off, literal text: !OS!
 echo Use character expansion!U+D!!U+A!for a new line.
-for /f "usebackq eol=!U+22!" %%A in ('"skip"!U+A!token') do echo %%A
-for /f %%A in (";token") do echo %%A
+for /f "eol=!U+0!" %%A in (";token") do echo %%A
 echo This is line %@batchline%.
 call :args 1 2 3 4 5 6 7 8 9 10 11
 set @dumpparse=true

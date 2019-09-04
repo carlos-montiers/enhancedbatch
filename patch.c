@@ -242,9 +242,6 @@ void hookCmd(void)
 
 			memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
 
-			// Remove the default "eol=;".
-			WriteMemory(peol, 0, 1);
-
 			// Swap START & ECHO's help tests, so ECHO has no help and START
 			// only looks at its first argument.
 			WriteMemory(pStartHelp, (LPVOID) 9, 1);
@@ -598,7 +595,6 @@ void hookCtrlCAborts(char aborts)
 void unhookCmd(void)
 {
 	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
-	WriteMemory(peol, (LPVOID) ';', 1);
 	WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);
 	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
