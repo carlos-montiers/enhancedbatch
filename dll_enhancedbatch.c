@@ -256,6 +256,33 @@ void setChars(void)
 	setVar(L"$EQ",     L"=");
 	setVar(L"$AT",     L"@");
 
+	setVar(L"$KEY_UP",     L"-72");
+	setVar(L"$KEY_DOWN",   L"-80");
+	setVar(L"$KEY_LEFT",   L"-75");
+	setVar(L"$KEY_RIGHT",  L"-77");
+	setVar(L"$KEY_ENTER",  L"13");
+	setVar(L"$KEY_ESCAPE", L"27");
+	setVar(L"$KEY_BS",     L"8");
+	setVar(L"$KEY_TAB",    L"9");
+	setVar(L"$KEY_HOME",   L"-71");
+	setVar(L"$KEY_END",    L"-79");
+	setVar(L"$KEY_PGUP",   L"-73");
+	setVar(L"$KEY_PGDN",   L"-81");
+	setVar(L"$KEY_INS",    L"-82");
+	setVar(L"$KEY_DEL",    L"-83");
+	setVar(L"$KEY_F1",     L"-59");
+	setVar(L"$KEY_F2",     L"-60");
+	setVar(L"$KEY_F3",     L"-61");
+	setVar(L"$KEY_F4",     L"-62");
+	setVar(L"$KEY_F5",     L"-63");
+	setVar(L"$KEY_F6",     L"-64");
+	setVar(L"$KEY_F7",     L"-65");
+	setVar(L"$KEY_F8",     L"-66");
+	setVar(L"$KEY_F9",     L"-67");
+	setVar(L"$KEY_F10",    L"-68");
+	setVar(L"$KEY_F11",    L"-133");
+	setVar(L"$KEY_F12",    L"-134");
+
 	WCHAR yesno[8] = L"NY";
 	FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
 				  NULL, 0x2328, 0, yesno, lenof(yesno), NULL);
