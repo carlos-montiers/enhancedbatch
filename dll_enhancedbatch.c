@@ -254,6 +254,7 @@ void setChars(void)
 	setVar(L"$SEMI",   L";");
 	setVar(L"$COMMA",  L",");
 	setVar(L"$EQ",     L"=");
+	setVar(L"$AT",     L"@");
 
 	WCHAR yesno[8] = L"NY";
 	FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
