@@ -1652,6 +1652,8 @@ void load(void)
 	Load();
 }
 
+// Default entry point of regsvr32
+// Used only as a method to load the DLL into CMD
 __declspec(dllexport)
 HRESULT DllRegisterServer(void)
 {
