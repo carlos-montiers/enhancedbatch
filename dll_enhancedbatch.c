@@ -3,7 +3,7 @@
  Copyright (c) 2019 Jason Hood
 
  This software is provided 'as-is', without any express or implied
- warranty.  In no event will the authors be held liable for any damages
+ warranty. In no event will the authors be held liable for any damages
  arising from the use of this software.
 
  Permission is granted to anyone to use this software for any purpose,
@@ -224,18 +224,18 @@ void setVar(LPCWSTR var, LPCWSTR val)
 
 void setChars(void)
 {
-	setVar(L"$LF",	   L"\n");
-	setVar(L"$CR",	   L"\r");
+	setVar(L"$LF",     L"\n");
+	setVar(L"$CR",     L"\r");
 	setVar(L"$CRLF",   L"\r\n");
-	setVar(L"$BS",	   L"\b");
+	setVar(L"$BS",     L"\b");
 	setVar(L"$TAB",    L"\t");
 	setVar(L"$ESC",    L"\33");
 	setVar(L"$EXCL",   L"!");
 	setVar(L"$QUOT",   L"\"");
 	setVar(L"$AMP",    L"&");
 	setVar(L"$BAR",    L"|");
-	setVar(L"$GT",	   L">");
-	setVar(L"$LT",	   L"<");
+	setVar(L"$GT",     L">");
+	setVar(L"$LT",     L"<");
 	setVar(L"$OPAR",   L"(");
 	setVar(L"$CPAR",   L")");
 	setVar(L"$OBRC",   L"{");
@@ -245,7 +245,7 @@ void setChars(void)
 	setVar(L"$DOLLAR", L"$");
 	setVar(L"$SEMI",   L";");
 	setVar(L"$COMMA",  L",");
-	setVar(L"$EQ",	   L"=");
+	setVar(L"$EQ",     L"=");
 
 	WCHAR yesno[8] = L"NY";
 	FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,

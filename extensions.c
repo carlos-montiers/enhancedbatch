@@ -3,7 +3,7 @@
  Copyright (c) 2019 Jason Hood
 
  This software is provided 'as-is', without any express or implied
- warranty.  In no event will the authors be held liable for any damages
+ warranty. In no event will the authors be held liable for any damages
  arising from the use of this software.
 
  Permission is granted to anyone to use this software for any purpose,
@@ -366,8 +366,8 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size)
 	return toString(-1, buffer, size);
 }
 
-// Search the Terminal windows for the tab window itself.  This lets us make
-// CMD transparent, but not Terminal as a whole.  It does, unfortunately (or
+// Search the Terminal windows for the tab window itself. This lets us make
+// CMD transparent, but not Terminal as a whole. It does, unfortunately (or
 // fortunately, depending on your point of view), apply to all tabs, though.
 BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam)
 {
@@ -885,7 +885,7 @@ DWORD GetTempDir(LPWSTR buffer, DWORD size)
 static SYSTEMTIME st;
 static DWORD time_retrieved;
 static WCHAR point;
-static int	 english;
+static int english;
 static const LPCWSTR MonthNames[] = {
 	L"January", L"February", L"March", L"April", L"May", L"June",
 	L"July", L"August", L"September", L"October", L"November", L"December"
