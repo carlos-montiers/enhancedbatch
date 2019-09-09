@@ -27,6 +27,16 @@
 
 #include "dll_enhancedbatch.h"
 
+#include "khash.h"
+#ifdef _WIN64
+KHASH_MAP_INIT_INT64(ptrdw, DWORD)
+#else
+KHASH_MAP_INIT_INT(ptrdw, DWORD)
+#endif
+
+khash_t(ptrdw) *sfwork_map;
+
+
 struct sCmdEntry {
 	LPCWSTR   name;
 	fnCmdFunc func;
@@ -39,11 +49,12 @@ struct sCmdEntry {
 #ifdef _WIN64
 LPBYTE redirect;
 BYTE oldCtrlCAborts[7];
+BYTE SFWork_saved;
 #else
 BYTE oldCtrlCAborts[5];
 DWORD SFWork_esp;
 BYTE SFWork_stdcall;
-int SFWork_passed, SFWork_first;
+int SFWork_saved, SFWork_passed, SFWork_first;
 #endif
 
 int iPutMsg;
@@ -51,9 +62,26 @@ BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
 
 DWORD_PTR SFWork_mkstr_org;
 DWORD_PTR FreeStack;
-LPDWORD gpDCount;
-DWORD loopDCount;
 BYTE SFWork_mkstr_reg;
+
+
+int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
+{
+	khint_t k;
+	int absent;
+
+	if (saved == NULL) {
+		k = kh_put(ptrdw, sfwork_map, (DWORD_PTR) passed, &absent);
+		kh_val(sfwork_map, k) = 0;
+		return 0;
+	}
+	k = kh_get(ptrdw, sfwork_map, (DWORD_PTR) passed);
+	if (kh_val(sfwork_map, k) == 0 || first) {
+		kh_val(sfwork_map, k) = *pDCount;
+		return -1;
+	}
+	return kh_val(sfwork_map, k);
+}
 
 
 #ifndef _WIN64
@@ -80,28 +108,39 @@ int __fastcall fastPutStdErrMsg62(int b, va_list *d, UINT a, UINT c)
 
 void SFWork_mkstr(void)
 {
-	asm("mov _SFWork_first,%eax\n"
-		"cmpl $0,(%ebp,%eax)\n"
-		"jnz org\n"                 // first call is the normal mkstr
-		"mov _loopDCount,%eax\n"
+	asm(
+		"push %ecx\n"               // preserve possible register argument
+		"mov _SFWork_first,%eax\n"
+		"pushl (%eax,%ebp)\n"
+		"mov _SFWork_passed,%eax\n"
+		"pushl (%eax,%ebp)\n"
+		"mov _SFWork_saved,%eax\n"
 		"test %eax,%eax\n"
-		"jnz 1f\n"                  // third and later calls free allocations
-		"mov _gpDCount,%eax\n"      // second call remembers current allocations
-		"mov (%eax),%eax\n"
-		"mov %eax,_loopDCount\n"
+		"js 1f\n"
+		"mov (%eax,%ebp),%eax\n"    // debug version doesn't store it
+		"mov -28(%ebp),%ecx\n"
+		"lea 4(%ecx,%eax,4),%eax\n"
 		"jmp 2f\n"
 		"org:\n"
-		"andl $0,_loopDCount\n"
 		"jmp *_SFWork_mkstr_org\n"
 		"1:\n"
-		"mov %eax,%ecx\n"           // 6.2 passes in eax
+		"mov (%eax,%ebp),%eax\n"
+		"2:\n"
+		"pushl (%eax)\n"
+		"call _SFWork_hook\n"
+		"add $12,%esp\n"
+		"pop %ecx\n"
+		"test %eax,%eax\n"
+		"js 1f\n"
+		"jz org\n"
+		"mov %eax,%ecx\n"           // 6.2.9200.16384 passes in eax, 6.3+ in ecx
 		"mov %esp,_SFWork_esp\n"    // 6.2.8102.0 is stdcall, but mkstr is fast
 		"push %eax\n"
 		"call *_FreeStack\n"        // free everything allocated between loops
 		"mov _SFWork_esp,%esp\n"
-		"2:\n"
+		"1:\n"
 		"mov _SFWork_passed,%eax\n"
-		"mov (%ebp,%eax),%eax\n"
+		"mov (%eax,%ebp),%eax\n"
 		"mov (%eax),%eax\n"         // reuse the original mkstr
 		"mov -8(%eax),%ecx\n"       // no terminator is added, reset to 0
 		"sub $8,%ecx\n"             // length that was requested
@@ -121,47 +160,70 @@ void SFWork_mkstr(void)
 		"1:\n"
 		"addl $0x35,(%esp)\n"       // skip over all the inline code
 		"cmp $0xF6,%cl\n"           // select the register it uses
-		"jne 1f\n"
+		"jb 1f\n"                   // 0xDB
+		"ja 2f\n"                   // 0xFF
 		"mov %eax,%esi\n"
-		"2:\n"
 		"ret $8\n"
 		"1:\n"
-		"cmp $0xDB,%cl\n"
-		"jne 1f\n"
 		"mov %eax,%ebx\n"
-		"jmp 2b\n"
-		"1:\n"
+		"ret $8\n"
+		"2:\n"
 		"mov %eax,%edi\n"
-		"jmp 2b\n"
-		"exit:");
+		"ret $8\n"
+		"exit:"
+	);
 }
 
 #else
 
 void SFWork_mkstr(void)
 {
-	asm("cmpb $0,cmdDebug(%rip)\n"      // debug version (only one, so far)
+	asm(
+		"cmpb $0,cmdDebug(%rip)\n"      // debug version (only one, so far)
 		"cmovnz 0xB0(%rsp),%r9d\n"      // retrieve the values
 		"cmovnz %r12,%rdx\n"
-		"test %r9d,%r9d\n"
-		"jnz org\n"                     // first call is the normal mkstr
-		"mov loopDCount(%rip),%ecx\n"
-		"test %ecx,%ecx\n"
-		"jnz 1f\n"                      // third and later free allocations
-		"mov gpDCount(%rip),%rax\n"     // second remembers current allocations
-		"mov (%rax),%ecx\n"
-		"mov %ecx,loopDCount(%rip)\n"
-		"jmp 2f\n"
+		"mov %r9d,%r8d\n"
+		"push %rcx\n"
+		"push %rdx\n"
+		"movzxb SFWork_saved(%rip),%eax\n"
+		"test $0x80,%al\n"
+		"jns 2f\n"
+		"cmp $0xA0,%al\n"
+		"je 1f\n"
+		"mov 0x18(%rsp,%rax),%rax\n"    // 0x90, 0x80
+		"mov 8(%rax,%rdi,8),%rcx\n"
+		"jmp 3f\n"
 		"org:\n"
-		"andl $0,loopDCount(%rip)\n"
 		"jmp *SFWork_mkstr_org(%rip)\n"
 		"1:\n"
+		"mov 8(%rsp,%rax),%rax\n"       // 0xA0
+		"mov 8(%rax,%r13,8),%rcx\n"
+		"jmp 3f\n"
+		"2:\n"
+		"cmp $0x34,%al\n"
+		"jne 1f\n"
+		"mov (%r14),%rcx\n"             // 0x34
+		"jmp 3f\n"
+		"1:\n"
+		"cmova %r15,%rax\n"             // 0x3C
+		"cmovb %r13,%rax\n"             // 0x2C
+		"mov 8(%rax),%rcx\n"
+		"3:\n"
+		"sub $32,%rsp\n"                // shadow space
+		"call SFWork_hook\n"
+		"add $32,%rsp\n"
+		"pop %rdx\n"
+		"pop %rcx\n"
+		"test %eax,%eax\n"
+		"js 1f\n"
+		"jz org\n"
 		"push %rdx\n"
 		"sub $32,%rsp\n"                // shadow space
+		"mov %eax,%ecx\n"
 		"call *FreeStack(%rip)\n"       // free everything allocated between loops
 		"add $32,%rsp\n"
 		"pop %rdx\n"
-		"2:\n"
+		"1:\n"
 		"mov (%rdx),%rax\n"             // reuse the original mkstr
 		"mov -16(%rax),%rcx\n"          // no terminator is added, reset to 0
 		"sub $16,%rcx\n"                // length that was requested
@@ -202,6 +264,8 @@ void hookCmd(void)
 	end = MakeVA(LPDWORD, pNTHeader->OptionalHeader.SizeOfImage);
 	cmd_end = end;
 	pMyEcho = MyEcho;
+
+	sfwork_map = kh_init(ptrdw);
 
 	// Search the image for the ECHO & SET help identifiers (to locate eEcho),
 	// L"%s\r\n" (for its output) and the binary file version.
@@ -303,7 +367,7 @@ void hookCmd(void)
 			memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
 			memcpy(oldSFWorkresize, pSFWorkresize, 6);
 			FreeStack = (DWORD_PTR) pFreeStack;
-			gpDCount = (LPDWORD) pDCount;
+			SFWork_saved = *pSFWorksaved;
 #ifdef _WIN64
 			if (*pSFWorkmkstr == 0xFF) {
 				SFWork_mkstr_reg = pSFWorkmkstr[0x47];
@@ -594,6 +658,8 @@ void hookCtrlCAborts(char aborts)
 
 void unhookCmd(void)
 {
+	kh_destroy(ptrdw, sfwork_map);
+
 	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
 	WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);
