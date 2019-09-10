@@ -512,9 +512,9 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x10be8,	// MSCmdVar
 	0x0dd3a,	// Lex:text
 	0x4c080,	// TmpBuf
-	0x502b0,	// PutStdErr:PutMsg
-	0x43cd4,	// CurrentBatchFile
-	0x14398,	// fOutputUnicode
+	0x14398,	// PutStdErr:PutMsg
+	0x502b0,	// CurrentBatchFile
+	0x54694,	// fOutputUnicode
 	0x502b8,	// fDelayedExpansion
 	0x502b9,	// fEnableExtensions
 	0x4bf64,	// fDumpTokens
