@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static DWORD toString(DWORD num, LPWSTR buffer, DWORD size)
+static DWORD toString(int num, LPWSTR buffer, DWORD size)
 {
 	return snwprintf(buffer, size, L"%d", num);
 }
