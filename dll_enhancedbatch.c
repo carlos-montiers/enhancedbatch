@@ -261,7 +261,7 @@ void setChars(void)
 	setVar(L"$KEY_LEFT",   L"-75");
 	setVar(L"$KEY_RIGHT",  L"-77");
 	setVar(L"$KEY_ENTER",  L"13");
-	setVar(L"$KEY_ESCAPE", L"27");
+	setVar(L"$KEY_ESC",    L"27");
 	setVar(L"$KEY_BS",     L"8");
 	setVar(L"$KEY_TAB",    L"9");
 	setVar(L"$KEY_HOME",   L"-71");
