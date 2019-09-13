@@ -51,11 +51,6 @@ CmdBatNotification(BOOL start);
 KHASH_MAP_INIT_WSTR(wstr, LPWSTR)
 KHASH_MAP_INIT_WSTR(line, DWORD)
 
-#ifdef _WIN64
-#define ARCH L"amd64"
-#else
-#define ARCH L"x86"
-#endif
 
 WCHAR enh_dll[MAX_PATH];
 
@@ -70,11 +65,8 @@ BOOL onWindowsTerminal; 		// running on Windows Terminal
 HWND consoleHwnd; 		// Hwnd of the console
 HANDLE consoleOutput;
 
-#define STRINGBUFFERMAX 32768
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
-
-#define FINDSTACKMAX 128
 
 LPWIN32_FIND_DATA findForStack[FINDSTACKMAX];
 int findForStackTop = -1;

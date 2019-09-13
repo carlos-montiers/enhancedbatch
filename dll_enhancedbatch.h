@@ -92,7 +92,17 @@ typedef LPWSTR (__fastcall *fastMSCmdVar62)(LPCWSTR, LPVOID, LPCWSTR, int *, LPW
 #endif
 extern int batchfile;
 
+#ifdef _WIN64
+#define ARCH L"amd64"
+#else
+#define ARCH L"x86"
+#endif
+
+#define STRINGBUFFERMAX 32768
+
+#define FINDSTACKMAX 128
 #define FORF_STACKSIZE 32		// should be way more than enough
+
 
 void WriteMemory(LPVOID dst, LPVOID src, int size);
 DWORD getBatchLine();
