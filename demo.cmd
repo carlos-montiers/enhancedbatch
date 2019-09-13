@@ -9,6 +9,15 @@ Goto :Eof
 set "@extensions=1"
 set "@delayedexpansion=1"
 
+echo Playing with forline and forlines
+set "file=%~dp0LICENSE.txt"
+for /f "usebackq" %%a in ("!file!") do (
+  echo !@forline!:%%a
+)
+echo TOTAL lines:!@forlines!
+
+pause & cls
+
 ::Save the current state.
 set $prevcolor=!@color!
 set $prevopacity=!@opacity!
