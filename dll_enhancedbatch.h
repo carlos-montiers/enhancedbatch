@@ -100,7 +100,7 @@ extern int batchfile;
 
 #define STRINGBUFFERMAX 32768
 
-#define FINDSTACKMAX 128
+#define FINDFOR_STACKSIZE 128
 #define FORF_STACKSIZE 32		// should be way more than enough
 
 

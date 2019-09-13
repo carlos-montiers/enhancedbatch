@@ -68,7 +68,7 @@ HANDLE consoleOutput;
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
 
-LPWIN32_FIND_DATA findForStack[FINDSTACKMAX];
+LPWIN32_FIND_DATA findForStack[FINDFOR_STACKSIZE];
 int findForStackTop = -1;
 
 enum { forRange, forInfinite };
@@ -1053,7 +1053,7 @@ BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
 
 BOOL findFor(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
 {
-	if (*lpFileName == L':' && findForStackTop < FINDSTACKMAX - 1) {
+	if (*lpFileName == L':' && findForStackTop < FINDFOR_STACKSIZE - 1) {
 		if (findInfinite(lpFileName, lpFindFileData)) {
 			return TRUE;
 		}
