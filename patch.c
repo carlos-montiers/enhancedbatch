@@ -116,16 +116,11 @@ void SFWork_mkstr(void)
 		"pushl (%eax,%ebp)\n"
 		"mov _SFWork_saved,%eax\n"
 		"test %eax,%eax\n"
-		"js 1f\n"
-		"mov (%eax,%ebp),%eax\n"    // debug version doesn't store it
-		"mov -28(%ebp),%ecx\n"
-		"lea 4(%ecx,%eax,4),%eax\n"
-		"jmp 2f\n"
-		"org:\n"
-		"jmp *_SFWork_mkstr_org\n"
-		"1:\n"
 		"mov (%eax,%ebp),%eax\n"
-		"2:\n"
+		"js 1f\n"
+		"mov -28(%ebp),%ecx\n"      // debug version doesn't store it
+		"lea 4(%ecx,%eax,4),%eax\n"
+		"1:\n"
 		"pushl (%eax)\n"
 		"call _SFWork_hook\n"
 		"add $12,%esp\n"
@@ -160,16 +155,12 @@ void SFWork_mkstr(void)
 		"1:\n"
 		"addl $0x35,(%esp)\n"       // skip over all the inline code
 		"cmp $0xF6,%cl\n"           // select the register it uses
-		"jb 1f\n"                   // 0xDB
-		"ja 2f\n"                   // 0xFF
-		"mov %eax,%esi\n"
+		"cmove %eax,%esi\n"
+		"cmovb %eax,%ebx\n"         // 0xDB
+		"cmova %eax,%edi\n"         // 0xFF
 		"ret $8\n"
-		"1:\n"
-		"mov %eax,%ebx\n"
-		"ret $8\n"
-		"2:\n"
-		"mov %eax,%edi\n"
-		"ret $8\n"
+		"org:\n"
+		"jmp *_SFWork_mkstr_org\n"
 		"exit:"
 	);
 }
