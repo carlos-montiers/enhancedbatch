@@ -134,6 +134,8 @@ const struct sGetExt getExtensionList[] = {
 	{ L"@english",			GetEnglish },
 	{ L"@enhancedbatch",	GetEnhancedBatch},
 	{ L"@extensions",		GetExtensions },
+	{ L"@forline",			GetForLine },
+	{ L"@forlines", 		GetForLines },
 	{ L"@getch",			Getch },
 	{ L"@getkb",			Getkb },
 	{ L"@height",			GetHeight },

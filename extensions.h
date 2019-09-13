@@ -140,6 +140,9 @@ DWORD GetBatchFile(LPWSTR buffer, DWORD size);
 
 BOOL SetBatchFile(int argc, LPCWSTR argv[]);
 
+DWORD GetForLine(LPWSTR buffer, DWORD size);
+DWORD GetForLines(LPWSTR buffer, DWORD size);
+
 DWORD GetEBVersion(LPWSTR buffer, DWORD size);
 DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size);
 

@@ -55,10 +55,14 @@ BYTE oldCtrlCAborts[5];
 DWORD SFWork_esp;
 BYTE SFWork_stdcall;
 int SFWork_saved, SFWork_passed, SFWork_first;
+DWORD ForFbegin_org;
 #endif
 
 int iPutMsg;
 BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
+BYTE oldForFbegin[6], oldForFend[6];
+DWORD_PTR ForFend_org;
+int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
 
 DWORD_PTR SFWork_mkstr_org;
 DWORD_PTR FreeStack;
@@ -81,6 +85,24 @@ int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
 		return -1;
 	}
 	return kh_val(sfwork_map, k);
+}
+
+
+void ForFbegin_hook(void) {
+	if (++ForF_stacktop == lenof(ForF_stack)) {
+		ForF_stacktop = 0;
+	}
+	ForF_stack[ForF_stacktop] = 1;
+}
+
+void __attribute((fastcall)) ForFend_hook(BYTE end) {
+	if (end || *pGotoFlag) {
+		if (--ForF_stacktop == -1) {
+			ForF_stacktop = lenof(ForF_stack) - 1;
+		}
+	} else {
+		++ForF_stack[ForF_stacktop];
+	}
 }
 
 
@@ -165,6 +187,42 @@ void SFWork_mkstr(void)
 	);
 }
 
+void ForFend(void)
+{
+	asm(
+		"pushf\n"
+		"setnc %cl\n"
+		"call _ForFend_hook\n"
+		"popf\n"
+		"jnc 1f\n"
+		"mov _ForFend_org,%eax\n"
+		"mov %eax,(%esp)\n"
+		"1:"
+	);
+}
+
+void ForFend_opp(void)
+{
+	asm(
+		"pushf\n"
+		"setnc %cl\n"
+		"call _ForFend_hook\n"
+		"popf\n"
+		"jc 1f\n"
+		"mov _ForFend_org,%eax\n"
+		"mov %eax,(%esp)\n"
+		"1:"
+	);
+}
+
+void ForFbegin_jmp(void)
+{
+	asm(
+		"call _ForFbegin_hook\n"
+		"jmp *_ForFbegin_org\n"
+	);
+}
+
 #else
 
 void SFWork_mkstr(void)
@@ -233,6 +291,71 @@ void SFWork_mkstr(void)
 		"cmove %rax,%rdi\n"
 		"cmovne %rax,%rbx\n"
 		"exit:");
+}
+
+void ForFend(void)
+{
+	asm(
+		"pushf\n"
+		"push %rdx\n"               // one of these registers may contain LF
+		//"push %r8\n"              // these registers aren't used by the hook
+		//"push %r9\n"
+		//"push %r10\n"
+		"setnc %cl\n"
+		//"sub $32,%rsp\n"          // shadow space not needed
+		"call ForFend_hook\n"
+		//"add $32,%rsp\n"
+		//"pop %r10\n"
+		//"pop %r9\n"
+		//"pop %r8\n"
+		"pop %rdx\n"
+		"popf\n"
+		"jnc 1f\n"
+		"mov ForFend_org(%rip),%rax\n"
+		"mov %rax,(%rsp)\n"
+		"1:"
+	);
+}
+
+void ForFend_opp(void)
+{
+	asm(
+		"pushf\n"
+		"push %rdx\n"
+		//"push %r8\n"
+		//"push %r9\n"
+		//"push %r10\n"
+		"setnc %cl\n"
+		//"sub $32,%rsp\n"
+		"call ForFend_hook\n"
+		//"add $32,%rsp\n"
+		//"pop %r10\n"
+		//"pop %r9\n"
+		//"pop %r8\n"
+		"pop %rdx\n"
+		"popf\n"
+		"jc 1f\n"
+		"mov ForFend_org(%rip),%rax\n"
+		"mov %rax,(%rsp)\n"
+		"1:"
+	);
+}
+
+void ForFbegin(void)
+{
+	asm(
+		"push %rdx\n"
+		//"push %r8\n"
+		//"push %r9\n"
+		//"push %r10\n"
+		//"sub $32,%rsp\n"
+		"call ForFbegin_hook\n"
+		//"add $32,%rsp\n"
+		//"pop %r10\n"
+		//"pop %r9\n"
+		//"pop %r8\n"
+		"pop %rdx\n"
+	);
 }
 
 #endif
@@ -522,6 +645,11 @@ void hookCmd(void)
 			}
 #endif
 
+			// Hook FOR /F to maintain a line number.
+			ForFend_org = (DWORD_PTR)pForFend+6 + *(int *)(pForFend+2);
+			memcpy(oldForFbegin, pForFbegin, 6);
+			memcpy(oldForFend, pForFend, 6);
+
 #ifdef _WIN64
 			// CMD and the DLL could be more than 2GiB apart, so allocate some
 			// memory before CMD to near jump to, which then does an absolute
@@ -547,6 +675,9 @@ void hookCmd(void)
 						"???"                       // alignment
 			/* 64 */	"????????"                  // SFWork_mkstr
 			/* 72 */	"\xFF\x25\xF2\xFF\xFF\xFF"  // jmp [redirect+64]
+						"??"                        // alignment
+			/* 80 */	"????????"                  // ForFbegin_hook
+			/* 88 */	"????????"                  // ForFend
 			;
 
 			for (redirect = cmd - 0x1000;;) {
@@ -568,6 +699,40 @@ void hookCmd(void)
 			((LPVOID *)redirect)[8] = SFWork_mkstr;
 			i = (DWORD_PTR)redirect + 72 - (DWORD_PTR)pSFWorkmkstr - 5;
 			WriteMemory(pSFWorkmkstr+1, &i, 4);
+
+			// No need for original begin, it can never be true.
+			((LPVOID *)redirect)[10] = ForFbegin;
+			if (pForFend[1] == 0x82) {
+				((LPVOID *)redirect)[11] = ForFend;
+			} else {
+				// 6.2.8102.0 uses jnc, not jc.
+				((LPVOID *)redirect)[11] = ForFend_opp;
+			}
+			i = (DWORD_PTR)redirect + 80 - (DWORD_PTR)pForFbegin - 6;
+			WriteMemory(pForFbegin+2, &i, 4);
+			i = (DWORD_PTR)redirect + 88 - (DWORD_PTR)pForFend - 6;
+			WriteMemory(pForFend+2, &i, 4);
+			WriteMemory(pForFbegin, "\xFF\x15", 2);     // call [rip]
+			WriteMemory(pForFend, "\xFF\x15", 2);
+#else
+			if (pForFbegin[1] == 0x83) {
+				// No need for original begin, it can never be true.
+				i = (DWORD_PTR)ForFbegin_hook - (DWORD_PTR)pForFbegin - 5;
+				WriteMemory(pForFbegin, (LPVOID) 0xE8, 1);
+				WriteMemory(pForFbegin+1, &i, 4);
+				WriteMemory(pForFbegin+5, (LPVOID) 0x90, 1);
+				i = (DWORD)ForFend;
+			} else {
+				// No need to return, it can never be false.
+				ForFbegin_org = (DWORD_PTR)pForFbegin+6 + *(int *)(pForFbegin+2);
+				i = (DWORD_PTR)ForFbegin_jmp - (DWORD_PTR)pForFbegin - 6;
+				WriteMemory(pForFbegin+2, &i, 4);
+				i = (DWORD)ForFend_opp;
+			}
+			i -= (DWORD)pForFend + 5;
+			WriteMemory(pForFend, (LPVOID) 0xE8, 1);
+			WriteMemory(pForFend+1, &i, 4);
+			WriteMemory(pForFend+5, (LPVOID) 0x90, 1);
 #endif
 
 			// Hook PutStdErr to write the batch file name and line number.
@@ -660,6 +825,8 @@ void unhookCmd(void)
 	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
 	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
+	WriteMemory(pForFbegin, oldForFbegin, 6);
+	WriteMemory(pForFend, oldForFend, 6);
 
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;

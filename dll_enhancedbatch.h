@@ -92,6 +92,8 @@ typedef LPWSTR (__fastcall *fastMSCmdVar62)(LPCWSTR, LPVOID, LPCWSTR, int *, LPW
 #endif
 extern int batchfile;
 
+#define FORF_STACKSIZE 32		// should be way more than enough
+
 void WriteMemory(LPVOID dst, LPVOID src, int size);
 DWORD getBatchLine();
 void hookCmd(void);
@@ -126,10 +128,13 @@ void hookCtrlCAborts(char aborts);
 #define pSFWorkmkstr		cmd_addrs[20]
 #define pSFWorkresize		cmd_addrs[21]
 #define pSFWorksaved		((char*)cmd_addrs[22])
+#define pGotoFlag			cmd_addrs[23]
+#define pForFbegin			cmd_addrs[24]
+#define pForFend			cmd_addrs[25]
 
 #ifdef _WIN64
-#define OFFSETS 23
+#define OFFSETS 26
 #else
-#define pSFWorkpassed		((char*)cmd_addrs[23])
-#define OFFSETS 24
+#define pSFWorkpassed		((char*)cmd_addrs[26])
+#define OFFSETS 27
 #endif

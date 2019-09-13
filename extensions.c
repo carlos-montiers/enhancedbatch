@@ -1094,6 +1094,22 @@ BOOL SetBatchFile(int argc, LPCWSTR argv[])
 	return TRUE;
 }
 
+extern int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
+
+DWORD GetForLine(LPWSTR buffer, DWORD size)
+{
+	return toString(ForF_stack[ForF_stacktop], buffer, size);
+}
+
+DWORD GetForLines(LPWSTR buffer, DWORD size)
+{
+	int sp = ForF_stacktop + 1;
+	if (sp == FORF_STACKSIZE) {
+		sp = 0;
+	}
+	return toString(ForF_stack[sp], buffer, size);
+}
+
 DWORD getVersionRevision(void)
 {
 	HKEY curver;
