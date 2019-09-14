@@ -418,62 +418,8 @@ void hookCmd(void)
 				cmd_addrs[i] = cmd + ver->offsets[i];
 			}
 
-			memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
-
-			// Swap START & ECHO's help tests, so ECHO has no help and START
-			// only looks at its first argument.
-			WriteMemory(pStartHelp, (LPVOID) 9, 1);
-			WriteMemory(pEchoHelp, (LPVOID) 31, 1);
-			// Patch ECHO to always echo, ignoring state.
 			memcpy(oldEchoOnOff, pEchoOnOff, 5);
-#ifdef _WIN64
-			if (cmdFileVersionMS == 0x50002) {
-				// 5.2.*.*
-				WriteMemory(pEchoOnOff, "\x6A\x03"  // push 3
-										"\x59"      // pop rcx
-										, 3);
-			} else if (cmdFileVersionMS == 0x60002) {
-				// 6.2.*.*
-				WriteMemory(pEchoOnOff, "\x31\xC9"      // xor ecx,ecx
-										"\x83\xC9\x01"  // or ecx,1
-										, 5);
-			} else {
-				// 6.0.*.*
-				// 6.1.*.*
-				// 6.3.*.*
-				// 10.*.*.*
-				WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
-			}
-#else
-			if (cmdFileVersionMS < 0x60002)  {
-				// 5.*.*.*
-				// 6.0.*.*
-				// 6.1.*.*
-				WriteMemory(pEchoOnOff, "\x58"      // pop eax
-										"\x58"      // pop eax
-										"\x6A\x03"  // push 3
-										"\x58"      // pop eax
-										, 5);
-			} else if (cmdFileVersionMS == 0x60002) {
-				if (cmdFileVersionLS == 0x1FA60000) {
-					// 6.2.8102.0
-					WriteMemory(pEchoOnOff, "\x90"      // nop
-											"\x58"      // pop eax
-											"\x6A\x03"  // push 3
-											"\x58"      // pop eax
-											, 5);
-				} else {
-					// 6.2.9200.16384
-					WriteMemory(pEchoOnOff, "\x33\xC0"      // xor eax,eax
-											"\x83\xC8\x01"  // or eax,1
-											, 5);
-				}
-			} else {
-				// 6.3.*.*
-				// 10.*.*.*
-				WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
-			}
-#endif
+			memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
 
 			// Patch FOR to fix a substitute bug - each one has its own memory.
 			// Allocate once and reuse it.	It also frees memory allocated
@@ -780,6 +726,69 @@ void hookCmd(void)
 
 			break;
 		}
+	}
+}
+
+void hookEchoOptions(BOOL options)
+{
+	if (!options) {
+		// Swap START & ECHO's help tests, so ECHO has no help and START
+		// only looks at its first argument.
+		WriteMemory(pStartHelp, (LPVOID) 9, 1);
+		WriteMemory(pEchoHelp, (LPVOID) 31, 1);
+		// Patch ECHO to always echo, ignoring state.
+#ifdef _WIN64
+		if (cmdFileVersionMS == 0x50002) {
+			// 5.2.*.*
+			WriteMemory(pEchoOnOff, "\x6A\x03"  // push 3
+									"\x59"      // pop rcx
+									, 3);
+		} else if (cmdFileVersionMS == 0x60002) {
+			// 6.2.*.*
+			WriteMemory(pEchoOnOff, "\x31\xC9"      // xor ecx,ecx
+									"\x83\xC9\x01"  // or ecx,1
+									, 5);
+		} else {
+			// 6.0.*.*
+			// 6.1.*.*
+			// 6.3.*.*
+			// 10.*.*.*
+			WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+		}
+#else
+		if (cmdFileVersionMS < 0x60002)  {
+			// 5.*.*.*
+			// 6.0.*.*
+			// 6.1.*.*
+			WriteMemory(pEchoOnOff, "\x58"      // pop eax
+									"\x58"      // pop eax
+									"\x6A\x03"  // push 3
+									"\x58"      // pop eax
+									, 5);
+		} else if (cmdFileVersionMS == 0x60002) {
+			if (cmdFileVersionLS == 0x1FA60000) {
+				// 6.2.8102.0
+				WriteMemory(pEchoOnOff, "\x90"      // nop
+										"\x58"      // pop eax
+										"\x6A\x03"  // push 3
+										"\x58"      // pop eax
+										, 5);
+			} else {
+				// 6.2.9200.16384
+				WriteMemory(pEchoOnOff, "\x33\xC0"      // xor eax,eax
+										"\x83\xC8\x01"  // or eax,1
+										, 5);
+			}
+		} else {
+			// 6.3.*.*
+			// 10.*.*.*
+			WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+		}
+#endif
+	} else {
+		WriteMemory(pStartHelp, (LPVOID) 31, 1);
+		WriteMemory(pEchoHelp, (LPVOID) 9, 1);
+		WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
 	}
 }
 

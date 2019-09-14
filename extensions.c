@@ -763,6 +763,21 @@ DWORD GetEcho(LPWSTR buffer, DWORD size)
 	return toString(*pEchoFlag, buffer, size);
 }
 
+BOOL SetEchoOptions(int argc, LPCWSTR argv[])
+{
+	BYTE options;
+	if (setBoolean(&options, *argv)) {
+		hookEchoOptions(options);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+DWORD GetEchoOptions(LPWSTR buffer, DWORD size)
+{
+	return toString(*pEchoHelp == 9, buffer, size);
+}
+
 BOOL SetUnicode(int argc, LPCWSTR argv[])
 {
 	return setBoolean(pfOutputUnicode, *argv);

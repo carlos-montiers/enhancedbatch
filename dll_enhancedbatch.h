@@ -108,6 +108,7 @@ void WriteMemory(LPVOID dst, LPVOID src, int size);
 DWORD getBatchLine();
 void hookCmd(void);
 void unhookCmd(void);
+void hookEchoOptions(BOOL on);
 void hookCtrlCAborts(char aborts);
 
 // The eol character is no longer modified, but still used to verify the version.

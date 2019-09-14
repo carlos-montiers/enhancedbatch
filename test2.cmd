@@ -2,6 +2,7 @@
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
 set $temp=@tempfile
+set @echooptions=off
 >>%$temp% call :test
 ::copy %$temp% test2.out
 fc >nul test2.out %$temp% || (
@@ -41,6 +42,12 @@ set $prompt=%PROMPT%
 prompt $G
 set @echo=on
 set @echo=off
+set @echooptions=on
+echo Echo options: %@echooptions%
+echo on
+echo off
+set @echooptions=off
+echo Echo options: %@echooptions%
 prompt %$prompt%
 set @extensions=no
 echo Extensions off, colon part of variable: %OS:_= %
