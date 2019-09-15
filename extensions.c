@@ -297,13 +297,14 @@ BOOL SetLoTimer(int argc, LPCWSTR argv[])
 		return FALSE;
 	}
 
-	if (argc == 0 || _wcsicmp(*argv, L"stop") == 0) {
+	// *argv points to null character if argc is 0.
+	if ((argc == 0 && lo_timer_running) || _wcsicmp(*argv, L"stop") == 0) {
 		if (lo_timer_running) {
 			lo_timer_end = GetTickCount();
 			lo_timer_running = FALSE;
 			return TRUE;
 		}
-	} else if (_wcsicmp(*argv, L"start" ) == 0) {
+	} else if ((argc == 0 && !lo_timer_running) || _wcsicmp(*argv, L"start" ) == 0) {
 		lo_timer_running = lo_timer_started = TRUE;
 		lo_timer_begin = GetTickCount();
 		return TRUE;
@@ -318,13 +319,14 @@ BOOL SetHiTimer(int argc, LPCWSTR argv[])
 		return FALSE;
 	}
 
-	if (argc == 0 || _wcsicmp(*argv, L"stop") == 0) {
+	// *argv points to null character if argc is 0.
+	if ((argc == 0 && hi_timer_running) || _wcsicmp(*argv, L"stop") == 0) {
 		if (hi_timer_running) {
 			QueryPerformanceCounter(&hi_timer_end);
 			hi_timer_running = FALSE;
 			return TRUE;
 		}
-	} else if (_wcsicmp(*argv, L"start" ) == 0) {
+	} else if ((argc == 0 && !hi_timer_running) || _wcsicmp(*argv, L"start" ) == 0) {
 		if (hi_frequency.QuadPart == -1) {
 			return FALSE;
 		}
