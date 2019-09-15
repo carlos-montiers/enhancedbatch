@@ -159,7 +159,7 @@ set $i=0
 echo;!$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@chhit%"
-if "!lastcode!" == "-1" set @sleep=100&goto chloop
+if "!lastcode!" == "-1" call @sleep 100&goto chloop
 echo last char: !lastcode!
 
 echo Calling to extension getkb. Press a key ...
@@ -172,7 +172,7 @@ set $i=0
 echo;!$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@kbhit%"
-if "!lastcode!" == "0" set @sleep=100&goto kbloop
+if "!lastcode!" == "-1" call @sleep 100&goto kbloop
 echo last code: !lastcode!
 
 set /a $row=%@row%+3
