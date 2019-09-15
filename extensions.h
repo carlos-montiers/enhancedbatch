@@ -130,6 +130,7 @@ DWORD GetHour(LPWSTR buffer, DWORD size);
 DWORD GetMinute(LPWSTR buffer, DWORD size);
 DWORD GetSecond(LPWSTR buffer, DWORD size);
 DWORD GetMilliseconds(LPWSTR buffer, DWORD size);
+DWORD GetUnixTime(LPWSTR buffer, DWORD size);
 
 DWORD GetEnglish(LPWSTR buffer, DWORD size);
 DWORD GetDecSep(LPWSTR buffer, DWORD size);

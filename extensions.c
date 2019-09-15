@@ -29,6 +29,7 @@
 #include "extensions.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 static DWORD toString(int num, LPWSTR buffer, DWORD size)
 {
@@ -1057,6 +1058,11 @@ DWORD GetMilliseconds(LPWSTR buffer, DWORD size)
 {
 	getDate();
 	return toString(st.wMilliseconds, buffer, size);
+}
+
+DWORD GetUnixTime(LPWSTR buffer, DWORD size)
+{
+	return snwprintf(buffer, size, L"%I64d", time(NULL));
 }
 
 DWORD GetEnglish(LPWSTR buffer, DWORD size)
