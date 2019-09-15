@@ -1,22 +1,10 @@
 @echo off
-
 rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
 If Not defined @enhancedbatch (
 Echo Something failed
 Goto :Eof
 )
-
-set "@extensions=1"
 set "@delayedexpansion=1"
-
-echo Playing with forline and forlines
-set "file=%~dp0LICENSE.txt"
-for /f "usebackq" %%a in ("!file!") do (
-  echo !@forline!:%%a
-)
-echo TOTAL lines:!@forlines!
-
-pause & cls
 
 ::Save the current state.
 set $prevcolor=!@color!
@@ -24,6 +12,22 @@ set $prevopacity=!@opacity!
 
 set @opacity=80
 Echo Using %@opacity% %% of opacity.
+
+pause & cls
+
+echo You can configure echo for not show or use options
+set "@echooptions=no"
+echo
+echo /?
+
+pause & cls
+
+echo Playing with forline and forlines
+set "file=%~dp0LICENSE.txt"
+for /f "usebackq" %%a in ("!file!") do (
+  echo !@forline!:%%a
+)
+echo TOTAL lines:!@forlines!
 
 pause & cls
 
