@@ -8,11 +8,11 @@ set $var=1
 2>nul set $var && (echo Failed: $var is in the environment.&goto :eof)
 if not defined $var echo Failed: $var is not defined.&goto :eof
 
-set @timer=start
-set @timerhi=start
-set @sleep=45
-set @timerhi=
-set @timer=
+call @timer start
+call @timerhi start
+call @sleep 45
+call @timerhi
+call @timer
 set $hi=@timerhi
 set $lo=@timer
 :: These aren't as good as they could be due to testing in virtual machines.

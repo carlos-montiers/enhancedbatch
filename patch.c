@@ -368,7 +368,7 @@ void hookCmd(void)
 	LPBYTE cmd;
 	LPDWORD data, end;
 	struct sCmdEntry *cmdentry;
-	fnCmdFunc pMyEcho;
+	fnCmdFunc pMyEcho, pMyCall;
 	const struct sCMD *ver;
 
 	cmd = (LPBYTE) GetModuleHandle(NULL);
@@ -378,6 +378,7 @@ void hookCmd(void)
 	end = MakeVA(LPDWORD, pNTHeader->OptionalHeader.SizeOfImage);
 	cmd_end = end;
 	pMyEcho = MyEcho;
+	pMyCall = MyCall;
 
 	sfwork_map = kh_init(ptrdw);
 
@@ -391,6 +392,18 @@ void hookCmd(void)
 				peEcho = &cmdentry->func;
 				eEcho = cmdentry->func;
 				WriteMemory(peEcho, &pMyEcho, sizeof(pMyEcho));
+				peCall = &cmdentry[14].func;
+				eCall = cmdentry[14].func;
+				WriteMemory(peCall, &pMyCall, sizeof(pMyCall));
+				// Use eCall to get the address of LastRetCode.
+				LPBYTE p = (LPBYTE) eCall;
+#ifdef _WIN64
+				p += cmdDebug ? 25 : 15;
+				pLastRetCode = (int *)(p + 4 + *(int *)p);
+#else
+				while (*p++ != 0xA3) ;
+				pLastRetCode = *(int **)p;
+#endif
 			}
 		}
 		if (!Fmt17) {
@@ -825,6 +838,7 @@ void unhookCmd(void)
 {
 	kh_destroy(ptrdw, sfwork_map);
 
+	WriteMemory(peCall, &eCall, sizeof(eCall));
 	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
 	WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);

@@ -70,10 +70,12 @@ struct cmdnode {		// partial definition
 
 typedef DWORD (WINAPI *fnCmdFunc)(struct cmdnode *node);
 
-extern fnCmdFunc *peEcho, eEcho;
+extern fnCmdFunc *peEcho, eEcho, *peCall, eCall;
 extern LPWSTR Fmt17;
+extern int *pLastRetCode;
 
 DWORD WINAPI MyEcho(struct cmdnode *node);
+DWORD WINAPI MyCall(struct cmdnode *node);
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d);
 UINT MyLexText(void);
 

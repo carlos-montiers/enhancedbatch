@@ -87,8 +87,9 @@ BOOL Next(int argc, LPCWSTR argv[]);
 void unhook(void);
 BOOL Unload(int argc, LPCWSTR argv[]);
 
-fnCmdFunc *peEcho, eEcho;
+fnCmdFunc *peEcho, eEcho, *peCall, eCall;
 LPWSTR Fmt17;
+int *pLastRetCode;
 DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 #ifdef _WIN64
 fnPutMsg pPutMsg;
@@ -198,10 +199,13 @@ const struct sSetExt setExtensionList[] = {
 	{ L"@outputcp", 		SetOutputCodePage, 0 },
 	{ L"@position", 		SetPosition, 2 },
 	{ L"@row",				SetRow, 1 },
+	{ L"@unicode",			SetUnicode, 0 },
+};
+
+const struct sSetExt callExtensionList[] = {
 	{ L"@sleep",			WaitMilliseconds, 1 },
 	{ L"@timer",			SetLoTimer, 0 },
 	{ L"@timerhi",			SetHiTimer, 0 },
-	{ L"@unicode",			SetUnicode, 0 },
 	{ L"@unload",			Unload, 0 },
 };
 
@@ -664,6 +668,58 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 	}
 
 	return SetEnvironmentVariable(lpName, lpValue);
+}
+
+DWORD WINAPI MyCall(struct cmdnode *node)
+{
+	if (node->arg) {
+		LPWSTR arg = node->arg;
+		while (*arg == L' ' || *arg == L'\t') {
+			++arg;
+		}
+		if (*arg == L'@') {
+			int nArgs;
+			LPWSTR *szArglist = CommandLineToArgvW(arg, &nArgs);
+			if (NULL == szArglist) {
+				wprintf(L"CommandLineToArgvW failed\n");
+				*pLastRetCode = 1;
+				return 1;
+			}
+			const struct sSetExt *ext = bsearch(szArglist[0], callExtensionList,
+				lenof(callExtensionList), sizeof(struct sSetExt), extcmp);
+			if (NULL == ext) {
+				LocalFree(szArglist);
+				*pLastRetCode = 1;
+				return 1;
+			}
+			BOOL ret;
+			if (ext->args == 0) {
+				do {
+					++arg;
+				} while (*arg != L' ' && *arg != L'\t' && *arg != L'\0');
+				if (*arg != L'\0') {
+					do {
+						++arg;
+					} while (*arg == L' ' || *arg == L'\t');
+				}
+				ret = ext->fn(*arg == L'\0' ? 0 : 1, (LPCWSTR*) &arg);
+			} else {
+				--nArgs;
+				if (ext->args != nArgs) {
+					wprintf(L"Incorrect parameters: %d needed, %d provided\n",
+						ext->args, nArgs);
+					ret = FALSE;
+				} else {
+					ret = ext->fn(nArgs, (LPCWSTR*) szArglist + 1);
+				}
+				LocalFree(szArglist);
+			}
+			*pLastRetCode = ret ? 0 : 1;
+			return *pLastRetCode;
+		}
+	}
+
+	return eCall(node);
 }
 
 void WriteMemory(LPVOID dst, LPVOID src, int size)
