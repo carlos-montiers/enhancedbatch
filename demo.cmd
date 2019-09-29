@@ -23,7 +23,7 @@ echo /?
 pause & cls
 
 echo Playing with forline and forlines
-set "file=%~dp0LICENSE.txt"
+set "file=!$0;~dp!LICENSE.txt"
 for /f "usebackq" %%a in ("!file!") do (
   echo !@forline!:%%a
 )
