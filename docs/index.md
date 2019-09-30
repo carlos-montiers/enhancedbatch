@@ -97,11 +97,15 @@ Enhanced Batch is:
 
 &copy; 2019 by [Jason Hood](https://github.com/adoxa)
 
-### Contributors
+### Collaborators
 
 <p><a href="https://github.com/adoxa"><img src="https://avatars2.githubusercontent.com/u/470238?v=4" alt="" width="48" height="48"> adoxa</a></p>
 
 <p><a href="https://github.com/carlos-montiers"> <img src="https://avatars1.githubusercontent.com/u/5741891?v=4" alt="" width="48" height="48"> carlos-montiers</a></p>
+
+<p><a href="https://github.com/lazna"> <img src="https://avatars2.githubusercontent.com/u/5476370?v=4" alt="" width="48" height="48"> lazna</a></p>
+
+<p><a href="https://github.com/german-one"> <img src="https://avatars2.githubusercontent.com/u/46659645?v=4" alt="" width="48" height="48"> german-one</a></p>
 
 ### License
 
