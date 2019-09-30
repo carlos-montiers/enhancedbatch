@@ -72,6 +72,17 @@ exit
 )
 ```
 
+Alternatively, you can use this method for the two steps:
+```
+regsvr32 /e "%~dp0enhancedbatch_%processor_architecture%" || (
+echo something failed
+pause
+exit
+)
+```
+
+If DLL could not be loaded a messagebox dialog will appear indicating the cause.
+
 ### Dependencies
 
 Enhanced Batch requires the command interpreter for Windows (`cmd.exe`).

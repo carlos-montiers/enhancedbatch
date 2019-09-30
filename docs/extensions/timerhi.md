@@ -20,32 +20,36 @@ Microsecond timer, with a resolution greater than that (CPU speed).
 
 ## start the high-resolution timer
 ```
-set @timerhi=start
+call @timerhi start
 ```
 
 ## read the running timer
 ```
-echo %@timerhi%
+echo !@timerhi!
 ```
 
 ## stop the timer
 ```
-set @timerhi=
-set @timerhi=stop
+call @timerhi stop
+```
+
+## toogles start/stop
+```
+call @timerhi
 ```
 
 ## read the elapsed time
 ```
-echo %@timerhi%
+echo !@timerhi!
 ```
 
 ## Example
 ```
-set @timerhi=start
+call @timerhi start
 echo Wait a little bit and press a key ...
 pause > nul
-set @timerhi=stop
-echo Elapsed microseconds: %@timerhi%
+call @timerhi stop
+echo Elapsed microseconds: !@timerhi!
 ```
 
 {: .fs-6 .fw-300 }

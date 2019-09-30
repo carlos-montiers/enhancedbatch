@@ -20,32 +20,36 @@ Millisecond timer, with a resolution of 10-15ms.
 
 ## start the low-resolution timer
 ```
-set @timer=start
+call @timer start
 ```
 
 ## read the running timer
 ```
-echo %@timer%
+echo !@timer!
 ```
 
 ## stop the timer
 ```
-set @timer=
-set @timer=stop
+call @timer stop
+```
+
+## toogles start/stop
+```
+call @timer
 ```
 
 ## read the elapsed time
 ```
-echo %@timer%
+echo !@timer!
 ```
 
 ## Example
 ```
-set @timer=start
+call @timer start
 echo Wait a little bit and press a key ...
 pause > nul
-set @timer=stop
-echo Elapsed milliseconds: %@timer%
+call @timer stop
+echo Elapsed milliseconds: !@timer!
 ```
 
 {: .fs-6 .fw-300 }

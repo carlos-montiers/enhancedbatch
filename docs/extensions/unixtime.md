@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Sleep
+title: UnixTime
 parent: Extensions
 ---
 
-# Sleep
+# UnixTime
 {: .no_toc }
 
 ## Table of contents
@@ -15,13 +15,12 @@ parent: Extensions
 
 ---
 
-## call @sleep
-Stop the execution for a time.
-
-Parameters: Number milliseconds
+## get @unixtime
+Retrieves the number of seconds since 1970-01-01 0:00:00 UTC.
 
 ```
-call @sleep 4000
+echo !@unixtime!
+1569799466
 ```
 
 {: .fs-6 .fw-300 }

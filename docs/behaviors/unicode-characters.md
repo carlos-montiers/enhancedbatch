@@ -2,7 +2,7 @@
 layout: default
 title: Unicode Characters
 parent: Behaviors
-nav_order: 4
+nav_order: 5
 ---
 
 # Unicode Characters
@@ -28,5 +28,9 @@ greek psi: Ψ
 ```
 set "$BOM=%U+FEFF%"
 ```
+
+## Some useful
+- `!U+0!` NUL
+- `!U+22!` Quote
 
 {: .fs-6 .fw-300 }

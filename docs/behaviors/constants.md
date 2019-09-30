@@ -18,27 +18,40 @@ nav_order: 11
 
 You can use the next constant alias variables for characters:
 
-- Tab `!$TAB!`
-- Backspace `!$BS!`
-- Carriage return `!$CR!`
-- Line feed `!$LF!`
-- New Line `!$CRLF!`
-- Exclamation `!$EXCL!`
-- Quote `!$QUOT!`
-- Ampersand `!$AMP!`
-- Pipie `!$BAR!`
-- Great than `!$GT!`
-- Lower than `!$LT!`
-- Opening parenthesis `!$OPAR!`
-- Closing parenthesis `!$CPAR!`
-- Opening brace curly `!$OBRC!`
-- Closing brace curly  `!$CBRC!`
-- Asterisk `!$STAR!`
-- ? `!$QUES!`
-- $ `!$DOLLAR!`
-- ; `!$SEMI!`
-- , `!$COMMA!`
-- = `!$EQ!`
-- Escape `!$ESC!`
+- `!$TAB!` Tab
+- `!$BS!` Backspace
+- `!$CR!` Carriage return
+- `!$LF!` Line feed
+- `!$CRLF!` New Line
+- `!$EXCL!` Exclamation
+- `!$PERC!` Percent
+- `!$QUOT!` Quote
+- `!$APOS!` Apostrophe
+- `!$BTICK!` Backtick
+- `!$AMP!` Ampersand
+- `!$BAR!` Pipe
+- `!$GT!` Great than
+- `!$LT!` Lower than
+- `!$CARET!` ^
+- `!$TILDE!` ~
+- `!$OPAR!` Opening parenthesis
+- `!$CPAR!` Closing parenthesis
+- `!$OBRC!` Opening brace curly
+- `!$CBRC!` Closing brace curly
+- `!$OBRS!` Opening brace square
+- `!$CBRS!` Closing brace square
+- `!$STAR!` Asterisk
+- `!$QUES!` ?
+- `!$DOLLAR!` $
+- `!$COLLON!` :
+- `!$SEMI!` ;
+- `!$COMMA!` ,
+- `!$EQ!` =
+- `!$AT!` @
+- `!$ESC!` Escape
+
+You can use the next variables for get localized `yes` and `no` first character:
+- `!$YES!` Y (english) S (spanish) J (german)
+- `!$NO!` N (english) N (spanish) N (german)
 
 {: .fs-6 .fw-300 }

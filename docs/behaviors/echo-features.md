@@ -2,7 +2,7 @@
 layout: default
 title: Echo Features
 parent: Behaviors
-nav_order: 5
+nav_order: 6
 ---
 
 # Echo Features
@@ -17,6 +17,14 @@ nav_order: 5
 ---
 
 Enhanced Batch add features to the echo command.
+
+## Not use options
+You can explicitly disable the echo options for take all parameters as text
+```
+set "@echooptions=no"
+echo
+echo /?
+```
 
 ## Echo without new line
 Use the `;` character as separator of the echo command for not print a new line at the end

@@ -2,7 +2,7 @@
 layout: default
 title: For Infinite
 parent: Behaviors
-nav_order: 2
+nav_order: 3
 ---
 
 # For Infinite
