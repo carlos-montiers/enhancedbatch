@@ -1287,7 +1287,7 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)
 		len -= r;
 	}
 
-	_pclose(pipe);
+	*pLastRetCode = _pclose(pipe);
 
 	len = (DWORD) (pos - buf);
 	len = MultiByteToWideChar(GetConsoleOutputCP(), 0, buf, len, buffer, size);
