@@ -291,6 +291,15 @@ void setChars(void)
 	setVar(L"$YES", yesno+1);
 	yesno[1] = yesno[0];
 	setVar(L"$NO", yesno+1);
+
+	WCHAR ctrlvar[16] = L"$CTRL+A";
+	WCHAR ctrlch[4] = L"\x1";
+	int c;
+	for (c = 1; c < 32; ++c) {
+		setVar(ctrlvar, ctrlch);
+		++ctrlvar[6];
+		++ctrlch[0];
+	}
 }
 
 int extcmp(const void *a, const void *b)
