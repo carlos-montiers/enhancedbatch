@@ -543,9 +543,6 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		} else if (*mod == L'~') {
 			int unused;
 			DWORD ext;
-			if (!pMSCmdVar) {
-				break;
-			}
 			var = (end) ? end - 1 : mod + wcslen(mod);
 			*var = L'?';
 			var = stringBuffer;
