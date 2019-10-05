@@ -64,14 +64,22 @@ DWORD GetSize(LPWSTR buffer, DWORD size);
 DWORD GetWidth(LPWSTR buffer, DWORD size);
 DWORD GetHeight(LPWSTR buffer, DWORD size);
 
+BOOL SetAttributes(int argc, LPCWSTR argv[]);
 BOOL SetColor(int argc, LPCWSTR argv[]);
+BOOL SetForeground(int argc, LPCWSTR argv[]);
+BOOL SetBackground(int argc, LPCWSTR argv[]);
+BOOL SetUnderline(int argc, LPCWSTR argv[]);
 BOOL SetOpacity(int argc, LPCWSTR argv[]);
 BOOL SetConsoleCursor(int argc, LPCWSTR argv[]);
 BOOL SetOutputCodePage(int argc, LPCWSTR argv[]);
 BOOL SetInputCodePage(int argc, LPCWSTR argv[]);
 BOOL SetCodePage(int argc, LPCWSTR argv[]);
 
+DWORD GetAttributes(LPWSTR buffer, DWORD size);
 DWORD GetColor(LPWSTR buffer, DWORD size);
+DWORD GetForeground(LPWSTR buffer, DWORD size);
+DWORD GetBackground(LPWSTR buffer, DWORD size);
+DWORD GetUnderline(LPWSTR buffer, DWORD size);
 DWORD GetOpacity(LPWSTR buffer, DWORD size);
 DWORD GetConsoleCursor(LPWSTR buffer, DWORD size);
 DWORD GetOutputCodePage(LPWSTR buffer, DWORD size);

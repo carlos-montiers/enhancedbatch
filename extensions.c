@@ -43,6 +43,26 @@ static void toNumber(int *num, int argc, LPCWSTR argv[])
 	}
 }
 
+static BOOL setBoolean(LPBYTE var, LPCWSTR arg)
+{
+	if (arg == NULL
+		|| (arg[0] == L'0' && arg[1] == L'\0')
+		|| _wcsicmp(arg, L"no") == 0
+		|| _wcsicmp(arg, L"off") == 0
+		|| _wcsicmp(arg, L"false") == 0) {
+		*var = FALSE;
+		return TRUE;
+	}
+	if ((arg[0] == L'1' && arg[1] == L'\0')
+		|| _wcsicmp(arg, L"yes") == 0
+		|| _wcsicmp(arg, L"on") == 0
+		|| _wcsicmp(arg, L"true") == 0) {
+		*var = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 DWORD Getch(LPWSTR buffer, DWORD size)
 {
 	int code;
@@ -242,15 +262,51 @@ DWORD GetWidth(LPWSTR buffer, DWORD size)
 	return toString(getSize().X, buffer, size);
 }
 
-BOOL SetColor(int argc, LPCWSTR argv[])
+BOOL SetAttributes(int argc, LPCWSTR argv[])
 {
-	WORD value;
+	DWORD value;
 
 	if (argc != 1 || !haveOutputHandle()) {
 		return FALSE;
 	}
 
-	value = (WORD) wcstol(argv[0], NULL, 16);
+	value = wcstol(argv[0], NULL, 16);
+	if (value > 0xFFFF) {
+		return FALSE;
+	}
+
+	return SetConsoleTextAttribute(consoleOutput, value);
+}
+
+DWORD GetAttributes(LPWSTR buffer, DWORD size)
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (!haveOutputHandle()) {
+		return toString(-1, buffer, size);
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+
+	return snwprintf(buffer, size, L"%.4X", csbi.wAttributes);
+}
+
+BOOL SetColor(int argc, LPCWSTR argv[])
+{
+	DWORD value;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (argc != 1 || !haveOutputHandle()) {
+		return FALSE;
+	}
+
+	value = wcstol(argv[0], NULL, 16);
+	if (value > 0xFF) {
+		return FALSE;
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+	value |= csbi.wAttributes & 0xFF00;
 
 	return SetConsoleTextAttribute(consoleOutput, value);
 }
@@ -265,7 +321,102 @@ DWORD GetColor(LPWSTR buffer, DWORD size)
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 
-	return snwprintf(buffer, size, L"%X", csbi.wAttributes);
+	return snwprintf(buffer, size, L"%.2X", csbi.wAttributes & 0xFF);
+}
+
+BOOL SetForeground(int argc, LPCWSTR argv[])
+{
+	DWORD value;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (argc != 1 || !haveOutputHandle()) {
+		return FALSE;
+	}
+
+	value = wcstol(argv[0], NULL, 16);
+	if (value > 0xF) {
+		return FALSE;
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+	value |= csbi.wAttributes & 0xFFF0;
+
+	return SetConsoleTextAttribute(consoleOutput, value);
+}
+
+DWORD GetForeground(LPWSTR buffer, DWORD size)
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (!haveOutputHandle()) {
+		return toString(-1, buffer, size);
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+
+	return snwprintf(buffer, size, L"%X", csbi.wAttributes & 0xF);
+}
+
+BOOL SetBackground(int argc, LPCWSTR argv[])
+{
+	DWORD value;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (argc != 1 || !haveOutputHandle()) {
+		return FALSE;
+	}
+
+	value = wcstol(argv[0], NULL, 16);
+	if (value > 0xF) {
+		return FALSE;
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+	value = (csbi.wAttributes & 0xFF0F) | (value << 4);
+
+	return SetConsoleTextAttribute(consoleOutput, value);
+}
+
+DWORD GetBackground(LPWSTR buffer, DWORD size)
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (!haveOutputHandle()) {
+		return toString(-1, buffer, size);
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+
+	return snwprintf(buffer, size, L"%X", (csbi.wAttributes & 0xF0) >> 4);
+}
+
+BOOL SetUnderline(int argc, LPCWSTR argv[])
+{
+	BYTE ul;
+	WORD value;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (!haveOutputHandle() || !setBoolean(&ul, *argv)) {
+		return FALSE;
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+	value = (csbi.wAttributes & 0x7FFF) | (ul << 15);
+
+	return SetConsoleTextAttribute(consoleOutput, value);
+}
+
+DWORD GetUnderline(LPWSTR buffer, DWORD size)
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (!haveOutputHandle()) {
+		return toString(-1, buffer, size);
+	}
+
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+
+	return toString(csbi.wAttributes >> 15, buffer, size);
 }
 
 BOOL WaitMilliseconds(int argc, LPCWSTR argv[])
@@ -734,26 +885,6 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	}
 	*buffer = L'\0';
 	return size;
-}
-
-static BOOL setBoolean(LPBYTE var, LPCWSTR arg)
-{
-	if (arg == NULL
-		|| (arg[0] == L'0' && arg[1] == L'\0')
-		|| _wcsicmp(arg, L"no") == 0
-		|| _wcsicmp(arg, L"off") == 0
-		|| _wcsicmp(arg, L"false") == 0) {
-		*var = FALSE;
-		return TRUE;
-	}
-	if ((arg[0] == L'1' && arg[1] == L'\0')
-		|| _wcsicmp(arg, L"yes") == 0
-		|| _wcsicmp(arg, L"on") == 0
-		|| _wcsicmp(arg, L"true") == 0) {
-		*var = TRUE;
-		return TRUE;
-	}
-	return FALSE;
 }
 
 BOOL SetEcho(int argc, LPCWSTR argv[])

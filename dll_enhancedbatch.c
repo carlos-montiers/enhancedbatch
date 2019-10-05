@@ -106,8 +106,10 @@ struct sGetExt {
 };
 
 const struct sGetExt getExtensionList[] = {
+	{ L"@attr", 			GetAttributes },
 	{ L"@batchfile",		GetBatchFile },
 	{ L"@batchline",		GetBatchLine },
+	{ L"@bg",				GetBackground },
 	{ L"@chhit",			Chhit },
 	{ L"@cmdversion",		GetCmdVersion },
 	{ L"@color",			GetColor },
@@ -128,6 +130,7 @@ const struct sGetExt getExtensionList[] = {
 	{ L"@english",			GetEnglish },
 	{ L"@enhancedbatch",	GetEnhancedBatch},
 	{ L"@extensions",		GetExtensions },
+	{ L"@fg",				GetForeground },
 	{ L"@forline",			GetForLine },
 	{ L"@forlines", 		GetForLines },
 	{ L"@getch",			Getch },
@@ -164,6 +167,7 @@ const struct sGetExt getExtensionList[] = {
 	{ L"@timerhi",			GetHiTimer },
 	{ L"@title",			GetTitle },
 	{ L"@transient",		GetTransient },
+	{ L"@ul",				GetUnderline },
 	{ L"@unicode",			GetUnicode },
 	{ L"@unique",			GetUnique },
 	{ L"@unixtime",			GetUnixTime },
@@ -179,7 +183,9 @@ struct sSetExt {
 };
 
 const struct sSetExt setExtensionList[] = {
+	{ L"@attr", 			SetAttributes, 1 },
 	{ L"@batchfile",		SetBatchFile, 1 },
+	{ L"@bg",				SetBackground, 1 },
 	{ L"@codepage", 		SetCodePage, 0 },
 	{ L"@color",			SetColor, 1 },
 	{ L"@column",			SetColumn, 1 },
@@ -193,12 +199,14 @@ const struct sSetExt setExtensionList[] = {
 	{ L"@echooptions", 		SetEchoOptions, 0 },
 	{ L"@english",			SetEnglish, 0 },
 	{ L"@extensions",		SetExtensions, 0 },
+	{ L"@fg",				SetForeground, 1 },
 	{ L"@inputcp", 			SetInputCodePage, 0 },
 	{ L"@next", 			Next, 0 },
 	{ L"@opacity",			SetOpacity, 1 },
 	{ L"@outputcp", 		SetOutputCodePage, 0 },
 	{ L"@position", 		SetPosition, 2 },
 	{ L"@row",				SetRow, 1 },
+	{ L"@ul",				SetUnderline, 0 },
 	{ L"@unicode",			SetUnicode, 0 },
 };
 
