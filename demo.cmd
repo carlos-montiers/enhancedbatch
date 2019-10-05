@@ -1,7 +1,7 @@
 @echo off
 rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
-If Not defined @enhancedbatch (
-Echo Something failed
+If Not Defined @enhancedbatch (
+Echo Load Failed
 Goto :Eof
 )
 set "@delayedexpansion=1"
@@ -89,7 +89,7 @@ echo     RTrim: !$var;rtrim!.
 echo Trim[ oy]: !$var;trim[ oy]!.
 echo LTrim[ o]: !$var;ltrim[ o]!.
 echo RTrim[ y]: !$var;rtrim[ y]!.
-echo  Trim,Cap: !$var;trim,capital!.
+echo  Trim,Cap: !$var;trim;capital!.
 
 pause & cls
 
