@@ -52,7 +52,7 @@ echo RTrim:     !$var;rtrim!.
 echo Trim[ oy]: !$var;trim[ oy]!.
 echo LTrim[ o]: !$var;ltrim[ o]!.
 echo RTrim[ y]: !$var;rtrim[ y]!.
-echo Trim,Cap:  !$var;trim,capital!.
+echo Trim,Cap:  !$var;trim;capital!.
 
 echo Character TAB:!$TAB!.
 echo Character ESC:!$ESC!.

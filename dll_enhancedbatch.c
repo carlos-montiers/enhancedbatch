@@ -471,7 +471,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			if (*end == L'\0') {
 				mod = NULL;
 				break;
-			} else if (*end != L',') {
+			} else if (*end != L';') {
 				break;
 			}
 			mod = end + 1;
@@ -492,11 +492,11 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			*end++ = L'\0';
 			if (*end == L'\0') {
 				end = NULL;
-			} else if (*end != L',') {
+			} else if (*end != L';') {
 				break;
 			}
 		} else {
-			end = wcschr(mod, L',');
+			end = wcschr(mod, L';');
 		}
 		if (end) {
 			*end++ = L'\0';
