@@ -236,6 +236,9 @@ void setChars(void)
 	setVar(L"$QUOT",   L"\"");
 	setVar(L"$APOS",   L"'");
 	setVar(L"$BTICK",  L"`");
+	setVar(L"$DQUOT",  L"\"");
+	setVar(L"$SQUOT",  L"'");
+	setVar(L"$BQUOT",  L"`");
 	setVar(L"$AMP",    L"&");
 	setVar(L"$BAR",    L"|");
 	setVar(L"$GT",     L">");
