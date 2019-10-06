@@ -24,4 +24,7 @@ for /f "usebackq" %%a in ("!file!") do (
 )
 ```
 
+## related extensions
+@forlines
+
 {: .fs-6 .fw-300 }

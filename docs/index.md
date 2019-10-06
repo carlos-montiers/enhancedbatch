@@ -56,28 +56,25 @@ Set "@unicode=1"
 
 ### Getting started
 
-1. Just download the DLLs from the release and run the following command at the start of your batch script:
+1. Just download the DLLs from the release.
+
+2. Load the library and verify the result with the following command at the start of your batch script:
 
 ```
-rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
-```
-
-2. Verify the result of the previous step:
-
-```
-if not defined @enhancedbatch (
-echo something failed
-pause
-exit
+Rundll32 "%~dp0enhancedbatch_%processor_architecture%" Load
+If Not Defined @enhancedbatch (
+Echo Load Failed
+Pause
+Exit
 )
 ```
 
-Alternatively, you can use this method for the two steps:
+Alternatively, you can use this brief method:
 ```
-regsvr32 /e "%~dp0enhancedbatch_%processor_architecture%" || (
-echo something failed
-pause
-exit
+Regsvr32 /e "%~dp0enhancedbatch_%processor_architecture%" || (
+Echo Load Failed
+Pause
+Exit
 )
 ```
 

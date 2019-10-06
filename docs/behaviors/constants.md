@@ -25,9 +25,12 @@ You can use the next constant alias variables for characters:
 - `!$CRLF!` New Line
 - `!$EXCL!` Exclamation
 - `!$PERC!` Percent
-- `!$QUOT!` Quote
-- `!$APOS!` Apostrophe
-- `!$BTICK!` Backtick
+- `!$QUOT!` Double Quote
+- `!$APOS!` Single Quote
+- `!$BTICK!` Backtick Quote
+- `!$DQUOT!` Double Quote
+- `!$SQUOT!` Single Quote
+- `!$BQUOT!` Backtick Quote
 - `!$AMP!` Ampersand
 - `!$BAR!` Pipe
 - `!$GT!` Great than

@@ -15,19 +15,25 @@ There are three types of usage: `get`, `set` and `call`.
 
 Not all extensions allow all the same usage.
 
-Get: For get the result of it, expand it:
+- Get: For get the result of it, expand it:
 
 ```
 echo %@theextension%
 ```
 
-Set: For set a value as parameter to the extension:
+- Set: For set a value as parameter to the extension:
 
 ```
 set "@theextension=value"
 ```
 
-Call: For call the extension like an internal command:
+Note: In the set, when the values are booly, the next values are equivalent:
+
+0, no, off, false
+
+1, yes, on, true
+
+- Call: For call the extension like an internal command:
 
 ```
 call @theextension parameter

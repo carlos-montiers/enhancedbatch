@@ -23,4 +23,7 @@ for /f "usebackq" %%a in ("!file!") do rem
 echo TOTAL lines:!@forlines!
 ```
 
+## related extensions
+@forline
+
 {: .fs-6 .fw-300 }

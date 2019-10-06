@@ -33,4 +33,10 @@ echo !@color!
 07
 ```
 
+## related extensions
+@bg
+@fg
+@ul
+@attr
+
 {: .fs-6 .fw-300 }
