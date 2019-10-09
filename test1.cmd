@@ -53,6 +53,9 @@ echo Trim[ oy]: !$var;trim[ oy]!.
 echo LTrim[ o]: !$var;ltrim[ o]!.
 echo RTrim[ y]: !$var;rtrim[ y]!.
 echo Trim,Cap:  !$var;trim;capital!.
+set $hex=!$var;hexify!
+echo Hexify:    !$hex!.
+echo Unhexify:  !$hex;unhexify!.
 
 echo Character TAB:!$TAB!.
 echo Character ESC:!$ESC!.

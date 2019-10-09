@@ -438,6 +438,52 @@ DWORD rtrim(DWORD length, LPCWSTR delim)
 	return length;
 }
 
+DWORD hexify(DWORD length)
+{
+	LPWSTR src = stringBuffer, dst = varBuffer;
+	for (; length > 0; ++src, --length) {
+		if (*src < 0x100) {
+			dst += snwprintf(dst, STRINGBUFFERMAX - (dst - varBuffer),
+							 L"%.2X ", *src);
+		}
+	}
+	if (dst == varBuffer) {
+		*stringBuffer = L'\0';
+		length = 0;
+	} else {
+		dst[-1] = L'\0';
+		length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", varBuffer);
+	}
+	return length;
+}
+
+DWORD unhexify(DWORD length)
+{
+	LPWSTR src = stringBuffer, dst = varBuffer;
+	while (length > 0) {
+		if (iswxdigit(src[0]) && iswxdigit(src[1])) {
+			swscanf(src, L"%2X", (int *) dst);
+			++dst;
+			src += 2;
+			length -= 2;
+		} else if (src[0] == L'0' && (src[1] == L'x' || src[1] == L'X')
+				   && iswxdigit(src[2]) && iswxdigit(src[3])) {
+			swscanf(src+2, L"%2X", (int *) dst);
+			++dst;
+			src += 4;
+			length -= 4;
+		} else if (iswspace(*src) || wcschr(L",-.:;", *src) != NULL) {
+			++src;
+			--length;
+		} else {
+			*stringBuffer = L'\0';
+			return 0;
+		}
+	}
+	*dst = L'\0';
+	return snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", varBuffer);
+}
+
 DWORD WINAPI
 MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 {
@@ -540,6 +586,10 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			length = rtrim(length, mod+6);
 		} else if (_wcsicmp(mod, L"length") == 0) {
 			length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%d", length);
+		} else if (_wcsicmp(mod, L"hexify") == 0) {
+			length = hexify(length);
+		} else if (_wcsicmp(mod, L"unhexify") == 0) {
+			length = unhexify(length);
 		} else if (*mod == L'~') {
 			int unused;
 			DWORD ext;
