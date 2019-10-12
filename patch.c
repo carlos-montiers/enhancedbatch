@@ -88,14 +88,16 @@ int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
 }
 
 
-void ForFbegin_hook(void) {
+void ForFbegin_hook(void)
+{
 	if (++ForF_stacktop == lenof(ForF_stack)) {
 		ForF_stacktop = 0;
 	}
 	ForF_stack[ForF_stacktop] = 1;
 }
 
-void __attribute((fastcall)) ForFend_hook(BYTE end) {
+void __attribute((fastcall)) ForFend_hook(BYTE end)
+{
 	if (end || *pGotoFlag) {
 		if (--ForF_stacktop == -1) {
 			ForF_stacktop = lenof(ForF_stack) - 1;
