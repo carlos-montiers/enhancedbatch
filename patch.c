@@ -397,15 +397,6 @@ void hookCmd(void)
 				peCall = &cmdentry[14].func;
 				eCall = cmdentry[14].func;
 				WriteMemory(peCall, &pMyCall, sizeof(pMyCall));
-				// Use eCall to get the address of LastRetCode.
-				LPBYTE p = (LPBYTE) eCall;
-#ifdef _WIN64
-				p += cmdDebug ? 25 : 15;
-				pLastRetCode = (int *)(p + 4 + *(int *)p);
-#else
-				while (*p++ != 0xA3) ;
-				pLastRetCode = *(int **)p;
-#endif
 			}
 		}
 		if (!Fmt17) {
@@ -422,6 +413,16 @@ void hookCmd(void)
 		}
 		++data;
 	}
+
+	// Use eCall to get the address of LastRetCode.
+	LPBYTE p = (LPBYTE) eCall;
+#ifdef _WIN64
+	p += cmdDebug ? 25 : 15;
+	pLastRetCode = (int *)(p + 4 + *(int *)p);
+#else
+	while (*p++ != 0xA3) ;
+	pLastRetCode = *(int **)p;
+#endif
 
 	for (ver = cmd_versions; ver->offsets; ++ver) {
 		if (ver->verMS == cmdFileVersionMS &&
