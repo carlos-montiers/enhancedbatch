@@ -144,10 +144,15 @@ void hookCtrlCAborts(char aborts);
 #define pGotoFlag			cmd_addrs[23]
 #define pForFbegin			cmd_addrs[24]
 #define pForFend			cmd_addrs[25]
+#define pParseFortoken		cmd_addrs[26]
+#define pLexBufPtr			((LPWSTR*)cmd_addrs[27])
+#define pLexBufferend		((LPWSTR)cmd_addrs[28])
+#define pForFoptions		cmd_addrs[29]
+#define pTokLen 			((int*)cmd_addrs[30])
 
 #ifdef _WIN64
-#define OFFSETS 26
+#define OFFSETS 31
 #else
-#define pSFWorkpassed		((char*)cmd_addrs[26])
-#define OFFSETS 27
+#define pSFWorkpassed		((char*)cmd_addrs[31])
+#define OFFSETS 32
 #endif

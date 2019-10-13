@@ -52,15 +52,15 @@ BYTE oldCtrlCAborts[7];
 BYTE SFWork_saved;
 #else
 BYTE oldCtrlCAborts[5];
-DWORD SFWork_esp;
+DWORD SFWork_esp, ParseForF_ret;
 BYTE SFWork_stdcall;
 int SFWork_saved, SFWork_passed, SFWork_first;
-DWORD ForFbegin_org;
+DWORD ForFbegin_org, ParseFor_org, ParseForF_org;
 #endif
 
 int iPutMsg;
 BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
-BYTE oldForFbegin[6], oldForFend[6];
+BYTE oldForFbegin[6], oldForFend[6], oldParseFor[4], oldParseForF[4];
 DWORD_PTR ForFend_org;
 int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
 
@@ -104,6 +104,103 @@ void __attribute((fastcall)) ForFend_hook(BYTE end)
 		}
 	} else {
 		++ForF_stack[ForF_stacktop];
+	}
+}
+
+
+void ParseFor(void)
+{
+	DWORD len;
+
+	LPWSTR p = *pLexBufPtr;
+	while (iswspace(*p)) {
+		++p;
+	}
+	if ((p[0] | 0x20) == L'd' && (p[1] | 0x20) == L'o' && iswspace(p[2])) {
+		// Translate "for do ..." to "for %_ in (:*) do ...".
+		len = wcslen(*pLexBufPtr);
+		if (*pLexBufPtr + 10 + len >= pLexBufferend) {
+			return;
+		}
+		memmove(*pLexBufPtr + 10, *pLexBufPtr, (len + 1) * sizeof(wchar_t));
+		memcpy(*pLexBufPtr, L"%_ in (:*)", 10 * sizeof(wchar_t));
+	} else if (p[0] == L'%' && p[1] != L'\0' && iswspace(p[2]) &&
+			   ((p[3] | 0x20) == L'd' && (p[4] | 0x20) == L'o' && iswspace(p[5]))) {
+		// Translate "for %? do ..." to "for %? in (:range*) do ...".
+		p += 3;
+		len = wcslen(p);
+		if (p + 13 + len >= pLexBufferend) {
+			return;
+		}
+		memmove(p + 13, p, (len + 1) * sizeof(wchar_t));
+		memcpy(p, L"in (:range*) ", 13 * sizeof(wchar_t));
+	} else if (p[0] == L'%' && p[1] != L'\0' && iswspace(p[2])
+			   && (iswdigit(p[3]) || (p[3] == L'-' && iswdigit(p[4]))
+				   || (*pfDelayedExpansion && p[3] == L'!'))) {
+		// Translate "for %? N ..." to "for %? in (:range*N) ...".
+		int digits = 1;
+		p += 4;
+		if (p[-1] == L'!') {
+			if (*p == L'!') {
+				return;
+			}
+			for (;;) {
+				if (*p == L'\0') {
+					return;
+				}
+				++digits;
+				++p;
+				if (p[-1] == L'!') {
+					break;
+				}
+			}
+		} else {
+			while (iswdigit(*p)) {
+				++digits;
+				++p;
+			}
+		}
+		len = wcslen(p);
+		if (p + 12 + len >= pLexBufferend) {
+			return;
+		}
+		memmove(p + 12, p, (len + 1) * sizeof(wchar_t));
+		p[11] = L')';
+		memmove(p + 11 - digits, p - digits, digits * sizeof(wchar_t));
+		memcpy(p - digits, L"in (:range*", 11 * sizeof(wchar_t));
+	}
+}
+
+void ParseForF(void)
+{
+	LPWSTR p = pTmpBuf;
+	if (*p == L'%' || *p == L'/') {
+		return;
+	}
+	if (*p == L'"' || *p == L'\'') {
+		++p;
+	}
+	for (;;) {
+		while (*p <= L' ') {
+			if (*p == L'\0') {
+				return;
+			}
+			++p;
+		}
+		if (_wcsnicmp(p, L"line", 4) == 0) {
+			// Translate "... line..." to "...     ... delims= eol=".
+			p[0] = p[1] = p[2] = p[3] = L' ';
+			p += wcslen(p);
+			if (p[-1] == L'"' || p[-1] == L'\'') {
+				--p;
+			}
+			wcscpy(p, L" delims= eol=");
+			*pTokLen = wcslen(pTmpBuf) + 1; 	// includes NUL
+			return;
+		}
+		while (*p > L' ') {
+			++p;
+		}
 	}
 }
 
@@ -222,6 +319,28 @@ void ForFbegin_jmp(void)
 	asm(
 		"call _ForFbegin_hook\n"
 		"jmp *_ForFbegin_org\n"
+	);
+}
+
+void ParseFor_hook(void)
+{
+	asm(
+		"push %eax\n"
+		"push %ecx\n"
+		"call _ParseFor\n"
+		"pop %ecx\n"
+		"pop %eax\n"
+		"jmp *_ParseFor_org\n"
+	);
+}
+
+void ParseForF_hook(void)
+{
+	asm(
+		"pop _ParseForF_ret\n"
+		"call *_ParseForF_org\n"
+		"push _ParseForF_ret\n"
+		"jmp _ParseForF\n"
 	);
 }
 
@@ -612,6 +731,12 @@ void hookCmd(void)
 			memcpy(oldForFbegin, pForFbegin, 6);
 			memcpy(oldForFend, pForFend, 6);
 
+			// Hook FOR to allow shorthand for infinite & simple range loops.
+			memcpy(oldParseFor, pParseFortoken, 4);
+
+			// Hook FOR /F to use "line" as shorthand for "delims= eol=".
+			memcpy(oldParseForF, pForFoptions, 4);
+
 #ifdef _WIN64
 			// CMD and the DLL could be more than 2GiB apart, so allocate some
 			// memory before CMD to near jump to, which then does an absolute
@@ -640,6 +765,23 @@ void hookCmd(void)
 						"??"                        // alignment
 			/* 80 */	"????????"                  // ForFbegin_hook
 			/* 88 */	"????????"                  // ForFend
+			/* 96 */	"????????"                  // ParseFor
+			/* 104 */	"????????"                  // ParseFor_org
+			/* 112 */	"????????"                  // ParseForF_org
+			/* 120 */	"????????"                  // ParseForF
+			/* 128 */	"\x51"                      // push rcx
+						"\x52"                      // push rdx
+						"\xFF\x15\xD8\xFF\xFF\xFF"  // call [redirect+96]
+						"\x5A"                      // pop rdx
+						"\x59"                      // pop rcx
+						"\xFF\x25\xD8\xFF\xFF\xFF"  // jmp [redirect+104]
+			/* 144 */	"\x48\x83\xEC\x20"          // sub rsp,0x20
+						"\xFF\x15\xD6\xFF\xFF\xFF"  // call [redirect+112]
+						"\x48\x83\xC4\x20"          // add rsp,0x20
+						"\x50"                      // push rax
+						"\xFF\x15\xD3\xFF\xFF\xFF"  // call [redirect+120]
+						"\x58"                      // pop rax
+						"\xC3"                      // ret
 			;
 
 			for (redirect = cmd - 0x1000;;) {
@@ -676,6 +818,15 @@ void hookCmd(void)
 			WriteMemory(pForFend+2, &i, 4);
 			WriteMemory(pForFbegin, "\xFF\x15", 2);     // call [rip]
 			WriteMemory(pForFend, "\xFF\x15", 2);
+
+			((LPVOID *)redirect)[12] = ParseFor;
+			((DWORD_PTR *)redirect)[13] = (DWORD_PTR)pParseFortoken + *(int *)(pParseFortoken) + 4;
+			((DWORD_PTR *)redirect)[14] = (DWORD_PTR)pForFoptions + *(int *)(pForFoptions) + 4;
+			((LPVOID *)redirect)[15] = ParseForF;
+			i = (DWORD_PTR)redirect + 128 - (DWORD_PTR)pParseFortoken - 4;
+			WriteMemory(pParseFortoken, &i, 4);
+			i = (DWORD_PTR)redirect + 144 - (DWORD_PTR)pForFoptions - 4;
+			WriteMemory(pForFoptions, &i, 4);
 #else
 			if (pForFbegin[1] == 0x83) {
 				// No need for original begin, it can never be true.
@@ -695,6 +846,12 @@ void hookCmd(void)
 			WriteMemory(pForFend, (LPVOID) 0xE8, 1);
 			WriteMemory(pForFend+1, &i, 4);
 			WriteMemory(pForFend+5, (LPVOID) 0x90, 1);
+			ParseFor_org = (DWORD_PTR)pParseFortoken + *(int *)(pParseFortoken) + 4;
+			i = (DWORD)ParseFor_hook - (DWORD)pParseFortoken - 4;
+			WriteMemory(pParseFortoken, &i, 4);
+			ParseForF_org = (DWORD_PTR)pForFoptions + *(int *)(pForFoptions) + 4;
+			i = (DWORD)ParseForF_hook - (DWORD)pForFoptions - 4;
+			WriteMemory(pForFoptions, &i, 4);
 #endif
 
 			// Hook PutStdErr to write the batch file name and line number.
@@ -853,6 +1010,8 @@ void unhookCmd(void)
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
 	WriteMemory(pForFbegin, oldForFbegin, 6);
 	WriteMemory(pForFend, oldForFend, 6);
+	WriteMemory(pParseFortoken, oldParseFor, 4);
+	WriteMemory(pForFoptions, oldParseForF, 4);
 
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;

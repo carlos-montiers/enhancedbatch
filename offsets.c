@@ -54,6 +54,11 @@ LPBYTE cmd_addrs[] = {
 	0,			// GotoFlag
 	0,			// FOR /F begin
 	0,			// FOR /F end
+	0,			// ParseFor initial token
+	0,			// LexBufPtr
+	0,			// LexBuffer end
+	0,			// ParseFor /F options
+	0,			// TokLen
 #ifndef _WIN64
 	0,			// SFWork:passed (EBP offset to the text)
 #endif
@@ -88,6 +93,11 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x42c40,	// GotoFlag
 	0x07388,	// FOR /F begin
 	0x075b4,	// FOR /F end
+	0x0acd9,	// ParseFor initial token
+	0x4b3a0,	// LexBufPtr
+	0x4f3c2,	// LexBuffer end
+	0x0ae3d,	// ParseFor /F options
+	0x4b38c,	// TokLen
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -117,6 +127,11 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x42c40,	// GotoFlag
 	0x073a8,	// FOR /F begin
 	0x075d4,	// FOR /F end
+	0x0acf9,	// ParseFor initial token
+	0x4b3a0,	// LexBufPtr
+	0x4f3c2,	// LexBuffer end
+	0x0ae5d,	// ParseFor /F options
+	0x4b38c,	// TokLen
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -146,6 +161,11 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x2e089,	// GotoFlag
 	0x0bbe4,	// FOR /F begin
 	0x0bdb5,	// FOR /F end
+	0x0b53f,	// ParseFor initial token
+	0x2e220,	// LexBufPtr
+	0x33302,	// LexBuffer end
+	0x0c1d7,	// ParseFor /F options
+	0x2e124,	// TokLen
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -175,6 +195,11 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x2e089,	// GotoFlag
 	0x0c24e,	// FOR /F begin
 	0x0c3fb,	// FOR /F end
+	0x0ba8f,	// ParseFor initial token
+	0x2e218,	// LexBufPtr
+	0x332e2,	// LexBuffer end
+	0x0c478,	// ParseFor /F options
+	0x2e120,	// TokLen
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -204,6 +229,11 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x2d0c9,	// GotoFlag
 	0x0d893,	// FOR /F begin
 	0x0da8c,	// FOR /F end
+	0x0de16,	// ParseFor initial token
+	0x2d278,	// LexBufPtr
+	0x36362,	// LexBuffer end
+	0x0e1fa,	// ParseFor /F options
+	0x2d17c,	// TokLen
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -233,6 +263,11 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x2d0c9,	// GotoFlag
 	0x0df6d,	// FOR /F begin
 	0x0e166,	// FOR /F end
+	0x0d8f2,	// ParseFor initial token
+	0x2d278,	// LexBufPtr
+	0x36362,	// LexBuffer end
+	0x0e223,	// ParseFor /F options
+	0x2d17c,	// TokLen
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -262,6 +297,11 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x2e0c9,	// GotoFlag
 	0x0e591,	// FOR /F begin
 	0x0e78a,	// FOR /F end
+	0x0df06,	// ParseFor initial token
+	0x2e278,	// LexBufPtr
+	0x37362,	// LexBuffer end
+	0x0e847,	// ParseFor /F options
+	0x2e17c,	// TokLen
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -291,6 +331,11 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x2ec09,	// GotoFlag
 	0x0e591,	// FOR /F begin
 	0x0e78a,	// FOR /F end
+	0x0df06,	// ParseFor initial token
+	0x2e278,	// LexBufPtr
+	0x37362,	// LexBuffer end
+	0x0e847,	// ParseFor /F options
+	0x2e17c,	// TokLen
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -320,6 +365,11 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x3c092,	// GotoFlag
 	0x0d6a6,	// FOR /F begin
 	0x0d905,	// FOR /F end (opposite jump)
+	0x0e43a,	// ParseFor initial token
+	0x3c218,	// LexBufPtr
+	0x49122,	// LexBuffer end
+	0x0e7b0,	// ParseFor /F options
+	0x3c124,	// TokLen
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -349,6 +399,11 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x380d2,	// GotoFlag
 	0x0dc2d,	// FOR /F begin
 	0x0de7e,	// FOR /F end
+	0x0e8fc,	// ParseFor initial token
+	0x38258,	// LexBufPtr
+	0x45162,	// LexBuffer end
+	0x0ebba,	// ParseFor /F options
+	0x38164,	// TokLen
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -378,6 +433,11 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x2e092,	// GotoFlag
 	0x0c277,	// FOR /F begin
 	0x0c046,	// FOR /F end
+	0x0c918,	// ParseFor initial token
+	0x2e218,	// LexBufPtr
+	0x3b102,	// LexBuffer end
+	0x0cb74,	// ParseFor /F options
+	0x2e12c,	// TokLen
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -407,6 +467,11 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x2f760,	// GotoFlag
 	0x08e1b,	// FOR /F begin
 	0x09006,	// FOR /F end
+	0x1b4be,	// ParseFor initial token
+	0x34058,	// LexBufPtr
+	0x3cca2,	// LexBuffer end
+	0x1b551,	// ParseFor /F options
+	0x33f04,	// TokLen
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -436,6 +501,11 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x2c760,	// GotoFlag
 	0x08d0d,	// FOR /F begin
 	0x08ebb,	// FOR /F end
+	0x08054,	// ParseFor initial token
+	0x30b38,	// LexBufPtr
+	0x39782,	// LexBuffer end
+	0x081eb,	// ParseFor /F options
+	0x309e4,	// TokLen
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -465,6 +535,11 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x2d092,	// GotoFlag
 	0x0c02b,	// FOR /F begin
 	0x0c1d0,	// FOR /F end
+	0x0c7e4,	// ParseFor initial token
+	0x2d218,	// LexBufPtr
+	0x3a102,	// LexBuffer end
+	0x0c9b0,	// ParseFor /F options
+	0x2d12c,	// TokLen
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -494,6 +569,11 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x2e012,	// GotoFlag
 	0x0e376,	// FOR /F begin
 	0x0e514,	// FOR /F end
+	0x0dd64,	// ParseFor initial token
+	0x2e198,	// LexBufPtr
+	0x36f82,	// LexBuffer end
+	0x0df30,	// ParseFor /F options
+	0x2e0ac,	// TokLen
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -523,6 +603,11 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x46b88,	// GotoFlag
 	0x054e5,	// FOR /F begin
 	0x0569d,	// FOR /F end
+	0x03278,	// ParseFor initial token
+	0x2f998,	// LexBufPtr
+	0x385e2,	// LexBuffer end
+	0x0340f,	// ParseFor /F options
+	0x2f844,	// TokLen
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -552,6 +637,11 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x47ba8,	// GotoFlag
 	0x05721,	// FOR /F begin
 	0x058c3,	// FOR /F end
+	0x117a8,	// ParseFor initial token
+	0x309b8,	// LexBufPtr
+	0x39602,	// LexBuffer end
+	0x1193f,	// ParseFor /F options
+	0x30864,	// TokLen
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -581,6 +671,11 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x30350,	// GotoFlag
 	0x0fff2,	// FOR /F begin
 	0x10193,	// FOR /F end
+	0x149d8,	// ParseFor initial token
+	0x3e8a8,	// LexBufPtr
+	0x3e8a2,	// LexBuffer end
+	0x14b6f,	// ParseFor /F options
+	0x46c00,	// TokLen
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -610,6 +705,11 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x39890,	// GotoFlag
 	0x03b27,	// FOR /F begin
 	0x03cc5,	// FOR /F end
+	0x07d70,	// ParseFor initial token
+	0x47c38,	// LexBufPtr
+	0x43c22,	// LexBuffer end
+	0x07f08,	// ParseFor /F options
+	0x4c074,	// TokLen
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -639,6 +739,11 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x39890,	// GotoFlag
 	0x03c62,	// FOR /F begin
 	0x03e03,	// FOR /F end
+	0x07fcc,	// ParseFor initial token
+	0x47c38,	// LexBufPtr
+	0x43c22,	// LexBuffer end
+	0x08164,	// ParseFor /F options
+	0x4c074,	// TokLen
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -668,6 +773,11 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x39890,	// GotoFlag
 	0x0337a,	// FOR /F begin
 	0x03537,	// FOR /F end
+	0x0777c,	// ParseFor initial token
+	0x47c38,	// LexBufPtr
+	0x43c22,	// LexBuffer end
+	0x07914,	// ParseFor /F options
+	0x4c074,	// TokLen
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -697,6 +807,11 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x43a88,	// GotoFlag
 	0x0ae22,	// FOR /F begin
 	0x0afdb,	// FOR /F end
+	0x14a04,	// ParseFor initial token
+	0x438f0,	// LexBufPtr
+	0x438e2,	// LexBuffer end
+	0x14b9c,	// ParseFor /F options
+	0x43a34,	// TokLen
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -726,6 +841,11 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x43a88,	// GotoFlag
 	0x09b12,	// FOR /F begin
 	0x09ccb,	// FOR /F end
+	0x15c5c,	// ParseFor initial token
+	0x438f0,	// LexBufPtr
+	0x438e2,	// LexBuffer end
+	0x15df4,	// ParseFor /F options
+	0x43a34,	// TokLen
 };
 
 #else
@@ -757,6 +877,11 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x0382b,	// FOR /F end
+	0x0ef7b,	// ParseFor initial token
+	0x1fbc8,	// LexBufPtr
+	0x21be2,	// LexBuffer end
+	0x0f004,	// ParseFor /F options
+	0x1faf0,	// TokLen
 	0x03d33,	// SFWork:passed
 };
 
@@ -787,6 +912,11 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x03830,	// FOR /F end
+	0x0ef6f,	// ParseFor initial token
+	0x1fbc8,	// LexBufPtr
+	0x21be2,	// LexBuffer end
+	0x0eff8,	// ParseFor /F options
+	0x1faf0,	// TokLen
 	0x03d38,	// SFWork:passed
 };
 
@@ -817,6 +947,11 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x03830,	// FOR /F end
+	0x0ef6b,	// ParseFor initial token
+	0x1fbc8,	// LexBufPtr
+	0x21be2,	// LexBuffer end
+	0x0eff4,	// ParseFor /F options
+	0x1faf0,	// TokLen
 	0x03d38,	// SFWork:passed
 };
 
@@ -847,6 +982,11 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x03830,	// FOR /F end
+	0x0efc2,	// ParseFor initial token
+	0x1fbc8,	// LexBufPtr
+	0x21be2,	// LexBuffer end
+	0x0f04b,	// ParseFor /F options
+	0x1faf0,	// TokLen
 	0x03d38,	// SFWork:passed
 };
 
@@ -877,6 +1017,11 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x1cf44,	// GotoFlag
 	0x036c0,	// FOR /F begin
 	0x03840,	// FOR /F end
+	0x0eff6,	// ParseFor initial token
+	0x1fbc8,	// LexBufPtr
+	0x21be2,	// LexBuffer end
+	0x0f07f,	// ParseFor /F options
+	0x1faf0,	// TokLen
 	0x03d48,	// SFWork:passed
 };
 
@@ -907,6 +1052,11 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x1cf44,	// GotoFlag
 	0x03777,	// FOR /F begin
 	0x038f7,	// FOR /F end
+	0x0f0b4,	// ParseFor initial token
+	0x1fbc8,	// LexBufPtr
+	0x21be2,	// LexBuffer end
+	0x0f13d,	// ParseFor /F options
+	0x1faf0,	// TokLen
 	0x03dff,	// SFWork:passed
 };
 
@@ -937,6 +1087,11 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x2caa0,	// GotoFlag
 	0x0673b,	// FOR /F begin
 	0x063b0,	// FOR /F end
+	0x04b2a,	// ParseFor initial token
+	0x2ca24,	// LexBufPtr
+	0x22082,	// LexBuffer end
+	0x067f1,	// ParseFor /F options
+	0x2ca40,	// TokLen
 	0x0284e,	// SFWork:passed
 };
 
@@ -967,6 +1122,11 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x2faa0,	// GotoFlag
 	0x0af6a,	// FOR /F begin
 	0x0ae34,	// FOR /F end
+	0x1081e,	// ParseFor initial token
+	0x2fa24,	// LexBufPtr
+	0x25082,	// LexBuffer end
+	0x0acd2,	// ParseFor /F options
+	0x2fa40,	// TokLen
 	0x1019b,	// SFWork:passed
 };
 
@@ -997,6 +1157,11 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x2faa0,	// GotoFlag
 	0x0b0a6,	// FOR /F begin
 	0x0af70,	// FOR /F end
+	0x08524,	// ParseFor initial token
+	0x2fa24,	// LexBufPtr
+	0x25082,	// LexBuffer end
+	0x0ae0e,	// ParseFor /F options
+	0x2fa40,	// TokLen
 	0x08082,	// SFWork:passed
 };
 
@@ -1027,6 +1192,11 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x2faa0,	// GotoFlag
 	0x0b0a6,	// FOR /F begin
 	0x0af70,	// FOR /F end
+	0x08524,	// ParseFor initial token
+	0x2fa24,	// LexBufPtr
+	0x25082,	// LexBuffer end
+	0x0ae0e,	// ParseFor /F options
+	0x2fa40,	// TokLen
 	0x08082,	// SFWork:passed
 };
 
@@ -1057,6 +1227,11 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x2004c,	// GotoFlag
 	0x06e21,	// FOR /F begin
 	0x06f6d,	// FOR /F end
+	0x067fa,	// ParseFor initial token
+	0x24d24,	// LexBufPtr
+	0x28d42,	// LexBuffer end
+	0x06fcc,	// ParseFor /F options
+	0x28d84,	// TokLen
 	0x06556,	// SFWork:passed
 };
 
@@ -1087,6 +1262,11 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x2fa58,	// GotoFlag
 	0x0cd31,	// FOR /F begin
 	0x0cc3f,	// FOR /F end
+	0x0a87f,	// ParseFor initial token
+	0x2f9e4,	// LexBufPtr
+	0x25042,	// LexBuffer end
+	0x0d1de,	// ParseFor /F options
+	0x2fa00,	// TokLen
 	0x0a189,	// SFWork:passed
 };
 
@@ -1117,6 +1297,11 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x2fa58,	// GotoFlag
 	0x0b363,	// FOR /F begin
 	0x0b487,	// FOR /F end
+	0x0a961,	// ParseFor initial token
+	0x2f9e4,	// LexBufPtr
+	0x25042,	// LexBuffer end
+	0x0b23e,	// ParseFor /F options
+	0x2fa00,	// TokLen
 	0x0aba4,	// SFWork:passed
 };
 
@@ -1147,6 +1332,11 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x24078,	// GotoFlag
 	0x08c15,	// FOR /F begin
 	0x08d7a,	// FOR /F end
+	0x09150,	// ParseFor initial token
+	0x2415c,	// LexBufPtr
+	0x40642,	// LexBuffer end
+	0x092d4,	// ParseFor /F options
+	0x24140,	// TokLen
 	0x087e5,	// SFWork:passed
 };
 
@@ -1177,6 +1367,11 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x24078,	// GotoFlag
 	0x0a713,	// FOR /F begin
 	0x0a878,	// FOR /F end
+	0x0a23f,	// ParseFor initial token
+	0x2413c,	// LexBufPtr
+	0x405e2,	// LexBuffer end
+	0x0a942,	// ParseFor /F options
+	0x24120,	// TokLen
 	0x09d37,	// SFWork:passed
 };
 
@@ -1207,6 +1402,11 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x240b8,	// GotoFlag
 	0x0e87b,	// FOR /F begin
 	0x0e9dc,	// FOR /F end
+	0x0e1a1,	// ParseFor initial token
+	0x2418c,	// LexBufPtr
+	0x40602,	// LexBuffer end
+	0x0e31d,	// ParseFor /F options
+	0x24170,	// TokLen
 	0x0ddff,	// SFWork:passed
 };
 
@@ -1237,6 +1437,11 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x240b8,	// GotoFlag
 	0x0ebc2,	// FOR /F begin
 	0x0ed23,	// FOR /F end
+	0x0e493,	// ParseFor initial token
+	0x2418c,	// LexBufPtr
+	0x40602,	// LexBuffer end
+	0x0e60f,	// ParseFor /F options
+	0x24170,	// TokLen
 	0x0e103,	// SFWork:passed
 };
 
@@ -1267,6 +1472,11 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x240b8,	// GotoFlag
 	0x0e84e,	// FOR /F begin
 	0x0e9af,	// FOR /F end
+	0x0e10e,	// ParseFor initial token
+	0x24194,	// LexBufPtr
+	0x40642,	// LexBuffer end
+	0x0e29b,	// ParseFor /F options
+	0x24178,	// TokLen
 	0x0dd8c,	// SFWork:passed
 };
 
@@ -1297,6 +1507,11 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x240b8,	// GotoFlag
 	0x0e84e,	// FOR /F begin
 	0x0e9af,	// FOR /F end
+	0x0e10e,	// ParseFor initial token
+	0x24194,	// LexBufPtr
+	0x40642,	// LexBuffer end
+	0x0e29b,	// ParseFor /F options
+	0x24178,	// TokLen
 	0x0dd8c,	// SFWork:passed
 };
 
@@ -1327,6 +1542,11 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x30042,	// GotoFlag
 	0x0e7d9,	// FOR /F begin
 	0x0d57a,	// FOR /F end
+	0x0dc04,	// ParseFor initial token
+	0x30144,	// LexBufPtr
+	0x4ba62,	// LexBuffer end
+	0x0dea5,	// ParseFor /F options
+	0x30118,	// TokLen
 	0x0df22,	// SFWork:passed
 };
 
@@ -1357,6 +1577,11 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x2e082,	// GotoFlag
 	0x0c732,	// FOR /F begin
 	0x0c35f,	// FOR /F end
+	0x0cbd1,	// ParseFor initial token
+	0x2e194,	// LexBufPtr
+	0x49ac2,	// LexBuffer end
+	0x0ce4f,	// ParseFor /F options
+	0x2e168,	// TokLen
 	0x0bfce,	// SFWork:passed
 };
 
@@ -1387,6 +1612,11 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x25042,	// GotoFlag
 	0x0a375,	// FOR /F begin
 	0x0a553,	// FOR /F end
+	0x09e14,	// ParseFor initial token
+	0x25148,	// LexBufPtr
+	0x40842,	// LexBuffer end
+	0x09f8a,	// ParseFor /F options
+	0x2511c,	// TokLen
 	0x098e6,	// SFWork:passed
 };
 
@@ -1417,6 +1647,11 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x28498,	// GotoFlag
 	0x081f3,	// FOR /F begin
 	0x08392,	// FOR /F end
+	0x17cfa,	// ParseFor initial token
+	0x2cb10,	// LexBufPtr
+	0x35742,	// LexBuffer end
+	0x17d73,	// ParseFor /F options
+	0x2c8d8,	// TokLen
 	0x08890,	// SFWork:passed
 };
 
@@ -1447,6 +1682,11 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x25478,	// GotoFlag
 	0x073bb,	// FOR /F begin
 	0x0753a,	// FOR /F end
+	0x06b60,	// ParseFor initial token
+	0x298d0,	// LexBufPtr
+	0x32502,	// LexBuffer end
+	0x06c92,	// ParseFor /F options
+	0x29698,	// TokLen
 	0x0dd7e,	// SFWork:passed
 };
 
@@ -1477,6 +1717,11 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x25042,	// GotoFlag
 	0x09720,	// FOR /F begin
 	0x0990a,	// FOR /F end
+	0x09acc,	// ParseFor initial token
+	0x25148,	// LexBufPtr
+	0x40842,	// LexBuffer end
+	0x09c36,	// ParseFor /F options
+	0x2511c,	// TokLen
 	0x0a28f,	// SFWork:passed
 };
 
@@ -1507,6 +1752,11 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x26002,	// GotoFlag
 	0x0d2f2,	// FOR /F begin
 	0x0d467,	// FOR /F end
+	0x0cd67,	// ParseFor initial token
+	0x26108,	// LexBufPtr
+	0x41802,	// LexBuffer end
+	0x0cee2,	// ParseFor /F options
+	0x260dc,	// TokLen
 	0x0d94e,	// SFWork:passed
 };
 
@@ -1537,6 +1787,11 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x3c974,	// GotoFlag
 	0x0fca0,	// FOR /F begin
 	0x0fe1f,	// FOR /F end
+	0x117dd,	// ParseFor initial token
+	0x257d0,	// LexBufPtr
+	0x2e402,	// LexBuffer end
+	0x11921,	// ParseFor /F options
+	0x25598,	// TokLen
 	0x099de,	// SFWork:passed
 };
 
@@ -1567,6 +1822,11 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x3d974,	// GotoFlag
 	0x0f9d0,	// FOR /F begin
 	0x0fb4f,	// FOR /F end
+	0x117c2,	// ParseFor initial token
+	0x267d0,	// LexBufPtr
+	0x2f402,	// LexBuffer end
+	0x11906,	// ParseFor /F options
+	0x26598,	// TokLen
 	0x08fae,	// SFWork:passed
 };
 
@@ -1597,6 +1857,11 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x2709c,	// GotoFlag
 	0x0f640,	// FOR /F begin
 	0x0f7bf,	// FOR /F end
+	0x115bf,	// ParseFor initial token
+	0x35598,	// LexBufPtr
+	0x35592,	// LexBuffer end
+	0x11700,	// ParseFor /F options
+	0x3d690,	// TokLen
 	0x08d0e,	// SFWork:passed
 };
 
@@ -1627,6 +1892,11 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x2d598,	// GotoFlag
 	0x09050,	// FOR /F begin
 	0x091d9,	// FOR /F end
+	0x065a8,	// ParseFor initial token
+	0x3b8b4,	// LexBufPtr
+	0x378a2,	// LexBuffer end
+	0x06700,	// ParseFor /F options
+	0x3fa9c,	// TokLen
 	0x09830,	// SFWork:passed
 };
 
@@ -1657,6 +1927,11 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x41c44,	// GotoFlag
 	0x18c76,	// FOR /F begin
 	0x18e2d,	// FOR /F end
+	0x217fd,	// ParseFor initial token
+	0x39814,	// LexBufPtr
+	0x35802,	// LexBuffer end
+	0x2188e,	// ParseFor /F options
+	0x3da08,	// TokLen
 	0x19726,	// SFWork:passed
 };
 
@@ -1687,6 +1962,11 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x2d590,	// GotoFlag
 	0x07520,	// FOR /F begin
 	0x076cb,	// FOR /F end
+	0x09a68,	// ParseFor initial token
+	0x3b8a4,	// LexBufPtr
+	0x37892,	// LexBuffer end
+	0x09bc0,	// ParseFor /F options
+	0x3fa8c,	// TokLen
 	0x07d3e,	// SFWork:passed
 };
 
@@ -1717,6 +1997,11 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x35734,	// GotoFlag
 	0x08350,	// FOR /F begin
 	0x084f4,	// FOR /F end
+	0x115d3,	// ParseFor initial token
+	0x355bc,	// LexBufPtr
+	0x355b2,	// LexBuffer end
+	0x1172b,	// ParseFor /F options
+	0x356ec,	// TokLen
 	0x09a3e,	// SFWork:passed
 };
 
@@ -1747,6 +2032,11 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x35734,	// GotoFlag
 	0x10ce0,	// FOR /F begin
 	0x10e84,	// FOR /F end
+	0x12867,	// ParseFor initial token
+	0x355bc,	// LexBufPtr
+	0x355b2,	// LexBuffer end
+	0x129a8,	// ParseFor /F options
+	0x356ec,	// TokLen
 	0x0b37e,	// SFWork:passed
 };
 

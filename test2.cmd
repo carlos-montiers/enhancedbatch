@@ -63,8 +63,10 @@ set @delayedexpansion=0
 echo Delayed expansion off, literal text: !OS!
 echo Use character expansion!U+D!!U+A!for a new line.
 for /f "eol=!U+0!" %%A in (";token") do echo %%A
+for /f "line" %%A in (";line one!U+A!!U+22!line two") do echo %%A
 echo This is line %@batchline%.
 call :args 1 2 3 4 5 6 7 8 9 10 11
+call :loop
 set @dumpparse=true
 set @dumpparse=false
 set @dumptokens=1
@@ -73,6 +75,31 @@ set @unicode=1
 echo;Unicode
 set @unicode=0
 echo
+goto :eof
+
+:loop
+set @delayedexpansion=1
+set $j=1
+for do (
+  echo;!$j!..
+  if !$j! == 5 (
+    echo Stop
+    set @next=
+  )
+  set /a $j=!$j!+1
+)
+set @delayedexpansion=0
+for %%j do (
+  echo;%%j..
+  if %%j == 5 (
+    echo Stop
+    set @next=
+  )
+)
+for %%j 10 do echo;%%j..
+echo Done
+for %%j -10 do echo;%%j..
+echo Done
 goto :eof
 
 :args
