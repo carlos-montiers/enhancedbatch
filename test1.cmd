@@ -23,8 +23,10 @@ set $temp=@tempfile
 if not exist %$temp% echo Failed: temporary file doesn't exist.&goto :eof
 >>%$temp% call :test
 ::copy %$temp% test1.out
-fc >nul /b test1.out %$temp% || (
-  echo Failed.
+fc >nul /b test1.out %$temp% && (
+  echo Passed.
+) || (
+  echo FAILED^^!
   fc /n test1.out %$temp%
 )
 del %$temp%

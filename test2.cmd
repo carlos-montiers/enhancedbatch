@@ -6,7 +6,7 @@ set @echooptions=off
 >>%$temp% call :test
 ::copy %$temp% test2.out
 fc >nul test2.out %$temp% || (
-  echo CMD %@cmdversion% failed.
+  echo FAILED!
   fc /n test2.out %$temp%
   del %$temp%
   goto :eof
@@ -19,16 +19,19 @@ set /a $lnum=%@batchline% + 5
 set @batchfile=1
 set $temp2=@tempfile
 2>>%$temp2% set /a
-fc >nul %$temp% %$temp2% && goto :out
+fc >nul %$temp% %$temp2% && goto :passed
 :: It may have failed because language resources are missing.
-findstr >nul 0x2371 %$temp2% && goto :out
-echo CMD %@cmdversion% failed.
+findstr >nul 0x2371 %$temp2% && goto :passed
+echo FAILED!
 echo;~"Expected: "
 type %$temp%
 echo
 echo;~"Actual:   "
 type %$temp2%
 echo
+goto :out
+:passed
+echo Passed.
 :out
 del %$temp% %$temp2%
 goto :eof
