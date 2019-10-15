@@ -155,7 +155,7 @@ void ParseFor(void)
 				}
 			}
 		} else {
-			while (iswdigit(*p)) {
+			while (iswdigit(*p) || *p == L':' || *p == L'-') {
 				++digits;
 				++p;
 			}
@@ -731,7 +731,7 @@ void hookCmd(void)
 			memcpy(oldForFbegin, pForFbegin, 6);
 			memcpy(oldForFend, pForFend, 6);
 
-			// Hook FOR to allow shorthand for infinite & simple range loops.
+			// Hook FOR to allow shorthand for infinite & range loops.
 			memcpy(oldParseFor, pParseFortoken, 4);
 
 			// Hook FOR /F to use "line" as shorthand for "delims= eol=".
