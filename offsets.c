@@ -163,7 +163,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x0bdb5,	// FOR /F end
 	0x0b53f,	// ParseFor initial token
 	0x2e220,	// LexBufPtr
-	0x33302,	// LexBuffer end
+	0x37302,	// LexBuffer end
 	0x0c1d7,	// ParseFor /F options
 	0x2e124,	// TokLen
 };
@@ -197,7 +197,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x0c3fb,	// FOR /F end
 	0x0ba8f,	// ParseFor initial token
 	0x2e218,	// LexBufPtr
-	0x332e2,	// LexBuffer end
+	0x372e2,	// LexBuffer end
 	0x0c478,	// ParseFor /F options
 	0x2e120,	// TokLen
 };
