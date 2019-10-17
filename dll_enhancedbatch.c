@@ -85,7 +85,7 @@ struct sFor {
 BOOL Next(int argc, LPCWSTR argv[]);
 
 void unhook(void);
-BOOL Unload(int argc, LPCWSTR argv[]);
+BOOL DllUnload(int argc, LPCWSTR argv[]);
 
 fnCmdFunc *peEcho, eEcho, *peCall, eCall;
 LPWSTR Fmt17;
@@ -214,7 +214,7 @@ const struct sSetExt callExtensionList[] = {
 	{ L"@sleep",			WaitMilliseconds, 1 },
 	{ L"@timer",			SetLoTimer, 0 },
 	{ L"@timerhi",			SetHiTimer, 0 },
-	{ L"@unload",			Unload, 0 },
+	{ L"@unload",			DllUnload, 0 },
 };
 
 void setVar(LPCWSTR var, LPCWSTR val)
@@ -1269,7 +1269,7 @@ FreeLibraryThread(LPVOID param)
 	return 0;
 }
 
-BOOL Unload(int argc, LPCWSTR argv[])
+BOOL DllUnload(int argc, LPCWSTR argv[])
 {
 	unhook();
 	SafeCloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
@@ -1724,7 +1724,7 @@ void Info(LPCWSTR msg)
 }
 
 __declspec(dllexport)
-HRESULT Load(void)
+HRESULT DllLoad(void)
 {
 	DWORD cmdpid = GetParentProcessId();
 	WCHAR cmdname[MAX_PATH];
@@ -1768,6 +1768,7 @@ HRESULT Load(void)
 	return S_OK;
 }
 
-HRESULT load(void) __attribute__((dllexport, alias("Load")));
-// Default entry point of regsvr32 used as a method to load the DLL into CMD
-HRESULT DllRegisterServer(void) __attribute__((dllexport, alias("Load")));
+HRESULT load(void) __attribute__((dllexport, alias("DllLoad")));
+HRESULT Load(void) __attribute__((dllexport, alias("DllLoad")));
+// Default entry point of regsvr32 used only as a method to load the DLL into CMD
+HRESULT DllRegisterServer(void) __attribute__((dllexport, alias("DllLoad")));
