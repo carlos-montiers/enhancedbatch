@@ -1723,7 +1723,6 @@ void Info(LPCWSTR msg)
 	}
 }
 
-__declspec(dllexport)
 HRESULT DllLoad(void)
 {
 	DWORD cmdpid = GetParentProcessId();
