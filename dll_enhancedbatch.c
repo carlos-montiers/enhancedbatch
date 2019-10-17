@@ -1724,7 +1724,7 @@ void Info(LPCWSTR msg)
 }
 
 __declspec(dllexport)
-void Load(void)
+HRESULT Load(void)
 {
 	DWORD cmdpid = GetParentProcessId();
 	WCHAR cmdname[MAX_PATH];
@@ -1764,15 +1764,10 @@ void Load(void)
 			Info(L"The parent process cannot be accessed.");
 		}
 	}
-}
 
-void load(void) __attribute__((dllexport, alias("Load")));
-
-// Default entry point of regsvr32
-// Used only as a method to load the DLL into CMD
-__declspec(dllexport)
-HRESULT DllRegisterServer(void)
-{
-	Load();
 	return S_OK;
 }
+
+HRESULT load(void) __attribute__((dllexport, alias("Load")));
+// Default entry point of regsvr32 used as a method to load the DLL into CMD
+HRESULT DllRegisterServer(void) __attribute__((dllexport, alias("Load")));
