@@ -1766,11 +1766,7 @@ void Load(void)
 	}
 }
 
-__declspec(dllexport)
-void load(void)
-{
-	Load();
-}
+void load(void) __attribute__((dllexport, alias("Load")));
 
 // Default entry point of regsvr32
 // Used only as a method to load the DLL into CMD
