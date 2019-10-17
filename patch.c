@@ -58,15 +58,13 @@ int SFWork_saved, SFWork_passed, SFWork_first;
 DWORD ForFbegin_org, ParseFor_org, ParseForF_org;
 #endif
 
-int iPutMsg;
+int oldPutMsg, oldParseFor, oldParseForF;
 BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
-BYTE oldForFbegin[6], oldForFend[6], oldParseFor[4], oldParseForF[4];
-DWORD_PTR ForFend_org;
-int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
-
-DWORD_PTR SFWork_mkstr_org;
-DWORD_PTR FreeStack;
+BYTE oldForFbegin[6], oldForFend[6];
+DWORD_PTR SFWork_mkstr_org, FreeStack, ForFend_org;
 BYTE SFWork_mkstr_reg;
+
+int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
 
 
 int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
@@ -274,7 +272,7 @@ void SFWork_mkstr(void)
 		"jz exit\n"                 // fastcall, just return
 		"ret $4\n"                  // stdcall, tidy up
 		"1:\n"
-		"addl $0x35,(%esp)\n"       // skip over all the inline code
+		"addl $0x34,(%esp)\n"       // skip over all the inline code
 		"cmp $0xF6,%cl\n"           // select the register it uses
 		"cmove %eax,%esi\n"
 		"cmovb %eax,%ebx\n"         // 0xDB
@@ -407,40 +405,98 @@ void SFWork_mkstr(void)
 		"mov SFWork_mkstr_reg(%rip),%cl\n"
 		"test %cl,%cl\n"
 		"jz exit\n"
-		"addq $0x49,(%rsp)\n"           // skip over all the inline code
+		"addq $0x48,(%rsp)\n"           // skip over all the inline code
 		"cmp $0xFF,%cl\n"               // select the register it uses
 		"cmove %rax,%rdi\n"
 		"cmovne %rax,%rbx\n"
 		"exit:");
 }
 
-void ForFend(void)
+// C can't access labels created in asm, so store the offsets in the function
+// and read them from there.
+#define redirect_data		((LPDWORD)redirect_code+1)
+#define redirect_code_start ((LPBYTE)redirect_code + redirect_data[0])
+#define redirect_code_size	redirect_data[1]
+#define rMyPutStdErrMsg 	(redirect + redirect_data[2])
+#define rMyLexText			(redirect + redirect_data[3])
+#define rPromptUser 		(redirect + redirect_data[4])
+#define rAbortFlag			(redirect + redirect_data[5])
+#define rPromptUserOrg		(redirect + redirect_data[6])
+#define rSFWork_mkstr		(redirect + redirect_data[7])
+#define rForFbegin			(redirect + redirect_data[8])
+#define rForFend			(redirect + redirect_data[9])
+#define rForFendj			(redirect + redirect_data[10])
+#define rParseFor			(redirect + redirect_data[11])
+#define rParseForF			(redirect + redirect_data[12])
+#define rParseFor_org		(DWORD_PTR*)(redirect + redirect_data[13])
+#define rParseForF_org		(DWORD_PTR*)(redirect + redirect_data[13]+8)
+
+// This code gets relocated to a region of memory closer to CMD, to stay within
+// the 32-bit relative address range.
+void redirect_code(void)
 {
 	asm(
-		"pushf\n"
-		"push %rdx\n"               // one of these registers may contain LF
-		//"push %r8\n"              // these registers aren't used by the hook
+		"ret\n"                 // never called, but it avoids dereferencing
+		".align 4\n"            // redirect_code and the strict alias warning
+		".long redirect_code_start - redirect_code\n"
+		".macro rel label\n"
+		".long \\label - redirect_code_start\n"
+		".endm\n"
+		"rel redirect_code_end\n"
+		"rel rMyPutStdErrMsg\n"
+		"rel rMyLexText\n"
+		"rel rPromptUser\n"
+		"rel rAbortFlag+1\n"
+		"rel rPromptUserOrg\n"
+		"rel rSFWork_mkstr\n"
+		"rel rForFbegin\n"
+		"rel rForFend\n"
+		"rel rForFendj\n"
+		"rel rParseFor\n"
+		"rel rParseForF\n"
+		"rel rParseFor_org\n"
+
+		"redirect_code_start:\n"
+
+		"rMyPutStdErrMsg:\n"
+		"jmp *aMyPutStdErrMsg(%rip)\n"
+
+		"mov $0x4000,%ebx\n"            // used by the debug version
+		"rMyLexText:\n"
+		"jmp *aMyLexText(%rip)\n"
+
+		"rPromptUser:\n"
+		"cmp $0x237b,%edx\n"            // Terminate batch job?
+		"jne 1f\n"
+		"rAbortFlag:\n"
+		"mov $0,%eax\n"                 // value patched in
+		"ret\n"
+		"1:\n"
+		"pop %rax\n"                    // return address
+		"add $2,%rax\n"                 // skip RET/NOP
+		"rPromptUserOrg:\n"
+		".fill 7,1,0x90\n"              // original code patched in
+		"push %rax\n"
+		"ret\n"
+
+		"rSFWork_mkstr:\n"
+		"jmp *aSFWork_mkstr(%rip)\n"
+
+		"rForFbegin:\n"
+		"push %rdx\n"                   // one of these registers may contain LF
+		//"push %r8\n"                  // these registers aren't used by the hook
 		//"push %r9\n"
 		//"push %r10\n"
-		"setnc %cl\n"
-		//"sub $32,%rsp\n"          // shadow space not needed
-		"call ForFend_hook\n"
+		//"sub $32,%rsp\n"              // shadow space not needed
+		"call *aForFbegin_hook(%rip)\n"
 		//"add $32,%rsp\n"
 		//"pop %r10\n"
 		//"pop %r9\n"
 		//"pop %r8\n"
 		"pop %rdx\n"
-		"popf\n"
-		"jnc 1f\n"
-		"mov ForFend_org(%rip),%rax\n"
-		"mov %rax,(%rsp)\n"
-		"1:"
-	);
-}
+		"ret\n"
 
-void ForFend_opp(void)
-{
-	asm(
+		"rForFend:\n"
 		"pushf\n"
 		"push %rdx\n"
 		//"push %r8\n"
@@ -448,39 +504,69 @@ void ForFend_opp(void)
 		//"push %r10\n"
 		"setnc %cl\n"
 		//"sub $32,%rsp\n"
-		"call ForFend_hook\n"
+		"call *aForFend_hook(%rip)\n"
 		//"add $32,%rsp\n"
 		//"pop %r10\n"
 		//"pop %r9\n"
 		//"pop %r8\n"
 		"pop %rdx\n"
 		"popf\n"
-		"jc 1f\n"
-		"mov ForFend_org(%rip),%rax\n"
+		"rForFendj:\n"
+		"jnc 1f\n"                      // possibly patched to jc
+		"movabs ForFend_org,%rax\n"
 		"mov %rax,(%rsp)\n"
-		"1:"
-	);
-}
+		"1:\n"
+		"ret\n"
 
-void ForFbegin(void)
-{
-	asm(
+		"rParseFor:\n"
+		"push %rcx\n"
 		"push %rdx\n"
-		//"push %r8\n"
-		//"push %r9\n"
-		//"push %r10\n"
-		//"sub $32,%rsp\n"
-		"call ForFbegin_hook\n"
-		//"add $32,%rsp\n"
-		//"pop %r10\n"
-		//"pop %r9\n"
-		//"pop %r8\n"
+		"call *aParseFor(%rip)\n"
 		"pop %rdx\n"
+		"pop %rcx\n"
+		"jmp *aParseFor_org(%rip)\n"
+
+		"rParseForF:\n"
+		"sub $32,%rsp\n"
+		"call *aParseForF_org(%rip)\n"
+		"add $32,%rsp\n"
+		"push %rax\n"
+		"call *aParseForF(%rip)\n"
+		"pop %rax\n"
+		"ret\n"
+
+		".align 8\n"
+		".macro abs label\n"
+		"a\\label: .quad \\label\n"
+		".endm\n"
+		"abs MyPutStdErrMsg\n"
+		"abs MyLexText\n"
+		"abs SFWork_mkstr\n"
+		"abs ForFbegin_hook\n"
+		"abs ForFend_hook\n"
+		"abs ParseFor\n"
+		"abs ParseForF\n"
+		"rParseFor_org:\n"
+		"aParseFor_org: .quad 0\n"
+		"aParseForF_org: .quad 0\n"
+
+		"redirect_code_end:\n"
 	);
 }
 
 #endif
 
+#define WriteCode(addr, code) \
+	do { \
+		static const char insns[sizeof(code)-1] = { code }; \
+		WriteMemory(addr, insns, sizeof(insns)); \
+	} while (0)
+
+// Create a displacement to TO from FROM (the end of the instruction).
+#define MKDISP(to, from) ((DWORD_PTR)(to) - (DWORD_PTR)(from))
+
+// Given the address of a displacement get its absolute destination.
+#define MKABS(disp) ((DWORD_PTR)(disp)+4 + *(int *)(disp))
 
 void hookCmd(void)
 {
@@ -491,6 +577,12 @@ void hookCmd(void)
 	struct sCmdEntry *cmdentry;
 	fnCmdFunc pMyEcho, pMyCall;
 	const struct sCMD *ver;
+	int i;
+	struct __attribute__((gcc_struct,packed)) {
+		char nop;
+		char op;
+		int  disp;
+	} call;
 
 	cmd = (LPBYTE) GetModuleHandle(NULL);
 	data = (LPDWORD) cmd;
@@ -503,13 +595,13 @@ void hookCmd(void)
 
 	sfwork_map = kh_init(ptrdw);
 
-	// Search the image for the ECHO & SET help identifiers (to locate eEcho),
-	// L"%s\r\n" (for its output) and the binary file version.
+	// Search the image for the ECHO & CALL help identifiers (to locate eEcho &
+	// eCall), L"%s\r\n" (for ECHO's output) and the binary file version.
 	while (data < end) {
 		if (!eEcho) {
 			cmdentry = (struct sCmdEntry *) data;
 			if (cmdentry->helpid == 0x2392 &&		// ECHO
-				(cmdentry+1)->helpid == 0x2389) {	// SET
+				(cmdentry+14)->helpid == 0x238F) {	// CALL
 				peEcho = &cmdentry->func;
 				eEcho = cmdentry->func;
 				WriteMemory(peEcho, &pMyEcho, sizeof(pMyEcho));
@@ -537,430 +629,366 @@ void hookCmd(void)
 	LPBYTE p = (LPBYTE) eCall;
 #ifdef _WIN64
 	p += cmdDebug ? 25 : 15;
-	pLastRetCode = (int *)(p + 4 + *(int *)p);
+	pLastRetCode = (int *)MKABS(p);
 #else
 	while (*p++ != 0xA3) ;
 	pLastRetCode = *(int **)p;
 #endif
 
-	for (ver = cmd_versions; ver->offsets; ++ver) {
-		if (ver->verMS == cmdFileVersionMS &&
-			ver->verLS == cmdFileVersionLS &&
-			*(LPCWSTR)(cmd + *ver->offsets) == L';') {
-
-			int i;
-			for (i = 0; i < OFFSETS; ++i) {
-				cmd_addrs[i] = cmd + ver->offsets[i];
-			}
-
-			memcpy(oldEchoOnOff, pEchoOnOff, 5);
-			memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
-
-			// Patch FOR to fix a substitute bug - each one has its own memory.
-			// Allocate once and reuse it.	It also frees memory allocated
-			// during each loop.
-			memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
-			memcpy(oldSFWorkresize, pSFWorkresize, 6);
-			FreeStack = (DWORD_PTR) pFreeStack;
-			SFWork_saved = *pSFWorksaved;
-#ifdef _WIN64
-			if (*pSFWorkmkstr == 0xFF) {
-				SFWork_mkstr_reg = pSFWorkmkstr[0x47];
-				SFWork_mkstr_org = *(DWORD_PTR*)((DWORD_PTR)pSFWorkmkstr+6 + *(int *)(pSFWorkmkstr+2));
-				WriteMemory(pSFWorkmkstr, (LPVOID) 0xE8, 1);	// call
-				WriteMemory(pSFWorkmkstr+5, (LPVOID) 0x90, 1);	// nop
-			} else {
-				SFWork_mkstr_org = (DWORD_PTR)pSFWorkmkstr+5 + *(int *)(pSFWorkmkstr+1);
-			}
-			if (*pSFWorkresize == 0xFF) {
-				WriteMemory(pSFWorkresize, "\x4C\x89\xC0"   // mov rax,r8
-										   "\x0F\x1F"       // nop
-										   , 6);			// include NUL
-			} else {
-				WriteMemory(pSFWorkresize, "\x48\x89\xC8"   // mov rax,rcx
-										   "\x66\x90"       // nop
-										   , 5);
-			}
-#else
-			SFWork_passed = *pSFWorkpassed;
-			SFWork_first = (cmdFileVersionMS >= 0x60002) ? 12 : 20;
-			if (*pSFWorkmkstr == 0xE8) {
-				SFWork_mkstr_org = (DWORD)pSFWorkmkstr+5 + *(int *)(pSFWorkmkstr+1);
-				if (pSFWorkmkstr[-5] == 0x68) {
-					SFWork_stdcall = 1;
-				}
-			} else {
-				SFWork_mkstr_org = **(LPDWORD*)(pSFWorkmkstr+2);
-				SFWork_mkstr_reg = pSFWorkmkstr[0x33];
-				WriteMemory(pSFWorkmkstr, (LPVOID) 0xE8, 1);	// call
-				WriteMemory(pSFWorkmkstr+5, (LPVOID) 0x90, 1);	// nop
-			}
-			i = (DWORD)SFWork_mkstr - ((DWORD)pSFWorkmkstr+5);
-			WriteMemory(pSFWorkmkstr+1, &i, 4);
-			if (*pSFWorkresize == 0xE8) {
-				if (SFWork_stdcall) {
-					WriteMemory(pSFWorkresize, "\x58"           // pop eax
-											   "\x59"           // pop ecx
-											   "\x66\x66\x90"   // nop
-											   , 5);
-				} else {
-					WriteMemory(pSFWorkresize, "\x89\xC8"       // mov eax,ecx
-											   "\x66\x66\x90"   // nop
-											   , 5);
-				}
-			} else {
-				WriteMemory(pSFWorkresize, "\x59"       // pop ecx
-										   "\x59"       // pop ecx
-										   "\x58"       // pop eax
-										   "\x59"       // pop ecx
-										   "\x66\x90"   // nop
-										   , 6);
-			}
-#endif
-
-			// Patch FOR to fix a bug with wildcard expansion - each name
-			// accumulates, resizing bigger and bigger (this patch is not
-			// undone on unload).
-			// I've made the initial size big enough, no need to resize.
-			WriteMemory(pForResize, (LPVOID) 0xEB, 1);
-#ifdef _WIN64
-			if (cmdFileVersionMS == 0x50002) {
-				// 5.2.*.*
-				WriteMemory(pForResize, "\x90\xE9", 2);
-				WriteMemory(pForMkstr, "\x90\x90\x90"               // nop
-									   "\x44\x8D\xA1\x00\x01\x00"   // lea r12d,rcx+256
-									   , 10);
-			} else if (cmdFileVersionMS == 0x60000 ||
-					   cmdFileVersionMS == 0x60001) {
-				// 6.0.*.*
-				// 6.1.*.*
-				WriteMemory(pForMkstr, "\x90\x90\x90"               // nop
-									   "\x44\x8D\xA9\x00\x01\x00"   // lea r13d,rcx+256
-									   , 10);
-			} else if (cmdFileVersionMS == 0x60002) {
-				if (cmdFileVersionLS == 0x1FA60000) {
-					// 6.2.8102.0
-					WriteMemory(pForMkstr, "\x90"                       // nop
-										   "\x49\xFF\xC7"               // inc r15
-										   "\x66\x42\x83\x3C\x79\x00"	// jmp word[rcx+r15*2],0
-										   "\x75\xF5"                   // jnz inc
-										   "\x41\x81\xC7\x00\x01\x00"   // add r15d,100
-										   , 19);
-				} else {
-					// 6.2.9200.16384
-					WriteMemory(pForMkstr, "\x90"                       // nop
-										   "\x48\xFF\xC5"               // inc rbp
-										   "\x66\x83\x3C\x69\x00"       // cmp word[rcx+rbp*2],0
-										   "\x75\xF6"                   // jnz inc
-										   "\x81\xC5\x00\x01\x00"       // add ebp,100
-										   , 17);
-				}
-			} else if (cmdFileVersionMS == 0x60003 &&
-					   cmdFileVersionLS == 0x24D70000 &&
-					   cmdDebug) {
-				// 6.3.9431.0u
-				WriteMemory(pForMkstr, "\x90"                   // nop
-									   "\x48\xFF\xC2"           // inc rdx
-									   "\x66\x44\x39\x24\x51"   // cmp [rcx+rdx*2],r12w
-									   "\x75\xF6"               // jnz inc
-									   "\xFE\xC6"               // inc dh
-									   "\x89\xD7", 15);         // mov edi,edx
-			} else if (cmdFileVersionMS == 0xA0000 &&
-					   HIWORD(cmdFileVersionLS) >= 17763) {
-				// 10.0.17763.1
-				// 10.0.18362.1
-				WriteMemory(pForMkstr, "\x48\xFF\xC2"           // inc rdx
-									   "\x90"                   // nop
-									   "\x66\x44\x39\x34\x51"   // cmp [rcx+rdx*2],r14w
-									   "\x75\xF5"               // jnz inc
-									   "\xFE\xC6"               // inc dh
-									   "\x89\xD7", 15);         // mov edi,edx
-			} else {
-				// 6.3.*.*
-				// 10.0.*.*
-				WriteMemory(pForMkstr, "\x90"                   // nop
-									   "\x48\xFF\xC2"           // inc rdx
-									   "\x66\x39\x2C\x51"       // cmp [rcx+rdx*2],bp
-									   "\x75\xF7"               // jnz inc
-									   "\xFE\xC6"               // inc dh
-									   "\x89\xD7", 14);         // mov edi,edx
-			}
-#else
-			if (cmdFileVersionMS == 0x50000) {
-				// 5.0.*.*
-				WriteMemory(pForMkstr, "\xEB\x00\xFE\xC4", 4);  // jmp $+2; inc ah
-			} else if (HIWORD(cmdFileVersionMS) == 5) {
-				if (LOWORD(cmdFileVersionLS) == 0) {
-					// 5.1.2600.0
-					// 5.2.3790.0
-					WriteMemory(pForMkstr, pForMkstr+2, 8);
-					WriteMemory(pForMkstr+8, "\xFE\xC4", 2);    // inc ah
-				} else {
-					// 5.1.*.*
-					// 5.2.*.*
-					WriteMemory(pForMkstr, pForMkstr+6, 8);
-					WriteMemory(pForMkstr+8, "\x81\xC0\x00\x01\x00", 6);    // add eax,256
-				}
-			} else if (cmdFileVersionMS == 0x60000) {
-				// 6.0.*.*
-				WriteMemory(pForMkstr, "\xFE\xC4"   // inc ah
-									   "\x93", 3);	// xchg ebx,eax
-			} else if (cmdFileVersionMS == 0x60001) {
-				// 6.1.*.*
-				WriteMemory(pForMkstr, "\xFE\xC4"   // inc ah
-									   "\x97", 3);	// xchg edi,eax
-			} else if (cmdFileVersionMS == 0x60002) {
-				// 6.2.*.*
-				WriteMemory(pForMkstr, "\x85\xC0"   // test eax,eax
-									   "\x75\xF6"   // jnz $-8
-									   "\x2B\xD1"   // sub edx,ecx
-									   "\xD1\xFA"   // sar edx,1
-									   "\xFE\xC6"   // inc dh
-									   "\x89\xD3"   // mov ebx,edx
-									   , 12);
-			} else {
-				// 6.3.*.*
-				// 10.0.*.*
-				WriteMemory(pForMkstr, "\xFE\xC6"   // inc dh
-									   "\x92", 3);	// xchg edx,eax
-			}
-#endif
-
-			// Hook FOR /F to maintain a line number.
-			ForFend_org = (DWORD_PTR)pForFend+6 + *(int *)(pForFend+2);
-			memcpy(oldForFbegin, pForFbegin, 6);
-			memcpy(oldForFend, pForFend, 6);
-
-			// Hook FOR to allow shorthand for infinite & range loops.
-			memcpy(oldParseFor, pParseFortoken, 4);
-
-			// Hook FOR /F to use "line" as shorthand for "delims= eol=".
-			memcpy(oldParseForF, pForFoptions, 4);
+	// This will be found because the loader finds it first.
+	ver = cmd_versions;
+	while (ver->verMS != cmdFileVersionMS ||
+		   ver->verLS != cmdFileVersionLS ||
+		   *(LPCWSTR)(cmd + *ver->offsets) != L';') {
+		++ver;
+	}
+	for (i = 0; i < OFFSETS; ++i) {
+		cmd_addrs[i] = cmd + ver->offsets[i];
+	}
 
 #ifdef _WIN64
-			// CMD and the DLL could be more than 2GiB apart, so allocate some
-			// memory before CMD to near jump to, which then does an absolute
-			// jump to the DLL.
-			static const char redirect_code[] =
-			/*	0 */								// MyPutStdErrMsg
-			/*	8 */								// MyLexText
-
-			/* 16 */	"\xFF\x25\xEA\xFF\xFF\xFF"  // jmp [redirect]
-
-			/* 22 */	"\xBB\00\x40\x00\x00"       // mov ebx,0x4000
-			/* 27 */	"\xFF\x25\xE7\xFF\xFF\xFF"  // jmp [redirect+8]
-
-			/* 33 */	"\x81\xFA\x7B\x23\x00\x00"  // cmp edx,0x237b ;Terminate batch job?
-						"\x75\x05"                  // jne not_terminate
-			/* 41 */	"\xB8\x00\x00\x00\x00"      // mov eax,0 ;or 1
-						"\xC3"                      // ret
-						"\x58"                      // pop rax ;return address
-						"\x48\x83\xC0\x02"          // add rax,2 ;skip RET/NOP
-			/* 52 */	"???????"                   // original code
-						"\x50"                      // push rax
-						"\xC3"                      // ret
-						"???"                       // alignment
-			/* 64 */	"????????"                  // SFWork_mkstr
-			/* 72 */	"\xFF\x25\xF2\xFF\xFF\xFF"  // jmp [redirect+64]
-						"??"                        // alignment
-			/* 80 */	"????????"                  // ForFbegin_hook
-			/* 88 */	"????????"                  // ForFend
-			/* 96 */	"????????"                  // ParseFor
-			/* 104 */	"????????"                  // ParseFor_org
-			/* 112 */	"????????"                  // ParseForF_org
-			/* 120 */	"????????"                  // ParseForF
-			/* 128 */	"\x51"                      // push rcx
-						"\x52"                      // push rdx
-						"\xFF\x15\xD8\xFF\xFF\xFF"  // call [redirect+96]
-						"\x5A"                      // pop rdx
-						"\x59"                      // pop rcx
-						"\xFF\x25\xD8\xFF\xFF\xFF"  // jmp [redirect+104]
-			/* 144 */	"\x48\x83\xEC\x20"          // sub rsp,0x20
-						"\xFF\x15\xD6\xFF\xFF\xFF"  // call [redirect+112]
-						"\x48\x83\xC4\x20"          // add rsp,0x20
-						"\x50"                      // push rax
-						"\xFF\x15\xD3\xFF\xFF\xFF"  // call [redirect+120]
-						"\x58"                      // pop rax
-						"\xC3"                      // ret
-			;
-
-			for (redirect = cmd - 0x1000;;) {
-				LPVOID mem = VirtualAlloc(redirect, 16 + sizeof(redirect_code),
-										  MEM_COMMIT | MEM_RESERVE,
-										  PAGE_EXECUTE_READWRITE);
-				if (mem) {
-					redirect = mem;
-					break;
-				} else {
-					MEMORY_BASIC_INFORMATION mbi;
-					VirtualQuery(redirect, &mbi, sizeof(mbi));
-					redirect = (LPBYTE)mbi.AllocationBase - 0x1000;
-				}
-			}
-			((LPVOID *)redirect)[0] = MyPutStdErrMsg;
-			memcpy(redirect + 16, redirect_code, sizeof(redirect_code));
-			memcpy(redirect + 52, pCtrlCAborts, 7);
-			((LPVOID *)redirect)[8] = SFWork_mkstr;
-			i = (DWORD_PTR)redirect + 72 - (DWORD_PTR)pSFWorkmkstr - 5;
-			WriteMemory(pSFWorkmkstr+1, &i, 4);
-
-			// No need for original begin, it can never be true.
-			((LPVOID *)redirect)[10] = ForFbegin;
-			if (pForFend[1] == 0x82) {
-				((LPVOID *)redirect)[11] = ForFend;
-			} else {
-				// 6.2.8102.0 uses jnc, not jc.
-				((LPVOID *)redirect)[11] = ForFend_opp;
-			}
-			i = (DWORD_PTR)redirect + 80 - (DWORD_PTR)pForFbegin - 6;
-			WriteMemory(pForFbegin+2, &i, 4);
-			i = (DWORD_PTR)redirect + 88 - (DWORD_PTR)pForFend - 6;
-			WriteMemory(pForFend+2, &i, 4);
-			WriteMemory(pForFbegin, "\xFF\x15", 2);     // call [rip]
-			WriteMemory(pForFend, "\xFF\x15", 2);
-
-			((LPVOID *)redirect)[12] = ParseFor;
-			((DWORD_PTR *)redirect)[13] = (DWORD_PTR)pParseFortoken + *(int *)(pParseFortoken) + 4;
-			((DWORD_PTR *)redirect)[14] = (DWORD_PTR)pForFoptions + *(int *)(pForFoptions) + 4;
-			((LPVOID *)redirect)[15] = ParseForF;
-			i = (DWORD_PTR)redirect + 128 - (DWORD_PTR)pParseFortoken - 4;
-			WriteMemory(pParseFortoken, &i, 4);
-			i = (DWORD_PTR)redirect + 144 - (DWORD_PTR)pForFoptions - 4;
-			WriteMemory(pForFoptions, &i, 4);
-#else
-			if (pForFbegin[1] == 0x83) {
-				// No need for original begin, it can never be true.
-				i = (DWORD_PTR)ForFbegin_hook - (DWORD_PTR)pForFbegin - 5;
-				WriteMemory(pForFbegin, (LPVOID) 0xE8, 1);
-				WriteMemory(pForFbegin+1, &i, 4);
-				WriteMemory(pForFbegin+5, (LPVOID) 0x90, 1);
-				i = (DWORD)ForFend;
-			} else {
-				// No need to return, it can never be false.
-				ForFbegin_org = (DWORD_PTR)pForFbegin+6 + *(int *)(pForFbegin+2);
-				i = (DWORD_PTR)ForFbegin_jmp - (DWORD_PTR)pForFbegin - 6;
-				WriteMemory(pForFbegin+2, &i, 4);
-				i = (DWORD)ForFend_opp;
-			}
-			i -= (DWORD)pForFend + 5;
-			WriteMemory(pForFend, (LPVOID) 0xE8, 1);
-			WriteMemory(pForFend+1, &i, 4);
-			WriteMemory(pForFend+5, (LPVOID) 0x90, 1);
-			ParseFor_org = (DWORD_PTR)pParseFortoken + *(int *)(pParseFortoken) + 4;
-			i = (DWORD)ParseFor_hook - (DWORD)pParseFortoken - 4;
-			WriteMemory(pParseFortoken, &i, 4);
-			ParseForF_org = (DWORD_PTR)pForFoptions + *(int *)(pForFoptions) + 4;
-			i = (DWORD)ParseForF_hook - (DWORD)pForFoptions - 4;
-			WriteMemory(pForFoptions, &i, 4);
-#endif
-
-			// Hook PutStdErr to write the batch file name and line number.
-			iPutMsg = *pPutStdErrMsg;
-			pPutMsg = (LPVOID)((DWORD_PTR)pPutStdErrMsg + 4 + iPutMsg);
-#ifdef _WIN64
-			i = (DWORD_PTR)redirect + 16 - (DWORD_PTR)pPutStdErrMsg - 4;
-#else
-			if (cmdFileVersionMS > 0x60002) {
-				i = (DWORD_PTR)fastPutStdErrMsg;
-			} else if (cmdFileVersionMS == 0x60002) {
-				i = (DWORD_PTR)fastPutStdErrMsg62;
-			} else {
-				i = (DWORD_PTR)stdPutStdErrMsg;
-			}
-			i -= (DWORD_PTR)pPutStdErrMsg + 4;
-#endif
-			WriteMemory(pPutStdErrMsg, &i, 4);
-
-			// Hook Lex text type to process Unicode characters.
-			memcpy(oldLexText, pLexText, 5);
-			WriteMemory(pLexText, (LPVOID) 0xE8, 1); // call
-#ifdef _WIN64
-			((LPVOID *)redirect)[1] = MyLexText;
-			if (cmdDebug) {
-				// Currently only the one debug version.
-				/*if (cmdFileVersionMS = 0x60003 &&
-					cmdFileVersionLS == 0x24d70000) */
-				i = (DWORD_PTR)redirect + 22;
-			} else {
-				i = (DWORD_PTR)redirect + 27;
-			}
-#else
-			if (cmdDebug) {
-				// Currently only the one debug version.
-				/*if (cmdFileVersionMS = 0x60003 &&
-					cmdFileVersionLS == 0x24d70000) */
-				i = (DWORD_PTR)MyLexTextESI;
-			} else {
-				i = (DWORD_PTR)MyLexText;
-			}
-#endif
-			i -= (DWORD_PTR)pLexText + 5;
-			WriteMemory(pLexText + 1, &i, 4);
-
+	// CMD and the DLL could be more than 2GiB apart, so allocate some memory
+	// before CMD to keep within the 32-bit relative address range.
+	for (redirect = cmd - 0x1000;;) {
+		LPVOID mem = VirtualAlloc(redirect, redirect_code_size,
+								  MEM_COMMIT | MEM_RESERVE,
+								  PAGE_EXECUTE_READWRITE);
+		if (mem) {
+			redirect = mem;
 			break;
+		} else {
+			MEMORY_BASIC_INFORMATION mbi;
+			VirtualQuery(redirect, &mbi, sizeof(mbi));
+			redirect = (LPBYTE)mbi.AllocationBase - 0x1000;
 		}
 	}
+	memcpy(redirect, redirect_code_start, redirect_code_size);
+	memcpy(rPromptUserOrg, pCtrlCAborts, 7);
+	if (pForFend[1] == 0x83) {	// 6.2.8102.0 uses jnc, not jc.
+		--*rForFendj;			// jnc -> jc
+	}
+#endif
+
+	oldPutMsg = *pPutStdErrMsg;
+	oldParseFor = *pParseFortoken;
+	oldParseForF = *pForFoptions;
+	memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
+	memcpy(oldLexText, pLexText, 5);
+	memcpy(oldEchoOnOff, pEchoOnOff, 5);
+	memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
+	memcpy(oldSFWorkresize, pSFWorkresize, 6);
+	memcpy(oldForFbegin, pForFbegin, 6);
+	memcpy(oldForFend, pForFend, 6);
+
+#ifdef _WIN64
+	call.nop = 0x40;	// dummy REX prefix
+#else
+	call.nop = 0x90;	// nop
+#endif
+	call.op = 0xE8; 	// call
+
+	// Patch FOR to fix a substitute inefficiency: each loop has its own
+	// memory.	Allocate once and reuse it.  Also free other memory allocated
+	// during each loop.
+	FreeStack = (DWORD_PTR) pFreeStack;
+	SFWork_saved = *pSFWorksaved;
+#ifdef _WIN64
+	if (*pSFWorkmkstr == 0xFF) {
+		SFWork_mkstr_reg = pSFWorkmkstr[0x47];
+		SFWork_mkstr_org = *(DWORD_PTR*)MKABS(pSFWorkmkstr+2);
+		call.disp = MKDISP(rSFWork_mkstr, pSFWorkmkstr+6);
+		WriteMemory(pSFWorkmkstr, &call, 6);
+	} else {
+		SFWork_mkstr_org = MKABS(pSFWorkmkstr+1);
+		i = MKDISP(rSFWork_mkstr, pSFWorkmkstr+5);
+		WriteMemory(pSFWorkmkstr+1, &i, 4);
+	}
+	if (*pSFWorkresize == 0xFF) {
+		WriteCode(pSFWorkresize, "\x4C\x89\xC0"		// mov rax,r8
+								 "\x0F\x1F\x00");	// nop
+	} else {
+		WriteCode(pSFWorkresize, "\x48\x89\xC8"		// mov rax,rcx
+								 "\x66\x90");		// nop
+	}
+#else
+	SFWork_passed = *pSFWorkpassed;
+	SFWork_first = (cmdFileVersionMS >= 0x60002) ? 12 : 20;
+	if (*pSFWorkmkstr == 0xE8) {
+		SFWork_mkstr_org = MKABS(pSFWorkmkstr+1);
+		if (pSFWorkmkstr[-5] == 0x68) {
+			SFWork_stdcall = 1;
+		}
+		i = MKDISP(SFWork_mkstr, pSFWorkmkstr+5);
+		WriteMemory(pSFWorkmkstr+1, &i, 4);
+	} else {
+		SFWork_mkstr_reg = pSFWorkmkstr[0x33];
+		SFWork_mkstr_org = **(LPDWORD*)(pSFWorkmkstr+2);
+		call.disp = MKDISP(SFWork_mkstr, pSFWorkmkstr+6);
+		WriteMemory(pSFWorkmkstr, &call, 6);
+	}
+	if (*pSFWorkresize == 0xE8) {
+		if (SFWork_stdcall) {
+			WriteCode(pSFWorkresize, "\x58"				// pop eax
+									 "\x59"				// pop ecx
+									 "\x66\x66\x90");	// nop
+		} else {
+			WriteCode(pSFWorkresize, "\x89\xC8" 		// mov eax,ecx
+									 "\x66\x66\x90");	// nop
+		}
+	} else {
+		WriteCode(pSFWorkresize, "\x59"			// pop ecx
+								 "\x59"			// pop ecx
+								 "\x58"			// pop eax
+								 "\x59"			// pop ecx
+								 "\x66\x90");	// nop
+	}
+#endif
+
+	// Patch FOR to fix a bug with wildcard expansion: each name accumulates,
+	// resizing bigger and bigger (this patch is not undone on unload).
+	// I've made the initial size big enough, no need to resize.
+	WriteByte(pForResize, 0xEB);				// jmp
+#ifdef _WIN64
+	if (cmdFileVersionMS == 0x50002) {
+		// 5.2.*.*
+		WriteCode(pForResize, "\x40\xE9");		// jmp with dummy REX prefix
+		WriteCode(pForMkstr,
+				  "\x0F\x1F\x00"						// nop
+				  "\x44\x8D\xA1\x00\x01\x00\x00");		// lea r12d,rcx+256
+	} else if (cmdFileVersionMS == 0x60000 ||
+			   cmdFileVersionMS == 0x60001) {
+		// 6.0.*.*
+		// 6.1.*.*
+		WriteCode(pForMkstr,
+				  "\x0F\x1F\x00"						// nop
+				  "\x44\x8D\xA9\x00\x01\x00\x00");		// lea r13d,rcx+256
+	} else if (cmdFileVersionMS == 0x60002) {
+		if (cmdFileVersionLS == 0x1FA60000) {
+			// 6.2.8102.0
+			WriteCode(pForMkstr,
+					  "\x90" 							// nop
+					  "\x49\xFF\xC7"					// inc r15
+					  "\x66\x42\x83\x3C\x79\x00"		// cmp word[rcx+r15*2],0
+					  "\x75\xF5"						// jnz inc
+					  "\x41\x81\xC7\x00\x01\x00\x00");	// add r15d,256
+		} else {
+			// 6.2.9200.16384
+			WriteCode(pForMkstr,
+					  "\x90" 							// nop
+					  "\x48\xFF\xC5"					// inc rbp
+					  "\x66\x83\x3C\x69\x00" 			// cmp word[rcx+rbp*2],0
+					  "\x75\xF6"						// jnz inc
+					  "\x81\xC5\x00\x01\x00\x00");		// add ebp,256
+		}
+	} else if (/*cmdFileVersionMS == 0x60003 &&
+			   cmdFileVersionLS == 0x24D70000 &&*/
+			   cmdDebug) {
+		// 6.3.9431.0u
+		WriteCode(pForMkstr, "\x90"						// nop
+							 "\x48\xFF\xC2"				// inc rdx
+							 "\x66\x44\x39\x24\x51"		// cmp [rcx+rdx*2],r12w
+							 "\x75\xF6"					// jnz inc
+							 "\xFE\xC6"					// inc dh
+							 "\x89\xD7");				// mov edi,edx
+	} else if (cmdFileVersionMS == 0xA0000 &&
+			   HIWORD(cmdFileVersionLS) >= 17763) {
+		// 10.0.17763.1
+		// 10.0.18362.1
+		WriteCode(pForMkstr, "\x90" 					// nop
+							 "\x48\xFF\xC2" 			// inc rdx
+							 "\x66\x44\x39\x34\x51"		// cmp [rcx+rdx*2],r14w
+							 "\x75\xF6" 				// jnz inc
+							 "\xFE\xC6" 				// inc dh
+							 "\x89\xD7");				// mov edi,edx
+	} else {
+		// 6.3.*.*
+		// 10.0.*.*
+		WriteCode(pForMkstr, "\x90"						// nop
+							 "\x48\xFF\xC2"				// inc rdx
+							 "\x66\x39\x2C\x51"			// cmp [rcx+rdx*2],bp
+							 "\x75\xF7" 				// jnz inc
+							 "\xFE\xC6" 				// inc dh
+							 "\x89\xD7");				// mov edi,edx
+	}
+#else
+	if (cmdFileVersionMS == 0x50000) {
+		// 5.0.*.*
+		WriteCode(pForMkstr, "\xEB\x00" 				// jmp inc
+							 "\xFE\xC4");				// inc ah
+	} else if (HIWORD(cmdFileVersionMS) == 5) {
+		if (LOWORD(cmdFileVersionLS) == 0) {
+			// 5.1.2600.0
+			// 5.2.3790.0
+			WriteMemory(pForMkstr, pForMkstr+2, 8);
+			WriteCode(pForMkstr+8, "\xFE\xC4");			// inc ah
+		} else {
+			// 5.1.*.*
+			// 5.2.*.*
+			WriteMemory(pForMkstr, pForMkstr+6, 8);
+			WriteCode(pForMkstr+8, "\x81\xC0\x00\x01\x00\x00");  // add eax,256
+		}
+	} else if (cmdFileVersionMS == 0x60000) {
+		// 6.0.*.*
+		WriteCode(pForMkstr, "\xFE\xC4" 				// inc ah
+							 "\x93"); 					// xchg ebx,eax
+	} else if (cmdFileVersionMS == 0x60001) {
+		// 6.1.*.*
+		WriteCode(pForMkstr, "\xFE\xC4" 				// inc ah
+							 "\x97"); 					// xchg edi,eax
+	} else if (cmdFileVersionMS == 0x60002) {
+		// 6.2.*.*
+		WriteCode(pForMkstr, "\x85\xC0" 				// test eax,eax
+							 "\x75\xF6" 				// jnz $-8
+							 "\x2B\xD1" 				// sub edx,ecx
+							 "\xD1\xFA" 				// sar edx,1
+							 "\xFE\xC6" 				// inc dh
+							 "\x89\xD3");				// mov ebx,edx
+	} else {
+		// 6.3.*.*
+		// 10.0.*.*
+		WriteCode(pForMkstr, "\xFE\xC6" 				// inc dh
+							 "\x92"); 					// xchg edx,eax
+	}
+#endif
+
+	// Hook PutStdErr to write the batch file name and line number.
+	pPutMsg = (LPVOID)MKABS(pPutStdErrMsg);
+#ifdef _WIN64
+	i = MKDISP(rMyPutStdErrMsg, pPutStdErrMsg+1);
+#else
+	if (cmdFileVersionMS > 0x60002) {
+		i = (DWORD)fastPutStdErrMsg;
+	} else if (cmdFileVersionMS == 0x60002) {
+		i = (DWORD)fastPutStdErrMsg62;
+	} else {
+		i = (DWORD)stdPutStdErrMsg;
+	}
+	i -= (DWORD)pPutStdErrMsg+4;
+#endif
+	WriteMemory(pPutStdErrMsg, &i, 4);
+
+	// Hook Lex text type to process Unicode characters.
+#ifdef _WIN64
+	call.disp = MKDISP(rMyLexText, pLexText+5);
+	if (cmdDebug) {
+		// Currently only the one debug version.
+		/*if (cmdFileVersionMS = 0x60003 &&
+			cmdFileVersionLS == 0x24d70000) */
+		call.disp -= 5;
+	}
+#else
+	if (cmdDebug) {
+		// Currently only the one debug version.
+		/*if (cmdFileVersionMS = 0x60003 &&
+			cmdFileVersionLS == 0x24d70000) */
+		call.disp = (DWORD)MyLexTextESI;
+	} else {
+		call.disp = (DWORD)MyLexText;
+	}
+	call.disp -= (DWORD)pLexText+5;
+#endif
+	WriteMemory(pLexText, &call.op, 5);
+
+	// Hook FOR /F to maintain a line number.
+	ForFend_org = MKABS(pForFend+2);
+#ifdef _WIN64
+	// No need for original begin, it can never be true.
+	call.disp = MKDISP(rForFbegin, pForFbegin+6);
+	WriteMemory(pForFbegin, &call, 6);
+	call.disp = MKDISP(rForFend, pForFend+6);
+	WriteMemory(pForFend, &call, 6);
+#else
+	if (pForFbegin[1] == 0x83) {
+		// No need for original begin, it can never be true.
+		call.disp = MKDISP(ForFbegin_hook, pForFbegin+6);
+		WriteMemory(pForFbegin, &call, 6);
+		call.disp = (DWORD)ForFend;
+	} else {
+		// No need to return, it can never be false.
+		ForFbegin_org = MKABS(pForFbegin+2);
+		i = MKDISP(ForFbegin_jmp, pForFbegin+6);
+		WriteMemory(pForFbegin+2, &i, 4);
+		call.disp = (DWORD)ForFend_opp;
+	}
+	call.disp -= (DWORD)pForFend+6;
+	WriteMemory(pForFend, &call, 6);
+#endif
+
+	// Hook FOR to allow shorthand for infinite & range loops.
+#ifdef _WIN64
+	*rParseFor_org = MKABS(pParseFortoken);
+	i = MKDISP(rParseFor, pParseFortoken+1);
+#else
+	ParseFor_org = MKABS(pParseFortoken);
+	i = MKDISP(ParseFor_hook, pParseFortoken+1);
+#endif
+	WriteMemory(pParseFortoken, &i, 4);
+
+	// Hook FOR /F to use "line" as shorthand for "delims= eol=".
+#ifdef _WIN64
+	*rParseForF_org = MKABS(pForFoptions);
+	i = MKDISP(rParseForF, pForFoptions+1);
+#else
+	ParseForF_org = MKABS(pForFoptions);
+	i = MKDISP(ParseForF_hook, pForFoptions+1);
+#endif
+	WriteMemory(pForFoptions, &i, 4);
 }
 
 void hookEchoOptions(BOOL options)
 {
 	if (!options) {
-		// Swap START & ECHO's help tests, so ECHO has no help and START
-		// only looks at its first argument.
-		WriteMemory(pStartHelp, (LPVOID) 9, 1);
-		WriteMemory(pEchoHelp, (LPVOID) 31, 1);
-		// Patch ECHO to always echo, ignoring state.
+		// Swap START & ECHO's help tests, so ECHO has no help and START only
+		// looks at its first argument.
+		WriteByte(pStartHelp, 9);
+		WriteByte(pEchoHelp, 31);
+		// Patch ECHO to always echo, ignoring options.
 #ifdef _WIN64
 		if (cmdFileVersionMS == 0x50002) {
 			// 5.2.*.*
-			WriteMemory(pEchoOnOff, "\x6A\x03"  // push 3
-									"\x59"      // pop rcx
-									, 3);
+			WriteCode(pEchoOnOff, "\x6A\x03"			// push 3
+								  "\x59");				// pop rcx
 		} else if (cmdFileVersionMS == 0x60002) {
 			// 6.2.*.*
-			WriteMemory(pEchoOnOff, "\x31\xC9"      // xor ecx,ecx
-									"\x83\xC9\x01"  // or ecx,1
-									, 5);
+			WriteCode(pEchoOnOff, "\x31\xC9"			// xor ecx,ecx
+								  "\x83\xC9\x01");		// or ecx,1
 		} else {
 			// 6.0.*.*
 			// 6.1.*.*
 			// 6.3.*.*
 			// 10.*.*.*
-			WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+			WriteCode(pEchoOnOff, "\xB8\x03\x00\x00\x00");	// mov eax,3
 		}
 #else
 		if (cmdFileVersionMS < 0x60002)  {
 			// 5.*.*.*
 			// 6.0.*.*
 			// 6.1.*.*
-			WriteMemory(pEchoOnOff, "\x58"      // pop eax
-									"\x58"      // pop eax
-									"\x6A\x03"  // push 3
-									"\x58"      // pop eax
-									, 5);
+			WriteCode(pEchoOnOff, "\x58" 				// pop eax
+								  "\x58" 				// pop eax
+								  "\x6A\x03"			// push 3
+								  "\x58");				// pop eax
 		} else if (cmdFileVersionMS == 0x60002) {
 			if (cmdFileVersionLS == 0x1FA60000) {
 				// 6.2.8102.0
-				WriteMemory(pEchoOnOff, "\x90"      // nop
-										"\x58"      // pop eax
-										"\x6A\x03"  // push 3
-										"\x58"      // pop eax
-										, 5);
+				WriteCode(pEchoOnOff, "\x90" 			// nop
+									  "\x58" 			// pop eax
+									  "\x6A\x03"		// push 3
+									  "\x58");			// pop eax
 			} else {
 				// 6.2.9200.16384
-				WriteMemory(pEchoOnOff, "\x33\xC0"      // xor eax,eax
-										"\x83\xC8\x01"  // or eax,1
-										, 5);
+				WriteCode(pEchoOnOff, "\x33\xC0"		// xor eax,eax
+									  "\x83\xC8\x01");	// or eax,1
 			}
 		} else {
 			// 6.3.*.*
 			// 10.*.*.*
-			WriteMemory(pEchoOnOff, "\xB8\x03\x00\x00", 5);     // mov eax,3
+			WriteCode(pEchoOnOff, "\xB8\x03\x00\x00\x00");	// mov eax,3
 		}
 #endif
 	} else {
-		WriteMemory(pStartHelp, (LPVOID) 31, 1);
-		WriteMemory(pEchoHelp, (LPVOID) 9, 1);
+		WriteByte(pStartHelp, 31);
+		WriteByte(pEchoHelp, 9);
 		WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
 	}
 }
@@ -972,11 +1000,11 @@ void hookCtrlCAborts(char aborts)
 	} else {
 #ifdef _WIN64
 		char code[7];
-		code[0] = 0xE8; 		// call redirect+33
-		*(int *)(code+1) = (DWORD_PTR)redirect+33 - ((DWORD_PTR)pCtrlCAborts+5);
+		code[0] = 0xE8; 		// call
+		*(int *)(code+1) = MKDISP(rPromptUser, pCtrlCAborts+5);
 		code[5] = 0xC3; 		// ret
 		code[6] = 0x90; 		// nop
-		redirect[42] = aborts;
+		*rAbortFlag = aborts;
 #else
 		char code[5];
 		if (cmdFileVersionMS < 0x60003) {
@@ -1000,7 +1028,7 @@ void unhookCmd(void)
 
 	WriteMemory(peCall, &eCall, sizeof(eCall));
 	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
-	WriteMemory(pPutStdErrMsg, &iPutMsg, 4);
+	WriteMemory(pPutStdErrMsg, &oldPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);
 	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
 	WriteMemory(pStartHelp, (LPVOID) 31, 1);
@@ -1010,8 +1038,8 @@ void unhookCmd(void)
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
 	WriteMemory(pForFbegin, oldForFbegin, 6);
 	WriteMemory(pForFend, oldForFend, 6);
-	WriteMemory(pParseFortoken, oldParseFor, 4);
-	WriteMemory(pForFoptions, oldParseForF, 4);
+	WriteMemory(pParseFortoken, &oldParseFor, 4);
+	WriteMemory(pForFoptions, &oldParseForF, 4);
 
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;

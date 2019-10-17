@@ -789,7 +789,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 	return eCall(node);
 }
 
-void WriteMemory(LPVOID dst, LPVOID src, int size)
+void WriteMemory(LPVOID dst, LPCVOID src, int size)
 {
 	DWORD protect;
 	VirtualProtect(dst, size, PAGE_READWRITE, &protect);
@@ -817,7 +817,7 @@ DWORD WINAPI MyEcho(struct cmdnode *node)
 	}
 
 	if (*node->arg == L';') {
-		WriteMemory(Fmt17+2, 0, 1);
+		WriteByte(Fmt17+2, 0);
 		modified_newline = TRUE;
 	} else if (*node->arg == L',') {
 		WriteMemory(Fmt17+2, L"\n", 4);

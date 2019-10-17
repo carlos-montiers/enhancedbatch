@@ -106,7 +106,9 @@ extern int batchfile;
 #define FORF_STACKSIZE 32		// should be way more than enough
 
 
-void WriteMemory(LPVOID dst, LPVOID src, int size);
+void WriteMemory(LPVOID dst, LPCVOID src, int size);
+#define WriteByte(dst, b) WriteMemory(dst, (LPCVOID) b, 1)
+
 DWORD getBatchLine();
 void hookCmd(void);
 void unhookCmd(void);
@@ -144,10 +146,10 @@ void hookCtrlCAborts(char aborts);
 #define pGotoFlag			cmd_addrs[23]
 #define pForFbegin			cmd_addrs[24]
 #define pForFend			cmd_addrs[25]
-#define pParseFortoken		cmd_addrs[26]
+#define pParseFortoken		((int*)cmd_addrs[26])
 #define pLexBufPtr			((LPWSTR*)cmd_addrs[27])
 #define pLexBufferend		((LPWSTR)cmd_addrs[28])
-#define pForFoptions		cmd_addrs[29]
+#define pForFoptions		((int*)cmd_addrs[29])
 #define pTokLen 			((int*)cmd_addrs[30])
 
 #ifdef _WIN64
