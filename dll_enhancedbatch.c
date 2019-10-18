@@ -1767,7 +1767,7 @@ HRESULT DllLoad(void)
 	return S_OK;
 }
 
-HRESULT load(void) __attribute__((dllexport, alias("DllLoad")));
-HRESULT Load(void) __attribute__((dllexport, alias("DllLoad")));
+Export_DllLoad_Entrypoint(load);
+Export_DllLoad_Entrypoint(Load);
 // Default entry point of regsvr32 used only as a method to load the DLL into CMD
-HRESULT DllRegisterServer(void) __attribute__((dllexport, alias("DllLoad")));
+Export_DllLoad_Entrypoint(DllRegisterServer);

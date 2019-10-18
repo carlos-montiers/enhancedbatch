@@ -46,6 +46,10 @@
 #define MakeVA(cast, addValue) \
 	(cast)((DWORD_PTR)pDosHeader + (DWORD_PTR)(addValue))
 
+HRESULT DllLoad(void);
+#define Export_DllLoad_Entrypoint(name) \
+	HRESULT name(void) __attribute__((dllexport, alias("DllLoad")))
+
 struct sCMD {
 	DWORD verMS, verLS;
 	const DWORD *offsets;
