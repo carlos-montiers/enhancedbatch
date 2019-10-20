@@ -359,7 +359,7 @@ DWORD getVar(LPCWSTR lpName)
 			}
 		}
 
-		if (wcscmp(lpName, L"$#") == 0) {
+		if (WCSEQ(lpName, L"$#")) {
 			return GetArgCount(stringBuffer, STRINGBUFFERMAX);
 		}
 		if (lpName[1] == L'-') {
@@ -531,10 +531,10 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			mod = end + 1;
 			continue;
 		}
-		if (_wcsnicmp(mod, L"trim[", 5) == 0 ||
-			_wcsnicmp(mod, L"ltrim[", 6) == 0 ||
-			_wcsnicmp(mod, L"rtrim[", 6) == 0 ||
-			_wcsnicmp(mod, L"capital[", 8) == 0) {
+		if (WCSIBEG(mod, L"trim[") ||
+			WCSIBEG(mod, L"ltrim[") ||
+			WCSIBEG(mod, L"rtrim[") ||
+			WCSIBEG(mod, L"capital[")) {
 			end = wcschr(mod, L'[');
 			if (end[1] == L'\0') {
 				break;
@@ -555,12 +555,12 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		if (end) {
 			*end++ = L'\0';
 		}
-		if (_wcsicmp(mod, L"upper") == 0) {
+		if (WCSIEQ(mod, L"upper")) {
 			CharUpper(stringBuffer);
-		} else if (_wcsicmp(mod, L"lower") == 0) {
+		} else if (WCSIEQ(mod, L"lower")) {
 			CharLower(stringBuffer);
-		} else if (_wcsicmp(mod, L"capital") == 0 ||
-				   _wcsnicmp(mod, L"capital[", 8) == 0) {
+		} else if (WCSIEQ(mod, L"capital") ||
+				   WCSIBEG(mod, L"capital[")) {
 			mod += mod[7] ? 6 : 5;
 			mod[0] = L' ';
 			mod[1] = L'\t';
@@ -570,25 +570,25 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 					CharUpperBuff(var, 1);
 				}
 			}
-		} else if (_wcsicmp(mod, L"trim") == 0) {
+		} else if (WCSIEQ(mod, L"trim")) {
 			length = rtrim(length, L" \t");
 			length = ltrim(length, L" \t");
-		} else if (_wcsicmp(mod, L"ltrim") == 0) {
+		} else if (WCSIEQ(mod, L"ltrim")) {
 			length = ltrim(length, L" \t");
-		} else if (_wcsicmp(mod, L"rtrim") == 0) {
+		} else if (WCSIEQ(mod, L"rtrim")) {
 			length = rtrim(length, L" \t");
-		} else if (_wcsnicmp(mod, L"trim[", 5) == 0) {
+		} else if (WCSIBEG(mod, L"trim[")) {
 			length = rtrim(length, mod+5);
 			length = ltrim(length, mod+5);
-		} else if (_wcsnicmp(mod, L"ltrim[", 6) == 0) {
+		} else if (WCSIBEG(mod, L"ltrim[")) {
 			length = ltrim(length, mod+6);
-		} else if (_wcsnicmp(mod, L"rtrim[", 6) == 0) {
+		} else if (WCSIBEG(mod, L"rtrim[")) {
 			length = rtrim(length, mod+6);
-		} else if (_wcsicmp(mod, L"length") == 0) {
+		} else if (WCSIEQ(mod, L"length")) {
 			length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%d", length);
-		} else if (_wcsicmp(mod, L"hexify") == 0) {
+		} else if (WCSIEQ(mod, L"hexify")) {
 			length = hexify(length);
-		} else if (_wcsicmp(mod, L"unhexify") == 0) {
+		} else if (WCSIEQ(mod, L"unhexify")) {
 			length = unhexify(length);
 		} else if (*mod == L'~') {
 			int unused;
@@ -596,7 +596,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			var = (end) ? end - 1 : mod + wcslen(mod);
 			*var = L'?';
 			var = stringBuffer;
-			if (wcsncmp(lpName, L"$0;~", 4) == 0) {
+			if (WCSBEG(lpName, L"$0;~")) {
 				wcscpy(var, **pCurrentBatchFile);
 			}
 			ext = *pfEnableExtensions;
@@ -825,7 +825,7 @@ DWORD WINAPI MyEcho(struct cmdnode *node)
 	}
 
 	if ((node->arg[1] == L'~' && node->arg[2] == L'"') ||
-		(modified_newline && wcsncmp(node->arg+1, L" ~\"", 3) == 0)) {
+		(modified_newline && WCSBEG(node->arg+1, L" ~\""))) {
 		DWORD len = (DWORD) wcslen(node->arg);
 		if (node->arg[len-1] == '"') {
 			node->arg[len-1] = L'\0';
@@ -1125,7 +1125,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 
 BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
 {
-	if (_wcsnicmp(lpFileName, L":range*", 7) == 0) {
+	if (WCSIBEG(lpFileName, L":range*")) {
 		LPCWSTR paramsLine = lpFileName + 7;
 		int args, arg[3];
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
@@ -1165,7 +1165,7 @@ BOOL findRange(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
 
 BOOL findInfinite(LPCWSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
 {
-	if (wcscmp(lpFileName, L":*") == 0) {
+	if (WCSEQ(lpFileName, L":*")) {
 		struct sFor *it = (struct sFor *) lpFindFileData->cFileName;
 		findForStack[++findForStackTop] = lpFindFileData;
 		ZeroMemory(lpFindFileData, sizeof(WIN32_FIND_DATA));
@@ -1318,7 +1318,7 @@ void HookThunks(PHookFn Hooks,
 				pNameThunk->u1.AddressOfData);
 		LPCSTR name = (LPCSTR) pName->Name;
 		for (hook = Hooks; hook->name; ++hook) {
-			if (strcmp(name, hook->name) == 0) {	// We found it!
+			if (STREQ(name, hook->name)) {		// We found it!
 				DWORD flOldProtect, flDummy;
 
 				// Change the access protection on the region of committed pages in the
@@ -1376,10 +1376,10 @@ void HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 	// for module names of interest.
 	for (; pImportDesc->Name != 0; pImportDesc++) {
 		PSTR pszModName = MakeVA(PSTR, pImportDesc->Name);
-		if (_stricmp(pszModName, "kernel32.dll") == 0
-			|| _strnicmp(pszModName, "API-MS-Win-Core-ProcessEnvironment-", 35) == 0
-			|| _strnicmp(pszModName, "API-MS-Win-Core-String-", 23) == 0
-			|| _strnicmp(pszModName, "API-MS-Win-Core-File-", 21) == 0) {
+		if (STRIEQ(pszModName, "kernel32.dll")
+			|| STRIBEG(pszModName, "API-MS-Win-Core-ProcessEnvironment-")
+			|| STRIBEG(pszModName, "API-MS-Win-Core-String-")
+			|| STRIBEG(pszModName, "API-MS-Win-Core-File-")) {
 
 			// Get a pointer to the found module's import address table (IAT)
 			pThunk = MakeVA(PIMAGE_THUNK_DATA, pImportDesc->FirstThunk);
@@ -1425,7 +1425,7 @@ void HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept c
 	// for module names of interest.
 	for (; pImportDesc->DllNameRVA != 0; pImportDesc++) {
 		PSTR pszModName = MakeVA(PSTR, pImportDesc->DllNameRVA);
-		if (_strnicmp(pszModName, "ext-ms-win-cmd-util-", 20) == 0) {
+		if (STRIBEG(pszModName, "ext-ms-win-cmd-util-")) {
 
 			// Get a pointer to the found module's import address table (IAT)
 			pThunk = MakeVA(PIMAGE_THUNK_DATA,
@@ -1618,7 +1618,7 @@ BOOL IsInstalled(DWORD id, LPWSTR name, PBYTE *base)
 		wcscpy(name, me.szExePath);
 		*base = me.modBaseAddr;
 		while ((fOk = Module32Next(hModuleSnap, &me))) {
-			if (_wcsicmp(me.szModule, enh_name) == 0) {
+			if (WCSIEQ(me.szModule, enh_name)) {
 				break;
 			}
 		}
@@ -1679,8 +1679,8 @@ BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
 			  L"\\StringFileInfo\\%04x%04x\\OriginalFilename",
 			  lang->language, lang->codepage);
 	if (VerQueryValue(vi, subblock, (LPVOID *) &originalname, &len)
-		&& (wcscmp(originalname, L"Cmd.Exe") == 0 ||
-			wcscmp(originalname, L"Cmd.Exe.MUI") == 0)) {
+		&& (WCSEQ(originalname, L"Cmd.Exe") ||
+			WCSEQ(originalname, L"Cmd.Exe.MUI"))) {
 		cmdFileVersionMS = pfi->dwFileVersionMS;
 		cmdFileVersionLS = pfi->dwFileVersionLS;
 		cmdDebug = pfi->dwFileFlags & VS_FF_DEBUG;
@@ -1696,7 +1696,7 @@ void checkArgs(void)
 	LPWSTR *szArglist = CommandLineToArgvW(GetCommandLine(), &nArgs);
 	if (NULL != szArglist) {
 		while (--nArgs > 0) {
-			if (_wcsicmp(szArglist[nArgs], L"/s") == 0) {
+			if (WCSIEQ(szArglist[nArgs], L"/s")) {
 				quiet = TRUE;
 				break;
 			}

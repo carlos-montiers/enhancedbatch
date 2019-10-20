@@ -41,6 +41,21 @@
 #define WSZ(len) ((len) * sizeof(WCHAR))	// byte size of a wide string
 #define lenof(a) (sizeof(a) / sizeof(*a))	// elements in a static array
 
+// Test if A equals B.
+#define STREQ(a, b) (strcmp(a, b) == 0)
+#define WCSEQ(a, b) (wcscmp(a, b) == 0)
+
+// Test if A equals B, ignoring case.
+#define STRIEQ(a, b) (_stricmp(a, b) == 0)
+#define WCSIEQ(a, b) (_wcsicmp(a, b) == 0)
+
+// Test if A starts with B (a static string), ignoring case.
+#define STRIBEG(a, b) (_strnicmp(a, b, sizeof(b)-1) == 0)
+#define WCSIBEG(a, b) (_wcsnicmp(a, b, lenof(b)-1) == 0)
+
+// Test if A starts with B (a static string).
+#define WCSBEG(a, b) (wcsncmp(a, b, lenof(b)-1) == 0)
+
 // Macro to convert a relative virtual address into a virtual address.
 // Requires pDosHeader to point to the base.
 #define MakeVA(cast, addValue) \

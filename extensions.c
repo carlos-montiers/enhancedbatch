@@ -47,16 +47,16 @@ static BOOL setBoolean(LPBYTE var, LPCWSTR arg)
 {
 	if (arg == NULL
 		|| (arg[0] == L'0' && arg[1] == L'\0')
-		|| _wcsicmp(arg, L"no") == 0
-		|| _wcsicmp(arg, L"off") == 0
-		|| _wcsicmp(arg, L"false") == 0) {
+		|| WCSIEQ(arg, L"no")
+		|| WCSIEQ(arg, L"off")
+		|| WCSIEQ(arg, L"false")) {
 		*var = FALSE;
 		return TRUE;
 	}
 	if ((arg[0] == L'1' && arg[1] == L'\0')
-		|| _wcsicmp(arg, L"yes") == 0
-		|| _wcsicmp(arg, L"on") == 0
-		|| _wcsicmp(arg, L"true") == 0) {
+		|| WCSIEQ(arg, L"yes")
+		|| WCSIEQ(arg, L"on")
+		|| WCSIEQ(arg, L"true")) {
 		*var = TRUE;
 		return TRUE;
 	}
@@ -449,13 +449,13 @@ BOOL SetLoTimer(int argc, LPCWSTR argv[])
 	}
 
 	// *argv points to null character if argc is 0.
-	if ((argc == 0 && lo_timer_running) || _wcsicmp(*argv, L"stop") == 0) {
+	if ((argc == 0 && lo_timer_running) || WCSIEQ(*argv, L"stop")) {
 		if (lo_timer_running) {
 			lo_timer_end = GetTickCount();
 			lo_timer_running = FALSE;
 			return TRUE;
 		}
-	} else if ((argc == 0 && !lo_timer_running) || _wcsicmp(*argv, L"start" ) == 0) {
+	} else if ((argc == 0 && !lo_timer_running) || WCSIEQ(*argv, L"start" )) {
 		lo_timer_running = lo_timer_started = TRUE;
 		lo_timer_begin = GetTickCount();
 		return TRUE;
@@ -471,13 +471,13 @@ BOOL SetHiTimer(int argc, LPCWSTR argv[])
 	}
 
 	// *argv points to null character if argc is 0.
-	if ((argc == 0 && hi_timer_running) || _wcsicmp(*argv, L"stop") == 0) {
+	if ((argc == 0 && hi_timer_running) || WCSIEQ(*argv, L"stop")) {
 		if (hi_timer_running) {
 			QueryPerformanceCounter(&hi_timer_end);
 			hi_timer_running = FALSE;
 			return TRUE;
 		}
-	} else if ((argc == 0 && !hi_timer_running) || _wcsicmp(*argv, L"start" ) == 0) {
+	} else if ((argc == 0 && !hi_timer_running) || WCSIEQ(*argv, L"start" )) {
 		if (hi_frequency.QuadPart == -1) {
 			return FALSE;
 		}
@@ -527,7 +527,7 @@ BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam)
 {
 	WCHAR buf[MAX_PATH];
 	GetClassName(hwnd, buf, MAX_PATH);
-	if (wcscmp(buf, L"Windows.UI.Composition.DesktopWindowContentBridge") == 0) {
+	if (WCSEQ(buf, L"Windows.UI.Composition.DesktopWindowContentBridge")) {
 		*(HWND *) lParam = hwnd;
 		return FALSE;
 	}
@@ -702,13 +702,13 @@ int cpFromCommandLine(int argc, LPCWSTR argv[])
 {
 	int cp;
 
-	if (argc == 0 || _wcsicmp(*argv, L"oem") == 0) {
+	if (argc == 0 || WCSIEQ(*argv, L"oem")) {
 		cp = GetOEMCP();
-	} else if (_wcsicmp(*argv, L"utf-8") == 0 ||
-			   _wcsicmp(*argv, L"utf8") == 0 ||
-			   _wcsicmp(*argv, L"utf_8") == 0) {
+	} else if (WCSIEQ(*argv, L"utf-8") ||
+			   WCSIEQ(*argv, L"utf8") ||
+			   WCSIEQ(*argv, L"utf_8")) {
 		cp = CP_UTF8;
-	} else if (_wcsicmp(*argv, L"ansi") == 0) {
+	} else if (WCSIEQ(*argv, L"ansi")) {
 		cp = GetACP();
 	} else {
 		toNumber(&cp, 1, argv);

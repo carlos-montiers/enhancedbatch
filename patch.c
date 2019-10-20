@@ -185,7 +185,7 @@ void ParseForF(void)
 			}
 			++p;
 		}
-		if (_wcsnicmp(p, L"line", 4) == 0) {
+		if (WCSIBEG(p, L"line")) {
 			// Translate "... line..." to "...     ... delims= eol=".
 			p[0] = p[1] = p[2] = p[3] = L' ';
 			p += wcslen(p);
