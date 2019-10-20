@@ -1348,10 +1348,9 @@ void HookThunks(PHookFn Hooks,
 //   HookAPIOneMod
 // Substitute a new function in the Import Address Table (IAT) of the
 // specified module.
-// Return FALSE on error and TRUE on success.
 //-----------------------------------------------------------------------------
 
-BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept calls from
+void HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept calls from
 				   PHookFn Hooks)		// Functions to replace
 {
 	PIMAGE_DOS_HEADER pDosHeader;
@@ -1369,7 +1368,7 @@ BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 					 .VirtualAddress;
 	// Bail out if the RVA of the imports section is 0 (it doesn't exist)
 	if (rva == 0) {
-		return TRUE;
+		return;
 	}
 	pImportDesc = MakeVA(PIMAGE_IMPORT_DESCRIPTOR, rva);
 
@@ -1389,10 +1388,9 @@ BOOL HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 			HookThunks(Hooks, pDosHeader, pThunk, pNameThunk);
 		}
 	}
-	return TRUE;		// Function not found
 }
 
-BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept calls from
+void HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept calls from
 					 PHookFn Hooks) 	  // Functions to replace
 {
 	PIMAGE_DOS_HEADER pDosHeader;
@@ -1410,7 +1408,7 @@ BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept c
 	if (pNTHeader->OptionalHeader.MajorOperatingSystemVersion < 6 ||
 		(pNTHeader->OptionalHeader.MajorOperatingSystemVersion == 6 &&
 		 pNTHeader->OptionalHeader.MinorOperatingSystemVersion < 2)) {
-		return TRUE;
+		return;
 	}
 
 	// Get a pointer to the module's imports section
@@ -1419,7 +1417,7 @@ BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept c
 					 .VirtualAddress;
 	// Bail out if the RVA of the delayed imports section is 0 (it doesn't exist)
 	if (rva == 0) {
-		return TRUE;
+		return;
 	}
 	pImportDesc = MakeVA(PIMAGE_DELAYLOAD_DESCRIPTOR, rva);
 
@@ -1438,7 +1436,6 @@ BOOL HookAPIDelayMod(HMODULE hFromModule, // Handle of the module to intercept c
 			break;
 		}
 	}
-	return TRUE;		// Function not found
 }
 
 // ========== Initialisation
@@ -1462,45 +1459,32 @@ DelayedHooks[] = {
 	{ NULL, 0, 0 },
 };
 
-//-----------------------------------------------------------------------------
-//   DllMain()
-// Function called by the system when processes and threads are initialized
-// and terminated.
-//-----------------------------------------------------------------------------
-
-BOOL WINAPI
-DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+void hook(HMODULE hInstance)
 {
-	if (dwReason == DLL_PROCESS_ATTACH) {
-		variables = kh_init(wstr);
-		batch_lnums = kh_init(line);
-		hDllInstance = hInstance;
-		GetModuleFileName(hInstance, enh_dll, lenof(enh_dll));
-		Hooks = AllHooks;
-		if (LOBYTE(GetVersion()) > 5) {
-			// No need for the MultiByteToWideChar patch.
-			++Hooks;
-		}
-		if (HookAPIOneMod(GetModuleHandle(NULL), Hooks)) {
-			if (AllHooks[1].oldfunc) {
-				HookAPIOneMod(hInstance, Hooks);
-			} else {
-				// CmdBatNotification is delay-loaded as CmdBatNotificationStub,
-				// so point our own CmdBatNotification to the stub, too.
-				HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
-				AllHooks[1].oldfunc = DelayedHooks[0].oldfunc;
-				HookAPIOneMod(hInstance, Hooks);
-			}
-		}
-		setChars();
-		hookCmd();
-		onWindowsTerminal = _wgetenv(L"WT_SESSION") != NULL;
-		DisableThreadLibraryCalls(hInstance);
-	} else if (dwReason == DLL_PROCESS_DETACH && variables != NULL) {
-		unhook();
+	hDllInstance = hInstance;
+
+	Hooks = AllHooks;
+	if (LOBYTE(GetVersion()) > 5) {
+		// No need for the MultiByteToWideChar patch.
+		++Hooks;
+	}
+	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
+	if (AllHooks[1].oldfunc) {
+		HookAPIOneMod(hInstance, Hooks);
+	} else {
+		// CmdBatNotification is delay-loaded as CmdBatNotificationStub,
+		// so point our own CmdBatNotification to the stub, too.
+		HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
+		AllHooks[1].oldfunc = DelayedHooks[0].oldfunc;
+		HookAPIOneMod(hInstance, Hooks);
 	}
 
-	return TRUE;
+	hookCmd();
+
+	variables = kh_init(wstr);
+	batch_lnums = kh_init(line);
+	setChars();
+	onWindowsTerminal = GetEnvironmentVariable(L"WT_SESSION", NULL, 0) != 0;
 }
 
 void unhook(void)
@@ -1523,6 +1507,28 @@ void unhook(void)
 	unhookCmd();
 
 	SafeCloseHandle(consoleOutput);
+}
+
+BOOL WINAPI
+_dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
+{
+	if (dwReason == DLL_PROCESS_ATTACH) {
+		// RunDLL & RegSvr32 are GUI, CMD is console.
+		PBYTE base = GetModuleHandle(NULL);
+		PIMAGE_NT_HEADERS phdr = (PIMAGE_NT_HEADERS)(base + *(DWORD*)(base + 0x3C));
+		if (phdr->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_WINDOWS_GUI) {
+			GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
+		} else {
+			DisableThreadLibraryCalls(hDll);
+			hook(hDll);
+		}
+	} else if (dwReason == DLL_PROCESS_DETACH) {
+		if (variables != NULL) {
+			unhook();
+		}
+	}
+
+	return TRUE;
 }
 
 // Search each process in the snapshot for id.
@@ -1639,24 +1645,6 @@ void Inject(HANDLE hProcess)
 	WaitForSingleObject(thread, INFINITE);
 	CloseHandle(thread);
 	VirtualFreeEx(hProcess, mem, 0, MEM_RELEASE);
-}
-
-BOOL WINAPI
-_dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
-{
-	BOOL bRet;
-	LPWSTR name;
-
-	GetModuleFileName(NULL, enh_dll, lenof(enh_dll));
-	name = wcsrchr(enh_dll, '\\') + 1;
-	if (_wcsicmp(name, L"rundll32.exe") == 0
-		|| _wcsicmp(name, L"regsvr32.exe") == 0) {
-		GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
-		return TRUE;
-	}
-
-	bRet = DllMain(hDll, dwReason, lpReserved);
-	return bRet;
 }
 
 BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
