@@ -98,6 +98,8 @@ DWORD WINAPI MyCall(struct cmdnode *node);
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d);
 UINT MyLexText(void);
 
+typedef int (*fncmd_printf)(LPCWSTR fmt, ...);
+extern fncmd_printf cmd_printf;
 #ifdef _WIN64
 typedef int (*fnPutMsg)(UINT, int, UINT, va_list *);
 extern fnPutMsg pPutMsg;

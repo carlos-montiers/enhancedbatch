@@ -37,6 +37,8 @@ KHASH_MAP_INIT_INT(ptrdw, DWORD)
 khash_t(ptrdw) *sfwork_map;
 
 
+fncmd_printf cmd_printf;
+
 struct sCmdEntry {
 	LPCWSTR   name;
 	fnCmdFunc func;
@@ -645,6 +647,25 @@ void hookCmd(void)
 	for (i = 0; i < OFFSETS; ++i) {
 		cmd_addrs[i] = cmd + ver->offsets[i];
 	}
+
+	// Use eEcho:CheckOnOff to get the address of cmd_printf.
+#ifdef _WIN64
+	p = pEchoOnOff;
+	if (cmdFileVersionMS == 0x50002) {
+		p = (LPBYTE) MKABS(p+8) - 9;
+	} else {
+		while (*(DWORD*)p != 0x02C28348) {	// add rdx,2
+			++p;
+		}
+		p += 5;
+	}
+#else
+	while (*(LPWSTR*)p != Fmt17) {
+		++p;
+	}
+	p += 5;
+#endif
+	cmd_printf = (fncmd_printf) MKABS(p);
 
 #ifdef _WIN64
 	// CMD and the DLL could be more than 2GiB apart, so allocate some memory
