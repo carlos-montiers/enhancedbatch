@@ -680,6 +680,14 @@ void hookCmd(void)
 	memcpy(oldForFbegin, pForFbegin, 6);
 	memcpy(oldForFend, pForFend, 6);
 
+	// Only check the first argument for help (pEchoHelp points to the ECHO
+	// command byte, which is followed by je).
+	if (*++pEchoHelp == 0x0F) {
+		WriteMemory(pEchoHelp, "\x90\xE9", 2);
+	} else {
+		WriteByte(pEchoHelp, 0xEB);
+	}
+
 #ifdef _WIN64
 	call.nop = 0x40;	// dummy REX prefix
 #else
@@ -939,9 +947,9 @@ void hookEchoOptions(BOOL options)
 {
 	if (!options) {
 		// Swap START & ECHO's help tests, so ECHO has no help and START only
-		// looks at its first argument.
+		// looks at its first argument (now done for all commands).
 		WriteByte(pStartHelp, 9);
-		WriteByte(pEchoHelp, 31);
+		//WriteByte(pEchoHelp, 31);
 		// Patch ECHO to always echo, ignoring options.
 #ifdef _WIN64
 		if (cmdFileVersionMS == 0x50002) {
@@ -988,7 +996,7 @@ void hookEchoOptions(BOOL options)
 #endif
 	} else {
 		WriteByte(pStartHelp, 31);
-		WriteByte(pEchoHelp, 9);
+		//WriteByte(pEchoHelp, 9);
 		WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
 	}
 }
@@ -1031,8 +1039,13 @@ void unhookCmd(void)
 	WriteMemory(pPutStdErrMsg, &oldPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);
 	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
-	WriteMemory(pStartHelp, (LPVOID) 31, 1);
-	WriteMemory(pEchoHelp, (LPVOID) 9, 1);
+	WriteByte(pStartHelp, 31);
+	//WriteByte(pEchoHelp, 9);
+	if (*pEchoHelp == 0x90) {
+		WriteMemory(pEchoHelp, "\x0F\x84", 2);
+	} else {
+		WriteByte(pEchoHelp, 0x74);
+	}
 	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
 	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
