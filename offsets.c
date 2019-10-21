@@ -972,7 +972,7 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x02bbe,	// eEcho:CheckOnOff
 	0x1c010,	// EchoFlag
 	0x0cdde,	// START /?
-	0x1414e,	// ECHO /?
+	0x14a4e,	// ECHO /?
 	0x12d54,	// CtrlCAbort:PromptUser
 	0x0d8ca,	// FreeStack
 	0x1cfbc,	// DCount
