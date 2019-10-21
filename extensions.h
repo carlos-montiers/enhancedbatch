@@ -75,6 +75,11 @@ BOOL SetOutputCodePage(int argc, LPCWSTR argv[]);
 BOOL SetInputCodePage(int argc, LPCWSTR argv[]);
 BOOL SetCodePage(int argc, LPCWSTR argv[]);
 
+typedef BOOL(WINAPI * Func_SetConsoleFont) (HANDLE, DWORD);
+typedef BOOL(WINAPI * Func_SetCurrentConsoleFontEx) (HANDLE, BOOL,
+        PCONSOLE_FONT_INFOEX);
+BOOL SetRasterFont(int argc, LPCWSTR argv[]);
+
 DWORD GetAttributes(LPWSTR buffer, DWORD size);
 DWORD GetColor(LPWSTR buffer, DWORD size);
 DWORD GetForeground(LPWSTR buffer, DWORD size);

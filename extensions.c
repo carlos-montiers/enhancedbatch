@@ -759,6 +759,75 @@ BOOL SetCodePage(int argc, LPCWSTR argv[])
 	return SetConsoleCP(cp);
 }
 
+// Note: Have no effect inside Windows Terminal
+BOOL SetRasterFont(int argc, LPCWSTR argv[]) {
+
+	CONSOLE_FONT_INFOEX fontInfo;
+	COORD terminalFonts[] = {
+		{4, 6},
+		{6, 8},
+		{8, 8},
+		{16, 8},
+		{5, 12},
+		{7, 12},
+		{8, 12},
+		{16, 12},
+		{12, 16},
+		{10, 18}
+	};
+	HINSTANCE hKernel32;
+	Func_SetCurrentConsoleFontEx pSetCurrentConsoleFontEx;
+	Func_SetConsoleFont pSetConsoleFont;
+	INT nFont;
+
+	if (!haveOutputHandle()) {
+		return FALSE;
+	}
+
+	if (argc != 1) {
+		return FALSE;
+	}
+
+	nFont = (INT) wcstol(argv[0], (WCHAR **) NULL, 10);
+	if ((nFont < 0) || (nFont >= lenof(terminalFonts))) {
+		return FALSE;
+	}
+
+	hKernel32 = LoadLibraryW(L"KERNEL32.DLL");
+
+	if (NULL != hKernel32) {
+
+		pSetCurrentConsoleFontEx =
+				(Func_SetCurrentConsoleFontEx)
+				GetProcAddress(hKernel32, "SetCurrentConsoleFontEx");
+
+		pSetConsoleFont =
+				(Func_SetConsoleFont)
+				GetProcAddress(hKernel32, "SetConsoleFont"); // Undocumented
+
+		if (NULL != pSetCurrentConsoleFontEx) { // Vista
+
+			fontInfo.cbSize = sizeof (CONSOLE_FONT_INFOEX);
+			fontInfo.nFont = nFont;
+			fontInfo.dwFontSize.X = terminalFonts[nFont].X;
+			fontInfo.dwFontSize.Y = terminalFonts[nFont].Y;
+			fontInfo.FontFamily = 48;
+			fontInfo.FontWeight = 400;
+			wcscpy(fontInfo.FaceName, L"Terminal");
+
+			pSetCurrentConsoleFontEx(consoleOutput, FALSE, &fontInfo);
+		}
+
+		if (NULL != pSetConsoleFont) { // XP
+			pSetConsoleFont(consoleOutput, nFont);
+		}
+
+		FreeLibrary(hKernel32);
+	}
+
+	return TRUE;
+}
+
 DWORD GetArgCount(LPWSTR buffer, DWORD size)
 {
 	LPWSTR *argv, rest;

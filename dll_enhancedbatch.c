@@ -204,6 +204,7 @@ const struct sSetExt setExtensionList[] = {
 	{ L"@fg",				SetForeground, 1 },
 	{ L"@inputcp", 			SetInputCodePage, 0 },
 	{ L"@next", 			Next, 0 },
+	{ L"@nfont",			SetRasterFont, 1},
 	{ L"@opacity",			SetOpacity, 1 },
 	{ L"@outputcp", 		SetOutputCodePage, 0 },
 	{ L"@position", 		SetPosition, 2 },
