@@ -772,7 +772,11 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 				ret = ext->fn(*arg == L'\0' ? 0 : 1, (LPCWSTR*) &arg);
 			} else {
 				--nArgs;
-				if (ext->args != nArgs) {
+				if (ext->args < 0 && ~ext->args > nArgs) {
+					fwprintf(stderr, L"Incorrect arguments: at least %d needed, %d provided.\n",
+						~ext->args, nArgs);
+					ret = FALSE;
+				} else if (ext->args > 0 && ext->args != nArgs) {
 					fwprintf(stderr, L"Incorrect arguments: %d needed, %d provided.\n",
 						ext->args, nArgs);
 					ret = FALSE;
