@@ -699,12 +699,12 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 						if (lpValue != NULL) {
 							szArglist = CommandLineToArgvW(lpValue, &nArgs);
 							if (NULL == szArglist) {
-								wprintf(L"CommandLineToArgvW failed\n");
+								fwprintf(stderr, L"Failed to retrieve arguments.\n");
 								return FALSE;
 							}
 						}
 						if (ext->args != nArgs) {
-							wprintf(L"Incorrect parameters: %d needed, %d provided\n",
+							fwprintf(stderr, L"Incorrect arguments: %d needed, %d provided.\n",
 								ext->args, nArgs);
 							ret = FALSE;
 						} else {
@@ -748,7 +748,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 			int nArgs;
 			LPWSTR *szArglist = CommandLineToArgvW(arg, &nArgs);
 			if (NULL == szArglist) {
-				wprintf(L"CommandLineToArgvW failed\n");
+				fwprintf(stderr, L"Failed to retrieve arguments.\n");
 				*pLastRetCode = 1;
 				return 1;
 			}
@@ -773,7 +773,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 			} else {
 				--nArgs;
 				if (ext->args != nArgs) {
-					wprintf(L"Incorrect parameters: %d needed, %d provided\n",
+					fwprintf(stderr, L"Incorrect arguments: %d needed, %d provided.\n",
 						ext->args, nArgs);
 					ret = FALSE;
 				} else {
