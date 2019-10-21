@@ -68,6 +68,8 @@ HANDLE consoleOutput;
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
 
+BOOL Help(int argc, LPCWSTR argv[]);
+
 LPWIN32_FIND_DATA findForStack[FINDFOR_STACKSIZE];
 int findForStackTop = -1;
 
@@ -210,11 +212,19 @@ const struct sSetExt setExtensionList[] = {
 	{ L"@unicode",			SetUnicode, 0 },
 };
 
-const struct sSetExt callExtensionList[] = {
-	{ L"@sleep",			WaitMilliseconds, 1 },
-	{ L"@timer",			SetLoTimer, 0 },
-	{ L"@timerhi",			SetHiTimer, 0 },
-	{ L"@unload",			DllUnload, 0 },
+struct sCallExt {
+	LPCWSTR name;
+	int args;
+	fnSetExt fn;
+	LPCWSTR brief, help;
+};
+
+const struct sCallExt callExtensionList[] = {
+	{ L"@help", 	0, Help, HelpBriefStr, HelpHelpStr },
+	{ L"@sleep",	1, WaitMilliseconds, SleepBriefStr, SleepHelpStr },
+	{ L"@timer",	0, SetLoTimer, TimerBriefStr, TimerHelpStr },
+	{ L"@timerhi",	0, SetHiTimer, TimerHiBriefStr, TimerHiHelpStr },
+	{ L"@unload",	0, DllUnload, UnloadBriefStr, UnloadHelpStr },
 };
 
 void setVar(LPCWSTR var, LPCWSTR val)
@@ -752,12 +762,18 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 				*pLastRetCode = 1;
 				return 1;
 			}
-			const struct sSetExt *ext = bsearch(szArglist[0], callExtensionList,
-				lenof(callExtensionList), sizeof(struct sSetExt), extcmp);
+			const struct sCallExt *ext = bsearch(szArglist[0], callExtensionList,
+				lenof(callExtensionList), sizeof(struct sCallExt), extcmp);
 			if (NULL == ext) {
 				LocalFree(szArglist);
 				*pLastRetCode = 1;
 				return 1;
+			}
+			if (nArgs == 2 && WCSEQ(szArglist[1], L"/?")) {
+				cmd_printf(L"%s\r\n", ext->help);
+				LocalFree(szArglist);
+				*pLastRetCode = 0;
+				return 0;
 			}
 			BOOL ret;
 			if (ext->args == 0) {
@@ -791,6 +807,23 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 	}
 
 	return eCall(node);
+}
+
+BOOL Help(int argc, LPCWSTR argv[])
+{
+	const struct sCallExt *ext;
+	const struct sCallExt *end = callExtensionList + lenof(callExtensionList);
+	int width = 0, len = 0;
+	for (ext = callExtensionList; ext < end; ++ext) {
+		len = wcslen(ext->name);
+		if (len > width) {
+			width = len;
+		}
+	}
+	for (ext = callExtensionList; ext < end; ++ext) {
+		cmd_printf(L"%-*s\t%s\r\n", width, ext->name, ext->brief);
+	}
+	return TRUE;
 }
 
 void WriteMemory(LPVOID dst, LPCVOID src, int size)

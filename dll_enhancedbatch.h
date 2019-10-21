@@ -126,6 +126,12 @@ extern int batchfile;
 #define FINDFOR_STACKSIZE 128
 #define FORF_STACKSIZE 32		// should be way more than enough
 
+extern const WCHAR HelpBriefStr[], HelpHelpStr[];
+extern const WCHAR SleepBriefStr[], SleepHelpStr[];
+extern const WCHAR TimerBriefStr[], TimerHelpStr[];
+extern const WCHAR TimerHiBriefStr[], TimerHiHelpStr[];
+extern const WCHAR UnloadBriefStr[], UnloadHelpStr[];
+
 
 void WriteMemory(LPVOID dst, LPCVOID src, int size);
 #define WriteByte(dst, b) WriteMemory(dst, (LPCVOID) b, 1)
