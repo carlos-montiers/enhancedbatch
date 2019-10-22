@@ -3,7 +3,7 @@
 CC=gcc
 CFLAGS=-O3 -Wall
 LDFLAGS=-nostartfiles -s -shared
-LIBS=-lversion
+LIBS=-lversion -lole32
 RC ?= windres
 
 SRC := $(wildcard *.c)

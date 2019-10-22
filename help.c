@@ -29,6 +29,7 @@
 typedef unsigned short WCHAR;
 
 const WCHAR HelpBriefStr[]	  = L"This list.";
+const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";
 const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
 const WCHAR TimerHiBriefStr[] = L"Microsecond timer.";
@@ -38,6 +39,24 @@ const WCHAR HelpHelpStr[] =
 	L"Display CALL commands added by Enhanced Batch.\r\n"
 	L"\r\n"
 	L"CALL @HELP"
+;
+
+const WCHAR SayHelpStr[] =
+	L"Speak a message.\r\n"
+	L"\r\n"
+	L"CALL @SAY [/N] [/S] [/U] [/V voice] [/W] [/X] message\r\n"
+	L"CALL @SAY /V\r\n"
+	L"\r\n"
+	L"/N        output message without newline\r\n"
+	L"/S        do not output message\r\n"
+	L"/U        output message with Unix line ending\r\n"
+	L"/V        select a voice or list voices\r\n"
+	L"/W        wait for the speech to finish\r\n"
+	L"/X        process SAPI XML\r\n"
+	L"\r\n"
+	L"Only a substring of the voice need be given; the first match will be used.\r\n"
+	L"An invalid voice will be ignored.  A default voice can be set using the\r\n"
+	L"@VOICE variable."
 ;
 
 const WCHAR SleepHelpStr[] =

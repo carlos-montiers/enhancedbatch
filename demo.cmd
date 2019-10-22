@@ -6,6 +6,9 @@ Goto :Eof
 )
 set "@delayedexpansion=1"
 
+call @say "Welcome to the test demo of Enhanced Batch"
+pause & cls
+
 ::Save the current state.
 set $prevcolor=!@color!
 set $prevopacity=!@opacity!

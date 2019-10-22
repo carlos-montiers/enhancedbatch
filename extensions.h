@@ -111,6 +111,9 @@ DWORD GetUnique(LPWSTR buffer, DWORD size);
 DWORD GetTempFile(LPWSTR buffer, DWORD size);
 DWORD GetTempDir(LPWSTR buffer, DWORD size);
 
+BOOL Say(int argc, LPCWSTR argv[]);
+BOOL SetVoice(int argc, LPCWSTR argv[]);
+
 BOOL WaitMilliseconds(int argc, LPCWSTR argv[]);
 
 BOOL SetLoTimer(int argc, LPCWSTR argv[]);

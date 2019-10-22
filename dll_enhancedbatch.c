@@ -64,6 +64,7 @@ LPVOID cmd_end; 		// end of the CMD.EXE image
 BOOL onWindowsTerminal; 		// running on Windows Terminal
 HWND consoleHwnd; 		// Hwnd of the console
 HANDLE consoleOutput;
+HANDLE hSpeaking;		// event signalling end of speech
 
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
@@ -210,6 +211,7 @@ const struct sSetExt setExtensionList[] = {
 	{ L"@row",				SetRow, 1 },
 	{ L"@ul",				SetUnderline, 0 },
 	{ L"@unicode",			SetUnicode, 0 },
+	{ L"@voice",			SetVoice, 0 },
 };
 
 struct sCallExt {
@@ -221,6 +223,7 @@ struct sCallExt {
 
 const struct sCallExt callExtensionList[] = {
 	{ L"@help", 	0, Help, HelpBriefStr, HelpHelpStr },
+	{ L"@say",	   ~1, Say, SayBriefStr, SayHelpStr },
 	{ L"@sleep",	1, WaitMilliseconds, SleepBriefStr, SleepHelpStr },
 	{ L"@timer",	0, SetLoTimer, TimerBriefStr, TimerHelpStr },
 	{ L"@timerhi",	0, SetHiTimer, TimerHiBriefStr, TimerHiHelpStr },
@@ -1528,6 +1531,9 @@ void unhook(void)
 {
 	khint_t k;
 
+	// Wait for speech to finish before exiting.
+	WaitForSingleObject(hSpeaking, INFINITE);
+
 	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
 	HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
 
@@ -1557,11 +1563,13 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 			GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
 		} else {
 			DisableThreadLibraryCalls(hDll);
+			hSpeaking = CreateEvent(NULL, TRUE, TRUE, NULL);
 			hook(hDll);
 		}
 	} else if (dwReason == DLL_PROCESS_DETACH) {
 		if (variables != NULL) {
 			unhook();
+			CloseHandle(hSpeaking);
 		}
 	}
 
