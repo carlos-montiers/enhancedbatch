@@ -28,8 +28,8 @@
 // Don't really want to include anything just for WCHAR or wchar_t.
 typedef unsigned short WCHAR;
 
-const WCHAR HelpBriefStr[]	  = L"This help.";
-const WCHAR SleepBriefStr[]   = L"Suspend execution for some milliseconds.";
+const WCHAR HelpBriefStr[]	  = L"This list.";
+const WCHAR SleepBriefStr[]   = L"Suspend execution.";
 const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
 const WCHAR TimerHiBriefStr[] = L"Microsecond timer.";
 const WCHAR UnloadBriefStr[]  = L"Remove Enhanced Batch.";
@@ -49,11 +49,11 @@ const WCHAR SleepHelpStr[] =
 const WCHAR TimerHelpStr[] =
 	L"Run a low-resolution timer.\r\n"
 	L"\r\n"
-	L"CALL @TIMER [start|stop]\r\n"
+	L"CALL @TIMER [START|STOP]\r\n"
 	L"\r\n"
 	L"<none>    toggle start/stop\r\n"
-	L"start     start the timer (even if it's running)\r\n"
-	L"stop      stop the timer\r\n"
+	L"START     start the timer (even if it's running)\r\n"
+	L"STOP      stop the timer\r\n"
 	L"\r\n"
 	L"The time is measured in milliseconds and has a resolution of about 10ms.\r\n"
 	L"It can be retrieved with the @TIMER variable."
@@ -62,7 +62,11 @@ const WCHAR TimerHelpStr[] =
 const WCHAR TimerHiHelpStr[] =
 	L"Run a high-resolution timer.\r\n"
 	L"\r\n"
-	L"CALL @TIMERHI [start|stop]\r\n"
+	L"CALL @TIMERHI [START|STOP]\r\n"
+	L"\r\n"
+	L"<none>    toggle start/stop\r\n"
+	L"START     start the timer (even if it's running)\r\n"
+	L"STOP      stop the timer\r\n"
 	L"\r\n"
 	L"The time is measured in microseconds and has a resolution dependent on the\r\n"
 	L"CPU.  It can be retrieved with the @TIMERHI variable."
