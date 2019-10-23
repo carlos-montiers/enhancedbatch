@@ -713,13 +713,12 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 						if (lpValue != NULL) {
 							szArglist = CommandLineToArgvW(lpValue, &nArgs);
 							if (NULL == szArglist) {
-								fwprintf(stderr, L"Failed to retrieve arguments.\n");
+								fwprintf(stderr, ArgErrorStr);
 								return FALSE;
 							}
 						}
 						if (ext->args != nArgs) {
-							fwprintf(stderr, L"Incorrect arguments: %d needed, %d provided.\n",
-								ext->args, nArgs);
+							fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
 							ret = FALSE;
 						} else {
 							ret = ext->fn(nArgs, (LPCWSTR*) szArglist);
@@ -762,7 +761,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 			int nArgs;
 			LPWSTR *szArglist = CommandLineToArgvW(arg, &nArgs);
 			if (NULL == szArglist) {
-				fwprintf(stderr, L"Failed to retrieve arguments.\n");
+				fwprintf(stderr, ArgErrorStr);
 				*pLastRetCode = 1;
 				return 1;
 			}
@@ -793,12 +792,10 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 			} else {
 				--nArgs;
 				if (ext->args < 0 && ~ext->args > nArgs) {
-					fwprintf(stderr, L"Incorrect arguments: at least %d needed, %d provided.\n",
-						~ext->args, nArgs);
+					fwprintf(stderr, MoreArgsStr, ~ext->args, nArgs);
 					ret = FALSE;
 				} else if (ext->args > 0 && ext->args != nArgs) {
-					fwprintf(stderr, L"Incorrect arguments: %d needed, %d provided.\n",
-						ext->args, nArgs);
+					fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
 					ret = FALSE;
 				} else {
 					ret = ext->fn(nArgs, (LPCWSTR*) szArglist + 1);
@@ -1757,7 +1754,7 @@ void checkArgs(void)
 void Info(LPCWSTR msg)
 {
 	if (!quiet) {
-		MessageBox(NULL, msg, L"Enhanced Batch", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, msg, ProgramNameStr, MB_OK | MB_ICONERROR);
 	}
 }
 
@@ -1770,15 +1767,9 @@ HRESULT DllLoad(void)
 	checkArgs();
 
 	if (cmdpid == 0) {
-		Info(L"The parent process cannot be accessed.");
+		Info(ParentErrStr);
 	} else if (cmdpid == -1) {
-		Info(
-#ifdef _WIN64
-			 L"The parent process is 32-bit, but this is the 64-bit (amd64) DLL."
-#else
-			 L"The parent process is 64-bit, but this is the 32-bit (x86) DLL."
-#endif
-			);
+		Info(ArchErrStr);
 	} else if (!IsInstalled(cmdpid, cmdname, &cmdbase)) {
 		HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, cmdpid);
 		if (ph != NULL) {
@@ -1787,18 +1778,17 @@ HRESULT DllLoad(void)
 			} else {
 				if (cmdFileVersionMS == 0) {
 					snwprintf(stringBuffer, STRINGBUFFERMAX,
-							  L"This process does not appear to be CMD.\n\n%s",
-							  cmdname);
+							  NotCmdStr, cmdname);
 				} else {
 					GetCmdVersion(varBuffer, STRINGBUFFERMAX);
 					snwprintf(stringBuffer, STRINGBUFFERMAX,
-							  L"CMD version %s is not supported.", varBuffer);
+							  NotSupportedStr, varBuffer);
 				}
 				Info(stringBuffer);
 			}
 			CloseHandle(ph);
 		} else {
-			Info(L"The parent process cannot be accessed.");
+			Info(ParentErrStr);
 		}
 	}
 

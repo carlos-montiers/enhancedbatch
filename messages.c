@@ -28,6 +28,25 @@
 // Don't really want to include anything just for WCHAR or wchar_t.
 typedef unsigned short WCHAR;
 
+// Not sure if this should be translated, but I'll put it here, anyway.
+const WCHAR ProgramNameStr[] = L"Enhanced Batch";
+
+const WCHAR ParentErrStr[] = L"The parent process cannot be accessed.";
+
+const WCHAR ArchErrStr[] =
+#ifdef _WIN64
+	L"The parent process is 32-bit, but this is the 64-bit (amd64) DLL.";
+#else
+	L"The parent process is 64-bit, but this is the 32-bit (x86) DLL.";
+#endif
+
+const WCHAR NotCmdStr[] = L"This process does not appear to be CMD.\n\n%s";
+const WCHAR NotSupportedStr[] = L"CMD version %s is not supported.";
+
+const WCHAR ArgErrorStr[]  = L"Failed to retrieve arguments.\n";
+const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
+const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
+
 const WCHAR HelpBriefStr[]	  = L"This list.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";

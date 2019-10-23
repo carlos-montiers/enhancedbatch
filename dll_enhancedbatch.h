@@ -127,6 +127,10 @@ extern int batchfile;
 #define FINDFOR_STACKSIZE 128
 #define FORF_STACKSIZE 32		// should be way more than enough
 
+
+extern const WCHAR ProgramNameStr[];
+extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
+extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
 extern const WCHAR HelpBriefStr[], HelpHelpStr[];
 extern const WCHAR SayBriefStr[], SayHelpStr[];
 extern const WCHAR SleepBriefStr[], SleepHelpStr[];
