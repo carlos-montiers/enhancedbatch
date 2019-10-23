@@ -175,6 +175,7 @@ const struct sGetExt getExtensionList[] = {
 	{ L"@unique",			GetUnique },
 	{ L"@unixtime",			GetUnixTime },
 	{ L"@version",			GetEBVersion },
+	{ L"@voice",			GetVoice },
 	{ L"@width",			GetWidth },
 	{ L"@year", 			GetYear },
 };

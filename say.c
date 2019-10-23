@@ -115,6 +115,34 @@ BOOL SetVoice(int argc, LPCWSTR argv[])
 	return pDefaultVoice != NULL;
 }
 
+DWORD GetVoice(LPWSTR buffer, DWORD size)
+{
+	LPWSTR voice = NULL;
+	ISpVoice* pVoice = NULL;
+	ISpObjectToken* pToken = NULL;
+
+	if (pDefaultVoice != NULL) {
+		vcall(pDefaultVoice, GetStringValue, NULL, &voice);
+	} else {
+		if SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
+			if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
+										  &IID_ISpVoice, (void**)&pVoice)) {
+				vcall(pVoice, GetVoice, &pToken);
+				vcall(pToken, GetStringValue, NULL, &voice);
+				vcall(pToken, Release);
+				vcall(pVoice, Release);
+			}
+			CoUninitialize();
+		}
+	}
+	if (voice != NULL) {
+		DWORD len = snwprintf(buffer, size, L"%s", voice);
+		CoTaskMemFree(voice);
+		return len;
+	}
+	return 0;
+}
+
 LPWSTR stripTags(LPCWSTR tagged)
 {
 	LPWSTR tagless = _wcsdup(tagged), p = tagless;
