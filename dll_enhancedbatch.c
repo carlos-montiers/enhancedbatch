@@ -824,8 +824,12 @@ BOOL Help(int argc, LPCWSTR argv[])
 			width = len;
 		}
 	}
+	width += 3;
+	if (width < 12) {
+		width = 12;
+	}
 	for (ext = callExtensionList; ext < end; ++ext) {
-		cmd_printf(L"%-*s\t%s\r\n", width, ext->name, ext->brief);
+		cmd_printf(L"%-*s%s\r\n", width, ext->name, ext->brief);
 	}
 	return TRUE;
 }
