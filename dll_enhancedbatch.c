@@ -986,12 +986,43 @@ void setBatchLine(DWORD pos)
 	}
 }
 
+LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size)
+{
+	HANDLE hFile;
+	LPSTR mem;
+	DWORD len;
+
+	if (size > buf_size) {
+		mem = malloc(size);
+		if (mem == NULL) {
+			return NULL;
+		}
+	} else {
+		mem = buf;
+	}
+
+	hFile = CreateFile(**pCurrentBatchFile, GENERIC_READ,
+					   FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+					   0, NULL);
+	if (hFile != INVALID_HANDLE_VALUE) {
+		ReadFile(hFile, mem, size, &len, NULL);
+		CloseHandle(hFile);
+		if (len == size) {
+			return mem;
+		}
+	}
+	if (mem != buf) {
+		free(mem);
+	}
+	return NULL;
+}
+
 DWORD getBatchLine()
 {
 	khint_t k;
 	DWORD pos, lnum;
-	HANDLE hFile, hMap;
-	LPBYTE mem, p;
+	LPSTR mem, p;
+	char buf[65536];
 
 	if (!*pCurrentBatchFile) {
 		return 0;
@@ -1002,21 +1033,8 @@ DWORD getBatchLine()
 		return 0;
 	}
 	pos = kh_val(batch_lnums, k);
-	hFile = CreateFile(**pCurrentBatchFile, GENERIC_READ,
-					   FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
-					   0, NULL);
-	if (hFile == INVALID_HANDLE_VALUE) {
-		return 0;
-	}
-	hMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-	if (hMap == NULL) {
-		CloseHandle(hFile);
-		return 0;
-	}
-	mem = MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, pos);
+	mem = readBatchFile(pos, buf, sizeof(buf));
 	if (mem == NULL) {
-		CloseHandle(hMap);
-		CloseHandle(hFile);
 		return 0;
 	}
 	lnum = 1;
@@ -1027,9 +1045,9 @@ DWORD getBatchLine()
 		}
 		++lnum;
 	}
-	UnmapViewOfFile(mem);
-	CloseHandle(hMap);
-	CloseHandle(hFile);
+	if (mem != buf) {
+		free(mem);
+	}
 	return lnum;
 }
 

@@ -148,6 +148,7 @@ extern const WCHAR TimerHiBriefStr[], TimerHiHelpStr[];
 extern const WCHAR UnloadBriefStr[], UnloadHelpStr[];
 
 
+LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size);
 BOOL SafeCloseHandle(HANDLE handle);
 
 void WriteMemory(LPVOID dst, LPCVOID src, int size);
