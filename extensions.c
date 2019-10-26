@@ -770,15 +770,15 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size)
 
 	argv = *pCurrentBatchFile;
 #ifdef _WIN64
-	if (cmdFileVersionMS >= 0x60000) {
+	if CMD_MAJOR(>=, 6) {
 		argv += 10;
 	} else {
 		argv += 6;
 	}
 #else
-	if (cmdFileVersionMS >= 0x60000) {
+	if CMD_MAJOR(>=, 6) {
 		argv += 15;
-	} else if (cmdFileVersionMS > 0x50000) {
+	} else if CMD_MAJOR_MINOR(>, 5,0) {
 		argv += 8;
 	} else {
 		argv += 7;
@@ -819,15 +819,15 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 
 	argv = *pCurrentBatchFile;
 #ifdef _WIN64
-	if (cmdFileVersionMS >= 0x60000) {
+	if CMD_MAJOR(>=, 6) {
 		argv += 10;
 	} else {
 		argv += 6;
 	}
 #else
-	if (cmdFileVersionMS >= 0x60000) {
+	if CMD_MAJOR(>=, 6) {
 		argv += 15;
-	} else if (cmdFileVersionMS > 0x50000) {
+	} else if CMD_MAJOR_MINOR(>, 5,0) {
 		argv += 8;
 	} else {
 		argv += 7;

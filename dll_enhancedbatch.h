@@ -72,8 +72,17 @@ struct sCMD {
 
 extern const struct sCMD cmd_versions[];
 
-extern DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 extern LPVOID cmd_end;
+extern DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
+
+#define CMD_MAJOR_MINOR(op, maj,min) (cmdFileVersionMS op ((maj << 16) | min))
+#define CMD_BUILD_REVISION(op, bld,rev) (cmdFileVersionLS op ((bld << 16) | rev))
+#define CMD_MAJOR(op, maj) (HIWORD(cmdFileVersionMS) op maj)
+#define CMD_BUILD(op, bld) (HIWORD(cmdFileVersionLS) op bld)
+#define CMD_REVISION(op, rev) (LOWORD(cmdFileVersionLS) op rev)
+#define CMD_VERSION(maj,min,bld,rev) \
+	(cmdFileVersionMS == ((maj << 16) | min) &&\
+	 cmdFileVersionLS == ((bld << 16) | rev))
 
 extern BOOL onWindowsTerminal;
 extern HWND consoleHwnd;

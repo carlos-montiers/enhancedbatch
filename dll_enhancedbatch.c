@@ -618,9 +618,9 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 #ifdef _WIN64
 			var = pMSCmdVar(NULL, mod, &unused, L"?", &var);
 #else
-			if (cmdFileVersionMS > 0x60002) {
+			if CMD_MAJOR_MINOR(>, 6,2) {
 				var = ((fastMSCmdVar) pMSCmdVar)(NULL, mod, &unused, L"?", &var);
-			} else if (cmdFileVersionMS == 0x60002) {
+			} else if CMD_MAJOR_MINOR(==, 6,2) {
 				var = ((fastMSCmdVar62) pMSCmdVar)(L"?", NULL, mod, &unused, &var);
 			} else {
 				var = ((stdMSCmdVar) pMSCmdVar)(NULL, mod, &unused, L"?", &var);
@@ -1052,9 +1052,9 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 #ifdef _WIN64
 		pPutMsg(0x2371, b, 1, (va_list *) &pargs);
 #else
-		if (cmdFileVersionMS > 0x60002) {
+		if CMD_MAJOR_MINOR(>, 6,2) {
 			((fastPutMsg) (pPutMsg))(0x2371, b, 1, (va_list *) &pargs);
-		} else if (cmdFileVersionMS == 0x60002) {
+		} else if CMD_MAJOR_MINOR(==, 6,2) {
 			((fastPutMsg62) (pPutMsg))(b, (va_list *) &pargs, 0x2371, c);
 		} else {
 			((stdPutMsg) (pPutMsg))(0x2371, b, 1, (va_list *) &pargs);
@@ -1066,9 +1066,9 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 #ifdef _WIN64
 	return pPutMsg(a, b, c, d);
 #else
-	if (cmdFileVersionMS > 0x60002) {
+	if CMD_MAJOR_MINOR(>, 6,2) {
 		return ((fastPutMsg) (pPutMsg))(a, b, c, d);
-	} else if (cmdFileVersionMS == 0x60002) {
+	} else if CMD_MAJOR_MINOR(==, 6,2) {
 		return ((fastPutMsg62) (pPutMsg))(b, d, a, c);
 	} else {
 		return ((stdPutMsg) (pPutMsg))(a, b, c, d);

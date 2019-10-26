@@ -651,7 +651,7 @@ void hookCmd(void)
 	// Use eEcho:CheckOnOff to get the address of cmd_printf.
 #ifdef _WIN64
 	p = pEchoOnOff;
-	if (cmdFileVersionMS == 0x50002) {
+	if CMD_MAJOR_MINOR(==, 5,2) {
 		p = (LPBYTE) MKABS(p+8) - 9;
 	} else {
 		while (*(DWORD*)p != 0x02C28348) {	// add rdx,2
@@ -741,7 +741,7 @@ void hookCmd(void)
 	}
 #else
 	SFWork_passed = *pSFWorkpassed;
-	SFWork_first = (cmdFileVersionMS >= 0x60002) ? 12 : 20;
+	SFWork_first = CMD_MAJOR_MINOR(>=, 6,2) ? 12 : 20;
 	if (*pSFWorkmkstr == 0xE8) {
 		SFWork_mkstr_org = MKABS(pSFWorkmkstr+1);
 		if (pSFWorkmkstr[-5] == 0x68) {
@@ -778,21 +778,20 @@ void hookCmd(void)
 	// I've made the initial size big enough, no need to resize.
 	WriteByte(pForResize, 0xEB);				// jmp
 #ifdef _WIN64
-	if (cmdFileVersionMS == 0x50002) {
+	if CMD_MAJOR_MINOR(==, 5,2) {
 		// 5.2.*.*
 		WriteCode(pForResize, "\x40\xE9");		// jmp with dummy REX prefix
 		WriteCode(pForMkstr,
 				  "\x0F\x1F\x00"						// nop
 				  "\x44\x8D\xA1\x00\x01\x00\x00");		// lea r12d,rcx+256
-	} else if (cmdFileVersionMS == 0x60000 ||
-			   cmdFileVersionMS == 0x60001) {
+	} else if (CMD_MAJOR_MINOR(==, 6,0) || CMD_MAJOR_MINOR(==, 6,1)) {
 		// 6.0.*.*
 		// 6.1.*.*
 		WriteCode(pForMkstr,
 				  "\x0F\x1F\x00"						// nop
 				  "\x44\x8D\xA9\x00\x01\x00\x00");		// lea r13d,rcx+256
-	} else if (cmdFileVersionMS == 0x60002) {
-		if (cmdFileVersionLS == 0x1FA60000) {
+	} else if CMD_MAJOR_MINOR(==, 6,2) {
+		if CMD_BUILD_REVISION(==, 8102,0) {
 			// 6.2.8102.0
 			WriteCode(pForMkstr,
 					  "\x90" 							// nop
@@ -809,9 +808,7 @@ void hookCmd(void)
 					  "\x75\xF6"						// jnz inc
 					  "\x81\xC5\x00\x01\x00\x00");		// add ebp,256
 		}
-	} else if (/*cmdFileVersionMS == 0x60003 &&
-			   cmdFileVersionLS == 0x24D70000 &&*/
-			   cmdDebug) {
+	} else if (/*CMD_VERSION(6,3,9431,0) &&*/ cmdDebug) {
 		// 6.3.9431.0u
 		WriteCode(pForMkstr, "\x90"						// nop
 							 "\x48\xFF\xC2"				// inc rdx
@@ -819,8 +816,7 @@ void hookCmd(void)
 							 "\x75\xF6"					// jnz inc
 							 "\xFE\xC6"					// inc dh
 							 "\x89\xD7");				// mov edi,edx
-	} else if (cmdFileVersionMS == 0xA0000 &&
-			   HIWORD(cmdFileVersionLS) >= 17763) {
+	} else if (CMD_MAJOR_MINOR(==, 10,0) && CMD_BUILD(>=, 17763)) {
 		// 10.0.17763.1
 		// 10.0.18362.1
 		WriteCode(pForMkstr, "\x90" 					// nop
@@ -840,12 +836,12 @@ void hookCmd(void)
 							 "\x89\xD7");				// mov edi,edx
 	}
 #else
-	if (cmdFileVersionMS == 0x50000) {
+	if CMD_MAJOR_MINOR(==, 5,0) {
 		// 5.0.*.*
 		WriteCode(pForMkstr, "\xEB\x00" 				// jmp inc
 							 "\xFE\xC4");				// inc ah
-	} else if (HIWORD(cmdFileVersionMS) == 5) {
-		if (LOWORD(cmdFileVersionLS) == 0) {
+	} else if CMD_MAJOR(==, 5) {
+		if CMD_REVISION(==, 0) {
 			// 5.1.2600.0
 			// 5.2.3790.0
 			WriteMemory(pForMkstr, pForMkstr+2, 8);
@@ -856,15 +852,15 @@ void hookCmd(void)
 			WriteMemory(pForMkstr, pForMkstr+6, 8);
 			WriteCode(pForMkstr+8, "\x81\xC0\x00\x01\x00\x00");  // add eax,256
 		}
-	} else if (cmdFileVersionMS == 0x60000) {
+	} else if CMD_MAJOR_MINOR(==, 6,0) {
 		// 6.0.*.*
 		WriteCode(pForMkstr, "\xFE\xC4" 				// inc ah
 							 "\x93"); 					// xchg ebx,eax
-	} else if (cmdFileVersionMS == 0x60001) {
+	} else if CMD_MAJOR_MINOR(==, 6,1) {
 		// 6.1.*.*
 		WriteCode(pForMkstr, "\xFE\xC4" 				// inc ah
 							 "\x97"); 					// xchg edi,eax
-	} else if (cmdFileVersionMS == 0x60002) {
+	} else if CMD_MAJOR_MINOR(==, 6,2) {
 		// 6.2.*.*
 		WriteCode(pForMkstr, "\x85\xC0" 				// test eax,eax
 							 "\x75\xF6" 				// jnz $-8
@@ -885,9 +881,9 @@ void hookCmd(void)
 #ifdef _WIN64
 	i = MKDISP(rMyPutStdErrMsg, pPutStdErrMsg+1);
 #else
-	if (cmdFileVersionMS > 0x60002) {
+	if CMD_MAJOR_MINOR(>, 6,2) {
 		i = (DWORD)fastPutStdErrMsg;
-	} else if (cmdFileVersionMS == 0x60002) {
+	} else if CMD_MAJOR_MINOR(==, 6,2) {
 		i = (DWORD)fastPutStdErrMsg62;
 	} else {
 		i = (DWORD)stdPutStdErrMsg;
@@ -901,15 +897,13 @@ void hookCmd(void)
 	call.disp = MKDISP(rMyLexText, pLexText+5);
 	if (cmdDebug) {
 		// Currently only the one debug version.
-		/*if (cmdFileVersionMS = 0x60003 &&
-			cmdFileVersionLS == 0x24d70000) */
+		/*if CMD_VERSION(6,3,9431,0)*/
 		call.disp -= 5;
 	}
 #else
 	if (cmdDebug) {
 		// Currently only the one debug version.
-		/*if (cmdFileVersionMS = 0x60003 &&
-			cmdFileVersionLS == 0x24d70000) */
+		/*if CMD_VERSION(6,3,9431,0)*/
 		call.disp = (DWORD)MyLexTextESI;
 	} else {
 		call.disp = (DWORD)MyLexText;
@@ -973,11 +967,11 @@ void hookEchoOptions(BOOL options)
 		//WriteByte(pEchoHelp, 31);
 		// Patch ECHO to always echo, ignoring options.
 #ifdef _WIN64
-		if (cmdFileVersionMS == 0x50002) {
+		if CMD_MAJOR_MINOR(==, 5,2) {
 			// 5.2.*.*
 			WriteCode(pEchoOnOff, "\x6A\x03"			// push 3
 								  "\x59");				// pop rcx
-		} else if (cmdFileVersionMS == 0x60002) {
+		} else if CMD_MAJOR_MINOR(==, 6,2) {
 			// 6.2.*.*
 			WriteCode(pEchoOnOff, "\x31\xC9"			// xor ecx,ecx
 								  "\x83\xC9\x01");		// or ecx,1
@@ -989,7 +983,7 @@ void hookEchoOptions(BOOL options)
 			WriteCode(pEchoOnOff, "\xB8\x03\x00\x00\x00");	// mov eax,3
 		}
 #else
-		if (cmdFileVersionMS < 0x60002)  {
+		if CMD_MAJOR_MINOR(<, 6,2) {
 			// 5.*.*.*
 			// 6.0.*.*
 			// 6.1.*.*
@@ -997,8 +991,8 @@ void hookEchoOptions(BOOL options)
 								  "\x58" 				// pop eax
 								  "\x6A\x03"			// push 3
 								  "\x58");				// pop eax
-		} else if (cmdFileVersionMS == 0x60002) {
-			if (cmdFileVersionLS == 0x1FA60000) {
+		} else if CMD_MAJOR_MINOR(==, 6,2) {
+			if CMD_BUILD_REVISION(==, 8102,0) {
 				// 6.2.8102.0
 				WriteCode(pEchoOnOff, "\x90" 			// nop
 									  "\x58" 			// pop eax
@@ -1036,7 +1030,7 @@ void hookCtrlCAborts(char aborts)
 		*rAbortFlag = aborts;
 #else
 		char code[5];
-		if (cmdFileVersionMS < 0x60003) {
+		if CMD_MAJOR_MINOR(<, 6,3) {
 			code[0] = 0x58; 	// pop eax ;0
 			code[1] = 0x59; 	// pop ecx
 		} else {
