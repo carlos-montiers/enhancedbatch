@@ -51,20 +51,20 @@ struct sCmdEntry {
 #ifdef _WIN64
 LPBYTE redirect;
 BYTE oldCtrlCAborts[7];
-BYTE SFWork_saved;
+BYTE SFWork_saved, Goto_pos, Goto_start;
 #else
 BYTE oldCtrlCAborts[5];
 DWORD SFWork_esp, ParseForF_ret;
 BYTE SFWork_stdcall;
-int SFWork_saved, SFWork_passed, SFWork_first;
+int SFWork_saved, SFWork_passed, SFWork_first, Goto_pos, Goto_start;
 DWORD ForFbegin_org, ParseFor_org, ParseForF_org;
 #endif
 
 int oldPutMsg, oldParseFor, oldParseForF;
 BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
-BYTE oldForFbegin[6], oldForFend[6];
+BYTE oldForFbegin[6], oldForFend[6], oldGotoEof[6];
 DWORD_PTR SFWork_mkstr_org, FreeStack, ForFend_org;
-BYTE SFWork_mkstr_reg;
+BYTE SFWork_mkstr_reg, Goto_reg;
 
 int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
 
@@ -202,6 +202,117 @@ void ParseForF(void)
 			++p;
 		}
 	}
+}
+
+
+LPCSTR findLabelForward(LPCSTR label, DWORD len, LPCSTR batch, DWORD size)
+{
+	LPCSTR p;
+
+	for (p = batch;; ++p) {
+		p = memchr(p, ':', size - (DWORD)(p - batch));
+		if (p == NULL) {
+			break;
+		}
+		if ((p++ == batch || p[-2] == '\n')
+			&& p+len < batch+size && isspace(p[len])
+			&& _memicmp(p, label, len) == 0) {
+			break;
+		}
+	}
+
+	return p;
+}
+
+LPCSTR findLabelBackward(LPCSTR label, DWORD len, LPCSTR batch, DWORD size)
+{
+	LPCSTR p;
+	char first;
+
+	first = tolower(*label++);
+	--len;
+	for (p = batch + size - len - 2; p >= batch + 2; p -= 3) {
+		if (*(LPWORD)p == 0x3a0a && tolower(p[2]) == first) {
+			p += 3;
+		} else if (*(LPWORD)(p-1) == 0x3a0a && tolower(p[1]) == first) {
+			p += 2;
+		} else if (*(LPWORD)(p-2) == 0x3a0a && tolower(p[0]) == first) {
+			++p;
+		} else {
+			continue;
+		}
+		if (isspace(p[len]) && _memicmp(p, label, len) == 0) {
+			return p;
+		}
+		p -= 3; 		// back to the newline before this non-matching label
+	}
+
+	return NULL;
+}
+
+DWORD findLabel(LPCSTR label, DWORD start, DWORD fsize)
+{
+	LPSTR batch;
+	LPCSTR p;
+	DWORD pos, len;
+	char buf[65536];
+
+	batch = readBatchFile(fsize, buf, sizeof(buf));
+	if (batch == NULL) {
+		return -1;
+	}
+
+	len = strlen(label);
+	if (*label == '~' && label[1] != '\0') {
+		++label;
+		--len;
+		p = findLabelBackward(label, len, batch, start);
+		if (p == NULL) {
+			p = findLabelBackward(label, len, batch + start, fsize - start);
+		}
+	} else {
+		p = findLabelForward(label, len, batch + start, fsize - start);
+		if (p == NULL) {
+			p = findLabelForward(label, len, batch, start);
+		}
+	}
+	if (p != NULL) {
+		p += len;
+		p = memchr(p, '\n', fsize - (DWORD)(p - batch));
+		if (p != NULL) {
+			pos = (DWORD)(p+1 - batch);
+		} else {
+			pos = fsize;
+		}
+	} else {
+		pos = -1;
+	}
+
+	if (batch != buf) {
+		free(batch);
+	}
+
+	return pos;
+}
+
+DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
+{
+	char label[128];			// maximum label size
+	LPCWSTR w = line;
+	LPSTR a = label;
+
+	if (*w == ':') {
+		++w;
+	}
+	while (*w != L'\0' && !iswspace(*w)) {
+		if (*w <= L'~') {
+			*a++ = *w++;
+		} else {
+			return -1;
+		}
+	}
+	*a = '\0';
+	return findLabel(label, start, fsize);
 }
 
 
@@ -344,6 +455,49 @@ void ParseForF_hook(void)
 	);
 }
 
+void GotoEof(void)
+{
+	asm(
+		"push 12(%esp)\n"
+		"push 12(%esp)\n"
+		"push 12(%esp)\n"
+		"call __wcsnicmp\n"             // should really call original, but meh
+		"add $12,%esp\n"
+		"test %eax,%eax\n"
+		"jz 1f\n"
+		"mov _Goto_pos,%ecx\n"
+		"mov %ebp,%eax\n"
+		"test %ecx,%ecx\n"
+		"cmovns %esp,%eax\n"
+		"add %eax,%ecx\n"
+		"add _Goto_start,%eax\n"
+		"mov (%eax),%edx\n"
+		"push %ecx\n"
+		"push (%ecx)\n"
+		"mov 8+4(%esp),%ecx\n"
+		"call _Goto\n"
+		"test %eax,%eax\n"
+		"pop %ecx\n"
+		"js 1f\n"
+		"mov %eax,(%ecx)\n"
+		"xor %eax,%eax\n"
+		"cmp _Goto_reg,%al\n"
+		"jl 2f\n"
+		"jg 3f\n"
+		"mov %ax,(%esi)\n"
+		"sub $8,%esi\n"
+		"ret\n"
+		"2:\n"
+		"mov %ax,(%edi)\n"
+		"sub $8,%edi\n"
+		"ret\n"
+		"3:\n"
+		"mov %ax,(%ebx)\n"
+		"sub $8,%ebx\n"
+		"1:\n"
+	);
+}
+
 #else
 
 void SFWork_mkstr(void)
@@ -411,7 +565,60 @@ void SFWork_mkstr(void)
 		"cmp $0xFF,%cl\n"               // select the register it uses
 		"cmove %rax,%rdi\n"
 		"cmovne %rax,%rbx\n"
-		"exit:");
+		"exit:"
+	);
+}
+
+void GotoEof(void)
+{
+	asm(
+		"push %rcx\n"
+		"sub $40,%rsp\n"
+		"call _wcsnicmp\n"
+		"add $40,%rsp\n"
+		"pop %rcx\n"
+		"test %eax,%eax\n"
+		"jz 1f\n"
+		"mov Goto_pos(%rip),%al\n"
+		"test %al,%al\n"
+		"mov 0x58(%rsp),%r8d\n"         // only one in the stack
+		"jns 2f\n"
+		"cmp $0xe0,%al\n"
+		"mov %esi,%r8d\n"               // F0
+		"cmove %r12,%r8\n"              // E0
+		"cmovb %r14,%r8\n"              // 8B
+		"2:\n"
+		"movzxb Goto_start(%rip),%edx\n"
+		"mov (%rsp,%rdx),%edx\n"
+		"push %rcx\n"
+		"sub $40,%rsp\n"
+		"call Goto\n"
+		"add $40,%rsp\n"
+		"pop %rcx\n"
+		"test %eax,%eax\n"
+		"js 1f\n"
+		"mov Goto_pos(%rip),%dl\n"
+		"test %dl,%dl\n"
+		"js 3f\n"
+		"mov %eax,0x58(%rsp)\n"         // only one in the stack
+		"jmp 4f\n"
+		"3:\n"
+		"cmp $0xe0,%dl\n"
+		"cmova %rax,%rsi\n"             // F0
+		"cmove %rax,%r12\n"             // E0
+		"cmovb %rax,%r14\n"             // 8B
+		"4:\n"
+		"xor %eax,%eax\n"
+		"cmp %rcx,%rbx\n"
+		"jne 2f\n"
+		"mov %ax,(%rbx)\n"
+		"sub $8,%rbx\n"
+		"ret\n"
+		"2:\n"
+		"mov %ax,(%rdi)\n"
+		"sub $8,%rdi\n"
+		"1:\n"
+	);
 }
 
 // C can't access labels created in asm, so store the offsets in the function
@@ -432,6 +639,7 @@ void SFWork_mkstr(void)
 #define rParseForF			(redirect + redirect_data[12])
 #define rParseFor_org		(DWORD_PTR*)(redirect + redirect_data[13])
 #define rParseForF_org		(DWORD_PTR*)(redirect + redirect_data[13]+8)
+#define rGotoEof			(redirect + redirect_data[14])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
@@ -456,7 +664,8 @@ void redirect_code(void)
 		"rel rForFendj\n"
 		"rel rParseFor\n"
 		"rel rParseForF\n"
-		"rel rParseFor_org\n"
+		"rel aParseFor_org\n"
+		"rel aGotoEof\n"
 
 		"redirect_code_start:\n"
 
@@ -548,9 +757,9 @@ void redirect_code(void)
 		"abs ForFend_hook\n"
 		"abs ParseFor\n"
 		"abs ParseForF\n"
-		"rParseFor_org:\n"
 		"aParseFor_org: .quad 0\n"
 		"aParseForF_org: .quad 0\n"
+		"abs GotoEof\n"
 
 		"redirect_code_end:\n"
 	);
@@ -700,6 +909,7 @@ void hookCmd(void)
 	memcpy(oldSFWorkresize, pSFWorkresize, 6);
 	memcpy(oldForFbegin, pForFbegin, 6);
 	memcpy(oldForFend, pForFend, 6);
+	memcpy(oldGotoEof, pGotoEof, 6);
 
 	// Only check the first argument for help (pEchoHelp points to the ECHO
 	// command byte, which is followed by je).
@@ -715,6 +925,30 @@ void hookCmd(void)
 	call.nop = 0x90;	// nop
 #endif
 	call.op = 0xE8; 	// call
+
+	// Hook GOTO to more efficiently find a label.
+#ifdef _WIN64
+	Goto_pos = *pGotopos;				// register or stack
+	Goto_start = *pGotostart + 8;		// stack, offset by call
+	i = MKDISP(rGotoEof, pGotoEof+6);
+	WriteMemory(pGotoEof+2, &i, 4);
+#else
+	if ((char) *pGotopos < 0) {
+		Goto_pos = *(int *)pGotopos;	// ebp - int
+		Goto_start = *(int *)pGotostart;
+	} else {
+		Goto_pos = *pGotopos + 8;		// esp + byte
+		Goto_start = *pGotostart + 12;
+	}
+	if CMD_VERSION(6,2,8102,0) {
+		++Goto_reg; 	// EDI
+	} else if (/*CMD_VERSION(6,3,9431,0) &&*/ cmdDebug ||
+			   CMD_VERSION(10,0,16299,15)) {
+		--Goto_reg; 	// EBX
+	}
+	call.disp = MKDISP(GotoEof, pGotoEof+6);
+	WriteMemory(pGotoEof, &call, 6);
+#endif
 
 	// Patch FOR to fix a substitute inefficiency: each loop has its own
 	// memory.	Allocate once and reuse it.  Also free other memory allocated
@@ -1066,6 +1300,7 @@ void unhookCmd(void)
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
 	WriteMemory(pForFbegin, oldForFbegin, 6);
 	WriteMemory(pForFend, oldForFend, 6);
+	WriteMemory(pGotoEof, oldGotoEof, 6);
 	WriteMemory(pParseFortoken, &oldParseFor, 4);
 	WriteMemory(pForFoptions, &oldParseForF, 4);
 

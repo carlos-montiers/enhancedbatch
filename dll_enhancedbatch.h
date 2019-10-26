@@ -196,10 +196,13 @@ void hookCtrlCAborts(char aborts);
 #define pLexBufferend		((LPWSTR)cmd_addrs[28])
 #define pForFoptions		((int*)cmd_addrs[29])
 #define pTokLen 			((int*)cmd_addrs[30])
+#define pGotoEof			cmd_addrs[31]
+#define pGotopos			cmd_addrs[32]
+#define pGotostart			cmd_addrs[33]
 
 #ifdef _WIN64
-#define OFFSETS 31
+#define OFFSETS 34
 #else
-#define pSFWorkpassed		((char*)cmd_addrs[31])
-#define OFFSETS 32
+#define pSFWorkpassed		((char*)cmd_addrs[34])
+#define OFFSETS 35
 #endif

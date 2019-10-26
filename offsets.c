@@ -59,6 +59,9 @@ LPBYTE cmd_addrs[] = {
 	0,			// LexBuffer end
 	0,			// ParseFor /F options
 	0,			// TokLen
+	0,			// Goto:EOF
+	0,			// Goto pos
+	0,			// Goto start
 #ifndef _WIN64
 	0,			// SFWork:passed (EBP offset to the text)
 #endif
@@ -98,6 +101,9 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x4f3c2,	// LexBuffer end
 	0x0ae3d,	// ParseFor /F options
 	0x4b38c,	// TokLen
+	0x08ee1,	// Goto:EOF
+	0x08e7d,	// Goto pos
+	0x08e40,	// Goto start
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -132,6 +138,9 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x4f3c2,	// LexBuffer end
 	0x0ae5d,	// ParseFor /F options
 	0x4b38c,	// TokLen
+	0x08f01,	// Goto:EOF
+	0x08e9d,	// Goto pos
+	0x08e60,	// Goto start
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -166,6 +175,9 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x37302,	// LexBuffer end
 	0x0c1d7,	// ParseFor /F options
 	0x2e124,	// TokLen
+	0x07e8e,	// Goto:EOF
+	0x07e69,	// Goto pos
+	0x07e3c,	// Goto start
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -200,6 +212,9 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x372e2,	// LexBuffer end
 	0x0c478,	// ParseFor /F options
 	0x2e120,	// TokLen
+	0x0872a,	// Goto:EOF
+	0x08705,	// Goto pos
+	0x086d8,	// Goto start
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -234,6 +249,9 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x36362,	// LexBuffer end
 	0x0e1fa,	// ParseFor /F options
 	0x2d17c,	// TokLen
+	0x065ae,	// Goto:EOF
+	0x06585,	// Goto pos
+	0x06558,	// Goto start
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -268,6 +286,9 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x36362,	// LexBuffer end
 	0x0e223,	// ParseFor /F options
 	0x2d17c,	// TokLen
+	0x0675e,	// Goto:EOF
+	0x06735,	// Goto pos
+	0x06708,	// Goto start
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -302,6 +323,9 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x37362,	// LexBuffer end
 	0x0e847,	// ParseFor /F options
 	0x2e17c,	// TokLen
+	0x06712,	// Goto:EOF
+	0x066e9,	// Goto pos
+	0x066bc,	// Goto start
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -336,6 +360,9 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x37362,	// LexBuffer end
 	0x0e847,	// ParseFor /F options
 	0x2e17c,	// TokLen
+	0x06712,	// Goto:EOF
+	0x066e9,	// Goto pos
+	0x066bc,	// Goto start
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -370,6 +397,9 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x49122,	// LexBuffer end
 	0x0e7b0,	// ParseFor /F options
 	0x3c124,	// TokLen
+	0x0a30f,	// Goto:EOF
+	0x0a2b2,	// Goto pos
+	0x0a251,	// Goto start
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -404,6 +434,9 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x45162,	// LexBuffer end
 	0x0ebba,	// ParseFor /F options
 	0x38164,	// TokLen
+	0x09c0a,	// Goto:EOF
+	0x09bad,	// Goto pos
+	0x09b54,	// Goto start
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -438,6 +471,9 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x3b102,	// LexBuffer end
 	0x0cb74,	// ParseFor /F options
 	0x2e12c,	// TokLen
+	0x090d9,	// Goto:EOF
+	0x090b4,	// Goto pos
+	0x0907a,	// Goto start
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -472,6 +508,9 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x3cca2,	// LexBuffer end
 	0x1b551,	// ParseFor /F options
 	0x33f04,	// TokLen
+	0x09dd7,	// Goto:EOF
+	0x09db0,	// Goto pos
+	0x09d51,	// Goto start
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -506,6 +545,9 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x39782,	// LexBuffer end
 	0x081eb,	// ParseFor /F options
 	0x309e4,	// TokLen
+	0x09c29,	// Goto:EOF
+	0x09c04,	// Goto pos
+	0x09bca,	// Goto start
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -540,6 +582,9 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x3a102,	// LexBuffer end
 	0x0c9b0,	// ParseFor /F options
 	0x2d12c,	// TokLen
+	0x08b79,	// Goto:EOF
+	0x08b54,	// Goto pos
+	0x08b1a,	// Goto start
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -574,6 +619,9 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x36f82,	// LexBuffer end
 	0x0df30,	// ParseFor /F options
 	0x2e0ac,	// TokLen
+	0x09c19,	// Goto:EOF
+	0x09bf4,	// Goto pos
+	0x09bba,	// Goto start
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -608,6 +656,9 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x385e2,	// LexBuffer end
 	0x0340f,	// ParseFor /F options
 	0x2f844,	// TokLen
+	0x09a59,	// Goto:EOF
+	0x09a34,	// Goto pos
+	0x099fa,	// Goto start
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -642,6 +693,9 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x39602,	// LexBuffer end
 	0x1193f,	// ParseFor /F options
 	0x30864,	// TokLen
+	0x08ab9,	// Goto:EOF
+	0x08a94,	// Goto pos
+	0x08a5a,	// Goto start
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -676,6 +730,9 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x3e8a2,	// LexBuffer end
 	0x14b6f,	// ParseFor /F options
 	0x46c00,	// TokLen
+	0x09db1,	// Goto:EOF
+	0x09d8c,	// Goto pos
+	0x09d5a,	// Goto start
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -710,6 +767,9 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x43c22,	// LexBuffer end
 	0x07f08,	// ParseFor /F options
 	0x4c074,	// TokLen
+	0x02faa,	// Goto:EOF
+	0x02f85,	// Goto pos
+	0x02f53,	// Goto start
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -744,6 +804,9 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x43c22,	// LexBuffer end
 	0x08164,	// ParseFor /F options
 	0x4c074,	// TokLen
+	0x0308b,	// Goto:EOF
+	0x03067,	// Goto pos
+	0x03032,	// Goto start
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -778,6 +841,9 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x43c22,	// LexBuffer end
 	0x07914,	// ParseFor /F options
 	0x4c074,	// TokLen
+	0x0279b,	// Goto:EOF
+	0x02776,	// Goto pos
+	0x02744,	// Goto start
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -812,6 +878,9 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x438e2,	// LexBuffer end
 	0x14b9c,	// ParseFor /F options
 	0x43a34,	// TokLen
+	0x0ef2a,	// Goto:EOF
+	0x0eefc,	// Goto pos
+	0x0eecb,	// Goto start
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -846,6 +915,9 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x438e2,	// LexBuffer end
 	0x15df4,	// ParseFor /F options
 	0x43a34,	// TokLen
+	0x0dedd,	// Goto:EOF
+	0x0deaf,	// Goto pos
+	0x0de7e,	// Goto start
 };
 
 #else
@@ -882,6 +954,9 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x21be2,	// LexBuffer end
 	0x0f004,	// ParseFor /F options
 	0x1faf0,	// TokLen
+	0x03fad,	// Goto:EOF
+	0x03f95,	// Goto pos
+	0x03f66,	// Goto start
 	0x03d33,	// SFWork:passed
 };
 
@@ -917,6 +992,9 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x21be2,	// LexBuffer end
 	0x0eff8,	// ParseFor /F options
 	0x1faf0,	// TokLen
+	0x03fb2,	// Goto:EOF
+	0x03f9a,	// Goto pos
+	0x03f6b,	// Goto start
 	0x03d38,	// SFWork:passed
 };
 
@@ -952,6 +1030,9 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x21be2,	// LexBuffer end
 	0x0eff4,	// ParseFor /F options
 	0x1faf0,	// TokLen
+	0x03fb2,	// Goto:EOF
+	0x03f9a,	// Goto pos
+	0x03f6b,	// Goto start
 	0x03d38,	// SFWork:passed
 };
 
@@ -987,6 +1068,9 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x21be2,	// LexBuffer end
 	0x0f04b,	// ParseFor /F options
 	0x1faf0,	// TokLen
+	0x03fb2,	// Goto:EOF
+	0x03f9a,	// Goto pos
+	0x03f6b,	// Goto start
 	0x03d38,	// SFWork:passed
 };
 
@@ -1022,6 +1106,9 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x21be2,	// LexBuffer end
 	0x0f07f,	// ParseFor /F options
 	0x1faf0,	// TokLen
+	0x03fc2,	// Goto:EOF
+	0x03faa,	// Goto pos
+	0x03f7b,	// Goto start
 	0x03d48,	// SFWork:passed
 };
 
@@ -1057,6 +1144,9 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x21be2,	// LexBuffer end
 	0x0f13d,	// ParseFor /F options
 	0x1faf0,	// TokLen
+	0x04079,	// Goto:EOF
+	0x04061,	// Goto pos
+	0x04032,	// Goto start
 	0x03dff,	// SFWork:passed
 };
 
@@ -1092,6 +1182,9 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x22082,	// LexBuffer end
 	0x067f1,	// ParseFor /F options
 	0x2ca40,	// TokLen
+	0x05b60,	// Goto:EOF
+	0x05b48,	// Goto pos
+	0x05b1c,	// Goto start
 	0x0284e,	// SFWork:passed
 };
 
@@ -1127,6 +1220,9 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x25082,	// LexBuffer end
 	0x0acd2,	// ParseFor /F options
 	0x2fa40,	// TokLen
+	0x0a15e,	// Goto:EOF
+	0x0a13f,	// Goto pos
+	0x0a111,	// Goto start
 	0x1019b,	// SFWork:passed
 };
 
@@ -1162,6 +1258,9 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x25082,	// LexBuffer end
 	0x0ae0e,	// ParseFor /F options
 	0x2fa40,	// TokLen
+	0x0a2bd,	// Goto:EOF
+	0x0a29e,	// Goto pos
+	0x0a270,	// Goto start
 	0x08082,	// SFWork:passed
 };
 
@@ -1197,6 +1296,9 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x25082,	// LexBuffer end
 	0x0ae0e,	// ParseFor /F options
 	0x2fa40,	// TokLen
+	0x0a2bd,	// Goto:EOF
+	0x0a29e,	// Goto pos
+	0x0a270,	// Goto start
 	0x08082,	// SFWork:passed
 };
 
@@ -1232,6 +1334,9 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x28d42,	// LexBuffer end
 	0x06fcc,	// ParseFor /F options
 	0x28d84,	// TokLen
+	0x04580,	// Goto:EOF
+	0x04568,	// Goto pos
+	0x0453c,	// Goto start
 	0x06556,	// SFWork:passed
 };
 
@@ -1267,6 +1372,9 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x25042,	// LexBuffer end
 	0x0d1de,	// ParseFor /F options
 	0x2fa00,	// TokLen
+	0x07c51,	// Goto:EOF
+	0x07c32,	// Goto pos
+	0x07c04,	// Goto start
 	0x0a189,	// SFWork:passed
 };
 
@@ -1302,6 +1410,9 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x25042,	// LexBuffer end
 	0x0b23e,	// ParseFor /F options
 	0x2fa00,	// TokLen
+	0x05f86,	// Goto:EOF
+	0x05f6b,	// Goto pos
+	0x05f3d,	// Goto start
 	0x0aba4,	// SFWork:passed
 };
 
@@ -1337,6 +1448,9 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x40642,	// LexBuffer end
 	0x092d4,	// ParseFor /F options
 	0x24140,	// TokLen
+	0x06698,	// Goto:EOF
+	0x0667d,	// Goto pos
+	0x0664f,	// Goto start
 	0x087e5,	// SFWork:passed
 };
 
@@ -1372,6 +1486,9 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x405e2,	// LexBuffer end
 	0x0a942,	// ParseFor /F options
 	0x24120,	// TokLen
+	0x065d8,	// Goto:EOF
+	0x065bd,	// Goto pos
+	0x0658f,	// Goto start
 	0x09d37,	// SFWork:passed
 };
 
@@ -1407,6 +1524,9 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x40602,	// LexBuffer end
 	0x0e31d,	// ParseFor /F options
 	0x24170,	// TokLen
+	0x06d23,	// Goto:EOF
+	0x06d04,	// Goto pos
+	0x06cd6,	// Goto start
 	0x0ddff,	// SFWork:passed
 };
 
@@ -1442,6 +1562,9 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x40602,	// LexBuffer end
 	0x0e60f,	// ParseFor /F options
 	0x24170,	// TokLen
+	0x07f82,	// Goto:EOF
+	0x07f63,	// Goto pos
+	0x07f35,	// Goto start
 	0x0e103,	// SFWork:passed
 };
 
@@ -1477,6 +1600,9 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x40642,	// LexBuffer end
 	0x0e29b,	// ParseFor /F options
 	0x24178,	// TokLen
+	0x064f8,	// Goto:EOF
+	0x064d9,	// Goto pos
+	0x064ab,	// Goto start
 	0x0dd8c,	// SFWork:passed
 };
 
@@ -1512,6 +1638,9 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x40642,	// LexBuffer end
 	0x0e29b,	// ParseFor /F options
 	0x24178,	// TokLen
+	0x064f8,	// Goto:EOF
+	0x064d9,	// Goto pos
+	0x064ab,	// Goto start
 	0x0dd8c,	// SFWork:passed
 };
 
@@ -1547,6 +1676,9 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x4ba62,	// LexBuffer end
 	0x0dea5,	// ParseFor /F options
 	0x30118,	// TokLen
+	0x0a09f,	// Goto:EOF
+	0x0a0c5,	// Goto pos
+	0x09ff2,	// Goto start
 	0x0df22,	// SFWork:passed
 };
 
@@ -1582,6 +1714,9 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x49ac2,	// LexBuffer end
 	0x0ce4f,	// ParseFor /F options
 	0x2e168,	// TokLen
+	0x09c6d,	// Goto:EOF
+	0x09c93,	// Goto pos
+	0x09bc1,	// Goto start
 	0x0bfce,	// SFWork:passed
 };
 
@@ -1617,6 +1752,9 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x40842,	// LexBuffer end
 	0x09f8a,	// ParseFor /F options
 	0x2511c,	// TokLen
+	0x078d4,	// Goto:EOF
+	0x078b8,	// Goto pos
+	0x07884,	// Goto start
 	0x098e6,	// SFWork:passed
 };
 
@@ -1652,6 +1790,9 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x35742,	// LexBuffer end
 	0x17d73,	// ParseFor /F options
 	0x2c8d8,	// TokLen
+	0x08fdd,	// Goto:EOF
+	0x08fbe,	// Goto pos
+	0x08f63,	// Goto start
 	0x08890,	// SFWork:passed
 };
 
@@ -1687,6 +1828,9 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x32502,	// LexBuffer end
 	0x06c92,	// ParseFor /F options
 	0x29698,	// TokLen
+	0x08379,	// Goto:EOF
+	0x0835d,	// Goto pos
+	0x08329,	// Goto start
 	0x0dd7e,	// SFWork:passed
 };
 
@@ -1722,6 +1866,9 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x40842,	// LexBuffer end
 	0x09c36,	// ParseFor /F options
 	0x2511c,	// TokLen
+	0x07cf9,	// Goto:EOF
+	0x07cdd,	// Goto pos
+	0x07ca9,	// Goto start
 	0x0a28f,	// SFWork:passed
 };
 
@@ -1757,6 +1904,9 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x41802,	// LexBuffer end
 	0x0cee2,	// ParseFor /F options
 	0x260dc,	// TokLen
+	0x07637,	// Goto:EOF
+	0x0761b,	// Goto pos
+	0x075e9,	// Goto start
 	0x0d94e,	// SFWork:passed
 };
 
@@ -1792,6 +1942,9 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x2e402,	// LexBuffer end
 	0x11921,	// ParseFor /F options
 	0x25598,	// TokLen
+	0x0a9cb,	// Goto:EOF
+	0x0a9ab,	// Goto pos
+	0x0a979,	// Goto start
 	0x099de,	// SFWork:passed
 };
 
@@ -1827,6 +1980,9 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x2f402,	// LexBuffer end
 	0x11906,	// ParseFor /F options
 	0x26598,	// TokLen
+	0x0a6cb,	// Goto:EOF
+	0x0a6ab,	// Goto pos
+	0x0a679,	// Goto start
 	0x08fae,	// SFWork:passed
 };
 
@@ -1862,6 +2018,9 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x35592,	// LexBuffer end
 	0x11700,	// ParseFor /F options
 	0x3d690,	// TokLen
+	0x0a36b,	// Goto:EOF
+	0x0a34b,	// Goto pos
+	0x0a319,	// Goto start
 	0x08d0e,	// SFWork:passed
 };
 
@@ -1897,6 +2056,9 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x378a2,	// LexBuffer end
 	0x06700,	// ParseFor /F options
 	0x3fa9c,	// TokLen
+	0x0859d,	// Goto:EOF
+	0x0857e,	// Goto pos
+	0x08549,	// Goto start
 	0x09830,	// SFWork:passed
 };
 
@@ -1932,6 +2094,9 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x35802,	// LexBuffer end
 	0x2188e,	// ParseFor /F options
 	0x3da08,	// TokLen
+	0x19fc7,	// Goto:EOF
+	0x19fab,	// Goto pos
+	0x19f82,	// Goto start
 	0x19726,	// SFWork:passed
 };
 
@@ -1967,6 +2132,9 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x37892,	// LexBuffer end
 	0x09bc0,	// ParseFor /F options
 	0x3fa8c,	// TokLen
+	0x06a3d,	// Goto:EOF
+	0x06a1e,	// Goto pos
+	0x069e9,	// Goto start
 	0x07d3e,	// SFWork:passed
 };
 
@@ -2002,6 +2170,9 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x355b2,	// LexBuffer end
 	0x1172b,	// ParseFor /F options
 	0x356ec,	// TokLen
+	0x0afcd,	// Goto:EOF
+	0x0afae,	// Goto pos
+	0x0af79,	// Goto start
 	0x09a3e,	// SFWork:passed
 };
 
@@ -2037,6 +2208,9 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x355b2,	// LexBuffer end
 	0x129a8,	// ParseFor /F options
 	0x356ec,	// TokLen
+	0x0c56b,	// Goto:EOF
+	0x0c54b,	// Goto pos
+	0x0c519,	// Goto start
 	0x0b37e,	// SFWork:passed
 };
 

@@ -67,6 +67,7 @@ for /f "line" %%A in (";line one!U+A!!U+22!line two") do echo %%A
 echo This is line %@batchline%.
 call :args 1 2 3 4 5 6 7 8 9 10 11
 call :loop
+call :labels
 set @dumpparse=true
 set @dumpparse=false
 set @dumptokens=1
@@ -117,3 +118,18 @@ echo from 4: %$4-%
 echo 5-7: %$5-7%
 echo twelfth: [%$12%]
 goto :eof
+
+:labels
+goto one
+:two
+echo first two
+goto ~one
+:one
+echo first one
+goto ~two
+:two
+echo second two
+goto :eof
+:one
+echo second one
+goto ~two
