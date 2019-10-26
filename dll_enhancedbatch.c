@@ -252,6 +252,7 @@ void setChars(void)
 	setVar(L"$CRLF",   L"\r\n");
 	setVar(L"$BS",     L"\b");
 	setVar(L"$TAB",    L"\t");
+	setVar(L"$BELL",   L"\a");
 	setVar(L"$ESC",    L"\33");
 	setVar(L"$EXCL",   L"!");
 	setVar(L"$PERC",   L"%");
