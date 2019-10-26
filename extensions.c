@@ -909,7 +909,7 @@ BOOL SetEchoOptions(int argc, LPCWSTR argv[])
 
 DWORD GetEchoOptions(LPWSTR buffer, DWORD size)
 {
-	return toString(*pEchoHelp == 9, buffer, size);
+	return toString(*pStartHelp == 31, buffer, size);
 }
 
 BOOL SetUnicode(int argc, LPCWSTR argv[])
