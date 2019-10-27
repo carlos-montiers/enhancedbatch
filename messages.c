@@ -47,12 +47,44 @@ const WCHAR ArgErrorStr[]  = L"Failed to retrieve arguments.\n";
 const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
 const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
 
+const WCHAR EchoBriefStr[]	  = L"Display a message.";
 const WCHAR HelpBriefStr[]	  = L"This list.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";
 const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
 const WCHAR TimerHiBriefStr[] = L"Microsecond timer.";
 const WCHAR UnloadBriefStr[]  = L"Remove Enhanced Batch.";
+
+const WCHAR EchoHelpStr[] =
+	L"Display a message.\r\n"
+	L"\r\n"
+	L"CALL @ECHO [/C] [/E] [/N] [/U] [/V] [//] message\r\n"
+	L"\r\n"
+	L"  /C        output message to the console\r\n"
+	L"  /E        process C-style backslash escapes (/E? for list)\r\n"
+	L"  /N        output message without newline\r\n"
+	L"  /U        output message with Unix line ending\r\n"
+	L"  /V        output message vertically\r\n"
+	L"  //        no more options\r\n"
+	L"\r\n"
+	L"Unlike the ECHO command message is not printed verbatim, it must be quoted\r\n"
+	L"to preserve spacing."
+;
+
+const WCHAR EscapeHelpStr[] =
+	L"\\a   Alert (U+0007)\r\n"
+	L"\\b   Backspace (U+0008)\r\n"
+	L"\\e   Escape (U+001B)\r\n"
+	L"\\f   Form feed (U+000C)\r\n"
+	L"\\n   Line feed (U+000A)\r\n"
+	L"\\r   Carriage return (U+000D)\r\n"
+	L"\\t   Tab (U+0009)\r\n"
+	L"\\v   Vertical tab (U+000B)\r\n"
+	L"\\\\   Backslash\r\n"
+	L"\\x   Unicode, one or two hex digits\r\n"
+	L"\\u   Unicode, one to four hex digits\r\n"
+	L"\\U   Unicode, one to six hex digits"
+;
 
 const WCHAR HelpHelpStr[] =
 	L"Display CALL commands added by Enhanced Batch.\r\n"

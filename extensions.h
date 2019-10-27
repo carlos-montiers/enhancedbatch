@@ -88,6 +88,8 @@ DWORD GetInputCodePage(LPWSTR buffer, DWORD size);
 DWORD GetArgCount(LPWSTR buffer, DWORD size);
 DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size);
 
+BOOL Echo(int argc, LPCWSTR argv[]);
+
 BOOL SetEcho(int argc, LPCWSTR argv[]);
 BOOL SetEchoOptions(int argc, LPCWSTR argv[]);
 BOOL SetUnicode(int argc, LPCWSTR argv[]);

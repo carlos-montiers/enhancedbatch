@@ -223,6 +223,7 @@ struct sCallExt {
 };
 
 const struct sCallExt callExtensionList[] = {
+	{ L"@echo",    ~0, Echo, EchoBriefStr, EchoHelpStr },
 	{ L"@help", 	0, Help, HelpBriefStr, HelpHelpStr },
 	{ L"@say",	   ~1, Say, SayBriefStr, SayHelpStr },
 	{ L"@sleep",	1, WaitMilliseconds, SleepBriefStr, SleepHelpStr },
