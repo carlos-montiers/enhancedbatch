@@ -1,26 +1,9 @@
 #include "spng.h"
 
-#include <windows.h>
 #include <inttypes.h>
 #include <stdio.h>
 
-typedef struct {
-    int newmode;
-} _startupinfo;
-
-int __getmainargs(int *_Argc, char *** _Argv, char *** _Env,
-        int _DoWildCard, _startupinfo * _StartInfo);
-
-void _start(void)
-{
-	int argc;
-	char **argv;
-	char **env;
-	_startupinfo start_info = {0};
-
-    if (__getmainargs(&argc, &argv, &env, 0, &start_info) < 0) {
-        ExitProcess(-1);
-    }
+int main(int argc, char **argv) {
 
     int r = 0;
     FILE *png;
@@ -133,9 +116,9 @@ void _start(void)
 
 err:
     spng_ctx_free(ctx);
-    
+
     free(out);
     free(pngbuf);
 
-    ExitProcess(r);
+    return r;
 }

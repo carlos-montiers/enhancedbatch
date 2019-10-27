@@ -1,8 +1,7 @@
 @echo off
 pushd zlib-1.2.11
 ::mingw32-make.exe  -f win32/Makefile.gcc
-::using -m32 example.exe fails silently to read 
-set arq=-m64
+set arq=-m32
 set flags=%arq% -O3 -s -Wall -c -o
 gcc %flags% adler32.o adler32.c
 gcc %flags% compress.o compress.c
@@ -21,5 +20,5 @@ gcc %flags% uncompr.o uncompr.c
 gcc %flags% zutil.o zutil.c
 ar rcs libz.a adler32.o compress.o crc32.o deflate.o gzclose.o gzlib.o gzread.o gzwrite.o infback.o inffast.o inflate.o inftrees.o trees.o uncompr.o zutil.o
 popd
-if "%arq%"=="-m32" gcc %arq% -Wl,-e,__start,--enable-stdcall-fixup -nostartfiles -O3 -s example.c spng.c zlib-1.2.11\libz.a -o example.exe
-if "%arq%"=="-m64" gcc %arq% -Wl,-e,_start -nostartfiles -O3 -s example.c spng.c zlib-1.2.11\libz.a -o example.exe
+if "%arq%"=="-m32" gcc %arq% -O3 -s example.c spng.c zlib-1.2.11\libz.a -o example.exe
+if "%arq%"=="-m64" gcc %arq% -O3 -s example.c spng.c zlib-1.2.11\libz.a -o example.exe
