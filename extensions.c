@@ -552,11 +552,11 @@ HWND GetConsoleWindowInTab(void)
 		pszWindowTitle[newlen++] = (pid % 32) + 0x80;
 		pid /= 32;
 	} while (pid != 0);
-	pszWindowTitle[newlen++] = L'\0';
+	pszWindowTitle[newlen] = L'\0';
 	SetConsoleTitle(pszWindowTitle);
 	Sleep(40);	// Ensure window title has been updated.
 	hwndFound = FindWindow(NULL, pszWindowTitle);
-	pszWindowTitle[oldlen++] = L'\0';
+	pszWindowTitle[oldlen] = L'\0';
 	SetConsoleTitle(pszWindowTitle);
 	if (hwndFound) {
 		EnumChildWindows(hwndFound, FindTabWindow, (LPARAM) &hwndFound);
