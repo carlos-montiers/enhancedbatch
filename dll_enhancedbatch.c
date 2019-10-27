@@ -341,7 +341,7 @@ DWORD getVar(LPCWSTR lpName)
 		return 0;
 	}
 
-	if (*lpName == L'U' && lpName[1] == '+') {
+	if (*lpName == L'U' && lpName[1] == L'+') {
 		LPWSTR end;
 		DWORD wch = (DWORD) wcstoul(lpName+2, &end, 16);
 		if (*end == L'\0' && end != lpName+2 && wch < 0x110000) {
@@ -391,13 +391,13 @@ DWORD getVar(LPCWSTR lpName)
 			}
 			return GetArgs(1, arg, stringBuffer, STRINGBUFFERMAX);
 		}
-		if (lpName[1] >= '0' && lpName[1] <= '9') {
+		if (lpName[1] >= L'0' && lpName[1] <= L'9') {
 			DWORD arg1, arg2;
 			LPWSTR end;
 			arg1 = (DWORD) wcstoul(lpName + 1, &end, 10);
 			if (*end == L'\0') {
 				arg2 = arg1;
-			} else if (*end == '-') {
+			} else if (*end == L'-') {
 				if (end[1] == L'\0') {
 					arg2 = -1;
 				} else {
@@ -512,7 +512,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 	varcpy = NULL;
 
 	var = (LPWSTR) lpName;
-	if (lpName && (*lpName != '@' || lpName[1] != '@')) {
+	if (lpName && (*lpName != L'@' || lpName[1] != L'@')) {
 		mod = wcschr(lpName, L';');
 		if (mod) {
 			var = varcpy = _wcsdup(lpName);
@@ -676,7 +676,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 				}
 				if (*s == L'-') {
 					*s = L'0';
-					*lpBuffer = '-';
+					*lpBuffer = L'-';
 				}
 			}
 		}
@@ -691,9 +691,9 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 {
 	if (lpName != NULL) {
 
-		if (lpValue && *lpValue == '@') {
+		if (lpValue && *lpValue == L'@') {
 			if (MyGetEnvironmentVariableW(lpValue, varBuffer, STRINGBUFFERMAX)
-				|| lpValue[1] == '@') {
+				|| lpValue[1] == L'@') {
 				lpValue = varBuffer;
 			}
 		}
@@ -871,9 +871,9 @@ DWORD WINAPI MyEcho(struct cmdnode *node)
 	if ((node->arg[1] == L'~' && node->arg[2] == L'"') ||
 		(modified_newline && WCSBEG(node->arg+1, L" ~\""))) {
 		DWORD len = (DWORD) wcslen(node->arg);
-		if (node->arg[len-1] == '"') {
+		if (node->arg[len-1] == L'"') {
 			node->arg[len-1] = L'\0';
-			arg_ofs = (node->arg[2] == '~') ? 3 : 2;
+			arg_ofs = (node->arg[2] == L'~') ? 3 : 2;
 			node->arg += arg_ofs;
 			suppressed_quotes = TRUE;
 		}
@@ -1676,7 +1676,7 @@ BOOL IsInstalled(DWORD id, LPWSTR name, PBYTE *base)
 	me.dwSize = sizeof(MODULEENTRY32);
 
 	// Get the name of the DLL.
-	enh_name = wcsrchr(enh_dll, '\\') + 1;
+	enh_name = wcsrchr(enh_dll, L'\\') + 1;
 
 	// Walk the module list of the modules.
 	fOk = Module32First(hModuleSnap, &me);

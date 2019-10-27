@@ -300,7 +300,7 @@ DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
 	char label[256];		// maximum label size is 128, double it for DBCS
 	LPCWSTR w;
 
-	if (*line == ':') {
+	if (*line == L':') {
 		++line;
 	}
 	w = line;

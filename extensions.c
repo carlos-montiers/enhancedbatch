@@ -1013,7 +1013,7 @@ BOOL Echo(int argc, LPCWSTR argv[])
 		}
 		int col = getPosition().X;
 		LPWSTR ch = text, next;
-		while (*ch != '\0') {
+		while (*ch != L'\0') {
 			// CharNext skips over the high surrogate and stops at the low.
 			if (*ch >= HIGH_SURROGATE_START && *ch <= HIGH_SURROGATE_END
 				&& ch[1] >= LOW_SURROGATE_START && ch[1] <= LOW_SURROGATE_END) {
@@ -1577,13 +1577,13 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)
 	len = MultiByteToWideChar(GetConsoleOutputCP(), 0, buf, len, buffer, size);
 	free(buf);
 
-	if (len > 0 && buffer[len-1] == '\n') {
+	if (len > 0 && buffer[len-1] == L'\n') {
 		--len;
-		if (len > 0 && buffer[len-1] == '\r') {
+		if (len > 0 && buffer[len-1] == L'\r') {
 			--len;
 		}
 	}
-	buffer[len] = '\0';
+	buffer[len] = L'\0';
 	return len;
 }
 
