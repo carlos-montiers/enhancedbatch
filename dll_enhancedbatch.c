@@ -652,12 +652,17 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		}
 		mod = end;
 	}
-	if (mod) {
-		pad = 0;
-		length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", lpName);
-	}
 	if (varcpy) {
 		free(varcpy);
+	}
+	if (mod) {
+		// Unknown modifier: return nothing on the command line; the variable
+		// itself in a batch (easier to diagnose).
+		if (*pCurrentBatchFile == NULL) {
+			return 0;
+		}
+		pad = 0;
+		length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", lpName);
 	}
 
 	size = (pad > length) ? pad : length;
