@@ -6,6 +6,9 @@
 extern "C" {
 #endif
 
+// No export functions
+#define SPNG_API
+/*
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined(__CYGWIN__)
     #ifndef SPNG_STATIC
         #define SPNG_API __declspec(dllexport)
@@ -15,6 +18,7 @@ extern "C" {
 #else
     #define SPNG_API
 #endif
+*/
 
 #include <stdlib.h>
 #include <stdint.h>
