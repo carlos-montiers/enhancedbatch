@@ -297,21 +297,22 @@ DWORD findLabel(LPCSTR label, DWORD start, DWORD fsize)
 
 DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
 {
-	char label[128];			// maximum label size
-	LPCWSTR w = line;
-	LPSTR a = label;
+	char label[256];		// maximum label size is 128, double it for DBCS
+	LPCWSTR w;
 
-	if (*w == ':') {
+	if (*line == ':') {
+		++line;
+	}
+	w = line;
+	while (*w != L'\0' && !iswspace(*w)) {
 		++w;
 	}
-	while (*w != L'\0' && !iswspace(*w)) {
-		if (*w <= L'~') {
-			*a++ = *w++;
-		} else {
-			return -1;
-		}
+	int len = WideCharToMultiByte(GetConsoleOutputCP(), 0, line, w - line,
+								  label, sizeof(label) - 1, NULL, NULL);
+	if (len == 0) {
+		return -1;
 	}
-	*a = '\0';
+	label[len] = '\0';
 	return findLabel(label, start, fsize);
 }
 
