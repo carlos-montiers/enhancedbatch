@@ -203,6 +203,7 @@ BOOL Say(int argc, LPCWSTR argv[])
 		return FALSE;
 	}
 
+	// Wait for the current speech to finish before saying a new one.
 	WaitForSingleObject(hSpeaking, INFINITE);
 
 	spFlags = SPF_DEFAULT;
