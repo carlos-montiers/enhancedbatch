@@ -821,7 +821,8 @@ BOOL Help(int argc, LPCWSTR argv[])
 {
 	const struct sCallExt *ext;
 	const struct sCallExt *end = callExtensionList + lenof(callExtensionList);
-	int width = 0, len = 0;
+	int width = 0;
+	int len;
 	for (ext = callExtensionList; ext < end; ++ext) {
 		len = wcslen(ext->name);
 		if (len > width) {
@@ -1622,7 +1623,7 @@ BOOL find_proc_id(HANDLE snap, DWORD id, LPPROCESSENTRY32 pe,
 // Obtain the process identifier of the parent process; verify the architecture.
 DWORD GetParentProcessId()
 {
-	HANDLE hSnap, ph;
+	HANDLE hSnap;
 	PROCESSENTRY32 pe, ppe;
 	BOOL parent_wow64, me_wow64;
 	typedef BOOL (WINAPI * LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
@@ -1647,7 +1648,7 @@ DWORD GetParentProcessId()
 	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
 			GetModuleHandle(L"kernel32.dll"), "IsWow64Process");
 	if (fnIsWow64Process != NULL) {
-		ph = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe.th32ProcessID);
+		HANDLE ph = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe.th32ProcessID);
 		if (ph == NULL) {
 			return 0;
 		}

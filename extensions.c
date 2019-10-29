@@ -78,10 +78,9 @@ DWORD Getch(LPWSTR buffer, DWORD size)
 
 DWORD Chhit(LPWSTR buffer, DWORD size)
 {
-	int code;
-
 	if (_kbhit()) {
-		if (!(code = _getwch()) || (0xE0 == code)) {
+		int code = _getwch();
+		if ((0 == code) || (0xE0 == code)) {
 			_getwch();
 			return toString(-1, buffer, size);
 		}
@@ -1545,23 +1544,20 @@ DWORD GetElevated(LPWSTR buffer, DWORD size)
 
 DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)
 {
-	FILE *pipe;
-	DWORD len, r;
-	char *buf, *pos;
-
-	pipe = _wpopen(cmd, L"rb");
+	FILE *pipe = _wpopen(cmd, L"rb");
 	if (pipe == NULL) {
 		return 0;
 	}
 
-	buf = malloc(size);
+	char *buf = malloc(size);
 	if (buf == NULL) {
 		_pclose(pipe);
 		return 0;
 	}
 
-	pos = buf;
-	len = size - 1;
+	char * pos = buf;
+	DWORD len = size - 1;
+	DWORD r;
 	while (len > 0) {
 		r = fread(pos, 1, len, pipe);
 		if (r == 0) {
