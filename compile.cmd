@@ -3,7 +3,6 @@
 
 SetLocal EnableDelayedExpansion
 set FLAGS=-nostartfiles -O3 -s -shared -Wall
-set FLAGS=-nostartfiles -O3 -s -shared -Wall
 set LIBS=-lversion -lole32
 set SRC=dll_enhancedbatch.c extensions.c say.c img4bit.c messages.c offsets.c patch.c
 set ZLIBDIR=zlib-1.2.11

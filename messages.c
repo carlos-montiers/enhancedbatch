@@ -62,7 +62,9 @@ const WCHAR HelpHelpStr[] =
 ;
 
 const WCHAR Img4BitHelpStr[] =
-	L"Display an image.\r\n"
+	L"Display an image. Only supports PNG.\r\n"
+	L"\r\n"
+	L"CALL @IMG4BIT filename\r\n"
 ;
 
 const WCHAR SayHelpStr[] =
