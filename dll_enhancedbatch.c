@@ -224,6 +224,7 @@ struct sCallExt {
 
 const struct sCallExt callExtensionList[] = {
 	{ L"@help", 	0, Help, HelpBriefStr, HelpHelpStr },
+	{ L"@img4bit", 	1, Img4Bit, Img4BitBriefStr, Img4BitHelpStr },
 	{ L"@say",	   ~1, Say, SayBriefStr, SayHelpStr },
 	{ L"@sleep",	1, WaitMilliseconds, SleepBriefStr, SleepHelpStr },
 	{ L"@timer",	0, SetLoTimer, TimerBriefStr, TimerHelpStr },

@@ -141,6 +141,7 @@ extern const WCHAR ProgramNameStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
 extern const WCHAR HelpBriefStr[], HelpHelpStr[];
+extern const WCHAR Img4BitBriefStr[], Img4BitHelpStr[];
 extern const WCHAR SayBriefStr[], SayHelpStr[];
 extern const WCHAR SleepBriefStr[], SleepHelpStr[];
 extern const WCHAR TimerBriefStr[], TimerHelpStr[];

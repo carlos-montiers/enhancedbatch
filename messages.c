@@ -48,6 +48,7 @@ const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
 const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
 
 const WCHAR HelpBriefStr[]	  = L"This list.";
+const WCHAR Img4BitBriefStr[] = L"Display an image.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";
 const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
@@ -58,6 +59,10 @@ const WCHAR HelpHelpStr[] =
 	L"Display CALL commands added by Enhanced Batch.\r\n"
 	L"\r\n"
 	L"CALL @HELP"
+;
+
+const WCHAR Img4BitHelpStr[] =
+	L"Display an image.\r\n"
 ;
 
 const WCHAR SayHelpStr[] =
