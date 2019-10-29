@@ -1609,3 +1609,4 @@ BOOL haveOutputHandle(void)
 
 	return consoleOutput != INVALID_HANDLE_VALUE;
 }
+

@@ -181,3 +181,5 @@ BOOL SetDumpTokens(int argc, LPCWSTR argv[]);
 BOOL SetDumpParse(int argc, LPCWSTR argv[]);
 
 BOOL haveOutputHandle(void);
+
+BOOL Img4Bit(int argc, LPCWSTR argv[]);
