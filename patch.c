@@ -232,7 +232,7 @@ LPCSTR findLabelBackward(LPCSTR label, DWORD len, LPCSTR batch, DWORD size)
 	first = tolower(*label++);
 	--len;
 	for (p = batch + size - len - 2; p >= batch + 2; p -= 3) {
-		if (*(LPWORD)p == 0x3a0a && tolower(p[2]) == first) {
+		if (*(LPWORD) p == 0x3a0a && tolower(p[2]) == first) {
 			p += 3;
 		} else if (*(LPWORD)(p-1) == 0x3a0a && tolower(p[1]) == first) {
 			p += 2;
@@ -624,8 +624,8 @@ void GotoEof(void)
 
 // C can't access labels created in asm, so store the offsets in the function
 // and read them from there.
-#define redirect_data		((LPDWORD)redirect_code+1)
-#define redirect_code_start ((LPBYTE)redirect_code + redirect_data[0])
+#define redirect_data		((LPDWORD) redirect_code + 1)
+#define redirect_code_start ((LPBYTE) redirect_code + redirect_data[0])
 #define redirect_code_size	redirect_data[1]
 #define rMyPutStdErrMsg 	(redirect + redirect_data[2])
 #define rMyLexText			(redirect + redirect_data[3])
@@ -638,8 +638,8 @@ void GotoEof(void)
 #define rForFendj			(redirect + redirect_data[10])
 #define rParseFor			(redirect + redirect_data[11])
 #define rParseForF			(redirect + redirect_data[12])
-#define rParseFor_org		(DWORD_PTR*)(redirect + redirect_data[13])
-#define rParseForF_org		(DWORD_PTR*)(redirect + redirect_data[13]+8)
+#define rParseFor_org		(DWORD_PTR *)(redirect + redirect_data[13])
+#define rParseForF_org		(DWORD_PTR *)(redirect + redirect_data[13]+8)
 #define rGotoEof			(redirect + redirect_data[14])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
@@ -810,7 +810,7 @@ void hookCmd(void)
 	// Search the image for the ECHO & CALL help identifiers (to locate eEcho &
 	// eCall), L"%s\r\n" (for ECHO's output) and the binary file version.
 	while (data < end) {
-		if (!eEcho) {
+		if (eEcho == NULL) {
 			cmdentry = (struct sCmdEntry *) data;
 			if (cmdentry->helpid == 0x2392 &&		// ECHO
 				(cmdentry+14)->helpid == 0x238F) {	// CALL
@@ -822,7 +822,7 @@ void hookCmd(void)
 				WriteMemory(peCall, &pMyCall, sizeof(pMyCall));
 			}
 		}
-		if (!Fmt17) {
+		if (Fmt17 == NULL) {
 			if (data[0] == 0x00730025 &&	// L"%s"
 				data[1] == 0x000a000d) {	// L"\r\n"
 				Fmt17 = (LPWSTR) data;
@@ -841,10 +841,10 @@ void hookCmd(void)
 	LPBYTE p = (LPBYTE) eCall;
 #ifdef _WIN64
 	p += cmdDebug ? 25 : 15;
-	pLastRetCode = (int *)MKABS(p);
+	pLastRetCode = (int *) MKABS(p);
 #else
 	while (*p++ != 0xA3) ;
-	pLastRetCode = *(int **)p;
+	pLastRetCode = *(int **) p;
 #endif
 
 	// This will be found because the loader finds it first.
@@ -864,13 +864,13 @@ void hookCmd(void)
 	if CMD_MAJOR_MINOR(==, 5,2) {
 		p = (LPBYTE) MKABS(p+8) - 9;
 	} else {
-		while (*(DWORD*)p != 0x02C28348) {	// add rdx,2
+		while (*(LPDWORD) p != 0x02C28348) {	// add rdx,2
 			++p;
 		}
 		p += 5;
 	}
 #else
-	while (*(LPWSTR*)p != Fmt17) {
+	while (*(LPWSTR *) p != Fmt17) {
 		++p;
 	}
 	p += 5;
@@ -884,13 +884,13 @@ void hookCmd(void)
 		LPVOID mem = VirtualAlloc(redirect, redirect_code_size,
 								  MEM_COMMIT | MEM_RESERVE,
 								  PAGE_EXECUTE_READWRITE);
-		if (mem) {
+		if (mem != NULL) {
 			redirect = mem;
 			break;
 		} else {
 			MEMORY_BASIC_INFORMATION mbi;
 			VirtualQuery(redirect, &mbi, sizeof(mbi));
-			redirect = (LPBYTE)mbi.AllocationBase - 0x1000;
+			redirect = (LPBYTE) mbi.AllocationBase - 0x1000;
 		}
 	}
 	memcpy(redirect, redirect_code_start, redirect_code_size);
@@ -935,8 +935,8 @@ void hookCmd(void)
 	WriteMemory(pGotoEof+2, &i, 4);
 #else
 	if ((char) *pGotopos < 0) {
-		Goto_pos = *(int *)pGotopos;	// ebp - int
-		Goto_start = *(int *)pGotostart;
+		Goto_pos = *(int *) pGotopos;	// ebp - int
+		Goto_start = *(int *) pGotostart;
 	} else {
 		Goto_pos = *pGotopos + 8;		// esp + byte
 		Goto_start = *pGotostart + 12;
@@ -959,7 +959,7 @@ void hookCmd(void)
 #ifdef _WIN64
 	if (*pSFWorkmkstr == 0xFF) {
 		SFWork_mkstr_reg = pSFWorkmkstr[0x47];
-		SFWork_mkstr_org = *(DWORD_PTR*)MKABS(pSFWorkmkstr+2);
+		SFWork_mkstr_org = *(DWORD_PTR *) MKABS(pSFWorkmkstr+2);
 		call.disp = MKDISP(rSFWork_mkstr, pSFWorkmkstr+6);
 		WriteMemory(pSFWorkmkstr, &call, 6);
 	} else {
@@ -980,13 +980,13 @@ void hookCmd(void)
 	if (*pSFWorkmkstr == 0xE8) {
 		SFWork_mkstr_org = MKABS(pSFWorkmkstr+1);
 		if (pSFWorkmkstr[-5] == 0x68) {
-			SFWork_stdcall = 1;
+			SFWork_stdcall = TRUE;
 		}
 		i = MKDISP(SFWork_mkstr, pSFWorkmkstr+5);
 		WriteMemory(pSFWorkmkstr+1, &i, 4);
 	} else {
 		SFWork_mkstr_reg = pSFWorkmkstr[0x33];
-		SFWork_mkstr_org = **(LPDWORD*)(pSFWorkmkstr+2);
+		SFWork_mkstr_org = **(LPDWORD *)(pSFWorkmkstr+2);
 		call.disp = MKDISP(SFWork_mkstr, pSFWorkmkstr+6);
 		WriteMemory(pSFWorkmkstr, &call, 6);
 	}
@@ -1112,18 +1112,18 @@ void hookCmd(void)
 #endif
 
 	// Hook PutStdErr to write the batch file name and line number.
-	pPutMsg = (LPVOID)MKABS(pPutStdErrMsg);
+	pPutMsg = (LPVOID) MKABS(pPutStdErrMsg);
 #ifdef _WIN64
 	i = MKDISP(rMyPutStdErrMsg, pPutStdErrMsg+1);
 #else
 	if CMD_MAJOR_MINOR(>, 6,2) {
-		i = (DWORD)fastPutStdErrMsg;
+		i = (DWORD) fastPutStdErrMsg;
 	} else if CMD_MAJOR_MINOR(==, 6,2) {
-		i = (DWORD)fastPutStdErrMsg62;
+		i = (DWORD) fastPutStdErrMsg62;
 	} else {
-		i = (DWORD)stdPutStdErrMsg;
+		i = (DWORD) stdPutStdErrMsg;
 	}
-	i -= (DWORD)pPutStdErrMsg+4;
+	i -= (DWORD) pPutStdErrMsg + 4;
 #endif
 	WriteMemory(pPutStdErrMsg, &i, 4);
 
@@ -1139,11 +1139,11 @@ void hookCmd(void)
 	if (cmdDebug) {
 		// Currently only the one debug version.
 		/*if CMD_VERSION(6,3,9431,0)*/
-		call.disp = (DWORD)MyLexTextESI;
+		call.disp = (DWORD) MyLexTextESI;
 	} else {
-		call.disp = (DWORD)MyLexText;
+		call.disp = (DWORD) MyLexText;
 	}
-	call.disp -= (DWORD)pLexText+5;
+	call.disp -= (DWORD) pLexText + 5;
 #endif
 	WriteMemory(pLexText, &call.op, 5);
 
@@ -1160,15 +1160,15 @@ void hookCmd(void)
 		// No need for original begin, it can never be true.
 		call.disp = MKDISP(ForFbegin_hook, pForFbegin+6);
 		WriteMemory(pForFbegin, &call, 6);
-		call.disp = (DWORD)ForFend;
+		call.disp = (DWORD) ForFend;
 	} else {
 		// No need to return, it can never be false.
 		ForFbegin_org = MKABS(pForFbegin+2);
 		i = MKDISP(ForFbegin_jmp, pForFbegin+6);
 		WriteMemory(pForFbegin+2, &i, 4);
-		call.disp = (DWORD)ForFend_opp;
+		call.disp = (DWORD) ForFend_opp;
 	}
-	call.disp -= (DWORD)pForFend+6;
+	call.disp -= (DWORD) pForFend + 6;
 	WriteMemory(pForFend, &call, 6);
 #endif
 

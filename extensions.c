@@ -558,7 +558,7 @@ HWND GetConsoleWindowInTab(void)
 	hwndFound = FindWindow(NULL, pszWindowTitle);
 	pszWindowTitle[oldlen] = L'\0';
 	SetConsoleTitle(pszWindowTitle);
-	if (hwndFound) {
+	if (hwndFound != NULL) {
 		EnumChildWindows(hwndFound, FindTabWindow, (LPARAM) &hwndFound);
 	}
 	return hwndFound;
@@ -566,7 +566,7 @@ HWND GetConsoleWindowInTab(void)
 
 HWND GetConsoleHwnd(void)
 {
-	if (!consoleHwnd) {
+	if (consoleHwnd == NULL) {
 		if (onWindowsTerminal) {
 			consoleHwnd = GetConsoleWindowInTab();
 		} else {
@@ -588,7 +588,7 @@ BOOL SetOpacity(int argc, LPCWSTR argv[])
 	}
 
 	hwnd = GetConsoleHwnd();
-	if (!hwnd) {
+	if (hwnd == NULL) {
 		return FALSE;
 	}
 
@@ -612,7 +612,7 @@ BOOL SetOpacity(int argc, LPCWSTR argv[])
 		}
 		wheel_movements = alpha - curr_alpha;
 		wheel_movements /= OPACITY_DELTA_INTERVAL;
-		if (wheel_movements) {
+		if (wheel_movements != 0) {
 			PostMessage(
 				hwnd,
 				WM_MOUSEWHEEL,
@@ -833,7 +833,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 		argv += 7;
 	}
 #endif
-	arglen = (DWORD *) (argv + 10);
+	arglen = (LPDWORD)(argv + 10);
 	rest = argv[-1];
 
 	// I'll take a shortcut here: the supplied buffer is 32Ki, which is as big
@@ -1176,7 +1176,7 @@ DWORD GetTempFile(LPWSTR buffer, DWORD size)
 DWORD GetTempDir(LPWSTR buffer, DWORD size)
 {
 	size = GetTempFile(buffer, size);
-	if (size) {
+	if (size != 0) {
 		if (!DeleteFile(buffer) || !CreateDirectory(buffer, NULL)) {
 			size = 0;
 		}
@@ -1199,7 +1199,7 @@ static const LPCWSTR DayNames[] = {
 
 WCHAR getPoint(void)
 {
-	if (!point) {
+	if (point == L'\0') {
 		WCHAR buf[5];
 		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, buf, 5);
 		point = *buf;
@@ -1498,7 +1498,7 @@ DWORD GetTitle(LPWSTR buffer, DWORD size)
 
 	for (;;) {
 		tsize = GetConsoleTitle(buffer, size);
-		if (tsize) {
+		if (tsize != 0) {
 			break;
 		}
 		// This happened running an XP virtual machine.
@@ -1514,7 +1514,7 @@ DWORD GetTitle(LPWSTR buffer, DWORD size)
 	// Strip off "Administrator: " and an extra space.
 	asize = FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
 						  NULL, 0x40002748, 0, admin, lenof(admin), NULL);
-	if (asize) {
+	if (asize != 0) {
 		if (wcsncmp(buffer, admin, asize) == 0) {
 			if (buffer[asize] == L' ') {
 				++asize;
@@ -1573,7 +1573,7 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)
 
 	*pLastRetCode = _pclose(pipe);
 
-	len = (DWORD) (pos - buf);
+	len = (DWORD)(pos - buf);
 	len = MultiByteToWideChar(GetConsoleOutputCP(), 0, buf, len, buffer, size);
 	free(buf);
 

@@ -241,7 +241,7 @@ void setVar(LPCWSTR var, LPCWSTR val)
 	if (absent) {
 		kh_key(variables, k) = _wcsdup(var);
 	} else {
-		free((void*) kh_val(variables, k));
+		free((void *) kh_val(variables, k));
 	}
 	kh_val(variables, k) = _wcsdup(val);
 }
@@ -369,7 +369,7 @@ DWORD getVar(LPCWSTR lpName)
 			} else {
 				const struct sGetExt *ext = bsearch(lpName, getExtensionList,
 					lenof(getExtensionList), sizeof(struct sGetExt), extcmp);
-				if (ext) {
+				if (ext != NULL) {
 					return ext->fn(stringBuffer, STRINGBUFFERMAX);
 				}
 			}
@@ -428,7 +428,7 @@ DWORD getVar(LPCWSTR lpName)
 
 DWORD ltrim(DWORD length, LPCWSTR delim)
 {
-	if (length) {
+	if (length != 0) {
 		LPWSTR p = stringBuffer, end = p + length;
 		while (wcschr(delim, *p)) {
 			if (++p == end) {
@@ -438,7 +438,7 @@ DWORD ltrim(DWORD length, LPCWSTR delim)
 		if (p != stringBuffer) {
 			stringBuffer[length] = L'\0';
 			wcscpy(stringBuffer, p);
-			length -= (DWORD) (p - stringBuffer);
+			length -= (DWORD)(p - stringBuffer);
 		}
 	}
 	return length;
@@ -514,7 +514,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 	var = (LPWSTR) lpName;
 	if (lpName && (*lpName != L'@' || lpName[1] != L'@')) {
 		mod = wcschr(lpName, L';');
-		if (mod) {
+		if (mod != NULL) {
 			var = varcpy = _wcsdup(lpName);
 			var[mod - lpName] = L'\0';
 			mod += var - lpName + 1;
@@ -556,7 +556,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 				break;
 			}
 			end = wcschr(end + 2, L']');
-			if (!end) {
+			if (end == NULL) {
 				break;
 			}
 			*end++ = L'\0';
@@ -568,7 +568,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		} else {
 			end = wcschr(mod, L';');
 		}
-		if (end) {
+		if (end != NULL) {
 			*end++ = L'\0';
 		}
 		if (WCSIEQ(mod, L"upper")) {
@@ -629,7 +629,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			}
 #endif
 			*pfEnableExtensions = ext;
-			if (!var) {
+			if (var == NULL) {
 				break;
 			}
 			length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", var);
@@ -652,10 +652,10 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		}
 		mod = end;
 	}
-	if (varcpy) {
+	if (varcpy != NULL) {
 		free(varcpy);
 	}
-	if (mod) {
+	if (mod != NULL) {
 		// Unknown modifier: return nothing on the command line; the variable
 		// itself in a batch (easier to diagnose).
 		if (*pCurrentBatchFile == NULL) {
@@ -709,7 +709,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 				const struct sSetExt *ext = bsearch(lpName, setExtensionList,
 					lenof(setExtensionList), sizeof(struct sSetExt), extcmp);
-				if (ext) {
+				if (ext != NULL) {
 					BOOL ret;
 					if (ext->args == 0) {
 						ret = ext->fn(lpValue == NULL ? 0 : 1, &lpValue);
@@ -728,7 +728,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 							fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
 							ret = FALSE;
 						} else {
-							ret = ext->fn(nArgs, (LPCWSTR*) szArglist);
+							ret = ext->fn(nArgs, (LPCWSTR *) szArglist);
 						}
 						if (szArglist != NULL) {
 							LocalFree(szArglist);
@@ -741,8 +741,8 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 			if (lpValue == NULL) {
 				khint_t k = kh_get(wstr, variables, lpName);
 				if (k != kh_end(variables)) {
-					free((void*) kh_key(variables, k));
-					free((void*) kh_val(variables, k));
+					free((void *) kh_key(variables, k));
+					free((void *) kh_val(variables, k));
 					kh_del(wstr, variables, k);
 				}
 				return TRUE;
@@ -795,7 +795,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 						++arg;
 					} while (*arg == L' ' || *arg == L'\t');
 				}
-				ret = ext->fn(*arg == L'\0' ? 0 : 1, (LPCWSTR*) &arg);
+				ret = ext->fn(*arg == L'\0' ? 0 : 1, (LPCWSTR *) &arg);
 			} else {
 				--nArgs;
 				if (ext->args < 0 && ~ext->args > nArgs) {
@@ -805,7 +805,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 					fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
 					ret = FALSE;
 				} else {
-					ret = ext->fn(nArgs, (LPCWSTR*) szArglist + 1);
+					ret = ext->fn(nArgs, (LPCWSTR *) szArglist + 1);
 				}
 				LocalFree(szArglist);
 			}
@@ -899,7 +899,7 @@ DWORD WINAPI MyEcho(struct cmdnode *node)
 
 BOOL DwFlagsForCodepageMustBeZero(UINT CodePage)
 {
-	if (!CodePage) {
+	if (CodePage == 0) {
 		CodePage = GetACP();
 	}
 
@@ -959,7 +959,7 @@ UINT MyLexText(void)
 		LPWSTR uc, end;
 		ULONG wc;
 		uc = wcsstr(buf, L"!U+");
-		if (!uc) {
+		if (uc == NULL) {
 			break;
 		}
 		wc = wcstoul(uc+3, &end, 16);
@@ -1067,7 +1067,7 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 		LPCWSTR file = **pCurrentBatchFile;
 		if (batchfile == 1) {
 			file = wcsrchr(file, L'\\');
-			if (file) {
+			if (file != NULL) {
 				++file;
 			} else {
 				file = **pCurrentBatchFile;
@@ -1078,11 +1078,11 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 		pPutMsg(0x2371, b, 1, (va_list *) &pargs);
 #else
 		if CMD_MAJOR_MINOR(>, 6,2) {
-			((fastPutMsg) (pPutMsg))(0x2371, b, 1, (va_list *) &pargs);
+			((fastPutMsg) pPutMsg)(0x2371, b, 1, (va_list *) &pargs);
 		} else if CMD_MAJOR_MINOR(==, 6,2) {
-			((fastPutMsg62) (pPutMsg))(b, (va_list *) &pargs, 0x2371, c);
+			((fastPutMsg62) pPutMsg)(b, (va_list *) &pargs, 0x2371, c);
 		} else {
-			((stdPutMsg) (pPutMsg))(0x2371, b, 1, (va_list *) &pargs);
+			((stdPutMsg) pPutMsg)(0x2371, b, 1, (va_list *) &pargs);
 		}
 #endif
 		last_lnum = lnum;
@@ -1092,11 +1092,11 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 	return pPutMsg(a, b, c, d);
 #else
 	if CMD_MAJOR_MINOR(>, 6,2) {
-		return ((fastPutMsg) (pPutMsg))(a, b, c, d);
+		return ((fastPutMsg) pPutMsg)(a, b, c, d);
 	} else if CMD_MAJOR_MINOR(==, 6,2) {
-		return ((fastPutMsg62) (pPutMsg))(b, d, a, c);
+		return ((fastPutMsg62) pPutMsg)(b, d, a, c);
 	} else {
-		return ((stdPutMsg) (pPutMsg))(a, b, c, d);
+		return ((stdPutMsg) pPutMsg)(a, b, c, d);
 	}
 #endif
 }
@@ -1107,7 +1107,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 {
 	BOOL ret, utf8file;
 
-	if (!AnsiBuf) {
+	if (AnsiBuf == NULL) {
 		// If the read is into a global variable that should be the buffer.
 		if (lpBuffer > (LPVOID) GetModuleHandle(NULL) && lpBuffer < cmd_end) {
 			AnsiBuf = lpBuffer;
@@ -1169,7 +1169,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 					buffer[end_quote-2] == '"' && buffer[end_quote-1] == '^') {
 					end_quote -= 2;
 				} else {
-					if (discarded) {
+					if (discarded != 0) {
 						memset(buffer, ' ', discarded);
 					}
 					break;
@@ -1566,8 +1566,8 @@ void unhook(void)
 
 	for (k = 0; k < kh_end(variables); ++k) {
 		if (kh_exist(variables, k)) {
-			free((void*) kh_key(variables, k));
-			free((void*) kh_val(variables, k));
+			free((void *) kh_key(variables, k));
+			free((void *) kh_val(variables, k));
 		}
 	}
 	kh_destroy(wstr, variables);
@@ -1585,7 +1585,7 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		// RunDLL & RegSvr32 are GUI, CMD is console.
 		PBYTE base = GetModuleHandle(NULL);
-		PIMAGE_NT_HEADERS phdr = (PIMAGE_NT_HEADERS)(base + *(DWORD*)(base + 0x3C));
+		PIMAGE_NT_HEADERS phdr = (PIMAGE_NT_HEADERS)(base + *(LPDWORD)(base + 0x3C));
 		if (phdr->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_WINDOWS_GUI) {
 			GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
 		} else {

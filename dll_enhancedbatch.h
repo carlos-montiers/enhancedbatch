@@ -59,7 +59,7 @@
 // Macro to convert a relative virtual address into a virtual address.
 // Requires pDosHeader to point to the base.
 #define MakeVA(cast, addValue) \
-	(cast)((DWORD_PTR)pDosHeader + (DWORD_PTR)(addValue))
+	(cast)((DWORD_PTR) pDosHeader + (DWORD_PTR)(addValue))
 
 HRESULT DllLoad(void);
 #define Export_DllLoad_Entrypoint(name) \
@@ -169,9 +169,9 @@ void hookCtrlCAborts(char aborts);
 #define pMSCmdVar			cmd_addrs[1]
 #endif
 #define pLexText			cmd_addrs[2]
-#define pTmpBuf 			((LPWSTR)cmd_addrs[3])
-#define pPutStdErrMsg		((int*)cmd_addrs[4])
-#define pCurrentBatchFile	((LPWSTR**)cmd_addrs[5])
+#define pTmpBuf 			((LPWSTR) cmd_addrs[3])
+#define pPutStdErrMsg		((int *) cmd_addrs[4])
+#define pCurrentBatchFile	((LPWSTR **) cmd_addrs[5])
 #define pfOutputUnicode 	cmd_addrs[6]
 #define pfDelayedExpansion	cmd_addrs[7]
 #define pfEnableExtensions	cmd_addrs[8]
@@ -185,18 +185,18 @@ void hookCtrlCAborts(char aborts);
 #define pEchoHelp			cmd_addrs[16]
 #define pCtrlCAborts		cmd_addrs[17]
 #define pFreeStack			cmd_addrs[18]
-#define pDCount 			((LPDWORD)cmd_addrs[19])
+#define pDCount 			((LPDWORD) cmd_addrs[19])
 #define pSFWorkmkstr		cmd_addrs[20]
 #define pSFWorkresize		cmd_addrs[21]
-#define pSFWorksaved		((char*)cmd_addrs[22])
+#define pSFWorksaved		((char *) cmd_addrs[22])
 #define pGotoFlag			cmd_addrs[23]
 #define pForFbegin			cmd_addrs[24]
 #define pForFend			cmd_addrs[25]
-#define pParseFortoken		((int*)cmd_addrs[26])
-#define pLexBufPtr			((LPWSTR*)cmd_addrs[27])
-#define pLexBufferend		((LPWSTR)cmd_addrs[28])
-#define pForFoptions		((int*)cmd_addrs[29])
-#define pTokLen 			((int*)cmd_addrs[30])
+#define pParseFortoken		((int *) cmd_addrs[26])
+#define pLexBufPtr			((LPWSTR *) cmd_addrs[27])
+#define pLexBufferend		((LPWSTR) cmd_addrs[28])
+#define pForFoptions		((int *) cmd_addrs[29])
+#define pTokLen 			((int *) cmd_addrs[30])
 #define pGotoEof			cmd_addrs[31]
 #define pGotopos			cmd_addrs[32]
 #define pGotostart			cmd_addrs[33]
@@ -204,6 +204,6 @@ void hookCtrlCAborts(char aborts);
 #ifdef _WIN64
 #define OFFSETS 34
 #else
-#define pSFWorkpassed		((char*)cmd_addrs[34])
+#define pSFWorkpassed		((char *) cmd_addrs[34])
 #define OFFSETS 35
 #endif

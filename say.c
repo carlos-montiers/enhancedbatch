@@ -38,28 +38,28 @@ DEFINE_GUID(IID_ISpObjectTokenCategory, 0x2d3d3845, 0x39af, 0x4850, 0xbb,0xf9, 0
 
 #define SPCAT_CORE_VOICES L"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Speech_OneCore\\Voices"
 
-ISpObjectToken* pDefaultVoice;
-ISpObjectToken* pCurrentVoice;
+ISpObjectToken *pDefaultVoice;
+ISpObjectToken *pCurrentVoice;
 SPEAKFLAGS spFlags;
 LPWSTR text;
 LPCWSTR fmt;
 
-ISpObjectToken* selectVoice(LPCWSTR voice)
+ISpObjectToken *selectVoice(LPCWSTR voice)
 {
-	ISpObjectTokenCategory* pCategory = NULL;
-	IEnumSpObjectTokens* pEnum = NULL;
-	ISpObjectToken* pToken = NULL;
+	ISpObjectTokenCategory *pCategory = NULL;
+	IEnumSpObjectTokens *pEnum = NULL;
+	ISpObjectToken *pToken = NULL;
 
 	if FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
 		return NULL;
 	}
 	if SUCCEEDED(CoCreateInstance(&CLSID_SpObjectTokenCategory, NULL, CLSCTX_ALL,
-								  &IID_ISpObjectTokenCategory, (void**)&pCategory)) {
+								  &IID_ISpObjectTokenCategory, (void **) &pCategory)) {
 		if ((SUCCEEDED(vcall(pCategory, SetId, SPCAT_CORE_VOICES, FALSE))
 			 || SUCCEEDED(vcall(pCategory, SetId, SPCAT_VOICES, FALSE)))
 			&& SUCCEEDED(vcall(pCategory, EnumTokens, NULL, NULL, &pEnum))) {
 			LPWSTR name, v;
-			if (voice) {
+			if (voice != NULL) {
 				v = _wcsdup(voice);
 				_wcslwr(v);
 			} else {
@@ -84,7 +84,7 @@ ISpObjectToken* selectVoice(LPCWSTR voice)
 				vcall(pToken, Release);
 				pToken = NULL;
 			}
-			if (v) {
+			if (v != NULL) {
 				free(v);
 			}
 			vcall(pEnum, Release);
@@ -100,7 +100,7 @@ ISpObjectToken* selectVoice(LPCWSTR voice)
 BOOL SetVoice(int argc, LPCWSTR argv[])
 {
 	if (argc == 0) {
-		if (pDefaultVoice) {
+		if (pDefaultVoice != NULL) {
 			vcall(pDefaultVoice, Release);
 			pDefaultVoice = NULL;
 		}
@@ -118,15 +118,15 @@ BOOL SetVoice(int argc, LPCWSTR argv[])
 DWORD GetVoice(LPWSTR buffer, DWORD size)
 {
 	LPWSTR voice = NULL;
-	ISpVoice* pVoice = NULL;
-	ISpObjectToken* pToken = NULL;
+	ISpVoice *pVoice = NULL;
+	ISpObjectToken *pToken = NULL;
 
 	if (pDefaultVoice != NULL) {
 		vcall(pDefaultVoice, GetStringValue, NULL, &voice);
 	} else {
 		if SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
 			if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
-										  &IID_ISpVoice, (void**)&pVoice)) {
+										  &IID_ISpVoice, (void **) &pVoice)) {
 				vcall(pVoice, GetVoice, &pToken);
 				vcall(pToken, GetStringValue, NULL, &voice);
 				vcall(pToken, Release);
@@ -168,15 +168,15 @@ LPWSTR stripTags(LPCWSTR tagged)
 
 DWORD WINAPI SayThread(LPVOID unused)
 {
-	ISpVoice* pVoice = NULL;
+	ISpVoice *pVoice = NULL;
 	DWORD said = 0;
 
 	if SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
 		if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
-									  &IID_ISpVoice, (void**)&pVoice)) {
-			if (pCurrentVoice) {
+									  &IID_ISpVoice, (void **) &pVoice)) {
+			if (pCurrentVoice != NULL) {
 				vcall(pVoice, SetVoice, pCurrentVoice);
-			} else if (pDefaultVoice) {
+			} else if (pDefaultVoice != NULL) {
 				vcall(pVoice, SetVoice, pDefaultVoice);
 			}
 			said = SUCCEEDED(vcall(pVoice, Speak, text, spFlags, NULL));
@@ -185,7 +185,7 @@ DWORD WINAPI SayThread(LPVOID unused)
 		CoUninitialize();
 	}
 
-	if (pCurrentVoice) {
+	if (pCurrentVoice != NULL) {
 		vcall(pCurrentVoice, Release);
 		pCurrentVoice = NULL;
 	}
@@ -271,7 +271,7 @@ BOOL Say(int argc, LPCWSTR argv[])
 			cmd_printf(fmt, text);
 		}
 	}
-	if (voice) {
+	if (voice != NULL) {
 		pCurrentVoice = selectVoice(voice);
 	}
 
