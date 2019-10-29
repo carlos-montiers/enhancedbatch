@@ -478,13 +478,13 @@ DWORD unhexify(DWORD length)
 	LPWSTR src = stringBuffer, dst = varBuffer;
 	while (length > 0) {
 		if (iswxdigit(src[0]) && iswxdigit(src[1])) {
-			swscanf(src, L"%2X", (int *) dst);
+			swscanf(src, L"%2X", (unsigned int *) dst);
 			++dst;
 			src += 2;
 			length -= 2;
 		} else if (src[0] == L'0' && (src[1] == L'x' || src[1] == L'X')
 				   && iswxdigit(src[2]) && iswxdigit(src[3])) {
-			swscanf(src+2, L"%2X", (int *) dst);
+			swscanf(src+2, L"%2X", (unsigned int *) dst);
 			++dst;
 			src += 4;
 			length -= 4;
