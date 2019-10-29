@@ -238,7 +238,7 @@ COORD getSize(void)
 		size.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 		size.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 	} else {
-		csbi.dwCursorPosition.X = csbi.dwCursorPosition.Y = -1;
+		size.X = size.Y = 0;
 	}
 
 	return size;
