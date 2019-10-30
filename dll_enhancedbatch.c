@@ -526,7 +526,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 	*stringBuffer = L'\0';
 	length = getVar(var);
 
-	while (mod) {
+	while (mod != NULL) {
 		if (*mod == L'\'' || *mod == L'"' || *mod == L'`') {
 			for (end = mod + 1; *end && *end != *mod; ++end) {
 				// do nothing
@@ -696,8 +696,8 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 {
 	if (lpName != NULL) {
 
-		if (lpValue && *lpValue == L'@') {
-			if (MyGetEnvironmentVariableW(lpValue, varBuffer, STRINGBUFFERMAX)
+		if (lpValue != NULL && *lpValue == L'@') {
+			if (MyGetEnvironmentVariableW(lpValue, varBuffer, STRINGBUFFERMAX) != 0
 				|| lpValue[1] == L'@') {
 				lpValue = varBuffer;
 			}
@@ -759,7 +759,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 DWORD WINAPI MyCall(struct cmdnode *node)
 {
-	if (node->arg) {
+	if (node->arg != NULL) {
 		LPWSTR arg = node->arg;
 		while (*arg == L' ' || *arg == L'\t') {
 			++arg;
@@ -858,7 +858,7 @@ DWORD WINAPI MyEcho(struct cmdnode *node)
 	int  arg_ofs;
 	DWORD ret;
 
-	if (!node->arg) {
+	if (node->arg == NULL) {
 		static WCHAR space[] = L" ";
 		node->arg = space;
 		ret = eEcho(node);
@@ -1032,7 +1032,7 @@ DWORD getBatchLine()
 	LPSTR mem, p;
 	char buf[65536];
 
-	if (!*pCurrentBatchFile) {
+	if (*pCurrentBatchFile == NULL) {
 		return 0;
 	}
 
@@ -1381,7 +1381,7 @@ void HookThunks(PHookFn Hooks,
 	PHookFn hook;
 
 	// Blast through the table of import names
-	while (pNameThunk->u1.AddressOfData) {
+	while (pNameThunk->u1.AddressOfData != 0) {
 		PIMAGE_IMPORT_BY_NAME pName = MakeVA(PIMAGE_IMPORT_BY_NAME,
 				pNameThunk->u1.AddressOfData);
 		LPCSTR name = (LPCSTR) pName->Name;
@@ -1395,7 +1395,7 @@ void HookThunks(PHookFn Hooks,
 						PAGE_READWRITE, &flOldProtect);
 
 				// Overwrite the original address with the address of the new function
-				if (hook->oldfunc) {
+				if (hook->oldfunc != 0) {
 					pThunk->u1.Function = hook->oldfunc;
 				} else {
 					hook->oldfunc = pThunk->u1.Function;
@@ -1537,7 +1537,7 @@ void hook(HMODULE hInstance)
 		++Hooks;
 	}
 	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
-	if (AllHooks[1].oldfunc) {
+	if (AllHooks[1].oldfunc != 0) {
 		HookAPIOneMod(hInstance, Hooks);
 	} else {
 		// CmdBatNotification is delay-loaded as CmdBatNotificationStub,

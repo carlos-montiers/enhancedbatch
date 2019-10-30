@@ -67,7 +67,7 @@ DWORD Getch(LPWSTR buffer, DWORD size)
 {
 	int code;
 
-	while (!(code = _getwch()) || (0xE0 == code)) {
+	while (0 == (code = _getwch()) || (0xE0 == code)) {
 		_getwch();
 	}
 
@@ -97,7 +97,7 @@ DWORD Getkb(LPWSTR buffer, DWORD size)
 	int code;
 
 	code = _getwch();
-	if ((!code) || (0xE0 == code)) {
+	if ((0 == code) || (0xE0 == code)) {
 		code = _getwch();
 		code = -code;
 	}
@@ -480,7 +480,7 @@ BOOL SetHiTimer(int argc, LPCWSTR argv[])
 		if (hi_frequency.QuadPart == -1) {
 			return FALSE;
 		}
-		if (!hi_frequency.QuadPart) {
+		if (hi_frequency.QuadPart == 0) {
 			if (!QueryPerformanceFrequency(&hi_frequency)) {
 				hi_frequency.QuadPart = -1;
 				return FALSE;
@@ -763,7 +763,7 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size)
 	LPWSTR *argv, rest;
 	DWORD argc;
 
-	if (!*pCurrentBatchFile) {
+	if (*pCurrentBatchFile == NULL) {
 		return toString(-1, buffer, size);
 	}
 
@@ -784,12 +784,12 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size)
 	}
 #endif
 	rest = argv[-1];
-	if (rest && *rest) {
+	if (rest != NULL && *rest != L'\0') {
 		argc = 10;
 		for (;; ++rest) {
-			if (!*rest) {
+			if (*rest == L'\0') {
 				++argc;
-				if (!rest[1]) {
+				if (rest[1] == L'\0') {
 					break;
 				}
 			}
@@ -797,7 +797,7 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size)
 	}
 	else {
 		argc = 0;
-		while (*argv) {
+		while (*argv != NULL) {
 			if (++argc == 10) {
 				break;
 			}
@@ -812,7 +812,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	LPWSTR *argv, rest;
 	DWORD argc, *arglen;
 
-	if (!*pCurrentBatchFile) {
+	if (*pCurrentBatchFile == NULL) {
 		return 0;
 	}
 
@@ -839,7 +839,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	// as the command line can be, so no need to test size.
 	size = 0;
 	argc = 0;
-	while (*argv) {
+	while (*argv != NULL) {
 		if (argc >= first) {
 			if (argc > first) {
 				*buffer++ = L' ';
@@ -860,7 +860,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 					++size;
 				}
 				for (;; ++rest) {
-					if (*rest) {
+					if (*rest != L'\0') {
 						if (argc >= first) {
 							*buffer++ = *rest;
 							++size;
