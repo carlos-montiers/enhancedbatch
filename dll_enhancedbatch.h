@@ -65,6 +65,9 @@ HRESULT DllLoad(void);
 #define Export_DllLoad_Entrypoint(name) \
 	HRESULT name(void) __attribute__((dllexport, alias("DllLoad")))
 
+// Allow optimize specific function for size
+#define AttrOptSize __attribute__((optimize("Os")))
+
 struct sCMD {
 	DWORD verMS, verLS;
 	const DWORD *offsets;
