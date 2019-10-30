@@ -47,6 +47,8 @@ typedef DWORD (*fnGetExt)(LPWSTR, DWORD);
 
 typedef BOOL (*fnSetExt)(int argc, LPCWSTR argv[]);
 
+BOOL isExtendedKeyCode(int code);
+int getKeyCode(void);
 DWORD Getch(LPWSTR buffer, DWORD size);
 DWORD Chhit(LPWSTR buffer, DWORD size);
 DWORD Getkb(LPWSTR buffer, DWORD size);
