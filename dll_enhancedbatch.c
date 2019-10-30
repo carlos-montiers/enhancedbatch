@@ -1416,15 +1416,15 @@ void HookThunks(PHookFn Hooks,
 				PIMAGE_THUNK_DATA pThunk,
 				PIMAGE_THUNK_DATA pNameThunk)
 {
-	PHookFn hook;
+	PHookFn pHook;
 
 	// Blast through the table of import names
 	while (pNameThunk->u1.AddressOfData != 0) {
 		PIMAGE_IMPORT_BY_NAME pName = MakeVA(PIMAGE_IMPORT_BY_NAME,
 				pNameThunk->u1.AddressOfData);
 		LPCSTR name = (LPCSTR) pName->Name;
-		for (hook = Hooks; hook->name; ++hook) {
-			if (STREQ(name, hook->name)) {		// We found it!
+		for (pHook = Hooks; pHook->name; ++pHook) {
+			if (STREQ(name, pHook->name)) {		// We found it!
 				DWORD flOldProtect, flDummy;
 
 				// Change the access protection on the region of committed pages in the
@@ -1433,11 +1433,11 @@ void HookThunks(PHookFn Hooks,
 						PAGE_READWRITE, &flOldProtect);
 
 				// Overwrite the original address with the address of the new function
-				if (hook->oldfunc != 0) {
-					pThunk->u1.Function = hook->oldfunc;
+				if (pHook->oldfunc != 0) {
+					pThunk->u1.Function = pHook->oldfunc;
 				} else {
-					hook->oldfunc = pThunk->u1.Function;
-					pThunk->u1.Function = hook->newfunc;
+					pHook->oldfunc = pThunk->u1.Function;
+					pThunk->u1.Function = pHook->newfunc;
 				}
 
 				// Put the page attributes back the way they were.
