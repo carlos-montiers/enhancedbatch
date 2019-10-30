@@ -694,13 +694,42 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 BOOL WINAPI
 MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 {
+	LPWSTR name = NULL;
+	LPWSTR varbuf = varBuffer;
+	DWORD varmax = STRINGBUFFERMAX;
+	BOOL append = FALSE;
+		
 	if (lpName != NULL) {
 
-		if (lpValue != NULL && *lpValue == L'@') {
-			if (MyGetEnvironmentVariableW(lpValue, varBuffer, STRINGBUFFERMAX) != 0
-				|| lpValue[1] == L'@') {
-				lpValue = varBuffer;
+		if (lpValue != NULL && *lpValue == L' ' && *lpName != L'@') {
+			DWORD len = wcslen(lpName);
+			if (len > 1 && lpName[len-1] == L' ') {
+				lpName = name = _wcsdup(lpName);
+				name[len-1] = L'\0';
+				++lpValue;
+			} else if (len > 2 && lpName[len-1] == L'+' && lpName[len-2] == L' ') {
+				lpName = name = _wcsdup(lpName);
+				name[len-2] = L'\0';
+				len = MyGetEnvironmentVariableW(name, varBuffer, STRINGBUFFERMAX);
+				varbuf += len;
+				varmax -= len;
+				++lpValue;
+				append = TRUE;
 			}
+		}
+
+		if (lpValue != NULL && *lpValue == L'@') {
+			if (MyGetEnvironmentVariableW(lpValue, varbuf, varmax) != 0
+				|| lpValue[1] == L'@') {
+				lpValue = varbuf;
+			}
+		}
+
+		if (append) {
+			if (lpValue != varbuf) {
+				snwprintf(varbuf, varmax, L"%s", lpValue);
+			}
+			lpValue = varBuffer;
 		}
 
 		if ((*lpName == L'$') || (*lpName == L'@')) {
@@ -749,12 +778,20 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 			}
 
 			setVar(lpName, lpValue);
+			if (name != NULL) {
+				free(name);
+			}
 			return TRUE;
 		}
-
 	}
 
-	return SetEnvironmentVariable(lpName, lpValue);
+	BOOL ret = SetEnvironmentVariable(lpName, lpValue);
+
+	if (name != NULL) {
+		free(name);
+	}
+
+	return ret;
 }
 
 DWORD WINAPI MyCall(struct cmdnode *node)

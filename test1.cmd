@@ -34,7 +34,7 @@ goto :eof
 
 :test
 set $A=1
-set $a=2
+set $a = 2
 echo $A=%$A% $a=%$a%
 
 echo Left aligned:  !$A;-5!.
@@ -58,6 +58,14 @@ echo Trim,Cap:  !$var;trim;capital!.
 set $hex=!$var;hexify!
 echo Hexify:    !$hex!.
 echo Unhexify:  !$hex;unhexify!.
+set $var += !$var!
+set $var+=var+
+set $ var+= var+
+set $var +=var +
+echo Append:    !$var!.
+echo "+=":      !$var+!.
+echo "+= ":     !$ var+!.
+echo " +=":     !$var +!.
 
 echo Character TAB:!$TAB!.
 echo Character ESC:!$ESC!.

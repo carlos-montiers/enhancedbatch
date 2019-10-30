@@ -17,6 +17,10 @@ RTrim[ y]:  oKa.
 Trim,Cap:  Okay.
 Hexify:    20 6F 4B 61 79 20.
 Unhexify:   oKay .
+Append:     oKay  oKay .
+"+=":      var+.
+"+= ":      var+.
+" +=":     var +.
 Character TAB:	.
 Character ESC:.
 Character BS:.
