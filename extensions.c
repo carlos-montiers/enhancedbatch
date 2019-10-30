@@ -63,12 +63,22 @@ static BOOL setBoolean(LPBYTE var, LPCWSTR arg)
 	return FALSE;
 }
 
+inline BOOL isExtendedKeyCode(int code)
+{
+	switch(code) {
+		case 0:
+		case 0xE0:
+			return TRUE;
+		default:
+			return FALSE;
+	}
+}
+
 DWORD Getch(LPWSTR buffer, DWORD size)
 {
 	int code;
-
-	while (0 == (code = _getwch()) || (0xE0 == code)) {
-		_getwch();
+	while (isExtendedKeyCode((code = _getwch()))) {
+		_getwch(); // eat
 	}
 
 	*buffer = code;
@@ -80,28 +90,24 @@ DWORD Chhit(LPWSTR buffer, DWORD size)
 {
 	if (_kbhit()) {
 		int code = _getwch();
-		if ((0 == code) || (0xE0 == code)) {
-			_getwch();
-			return toString(-1, buffer, size);
+		if (isExtendedKeyCode(code)) {
+			_getwch(); // eat
+		} else {
+			*buffer = code;
+			buffer[1] = L'\0';
+			return 1;
 		}
-		*buffer = code;
-		buffer[1] = L'\0';
-		return 1;
-	} else {
-		return toString(-1, buffer, size);
 	}
+	return toString(-1, buffer, size);
 }
 
 DWORD Getkb(LPWSTR buffer, DWORD size)
 {
-	int code;
-
-	code = _getwch();
-	if ((0 == code) || (0xE0 == code)) {
+	int code = _getwch();
+	if (isExtendedKeyCode(code)) {
 		code = _getwch();
 		code = -code;
 	}
-
 	return toString(code, buffer, size);
 }
 
