@@ -696,10 +696,11 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 {
 	LPWSTR name = NULL;
 	LPWSTR varbuf = varBuffer;
-	DWORD varmax = STRINGBUFFERMAX;
 	BOOL append = FALSE;
 		
 	if (lpName != NULL) {
+
+		DWORD varmax = STRINGBUFFERMAX;
 
 		if (lpValue != NULL && *lpValue == L' ' && *lpName != L'@') {
 			DWORD len = wcslen(lpName);
