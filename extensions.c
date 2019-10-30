@@ -1421,6 +1421,7 @@ DWORD GetForLines(LPWSTR buffer, DWORD size)
 	return toString(ForF_stack[sp], buffer, size);
 }
 
+AttrOptSize
 DWORD getVersionRevision(void)
 {
 	HKEY curver;
@@ -1459,6 +1460,7 @@ DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size)
 	return toString(EBVERSION, buffer, size);
 }
 
+AttrOptSize
 DWORD GetOSVersion(LPWSTR buffer, DWORD size)
 {
 	DWORD ver = GetVersion();
@@ -1467,21 +1469,25 @@ DWORD GetOSVersion(LPWSTR buffer, DWORD size)
 					 getVersionRevision());
 }
 
+AttrOptSize
 DWORD GetOSMajor(LPWSTR buffer, DWORD size)
 {
 	return toString(LOBYTE(LOWORD(GetVersion())), buffer, size);
 }
 
+AttrOptSize
 DWORD GetOSMinor(LPWSTR buffer, DWORD size)
 {
 	return toString(HIBYTE(LOWORD(GetVersion())), buffer, size);
 }
 
+AttrOptSize
 DWORD GetOSBuild(LPWSTR buffer, DWORD size)
 {
 	return toString(HIWORD(GetVersion()), buffer, size);
 }
 
+AttrOptSize
 DWORD GetOSRevision(LPWSTR buffer, DWORD size)
 {
 	return toString(getVersionRevision(), buffer, size);
