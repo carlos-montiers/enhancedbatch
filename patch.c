@@ -96,7 +96,7 @@ void ForFbegin_hook(void)
 	ForF_stack[ForF_stacktop] = 1;
 }
 
-void __attribute((fastcall)) ForFend_hook(BYTE end)
+void __fastcall ForFend_hook(BYTE end)
 {
 	if (end || *pGotoFlag) {
 		if (--ForF_stacktop == -1) {
