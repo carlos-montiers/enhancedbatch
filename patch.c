@@ -318,12 +318,6 @@ DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
 
 
 #ifndef _WIN64
-void MyLexTextESI(void)
-{
-	asm("call _MyLexText");
-	asm("movl %eax,%esi");
-}
-
 int __stdcall stdPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 {
 	return MyPutStdErrMsg(a, b, c, d);
@@ -339,9 +333,22 @@ int __fastcall fastPutStdErrMsg62(int b, va_list *d, UINT a, UINT c)
 	return MyPutStdErrMsg(a, b, c, d);
 }
 
-void SFWork_mkstr(void)
+// GCC doesn't support the naked attribute for x86, so use a single function
+// with multiple entry points, instead.  (Naked prevents the normal function
+// prologue and epilogue being used; hooking relies on ESP being a known value,
+// which the prologue/epilogue will modify.)
+void MyLexTextESI(), SFWork_mkstr(), ForFend(), ForFend_opp(), ForFbegin_jmp();
+void ParseFor_hook(), ParseForF_hook(), GotoEof();
+
+void bare_x86(void)
 {
 	asm(
+	"_MyLexTextESI:\n"
+		"call _MyLexText\n"
+		"movl %eax,%esi\n"
+		"ret\n"
+
+	"_SFWork_mkstr:\n"
 		"push %ecx\n"               // preserve possible register argument
 		"mov _SFWork_first,%eax\n"
 		"pushl (%eax,%ebp)\n"
@@ -394,13 +401,10 @@ void SFWork_mkstr(void)
 		"ret $8\n"
 		"org:\n"
 		"jmp *_SFWork_mkstr_org\n"
-		"exit:"
-	);
-}
+		"exit:\n"
+		"ret\n"
 
-void ForFend(void)
-{
-	asm(
+	"_ForFend:\n"
 		"pushf\n"
 		"setnc %cl\n"
 		"call _ForFend_hook\n"
@@ -408,13 +412,10 @@ void ForFend(void)
 		"jnc 1f\n"
 		"mov _ForFend_org,%eax\n"
 		"mov %eax,(%esp)\n"
-		"1:"
-	);
-}
+		"1:\n"
+		"ret\n"
 
-void ForFend_opp(void)
-{
-	asm(
+	"_ForFend_opp:\n"
 		"pushf\n"
 		"setnc %cl\n"
 		"call _ForFend_hook\n"
@@ -422,43 +423,28 @@ void ForFend_opp(void)
 		"jc 1f\n"
 		"mov _ForFend_org,%eax\n"
 		"mov %eax,(%esp)\n"
-		"1:"
-	);
-}
+		"1:\n"
+		"ret\n"
 
-void ForFbegin_jmp(void)
-{
-	asm(
+	"_ForFbegin_jmp:\n"
 		"call _ForFbegin_hook\n"
 		"jmp *_ForFbegin_org\n"
-	);
-}
 
-void ParseFor_hook(void)
-{
-	asm(
+	"_ParseFor_hook:\n"
 		"push %eax\n"
 		"push %ecx\n"
 		"call _ParseFor\n"
 		"pop %ecx\n"
 		"pop %eax\n"
 		"jmp *_ParseFor_org\n"
-	);
-}
 
-void ParseForF_hook(void)
-{
-	asm(
+	"_ParseForF_hook:\n"
 		"pop _ParseForF_ret\n"
 		"call *_ParseForF_org\n"
 		"push _ParseForF_ret\n"
 		"jmp _ParseForF\n"
-	);
-}
 
-void GotoEof(void)
-{
-	asm(
+	"_GotoEof:\n"
 		"push 12(%esp)\n"
 		"push 12(%esp)\n"
 		"push 12(%esp)\n"
@@ -496,6 +482,7 @@ void GotoEof(void)
 		"mov %ax,(%ebx)\n"
 		"sub $8,%ebx\n"
 		"1:\n"
+		"ret\n"
 	);
 }
 
@@ -622,8 +609,8 @@ void GotoEof(void)
 	);
 }
 
-// C can't access labels created in asm, so store the offsets in the function
-// and read them from there.
+// Using the labels in C isn't as efficient as storing the offsets in the
+// function and reading them from there.
 #define redirect_data		((LPDWORD) redirect_code + 1)
 #define redirect_code_start ((LPBYTE) redirect_code + redirect_data[0])
 #define redirect_code_size	redirect_data[1]
