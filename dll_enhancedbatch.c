@@ -1542,6 +1542,7 @@ void unhook(void)
 	// Wait for speech to finish before exiting.
 	WaitForSingleObject(hSpeaking, INFINITE);
 	uninitCo();
+	unload_delayed();
 
 	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
 	HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
@@ -1605,8 +1606,7 @@ DWORD GetParentProcessId()
 	HANDLE hSnap;
 	PROCESSENTRY32 pe, ppe;
 	BOOL parent_wow64, me_wow64;
-	typedef BOOL (WINAPI * LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
-	LPFN_ISWOW64PROCESS fnIsWow64Process;
+	BOOL (WINAPI *pIsWow64Process)(HANDLE, PBOOL);
 
 	hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (hSnap == INVALID_HANDLE_VALUE) {
@@ -1624,15 +1624,14 @@ DWORD GetParentProcessId()
 
 	CloseHandle(hSnap);
 
-	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
-			GetModuleHandle(L"kernel32.dll"), "IsWow64Process");
-	if (fnIsWow64Process != NULL) {
+	GETPROC(GetModuleHandle(L"kernel32.dll"), IsWow64Process);
+	if (pIsWow64Process != NULL) {
 		HANDLE ph = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe.th32ProcessID);
 		if (ph == NULL) {
 			return 0;
 		}
-		fnIsWow64Process(ph, &parent_wow64);
-		fnIsWow64Process(GetCurrentProcess(), &me_wow64);
+		pIsWow64Process(ph, &parent_wow64);
+		pIsWow64Process(GetCurrentProcess(), &me_wow64);
 		CloseHandle(ph);
 
 		if (parent_wow64 != me_wow64) {

@@ -68,6 +68,9 @@ HRESULT DllLoad(void);
 // Allow optimize specific function for size
 #define AttrOptSize __attribute__((optimize("Os")))
 
+// Import a function to its pointer (Function becomes pFunction)
+#define GETPROC(mod, name) p ## name = (LPVOID) GetProcAddress(mod, #name)
+
 struct sCMD {
 	DWORD verMS, verLS;
 	const DWORD *offsets;
@@ -93,6 +96,7 @@ extern HANDLE consoleOutput;
 extern HANDLE hSpeaking;
 
 void uninitCo(void);
+void unload_delayed(void);
 
 extern LPBYTE cmd_addrs[];
 

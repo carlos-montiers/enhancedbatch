@@ -26,6 +26,7 @@
 */
 
 #include "dll_enhancedbatch.h"
+#define _OLE32_ 		// declare non-imported functions, for my delay code
 #include <sapi.h>
 #include <initguid.h>
 
