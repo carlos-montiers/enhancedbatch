@@ -214,7 +214,7 @@ DWORD WINAPI SayThread(LPVOID unused)
 	return said;
 }
 
-BOOL Say(int argc, LPCWSTR argv[])
+BOOL CallSay(int argc, LPCWSTR argv[])
 {
 	if (argc == 0 || !initCo()) {
 		return FALSE;

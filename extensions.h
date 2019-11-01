@@ -90,7 +90,7 @@ DWORD GetInputCodePage(LPWSTR buffer, DWORD size);
 DWORD GetArgCount(LPWSTR buffer, DWORD size);
 DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size);
 
-BOOL Echo(int argc, LPCWSTR argv[]);
+BOOL CallEcho(int argc, LPCWSTR argv[]);
 
 BOOL SetEcho(int argc, LPCWSTR argv[]);
 BOOL SetEchoOptions(int argc, LPCWSTR argv[]);
@@ -115,14 +115,14 @@ DWORD GetUnique(LPWSTR buffer, DWORD size);
 DWORD GetTempFile(LPWSTR buffer, DWORD size);
 DWORD GetTempDir(LPWSTR buffer, DWORD size);
 
-BOOL Say(int argc, LPCWSTR argv[]);
+BOOL CallSay(int argc, LPCWSTR argv[]);
 BOOL SetVoice(int argc, LPCWSTR argv[]);
 DWORD GetVoice(LPWSTR buffer, DWORD size);
 
-BOOL WaitMilliseconds(int argc, LPCWSTR argv[]);
+BOOL CallSleep(int argc, LPCWSTR argv[]);
 
-BOOL SetLoTimer(int argc, LPCWSTR argv[]);
-BOOL SetHiTimer(int argc, LPCWSTR argv[]);
+BOOL CallTimer(int argc, LPCWSTR argv[]);
+BOOL CallTimerHi(int argc, LPCWSTR argv[]);
 
 DWORD GetTimer(LPWSTR buffer, DWORD size);
 DWORD GetHiTimer(LPWSTR buffer, DWORD size);

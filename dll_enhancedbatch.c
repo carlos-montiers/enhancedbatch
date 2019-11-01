@@ -69,7 +69,7 @@ HANDLE hSpeaking;		// speech thread
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
 
-BOOL Help(int argc, LPCWSTR argv[]);
+BOOL CallHelp(int argc, LPCWSTR argv[]);
 
 LPWIN32_FIND_DATA findForStack[FINDFOR_STACKSIZE];
 int findForStackTop = -1;
@@ -88,7 +88,7 @@ struct sFor {
 BOOL Next(int argc, LPCWSTR argv[]);
 
 void unhook(void);
-BOOL DllUnload(int argc, LPCWSTR argv[]);
+BOOL CallUnload(int argc, LPCWSTR argv[]);
 
 fnCmdFunc *peEcho, eEcho, *peCall, eCall;
 LPWSTR Fmt17;
@@ -223,13 +223,13 @@ struct sCallExt {
 };
 
 const struct sCallExt callExtensionList[] = {
-	{ L"@echo",    ~0, Echo, EchoBriefStr, EchoHelpStr },
-	{ L"@help", 	0, Help, HelpBriefStr, HelpHelpStr },
-	{ L"@say",	   ~1, Say, SayBriefStr, SayHelpStr },
-	{ L"@sleep",	1, WaitMilliseconds, SleepBriefStr, SleepHelpStr },
-	{ L"@timer",	0, SetLoTimer, TimerBriefStr, TimerHelpStr },
-	{ L"@timerhi",	0, SetHiTimer, TimerHiBriefStr, TimerHiHelpStr },
-	{ L"@unload",	0, DllUnload, UnloadBriefStr, UnloadHelpStr },
+	{ L"@echo",    ~0, CallEcho, EchoBriefStr, EchoHelpStr },
+	{ L"@help", 	0, CallHelp, HelpBriefStr, HelpHelpStr },
+	{ L"@say",	   ~1, CallSay, SayBriefStr, SayHelpStr },
+	{ L"@sleep",	1, CallSleep, SleepBriefStr, SleepHelpStr },
+	{ L"@timer",	0, CallTimer, TimerBriefStr, TimerHelpStr },
+	{ L"@timerhi",	0, CallTimerHi, TimerHiBriefStr, TimerHiHelpStr },
+	{ L"@unload",	0, CallUnload, UnloadBriefStr, UnloadHelpStr },
 };
 
 void setVar(LPCWSTR var, LPCWSTR val)
@@ -854,7 +854,7 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 	return eCall(node);
 }
 
-BOOL Help(int argc, LPCWSTR argv[])
+BOOL CallHelp(int argc, LPCWSTR argv[])
 {
 	const struct sCallExt *ext;
 	const struct sCallExt *end = callExtensionList + lenof(callExtensionList);
@@ -1321,7 +1321,7 @@ FreeLibraryThread(LPVOID param)
 	return 0;
 }
 
-BOOL DllUnload(int argc, LPCWSTR argv[])
+BOOL CallUnload(int argc, LPCWSTR argv[])
 {
 	unhook();
 	SafeCloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));

@@ -423,7 +423,7 @@ DWORD GetUnderline(LPWSTR buffer, DWORD size)
 	return toString(csbi.wAttributes >> 15, buffer, size);
 }
 
-BOOL WaitMilliseconds(int argc, LPCWSTR argv[])
+BOOL CallSleep(int argc, LPCWSTR argv[])
 {
 	int milliseconds;
 
@@ -446,7 +446,7 @@ static LARGE_INTEGER hi_timer_begin, hi_timer_end, hi_frequency;
 static BOOL lo_timer_running, hi_timer_running;
 static BOOL lo_timer_started, hi_timer_started;
 
-BOOL SetLoTimer(int argc, LPCWSTR argv[])
+BOOL CallTimer(int argc, LPCWSTR argv[])
 {
 	if (argc > 1) {
 		return FALSE;
@@ -468,7 +468,7 @@ BOOL SetLoTimer(int argc, LPCWSTR argv[])
 	return FALSE;
 }
 
-BOOL SetHiTimer(int argc, LPCWSTR argv[])
+BOOL CallTimerHi(int argc, LPCWSTR argv[])
 {
 	if (argc > 1) {
 		return FALSE;
@@ -835,7 +835,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	return size;
 }
 
-BOOL Echo(int argc, LPCWSTR argv[])
+BOOL CallEcho(int argc, LPCWSTR argv[])
 {
 	LPWSTR text;
 	int len;
