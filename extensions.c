@@ -524,62 +524,6 @@ DWORD GetHiTimer(LPWSTR buffer, DWORD size)
 	return toString(-1, buffer, size);
 }
 
-// Search the Terminal windows for the tab window itself. This lets us make
-// CMD transparent, but not Terminal as a whole. It does, unfortunately (or
-// fortunately, depending on your point of view), apply to all tabs, though.
-BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam)
-{
-	WCHAR buf[MAX_PATH];
-	GetClassName(hwnd, buf, MAX_PATH);
-	if (WCSEQ(buf, L"Windows.UI.Composition.DesktopWindowContentBridge")) {
-		*(HWND *) lParam = hwnd;
-		return FALSE;
-	}
-	return TRUE;
-}
-
-// Based on old method for retrieve console window handle:
-// https://web.archive.org/web/20070116020857/http://support.microsoft.com/kb/124103
-HWND GetConsoleWindowInTab(void)
-{
-	#define MY_BUFSIZE 1016
-	#define MY_STAMPSIZE 7	// digits required for 2**32 in base 32
-	HWND hwndFound;
-	WCHAR pszWindowTitle[MY_BUFSIZE + MY_STAMPSIZE + 1];
-	DWORD oldlen, newlen, pid;
-
-	newlen = oldlen = GetConsoleTitle(pszWindowTitle, MY_BUFSIZE);
-	pid = GetCurrentProcessId();
-	// Generate a unique title by converting the PID to base 32,
-	// using characters U+0080..U+009F, which are not displayed.
-	do {
-		pszWindowTitle[newlen++] = (pid % 32) + 0x80;
-		pid /= 32;
-	} while (pid != 0);
-	pszWindowTitle[newlen] = L'\0';
-	SetConsoleTitle(pszWindowTitle);
-	Sleep(40);	// Ensure window title has been updated.
-	hwndFound = FindWindow(NULL, pszWindowTitle);
-	pszWindowTitle[oldlen] = L'\0';
-	SetConsoleTitle(pszWindowTitle);
-	if (hwndFound != NULL) {
-		EnumChildWindows(hwndFound, FindTabWindow, (LPARAM) &hwndFound);
-	}
-	return hwndFound;
-}
-
-HWND GetConsoleHwnd(void)
-{
-	if (consoleHwnd == NULL) {
-		if (onWindowsTerminal) {
-			consoleHwnd = GetConsoleWindowInTab();
-		} else {
-			consoleHwnd = GetConsoleWindow();
-		}
-	}
-	return consoleHwnd;
-}
-
 BOOL SetOpacity(int argc, LPCWSTR argv[])
 {
 	int pc;
@@ -1602,17 +1546,4 @@ BOOL SetDumpTokens(int argc, LPCWSTR argv[])
 BOOL SetDumpParse(int argc, LPCWSTR argv[])
 {
 	return setBoolean(pfDumpParse, *argv);
-}
-
-BOOL haveOutputHandle(void)
-{
-	// If is not initialized
-	if (consoleOutput == NULL) {
-		// If this fails nothing will change to make it succeed, so there's no
-		// need to keep trying.
-		consoleOutput = CreateFile(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
-			(FILE_SHARE_READ | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, 0, NULL);
-	}
-
-	return consoleOutput != INVALID_HANDLE_VALUE;
 }

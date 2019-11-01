@@ -877,18 +877,6 @@ BOOL Help(int argc, LPCWSTR argv[])
 	return TRUE;
 }
 
-void WriteMemory(LPVOID dst, LPCVOID src, int size)
-{
-	DWORD protect;
-	VirtualProtect(dst, size, PAGE_READWRITE, &protect);
-	if ((DWORD_PTR) src < 256) {
-		*(LPBYTE) dst = (BYTE) (DWORD_PTR) src;
-	} else {
-		memcpy(dst, src, size);
-	}
-	VirtualProtect(dst, size, protect, &protect);
-}
-
 DWORD WINAPI MyEcho(struct cmdnode *node)
 {
 	BOOL modified_newline = FALSE;
@@ -968,16 +956,6 @@ BOOL DwFlagsForCodepageMustBeZero(UINT CodePage)
 	return FALSE;
 }
 
-BOOL SafeCloseHandle(HANDLE handle) {
-	if (handle != NULL
-		&& handle != INVALID_HANDLE_VALUE
-	) {
-		return CloseHandle(handle);
-	} else {
-		return FALSE;
-	}
-}
-
 int WINAPI
 MyMultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCCH lpMultiByteStr,
 	int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar)
@@ -1030,37 +1008,6 @@ void setBatchLine(DWORD pos)
 	if (pos == 0) {
 		last_lnum = 0;
 	}
-}
-
-LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size)
-{
-	HANDLE hFile;
-	LPSTR mem;
-	DWORD len;
-
-	if (size > buf_size) {
-		mem = malloc(size);
-		if (mem == NULL) {
-			return NULL;
-		}
-	} else {
-		mem = buf;
-	}
-
-	hFile = CreateFile(**pCurrentBatchFile, GENERIC_READ,
-					   FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
-					   0, NULL);
-	if (hFile != INVALID_HANDLE_VALUE) {
-		ReadFile(hFile, mem, size, &len, NULL);
-		CloseHandle(hFile);
-		if (len == size) {
-			return mem;
-		}
-	}
-	if (mem != buf) {
-		free(mem);
-	}
-	return NULL;
 }
 
 DWORD getBatchLine()

@@ -156,6 +156,8 @@ extern const WCHAR UnloadBriefStr[], UnloadHelpStr[];
 
 LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size);
 BOOL SafeCloseHandle(HANDLE handle);
+BOOL haveOutputHandle(void);
+HWND GetConsoleHwnd(void);
 
 void WriteMemory(LPVOID dst, LPCVOID src, int size);
 #define WriteByte(dst, b) WriteMemory(dst, (LPCVOID) b, 1)
