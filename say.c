@@ -186,18 +186,20 @@ LPWSTR stripTags(LPCWSTR tagged)
 DWORD WINAPI SayThread(LPVOID unused)
 {
 	ISpVoice *pVoice = NULL;
-	DWORD said = 0;
+	DWORD hr;
 
 	// This is a different thread, so has its own initialization.
-	if SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
-		if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
-									  &IID_ISpVoice, (void **) &pVoice)) {
+	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+	if SUCCEEDED(hr) {
+		hr = CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
+							  &IID_ISpVoice, (void **) &pVoice);
+		if SUCCEEDED(hr) {
 			if (pCurrentVoice != NULL) {
 				vcall(pVoice, SetVoice, pCurrentVoice);
 			} else if (pDefaultVoice != NULL) {
 				vcall(pVoice, SetVoice, pDefaultVoice);
 			}
-			said = SUCCEEDED(vcall(pVoice, Speak, sayBuffer, spFlags, NULL));
+			hr = vcall(pVoice, Speak, sayBuffer, spFlags, NULL);
 			vcall(pVoice, Release);
 		}
 		CoUninitialize();
@@ -211,13 +213,13 @@ DWORD WINAPI SayThread(LPVOID unused)
 	SafeCloseHandle(hSpeaking);
 	hSpeaking = NULL;
 
-	return said;
+	return hr;
 }
 
-BOOL CallSay(int argc, LPCWSTR argv[])
+int CallSay(int argc, LPCWSTR argv[])
 {
 	if (argc == 0 || !initCo()) {
-		return FALSE;
+		return EXIT_FAILURE;
 	}
 
 	// Wait for the current speech to finish before saying a new one.
@@ -236,7 +238,7 @@ BOOL CallSay(int argc, LPCWSTR argv[])
 		if (WCSIEQ(argv[i], L"/v")) {
 			if (i == argc-1) {
 				selectVoice(NULL);
-				return TRUE;
+				return EXIT_SUCCESS;
 			}
 			voice = argv[++i];
 		} else if (WCSIEQ(argv[i], L"/n")) {
@@ -252,7 +254,7 @@ BOOL CallSay(int argc, LPCWSTR argv[])
 		}
 	}
 	if (i == argc) {
-		return FALSE;
+		return EXIT_FAILURE;
 	}
 	if (!(spFlags & SPF_IS_XML)) {
 		spFlags |= SPF_IS_NOT_XML;
@@ -285,5 +287,5 @@ BOOL CallSay(int argc, LPCWSTR argv[])
 		return SayThread(NULL);
 	}
 	hSpeaking = CreateThread(NULL, 4096, SayThread, NULL, 0, NULL);
-	return hSpeaking != NULL;
+	return hSpeaking != NULL ? EXIT_SUCCESS : EXIT_FAILURE;
 }

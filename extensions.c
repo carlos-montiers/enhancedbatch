@@ -423,22 +423,22 @@ DWORD GetUnderline(LPWSTR buffer, DWORD size)
 	return toString(csbi.wAttributes >> 15, buffer, size);
 }
 
-BOOL CallSleep(int argc, LPCWSTR argv[])
+int CallSleep(int argc, LPCWSTR argv[])
 {
 	int milliseconds;
 
 	if (argc != 1) {
-		return FALSE;
+		return EXIT_FAILURE;
 	}
 
 	toNumber(&milliseconds, 1, argv);
 	if (milliseconds < 0) {
-		return FALSE;
+		return EXIT_FAILURE;
 	}
 
 	Sleep(milliseconds);
 
-	return TRUE;
+	return EXIT_SUCCESS;
 }
 
 static DWORD lo_timer_begin, lo_timer_end;
@@ -446,10 +446,10 @@ static LARGE_INTEGER hi_timer_begin, hi_timer_end, hi_frequency;
 static BOOL lo_timer_running, hi_timer_running;
 static BOOL lo_timer_started, hi_timer_started;
 
-BOOL CallTimer(int argc, LPCWSTR argv[])
+int CallTimer(int argc, LPCWSTR argv[])
 {
 	if (argc > 1) {
-		return FALSE;
+		return EXIT_FAILURE;
 	}
 
 	// *argv points to null character if argc is 0.
@@ -457,21 +457,21 @@ BOOL CallTimer(int argc, LPCWSTR argv[])
 		if (lo_timer_running) {
 			lo_timer_end = GetTickCount();
 			lo_timer_running = FALSE;
-			return TRUE;
+			return EXIT_SUCCESS;
 		}
 	} else if ((argc == 0 && !lo_timer_running) || WCSIEQ(*argv, L"start" )) {
 		lo_timer_running = lo_timer_started = TRUE;
 		lo_timer_begin = GetTickCount();
-		return TRUE;
+		return EXIT_SUCCESS;
 	}
 
-	return FALSE;
+	return EXIT_FAILURE;
 }
 
-BOOL CallTimerHi(int argc, LPCWSTR argv[])
+int CallTimerHi(int argc, LPCWSTR argv[])
 {
 	if (argc > 1) {
-		return FALSE;
+		return EXIT_FAILURE;
 	}
 
 	// *argv points to null character if argc is 0.
@@ -479,24 +479,24 @@ BOOL CallTimerHi(int argc, LPCWSTR argv[])
 		if (hi_timer_running) {
 			QueryPerformanceCounter(&hi_timer_end);
 			hi_timer_running = FALSE;
-			return TRUE;
+			return EXIT_SUCCESS;
 		}
 	} else if ((argc == 0 && !hi_timer_running) || WCSIEQ(*argv, L"start" )) {
 		if (hi_frequency.QuadPart == -1) {
-			return FALSE;
+			return EXIT_FAILURE;
 		}
 		if (hi_frequency.QuadPart == 0) {
 			if (!QueryPerformanceFrequency(&hi_frequency)) {
 				hi_frequency.QuadPart = -1;
-				return FALSE;
+				return EXIT_FAILURE;
 			}
 		}
 		hi_timer_running = hi_timer_started = TRUE;
 		QueryPerformanceCounter(&hi_timer_begin);
-		return TRUE;
+		return EXIT_SUCCESS;
 	}
 
-	return FALSE;
+	return EXIT_FAILURE;
 }
 
 DWORD GetTimer(LPWSTR buffer, DWORD size)
@@ -835,7 +835,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	return size;
 }
 
-BOOL CallEcho(int argc, LPCWSTR argv[])
+int CallEcho(int argc, LPCWSTR argv[])
 {
 	LPWSTR text;
 	int len;
@@ -865,7 +865,7 @@ BOOL CallEcho(int argc, LPCWSTR argv[])
 			break;
 		} else if (WCSIEQ(argv[i], L"/e?")) {
 			cmd_printf(L"%s\r\n", EscapeHelpStr);
-			return TRUE;
+			return EXIT_SUCCESS;
 		}
 	}
 
@@ -875,13 +875,13 @@ BOOL CallEcho(int argc, LPCWSTR argv[])
 		} else {
 			cmd_printf(L"%s", ending);
 		}
-		return TRUE;
+		return EXIT_SUCCESS;
 	}
 
 	if (i == argc-1) {
 		text = _wcsdup(argv[i]);
 		if (text == NULL) {
-			return FALSE;
+			return EXIT_FAILURE;
 		}
 	} else {
 		int j;
@@ -891,7 +891,7 @@ BOOL CallEcho(int argc, LPCWSTR argv[])
 		}
 		text = malloc(WSZ(len));
 		if (text == NULL) {
-			return FALSE;
+			return EXIT_FAILURE;
 		}
 		LPWSTR p = text;
 		for (j = i; j < argc; ++j) {
@@ -985,7 +985,7 @@ BOOL CallEcho(int argc, LPCWSTR argv[])
 	}
 
 	free(text);
-	return TRUE;
+	return EXIT_SUCCESS;
 }
 
 BOOL SetEcho(int argc, LPCWSTR argv[])

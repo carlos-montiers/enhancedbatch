@@ -69,7 +69,7 @@ HANDLE hSpeaking;		// speech thread
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
 
-BOOL CallHelp(int argc, LPCWSTR argv[]);
+int CallHelp(int argc, LPCWSTR argv[]);
 
 LPWIN32_FIND_DATA findForStack[FINDFOR_STACKSIZE];
 int findForStackTop = -1;
@@ -88,7 +88,7 @@ struct sFor {
 BOOL Next(int argc, LPCWSTR argv[]);
 
 void unhook(void);
-BOOL CallUnload(int argc, LPCWSTR argv[]);
+int CallUnload(int argc, LPCWSTR argv[]);
 
 fnCmdFunc *peEcho, eEcho, *peCall, eCall;
 LPWSTR Fmt17;
@@ -218,7 +218,7 @@ const struct sSetExt setExtensionList[] = {
 struct sCallExt {
 	LPCWSTR name;
 	int args;
-	fnSetExt fn;
+	fnCallExt fn;
 	LPCWSTR brief, help;
 };
 
@@ -794,7 +794,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 	return ret;
 }
 
-DWORD WINAPI MyCall(struct cmdnode *node)
+int WINAPI MyCall(struct cmdnode *node)
 {
 	if (node->arg != NULL) {
 		LPWSTR arg = node->arg;
@@ -806,23 +806,20 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 			LPWSTR *szArglist = CommandLineToArgvW(arg, &nArgs);
 			if (NULL == szArglist) {
 				fwprintf(stderr, ArgErrorStr);
-				*pLastRetCode = 1;
-				return 1;
+				return *pLastRetCode = EXIT_FAILURE;
 			}
 			const struct sCallExt *ext = bsearch(szArglist[0], callExtensionList,
 				lenof(callExtensionList), sizeof(struct sCallExt), extcmp);
 			if (NULL == ext) {
 				LocalFree(szArglist);
-				*pLastRetCode = 1;
-				return 1;
+				return *pLastRetCode = EXIT_FAILURE;
 			}
 			if (nArgs == 2 && WCSEQ(szArglist[1], L"/?")) {
 				cmd_printf(L"%s\r\n", ext->help);
 				LocalFree(szArglist);
-				*pLastRetCode = 0;
-				return 0;
+				return *pLastRetCode = EXIT_SUCCESS;
 			}
-			BOOL ret;
+			int ret;
 			if (ext->args == 0) {
 				do {
 					++arg;
@@ -837,24 +834,23 @@ DWORD WINAPI MyCall(struct cmdnode *node)
 				--nArgs;
 				if (ext->args < 0 && ~ext->args > nArgs) {
 					fwprintf(stderr, MoreArgsStr, ~ext->args, nArgs);
-					ret = FALSE;
+					ret = EXIT_FAILURE;
 				} else if (ext->args > 0 && ext->args != nArgs) {
 					fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
-					ret = FALSE;
+					ret = EXIT_FAILURE;
 				} else {
 					ret = ext->fn(nArgs, (LPCWSTR *) szArglist + 1);
 				}
 				LocalFree(szArglist);
 			}
-			*pLastRetCode = ret ? 0 : 1;
-			return *pLastRetCode;
+			return *pLastRetCode = ret;
 		}
 	}
 
 	return eCall(node);
 }
 
-BOOL CallHelp(int argc, LPCWSTR argv[])
+int CallHelp(int argc, LPCWSTR argv[])
 {
 	const struct sCallExt *ext;
 	const struct sCallExt *end = callExtensionList + lenof(callExtensionList);
@@ -873,15 +869,15 @@ BOOL CallHelp(int argc, LPCWSTR argv[])
 	for (ext = callExtensionList; ext < end; ++ext) {
 		cmd_printf(L"%-*s%s\r\n", width, ext->name, ext->brief);
 	}
-	return TRUE;
+	return EXIT_SUCCESS;
 }
 
-DWORD WINAPI MyEcho(struct cmdnode *node)
+int WINAPI MyEcho(struct cmdnode *node)
 {
 	BOOL modified_newline = FALSE;
 	BOOL suppressed_quotes = FALSE;
 	int  arg_ofs;
-	DWORD ret;
+	int  ret;
 
 	if (node->arg == NULL) {
 		static WCHAR space[] = L" ";
@@ -1321,11 +1317,11 @@ FreeLibraryThread(LPVOID param)
 	return 0;
 }
 
-BOOL CallUnload(int argc, LPCWSTR argv[])
+int CallUnload(int argc, LPCWSTR argv[])
 {
 	unhook();
 	SafeCloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
-	return TRUE;
+	return EXIT_SUCCESS;
 }
 
 BOOL WINAPI

@@ -44,8 +44,8 @@
 #define MIN_OPACITY_ALPHA 77
 
 typedef DWORD (*fnGetExt)(LPWSTR, DWORD);
-
 typedef BOOL (*fnSetExt)(int argc, LPCWSTR argv[]);
+typedef int (*fnCallExt)(int argc, LPCWSTR argv[]);
 
 BOOL isExtendedKeyCode(int code);
 int getKeyCode(void);
@@ -90,7 +90,7 @@ DWORD GetInputCodePage(LPWSTR buffer, DWORD size);
 DWORD GetArgCount(LPWSTR buffer, DWORD size);
 DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size);
 
-BOOL CallEcho(int argc, LPCWSTR argv[]);
+int CallEcho(int argc, LPCWSTR argv[]);
 
 BOOL SetEcho(int argc, LPCWSTR argv[]);
 BOOL SetEchoOptions(int argc, LPCWSTR argv[]);
@@ -115,14 +115,14 @@ DWORD GetUnique(LPWSTR buffer, DWORD size);
 DWORD GetTempFile(LPWSTR buffer, DWORD size);
 DWORD GetTempDir(LPWSTR buffer, DWORD size);
 
-BOOL CallSay(int argc, LPCWSTR argv[]);
+int CallSay(int argc, LPCWSTR argv[]);
 BOOL SetVoice(int argc, LPCWSTR argv[]);
 DWORD GetVoice(LPWSTR buffer, DWORD size);
 
-BOOL CallSleep(int argc, LPCWSTR argv[]);
+int CallSleep(int argc, LPCWSTR argv[]);
 
-BOOL CallTimer(int argc, LPCWSTR argv[]);
-BOOL CallTimerHi(int argc, LPCWSTR argv[]);
+int CallTimer(int argc, LPCWSTR argv[]);
+int CallTimerHi(int argc, LPCWSTR argv[]);
 
 DWORD GetTimer(LPWSTR buffer, DWORD size);
 DWORD GetHiTimer(LPWSTR buffer, DWORD size);

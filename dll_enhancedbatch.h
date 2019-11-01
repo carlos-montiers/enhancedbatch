@@ -102,14 +102,14 @@ struct cmdnode {		// partial definition
 	LPWSTR arg;
 };
 
-typedef DWORD (WINAPI *fnCmdFunc)(struct cmdnode *node);
+typedef int (WINAPI *fnCmdFunc)(struct cmdnode *node);
 
 extern fnCmdFunc *peEcho, eEcho, *peCall, eCall;
 extern LPWSTR Fmt17;
 extern int *pLastRetCode;
 
-DWORD WINAPI MyEcho(struct cmdnode *node);
-DWORD WINAPI MyCall(struct cmdnode *node);
+int WINAPI MyEcho(struct cmdnode *node);
+int WINAPI MyCall(struct cmdnode *node);
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d);
 UINT MyLexText(void);
 
