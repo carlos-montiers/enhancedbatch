@@ -153,7 +153,7 @@ DWORD GetVoice(LPWSTR buffer, DWORD size)
 		}
 	}
 	if (voice != NULL) {
-		DWORD len = snwprintf(buffer, size, L"%s", voice);
+		DWORD len = wsncpy(buffer, size, voice);
 		CoTaskMemFree(voice);
 		return len;
 	}
@@ -259,11 +259,11 @@ BOOL Say(int argc, LPCWSTR argv[])
 	}
 
 	if (i == argc-1) {
-		snwprintf(sayBuffer, STRINGBUFFERMAX, L"%s", argv[i]);
+		sbcpy(sayBuffer, argv[i]);
 	} else {
 		LPWSTR p = sayBuffer;
 		for (; i < argc; ++i) {
-			p += snwprintf(p, STRINGBUFFERMAX - (p-sayBuffer), L"%s ", argv[i]);
+			p += sbprintf(p, L"%s ", argv[i]);
 		}
 		p[-1] = L'\0';
 	}

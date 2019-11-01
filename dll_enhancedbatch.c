@@ -459,8 +459,7 @@ DWORD hexify(DWORD length)
 	LPWSTR src = stringBuffer, dst = varBuffer;
 	for (; length > 0; ++src, --length) {
 		if (*src < 0x100) {
-			dst += snwprintf(dst, STRINGBUFFERMAX - (dst - varBuffer),
-							 L"%.2X ", *src);
+			dst += sbprintf(dst, L"%.2X ", *src);
 		}
 	}
 	if (dst == varBuffer) {
@@ -468,7 +467,7 @@ DWORD hexify(DWORD length)
 		length = 0;
 	} else {
 		dst[-1] = L'\0';
-		length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", varBuffer);
+		length = sbcpy(stringBuffer, varBuffer);
 	}
 	return length;
 }
@@ -497,7 +496,7 @@ DWORD unhexify(DWORD length)
 		}
 	}
 	*dst = L'\0';
-	return snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", varBuffer);
+	return sbcpy(stringBuffer, varBuffer);
 }
 
 DWORD WINAPI
@@ -536,7 +535,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			}
 			*end++ = L'\0';
 			if (length == 0) {
-				length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", mod+1);
+				length = sbcpy(stringBuffer, mod+1);
 			}
 			if (*end == L'\0') {
 				mod = NULL;
@@ -601,7 +600,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		} else if (WCSIBEG(mod, L"rtrim[")) {
 			length = rtrim(length, mod+6);
 		} else if (WCSIEQ(mod, L"length")) {
-			length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%d", length);
+			length = sbprintf(stringBuffer, L"%d", length);
 		} else if (WCSIEQ(mod, L"hexify")) {
 			length = hexify(length);
 		} else if (WCSIEQ(mod, L"unhexify")) {
@@ -632,7 +631,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			if (var == NULL) {
 				break;
 			}
-			length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", var);
+			length = sbcpy(stringBuffer, var);
 		} else if (*mod == L'-' || (*mod >= L'0' && *mod <= L'9')) {
 			spad = mod;
 			if (*spad == L'0') {
@@ -662,7 +661,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			return 0;
 		}
 		pad = 0;
-		length = snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s", lpName);
+		length = sbcpy(stringBuffer, lpName);
 	}
 
 	size = (pad > length) ? pad : length;
@@ -671,9 +670,9 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 	}
 	if (pad > length) {
 		if (right) {
-			snwprintf(lpBuffer, nSize, L"%-*s", pad, stringBuffer);
+			wsnprintf(lpBuffer, nSize, L"%-*s", pad, stringBuffer);
 		} else {
-			snwprintf(lpBuffer, nSize, L"%*s", pad, stringBuffer);
+			wsnprintf(lpBuffer, nSize, L"%*s", pad, stringBuffer);
 			if (zero) {
 				LPWSTR s = lpBuffer;
 				while (*s == L' ') {
@@ -728,7 +727,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 		if (append) {
 			if (lpValue != varbuf) {
-				snwprintf(varbuf, varmax, L"%s", lpValue);
+				sbcpy(varbuf, lpValue);
 			}
 			lpValue = varBuffer;
 		}
@@ -1059,7 +1058,7 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 				file = **pCurrentBatchFile;
 			}
 		}
-		snwprintf(stringBuffer, STRINGBUFFERMAX, L"%s:%lu: ", file, lnum);
+		sbprintf(stringBuffer, L"%s:%lu: ", file, lnum);
 #ifdef _WIN64
 		pPutMsg(0x2371, b, 1, (va_list *) &pargs);
 #else
@@ -1732,7 +1731,7 @@ BOOL IsSupported(HANDLE ph, LPCWSTR name, PBYTE base)
 		}
 	}
 	VerQueryValue(vi, L"\\VarFileInfo\\Translation", (LPVOID *) &lang, &len);
-	snwprintf(subblock, lenof(subblock),
+	wsnprintf(subblock, lenof(subblock),
 			  L"\\StringFileInfo\\%04x%04x\\OriginalFilename",
 			  lang->language, lang->codepage);
 	if (VerQueryValue(vi, subblock, (LPVOID *) &originalname, &len)
@@ -1787,12 +1786,10 @@ HRESULT DllLoad(void)
 				Inject(ph);
 			} else {
 				if (cmdFileVersionMS == 0) {
-					snwprintf(stringBuffer, STRINGBUFFERMAX,
-							  NotCmdStr, cmdname);
+					sbprintf(stringBuffer, NotCmdStr, cmdname);
 				} else {
 					GetCmdVersion(varBuffer, STRINGBUFFERMAX);
-					snwprintf(stringBuffer, STRINGBUFFERMAX,
-							  NotSupportedStr, varBuffer);
+					sbprintf(stringBuffer, NotSupportedStr, varBuffer);
 				}
 				Info(stringBuffer);
 			}

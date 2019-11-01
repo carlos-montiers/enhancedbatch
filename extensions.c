@@ -33,7 +33,7 @@
 
 static DWORD toString(int num, LPWSTR buffer, DWORD size)
 {
-	return snwprintf(buffer, size, L"%d", num);
+	return wsnprintf(buffer, size, L"%d", num);
 }
 
 static void toNumber(int *num, int argc, LPCWSTR argv[])
@@ -191,7 +191,7 @@ DWORD GetPosition(LPWSTR buffer, DWORD size)
 	COORD position;
 
 	position = getPosition();
-	return snwprintf(buffer, size, L"%d %d", position.Y, position.X);
+	return wsnprintf(buffer, size, L"%d %d", position.Y, position.X);
 }
 
 BOOL SetRow(int argc, LPCWSTR argv[])
@@ -253,7 +253,7 @@ DWORD GetSize(LPWSTR buffer, DWORD size)
 	COORD csize;
 
 	csize = getSize();
-	return snwprintf(buffer, size, L"%d %d", csize.Y, csize.X);
+	return wsnprintf(buffer, size, L"%d %d", csize.Y, csize.X);
 }
 
 DWORD GetHeight(LPWSTR buffer, DWORD size)
@@ -292,7 +292,7 @@ DWORD GetAttributes(LPWSTR buffer, DWORD size)
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 
-	return snwprintf(buffer, size, L"%.4X", csbi.wAttributes);
+	return wsnprintf(buffer, size, L"%.4X", csbi.wAttributes);
 }
 
 BOOL SetColor(int argc, LPCWSTR argv[])
@@ -325,7 +325,7 @@ DWORD GetColor(LPWSTR buffer, DWORD size)
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 
-	return snwprintf(buffer, size, L"%.2X", csbi.wAttributes & 0xFF);
+	return wsnprintf(buffer, size, L"%.2X", csbi.wAttributes & 0xFF);
 }
 
 BOOL SetForeground(int argc, LPCWSTR argv[])
@@ -358,7 +358,7 @@ DWORD GetForeground(LPWSTR buffer, DWORD size)
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 
-	return snwprintf(buffer, size, L"%X", csbi.wAttributes & 0xF);
+	return wsnprintf(buffer, size, L"%X", csbi.wAttributes & 0xF);
 }
 
 BOOL SetBackground(int argc, LPCWSTR argv[])
@@ -391,7 +391,7 @@ DWORD GetBackground(LPWSTR buffer, DWORD size)
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
 
-	return snwprintf(buffer, size, L"%X", (csbi.wAttributes & 0xF0) >> 4);
+	return wsnprintf(buffer, size, L"%X", (csbi.wAttributes & 0xF0) >> 4);
 }
 
 BOOL SetUnderline(int argc, LPCWSTR argv[])
@@ -895,7 +895,7 @@ BOOL Echo(int argc, LPCWSTR argv[])
 		}
 		LPWSTR p = text;
 		for (j = i; j < argc; ++j) {
-			p += snwprintf(p, len, L"%s ", argv[j]);
+			p += wsnprintf(p, len, L"%s ", argv[j]);
 		}
 		p[-1] = L'\0';
 	}
@@ -1167,21 +1167,21 @@ void getDate(void)
 DWORD GetDate(LPWSTR buffer, DWORD size)
 {
 	getDate();
-	return snwprintf(buffer, size, L"%d-%02d-%02d",
+	return wsnprintf(buffer, size, L"%d-%02d-%02d",
 					 st.wYear, st.wMonth, st.wDay);
 }
 
 DWORD GetTime(LPWSTR buffer, DWORD size)
 {
 	getDate();
-	return snwprintf(buffer, size, L"%02d:%02d:%02d",
+	return wsnprintf(buffer, size, L"%02d:%02d:%02d",
 					 st.wHour, st.wMinute, st.wSecond);
 }
 
 DWORD GetTimems(LPWSTR buffer, DWORD size)
 {
 	DWORD len = GetTime(buffer, size);
-	return len + snwprintf(buffer + len, size - len, L"%c%03d",
+	return len + wsnprintf(buffer + len, size - len, L"%c%03d",
 						   getPoint(), st.wMilliseconds);
 }
 
@@ -1218,7 +1218,7 @@ DWORD GetMonthName(LPWSTR buffer, DWORD size)
 {
 	getDate();
 	if (english) {
-		return snwprintf(buffer, size, L"%s", MonthNames[st.wMonth-1]);
+		return wsncpy(buffer, size, MonthNames[st.wMonth-1]);
 	}
 	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SMONTHNAME1-1+st.wMonth,
 						 buffer, size);
@@ -1228,7 +1228,7 @@ DWORD GetMonthShort(LPWSTR buffer, DWORD size)
 {
 	getDate();
 	if (english) {
-		return snwprintf(buffer, size, L"%.3s", MonthNames[st.wMonth-1]);
+		return wsnprintf(buffer, size, L"%.3s", MonthNames[st.wMonth-1]);
 	}
 	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVMONTHNAME1-1+st.wMonth,
 						 buffer, size);
@@ -1245,7 +1245,7 @@ DWORD GetDayName(LPWSTR buffer, DWORD size)
 	int day;
 	getDate();
 	if (english) {
-		return snwprintf(buffer, size, L"%s", DayNames[st.wDayOfWeek]);
+		return wsncpy(buffer, size, DayNames[st.wDayOfWeek]);
 	}
 	day = (st.wDayOfWeek == 0) ? 7 : st.wDayOfWeek;
 	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDAYNAME1-1+day,
@@ -1257,7 +1257,7 @@ DWORD GetDayShort(LPWSTR buffer, DWORD size)
 	int day;
 	getDate();
 	if (english) {
-		return snwprintf(buffer, size, L"%.3s", DayNames[st.wDayOfWeek]);
+		return wsnprintf(buffer, size, L"%.3s", DayNames[st.wDayOfWeek]);
 	}
 	day = (st.wDayOfWeek == 0) ? 7 : st.wDayOfWeek;
 	return GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVDAYNAME1-1+day,
@@ -1296,7 +1296,7 @@ DWORD GetMilliseconds(LPWSTR buffer, DWORD size)
 
 DWORD GetUnixTime(LPWSTR buffer, DWORD size)
 {
-	return snwprintf(buffer, size, L"%I64d", time(NULL));
+	return wsnprintf(buffer, size, L"%I64d", time(NULL));
 }
 
 DWORD GetEnglish(LPWSTR buffer, DWORD size)
@@ -1396,7 +1396,7 @@ DWORD getVersionRevision(void)
 
 DWORD GetEBVersion(LPWSTR buffer, DWORD size)
 {
-	return snwprintf(buffer, size, L"%S", __DATE__);
+	return wsnprintf(buffer, size, L"%S", __DATE__);
 }
 
 DWORD GetEnhancedBatch(LPWSTR buffer, DWORD size)
@@ -1408,7 +1408,7 @@ AttrOptSize
 DWORD GetOSVersion(LPWSTR buffer, DWORD size)
 {
 	DWORD ver = GetVersion();
-	return snwprintf(buffer, size, L"%d.%d.%d.%d",
+	return wsnprintf(buffer, size, L"%d.%d.%d.%d",
 					 LOBYTE(LOWORD(ver)), HIBYTE(LOWORD(ver)), HIWORD(ver),
 					 getVersionRevision());
 }
@@ -1439,7 +1439,7 @@ DWORD GetOSRevision(LPWSTR buffer, DWORD size)
 
 DWORD GetCmdVersion(LPWSTR buffer, DWORD size)
 {
-	return snwprintf(buffer, size, L"%d.%d.%d.%d%s",
+	return wsnprintf(buffer, size, L"%d.%d.%d.%d%s",
 					 HIWORD(cmdFileVersionMS), LOWORD(cmdFileVersionMS),
 					 HIWORD(cmdFileVersionLS), LOWORD(cmdFileVersionLS),
 					 cmdDebug ? L" [debug]" : L"");

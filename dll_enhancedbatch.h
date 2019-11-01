@@ -137,6 +137,9 @@ extern int batchfile;
 #endif
 
 #define STRINGBUFFERMAX 32768
+extern WCHAR stringBuffer[STRINGBUFFERMAX];
+extern WCHAR varBuffer[STRINGBUFFERMAX];
+extern WCHAR sayBuffer[STRINGBUFFERMAX];
 
 #define FINDFOR_STACKSIZE 128
 #define FORF_STACKSIZE 32		// should be way more than enough
@@ -153,6 +156,11 @@ extern const WCHAR TimerBriefStr[], TimerHelpStr[];
 extern const WCHAR TimerHiBriefStr[], TimerHiHelpStr[];
 extern const WCHAR UnloadBriefStr[], UnloadHelpStr[];
 
+
+int wsnprintf(LPWSTR buf, size_t size, LPCWSTR fmt, ...);
+int sbprintf(LPWSTR buf, LPCWSTR fmt, ...);
+#define wsncpy(dst, size, src) wsnprintf(dst, size, L"%s", src)
+#define sbcpy(dst, src) sbprintf(dst, L"%s", src)
 
 LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size);
 BOOL SafeCloseHandle(HANDLE handle);

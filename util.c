@@ -26,9 +26,72 @@
 */
 
 #include "dll_enhancedbatch.h"
+#include <stdarg.h>
 
 static BOOL CALLBACK FindTabWindow(HWND hwnd, LPARAM lParam);
 static HWND GetConsoleWindowInTab(void);
+
+
+// If the string is bigger than the buffer snwprintf fills it and returns -1.
+// If the string is the same size as the buffer snwprintf fills it.
+// These do not add the terminator.  Rectify that.
+static int my_vsnwprintf(LPWSTR buf, size_t size, LPCWSTR fmt, va_list args)
+{
+	if (size == 0) {
+		return 0;
+	}
+	if (size == 1) {
+		*buf = L'\0';
+		return 0;
+	}
+
+	int len = vsnwprintf(buf, size - 1, fmt, args);
+
+	if (len == -1) {
+		len = size - 1;
+	}
+	if (len == size - 1) {
+		buf[len] = L'\0';
+	}
+
+	return len;
+}
+
+
+int wsnprintf(LPWSTR buf, size_t size, LPCWSTR fmt, ...)
+{
+	va_list args;
+
+	va_start(args, fmt);
+	int len = my_vsnwprintf(buf, size - 1, fmt, args);
+	va_end(args);
+
+	return len;
+}
+
+
+// Determine the size of our string buffers automatically.
+int sbprintf(LPWSTR buf, LPCWSTR fmt, ...)
+{
+	LPWSTR base;
+	va_list args;
+
+	if (buf >= stringBuffer && buf < stringBuffer + STRINGBUFFERMAX) {
+		base = stringBuffer;
+	} else if (buf >= varBuffer && buf < varBuffer + STRINGBUFFERMAX) {
+		base = varBuffer;
+	} else if (buf >= sayBuffer && buf < sayBuffer + STRINGBUFFERMAX) {
+		base = sayBuffer;
+	} else {
+		return 0;
+	}
+
+	va_start(args, fmt);
+	int len = my_vsnwprintf(buf, STRINGBUFFERMAX - (buf - base), fmt, args);
+	va_end(args);
+
+	return len;
+}
 
 
 LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size)
