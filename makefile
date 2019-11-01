@@ -1,7 +1,7 @@
 # Enhanced Batch makefile using TDM GCC MinGW-w64.
 
 CC=gcc
-CFLAGS=-Os -Wall
+CFLAGS=-O3 -Wall
 LDFLAGS=-nostartfiles -s -shared
 LIBS=-lversion -lole32
 RC ?= windres
