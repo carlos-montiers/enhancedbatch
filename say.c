@@ -41,8 +41,25 @@ DEFINE_GUID(IID_ISpObjectTokenCategory, 0x2d3d3845, 0x39af, 0x4850, 0xbb,0xf9, 0
 ISpObjectToken *pDefaultVoice;
 ISpObjectToken *pCurrentVoice;
 SPEAKFLAGS spFlags;
-LPWSTR text;
+WCHAR sayBuffer[STRINGBUFFERMAX];
 LPCWSTR fmt;
+
+int co_status = -1;
+
+BOOL initCo(void)
+{
+	if (co_status == -1) {
+		co_status = SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED));
+	}
+	return co_status;
+}
+
+void uninitCo(void)
+{
+	if (co_status == 1) {
+		CoUninitialize();
+	}
+}
 
 ISpObjectToken *selectVoice(LPCWSTR voice)
 {
@@ -50,9 +67,6 @@ ISpObjectToken *selectVoice(LPCWSTR voice)
 	IEnumSpObjectTokens *pEnum = NULL;
 	ISpObjectToken *pToken = NULL;
 
-	if FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
-		return NULL;
-	}
 	if SUCCEEDED(CoCreateInstance(&CLSID_SpObjectTokenCategory, NULL, CLSCTX_ALL,
 								  &IID_ISpObjectTokenCategory, (void **) &pCategory)) {
 		if ((SUCCEEDED(vcall(pCategory, SetId, SPCAT_CORE_VOICES, FALSE))
@@ -92,13 +106,15 @@ ISpObjectToken *selectVoice(LPCWSTR voice)
 		vcall(pCategory, Release);
 	}
 
-	CoUninitialize();
-
 	return pToken;
 }
 
 BOOL SetVoice(int argc, LPCWSTR argv[])
 {
+	if (!initCo()) {
+		return FALSE;
+	}
+
 	if (argc == 0) {
 		if (pDefaultVoice != NULL) {
 			vcall(pDefaultVoice, Release);
@@ -117,6 +133,10 @@ BOOL SetVoice(int argc, LPCWSTR argv[])
 
 DWORD GetVoice(LPWSTR buffer, DWORD size)
 {
+	if (!initCo()) {
+		return 0;
+	}
+
 	LPWSTR voice = NULL;
 	ISpVoice *pVoice = NULL;
 	ISpObjectToken *pToken = NULL;
@@ -124,15 +144,12 @@ DWORD GetVoice(LPWSTR buffer, DWORD size)
 	if (pDefaultVoice != NULL) {
 		vcall(pDefaultVoice, GetStringValue, NULL, &voice);
 	} else {
-		if SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
-			if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
-										  &IID_ISpVoice, (void **) &pVoice)) {
-				vcall(pVoice, GetVoice, &pToken);
-				vcall(pToken, GetStringValue, NULL, &voice);
-				vcall(pToken, Release);
-				vcall(pVoice, Release);
-			}
-			CoUninitialize();
+		if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
+									  &IID_ISpVoice, (void **) &pVoice)) {
+			vcall(pVoice, GetVoice, &pToken);
+			vcall(pToken, GetStringValue, NULL, &voice);
+			vcall(pToken, Release);
+			vcall(pVoice, Release);
 		}
 	}
 	if (voice != NULL) {
@@ -171,6 +188,7 @@ DWORD WINAPI SayThread(LPVOID unused)
 	ISpVoice *pVoice = NULL;
 	DWORD said = 0;
 
+	// This is a different thread, so has its own initialization.
 	if SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)) {
 		if SUCCEEDED(CoCreateInstance(&CLSID_SpVoice, NULL, CLSCTX_ALL,
 									  &IID_ISpVoice, (void **) &pVoice)) {
@@ -179,7 +197,7 @@ DWORD WINAPI SayThread(LPVOID unused)
 			} else if (pDefaultVoice != NULL) {
 				vcall(pVoice, SetVoice, pDefaultVoice);
 			}
-			said = SUCCEEDED(vcall(pVoice, Speak, text, spFlags, NULL));
+			said = SUCCEEDED(vcall(pVoice, Speak, sayBuffer, spFlags, NULL));
 			vcall(pVoice, Release);
 		}
 		CoUninitialize();
@@ -189,17 +207,16 @@ DWORD WINAPI SayThread(LPVOID unused)
 		vcall(pCurrentVoice, Release);
 		pCurrentVoice = NULL;
 	}
-	free(text);
-	text = NULL;
 
-	SetEvent(hSpeaking);
+	SafeCloseHandle(hSpeaking);
+	hSpeaking = NULL;
 
 	return said;
 }
 
 BOOL Say(int argc, LPCWSTR argv[])
 {
-	if (argc == 0) {
+	if (argc == 0 || !initCo()) {
 		return FALSE;
 	}
 
@@ -242,43 +259,31 @@ BOOL Say(int argc, LPCWSTR argv[])
 	}
 
 	if (i == argc-1) {
-		text = _wcsdup(argv[i]);
-		if (text == NULL) {
-			return FALSE;
-		}
+		snwprintf(sayBuffer, STRINGBUFFERMAX, L"%s", argv[i]);
 	} else {
-		int j, len = 1;
-		for (j = i; j < argc; ++j) {
-			len += wcslen(argv[j]) + 1;
-		}
-		text = malloc(WSZ(len));
-		if (text == NULL) {
-			return FALSE;
-		}
-		LPWSTR p = text;
-		for (j = i; j < argc; ++j) {
-			p += snwprintf(p, len, L"%s ", argv[j]);
+		LPWSTR p = sayBuffer;
+		for (; i < argc; ++i) {
+			p += snwprintf(p, STRINGBUFFERMAX - (p-sayBuffer), L"%s ", argv[i]);
 		}
 		p[-1] = L'\0';
 	}
 
 	if (fmt != NULL) {
 		if (spFlags & SPF_IS_XML) {
-			LPWSTR tagless = stripTags(text);
+			LPWSTR tagless = stripTags(sayBuffer);
 			cmd_printf(fmt, tagless);
 			free(tagless);
 		} else {
-			cmd_printf(fmt, text);
+			cmd_printf(fmt, sayBuffer);
 		}
 	}
 	if (voice != NULL) {
 		pCurrentVoice = selectVoice(voice);
 	}
 
-	ResetEvent(hSpeaking);
 	if (wait) {
 		return SayThread(NULL);
 	}
-	SafeCloseHandle(CreateThread(NULL, 4096, SayThread, NULL, 0, NULL));
-	return TRUE;
+	hSpeaking = CreateThread(NULL, 4096, SayThread, NULL, 0, NULL);
+	return hSpeaking != NULL;
 }

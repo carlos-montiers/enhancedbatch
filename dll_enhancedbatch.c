@@ -64,7 +64,7 @@ LPVOID cmd_end; 		// end of the CMD.EXE image
 BOOL onWindowsTerminal; 		// running on Windows Terminal
 HWND consoleHwnd; 		// Hwnd of the console
 HANDLE consoleOutput;
-HANDLE hSpeaking;		// event signalling end of speech
+HANDLE hSpeaking;		// speech thread
 
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
@@ -1599,6 +1599,7 @@ void unhook(void)
 
 	// Wait for speech to finish before exiting.
 	WaitForSingleObject(hSpeaking, INFINITE);
+	uninitCo();
 
 	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
 	HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
@@ -1629,13 +1630,11 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 			GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
 		} else {
 			DisableThreadLibraryCalls(hDll);
-			hSpeaking = CreateEvent(NULL, TRUE, TRUE, NULL);
 			hook(hDll);
 		}
 	} else if (dwReason == DLL_PROCESS_DETACH) {
 		if (variables != NULL) {
 			unhook();
-			CloseHandle(hSpeaking);
 		}
 	}
 

@@ -92,6 +92,8 @@ extern HWND consoleHwnd;
 extern HANDLE consoleOutput;
 extern HANDLE hSpeaking;
 
+void uninitCo(void);
+
 extern LPBYTE cmd_addrs[];
 
 struct cmdnode {		// partial definition
