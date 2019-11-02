@@ -165,7 +165,7 @@ int sbprintf(LPWSTR buf, LPCWSTR fmt, ...);
 LPSTR readBatchFile(DWORD size, LPSTR buf, DWORD buf_size);
 BOOL SafeCloseHandle(HANDLE handle);
 BOOL haveOutputHandle(void);
-HWND GetConsoleHwnd(void);
+BOOL haveWindowHandle(void);
 
 void WriteMemory(LPVOID dst, LPCVOID src, int size);
 #define WriteByte(dst, b) WriteMemory(dst, (LPCVOID) b, 1)

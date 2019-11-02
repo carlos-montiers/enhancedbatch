@@ -528,15 +528,9 @@ BOOL SetOpacity(int argc, LPCWSTR argv[])
 {
 	int pc;
 	BYTE alpha;
-	HANDLE hwnd;
 	LONG_PTR exstyle;
 
-	if (argc != 1) {
-		return FALSE;
-	}
-
-	hwnd = GetConsoleHwnd();
-	if (hwnd == NULL) {
+	if (argc != 1 || !haveWindowHandle()) {
 		return FALSE;
 	}
 
@@ -555,14 +549,14 @@ BOOL SetOpacity(int argc, LPCWSTR argv[])
 		// (within 4.7%, anyway).
 		BYTE curr_alpha;
 		int wheel_movements;
-		if (!GetLayeredWindowAttributes(hwnd, NULL, &curr_alpha, NULL)) {
+		if (!GetLayeredWindowAttributes(consoleHwnd, NULL, &curr_alpha, NULL)) {
 			curr_alpha = MAX_OPACITY_ALPHA;
 		}
 		wheel_movements = alpha - curr_alpha;
 		wheel_movements /= OPACITY_DELTA_INTERVAL;
 		if (wheel_movements != 0) {
 			PostMessage(
-				hwnd,
+				consoleHwnd,
 				WM_MOUSEWHEEL,
 				MAKELONG(MK_CONTROL | MK_SHIFT, WHEEL_DELTA * wheel_movements),
 				0
@@ -570,22 +564,22 @@ BOOL SetOpacity(int argc, LPCWSTR argv[])
 		}
 	}
 
-	exstyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
+	exstyle = GetWindowLongPtr(consoleHwnd, GWL_EXSTYLE);
 	if (!(exstyle & WS_EX_LAYERED)) {
 		exstyle |= WS_EX_LAYERED;
-		SetWindowLongPtr(hwnd, GWL_EXSTYLE, exstyle);
+		SetWindowLongPtr(consoleHwnd, GWL_EXSTYLE, exstyle);
 	}
 
-	return SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
+	return SetLayeredWindowAttributes(consoleHwnd, 0, alpha, LWA_ALPHA);
 }
 
 DWORD GetOpacity(LPWSTR buffer, DWORD size)
 {
-	HANDLE hwnd = GetConsoleHwnd();
 	DWORD pc = MAX_OPACITY_PERCENT;
 	BYTE alpha;
 
-	if (hwnd && GetLayeredWindowAttributes(hwnd, NULL, &alpha, NULL)) {
+	if (haveWindowHandle()
+		&& GetLayeredWindowAttributes(consoleHwnd, NULL, &alpha, NULL)) {
 		pc = MAX_OPACITY_PERCENT * alpha / MAX_OPACITY_ALPHA;
 	}
 

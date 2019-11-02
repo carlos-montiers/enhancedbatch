@@ -150,7 +150,7 @@ BOOL haveOutputHandle(void)
 }
 
 
-HWND GetConsoleHwnd(void)
+BOOL haveWindowHandle(void)
 {
 	if (consoleHwnd == NULL) {
 		if (onWindowsTerminal) {
@@ -159,7 +159,7 @@ HWND GetConsoleHwnd(void)
 			consoleHwnd = GetConsoleWindow();
 		}
 	}
-	return consoleHwnd;
+	return consoleHwnd != NULL;
 }
 
 // Based on old method for retrieve console window handle:
