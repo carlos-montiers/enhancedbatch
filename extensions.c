@@ -870,43 +870,33 @@ int CallEcho(int argc, LPCWSTR argv[])
 	}
 
 	if (i == argc) {
-		if (console) {
-			WriteConsole(consoleOutput, ending, wcslen(ending), &dummy, NULL);
-		} else {
-			cmd_printf(L"%s", ending);
+		if (*ending != L'\0') {
+			if (console) {
+				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
+			} else {
+				cmd_printf(ending);
+			}
 		}
 		return EXIT_SUCCESS;
 	}
 
 	if (i == argc-1) {
-		text = _wcsdup(argv[i]);
-		if (text == NULL) {
-			return EXIT_FAILURE;
-		}
+		len = sbcpy(stringBuffer, argv[i]);
 	} else {
-		int j;
-		len = 1;
-		for (j = i; j < argc; ++j) {
-			len += wcslen(argv[j]) + 1;
+		text = stringBuffer;
+		for (; i < argc; ++i) {
+			text += sbprintf(text, L"%s ", argv[i]);
 		}
-		text = malloc(WSZ(len));
-		if (text == NULL) {
-			return EXIT_FAILURE;
-		}
-		LPWSTR p = text;
-		for (j = i; j < argc; ++j) {
-			p += wsnprintf(p, len, L"%s ", argv[j]);
-		}
-		p[-1] = L'\0';
+		*--text = L'\0';
+		len = text - stringBuffer;
 	}
 
 	if (escapes) {
-		len = wcslen(text);
-		for (i = 0; i < len; ++i) {
-			if (text[i] == L'\\') {
+		for (text = stringBuffer; *text != L'\0'; ++text) {
+			if (*text == L'\\') {
 				WCHAR esc = 0;
 				LPCWSTR hex = NULL;
-				switch (text[i+1]) {
+				switch (text[1]) {
 					case L'a':  esc = L'\a'; break;
 					case L'b':  esc = L'\b'; break;
 					case L'e':  esc = L'\33'; break;
@@ -921,23 +911,23 @@ int CallEcho(int argc, LPCWSTR argv[])
 					case L'U':  hex = L"%6x%n"; break;
 				}
 				if (esc != 0) {
-					text[i] = esc;
-					wcscpy(text+i+1, text+i+2);
+					*text = esc;
+					wcscpy(text+1, text+2);
 					--len;
 				} else if (hex != NULL) {
 					DWORD code;
 					int size = 0;
-					swscanf(text+i+2, hex, &code, &size);
+					swscanf(text+2, hex, &code, &size);
 					if (size != 0) {
 						if (code < 0x10000) {
-							text[i] = code;
+							*text = code;
 						} else {
 							code -= 0x10000;
-							text[i++] = HIGH_SURROGATE_START + (code >> 10);
-							text[i] = LOW_SURROGATE_START + (code & 0x3ff);
+							*text++ = HIGH_SURROGATE_START + (code >> 10);
+							*text = LOW_SURROGATE_START + (code & 0x3ff);
 							--size;
 						}
-						wcscpy(text+i+1, text+i+2+size);
+						wcscpy(text+1, text+2+size);
 						len -= size;
 					}
 				}
@@ -948,43 +938,43 @@ int CallEcho(int argc, LPCWSTR argv[])
 
 	if (!vertical) {
 		if (console) {
-			WriteConsole(consoleOutput, text, wcslen(text), &dummy, NULL);
+			WriteConsole(consoleOutput, stringBuffer, len, &dummy, NULL);
 			if (*ending != L'\0') {
 				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
 			}
 		} else {
-			cmd_printf(L"%s%s", text, ending);
+			cmd_printf(L"%s%s", stringBuffer, ending);
 		}
 	} else {
 		if (*ending == L'\0') {
 			ending = L"\r\n";
 		}
 		int col = getPosition().X;
-		LPWSTR ch = text, next;
-		while (*ch != L'\0') {
+		LPWSTR next;
+		text = stringBuffer;
+		while (*text != L'\0') {
 			// CharNext skips over the high surrogate and stops at the low.
-			if (*ch >= HIGH_SURROGATE_START && *ch <= HIGH_SURROGATE_END
-				&& ch[1] >= LOW_SURROGATE_START && ch[1] <= LOW_SURROGATE_END) {
-				next = CharNext(ch+1);
+			if (*text >= HIGH_SURROGATE_START && *text <= HIGH_SURROGATE_END
+				&& text[1] >= LOW_SURROGATE_START && text[1] <= LOW_SURROGATE_END) {
+				next = CharNext(text+1);
 			} else {
-				next = CharNext(ch);
+				next = CharNext(text);
 				if (*next >= LOW_SURROGATE_START && *next <= LOW_SURROGATE_END
 					&& next[-1] >= HIGH_SURROGATE_START && next[-1] <= HIGH_SURROGATE_END) {
 					--next;
 				}
 			}
 			if (console) {
-				WriteConsole(consoleOutput, ch, next - ch, &dummy, NULL);
+				WriteConsole(consoleOutput, text, next - text, &dummy, NULL);
 				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
 			} else {
-				cmd_printf(L"%.*s%s", next - ch, ch, ending);
+				cmd_printf(L"%.*s%s", next - text, text, ending);
 			}
-			ch = next;
+			text = next;
 			setPosition(getPosition().Y, col);
 		}
 	}
 
-	free(text);
 	return EXIT_SUCCESS;
 }
 
