@@ -861,6 +861,7 @@ int CallEcho(int argc, LPCWSTR argv[])
 	BOOL vertical = FALSE;
 	BOOL console = FALSE;
 	BOOL escapes = FALSE;
+	WCHAR esc_ch = L'\\';
 	DWORD dummy;
 
 	int i;
@@ -870,8 +871,15 @@ int CallEcho(int argc, LPCWSTR argv[])
 		}
 		if (WCSIEQ(argv[i], L"/c")) {
 			console = haveOutputHandle();
-		} else if (WCSIEQ(argv[i], L"/e")) {
+		} else if (WCSIBEG(argv[i], L"/e")) {
+			if (argv[i][2] == L'?') {
+				cmd_printf(L"%s\r\n", EscapeHelpStr);
+				return EXIT_SUCCESS;
+			}
 			escapes = TRUE;
+			if (argv[i][2] != L'\0' && !iswalnum(argv[i][2])) {
+				esc_ch = argv[i][2];
+			}
 		} else if (WCSIEQ(argv[i], L"/n")) {
 			ending = L"";
 		} else if (WCSIEQ(argv[i], L"/u")) {
@@ -881,9 +889,6 @@ int CallEcho(int argc, LPCWSTR argv[])
 		} else if (WCSEQ(argv[i], L"//")) {
 			++i;
 			break;
-		} else if (WCSIEQ(argv[i], L"/e?")) {
-			cmd_printf(L"%s\r\n", EscapeHelpStr);
-			return EXIT_SUCCESS;
 		}
 	}
 
@@ -911,22 +916,23 @@ int CallEcho(int argc, LPCWSTR argv[])
 
 	if (escapes) {
 		for (text = stringBuffer; *text != L'\0'; ++text) {
-			if (*text == L'\\') {
+			if (*text == esc_ch) {
 				WCHAR esc = 0;
 				LPCWSTR hex = NULL;
-				switch (text[1]) {
-					case L'a':  esc = L'\a'; break;
-					case L'b':  esc = L'\b'; break;
-					case L'e':  esc = L'\33'; break;
-					case L'f':  esc = L'\f'; break;
-					case L'n':  esc = L'\n'; break;
-					case L'r':  esc = L'\r'; break;
-					case L't':  esc = L'\t'; break;
-					case L'v':  esc = L'\v'; break;
-					case L'\\': esc = L'\\'; break;
-					case L'x':  hex = L"%2x%n"; break;
-					case L'u':  hex = L"%4x%n"; break;
-					case L'U':  hex = L"%6x%n"; break;
+				if (text[1] == esc_ch) {
+					esc = esc_ch;
+				} else switch (text[1]) {
+					case L'a': esc = L'\a'; break;
+					case L'b': esc = L'\b'; break;
+					case L'e': esc = L'\33'; break;
+					case L'f': esc = L'\f'; break;
+					case L'n': esc = L'\n'; break;
+					case L'r': esc = L'\r'; break;
+					case L't': esc = L'\t'; break;
+					case L'v': esc = L'\v'; break;
+					case L'x': hex = L"%2x%n"; break;
+					case L'u': hex = L"%4x%n"; break;
+					case L'U': hex = L"%6x%n"; break;
 				}
 				if (esc != 0) {
 					*text = esc;
