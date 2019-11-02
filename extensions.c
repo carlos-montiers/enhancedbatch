@@ -31,6 +31,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+
+#define CHECK_CONSOLE_AND_ARG(argc) \
+	if (argc > 1 || !haveOutputHandle()) return FALSE
+
+WORD original_attributes;
+CONSOLE_CURSOR_INFO original_cci;
+
+
 static DWORD toString(int num, LPWSTR buffer, DWORD size)
 {
 	return wsnprintf(buffer, size, L"%d", num);
@@ -270,13 +278,15 @@ BOOL SetAttributes(int argc, LPCWSTR argv[])
 {
 	DWORD value;
 
-	if (argc != 1 || !haveOutputHandle()) {
-		return FALSE;
-	}
+	CHECK_CONSOLE_AND_ARG(argc);
 
-	value = wcstol(argv[0], NULL, 16);
-	if (value > 0xFFFF) {
-		return FALSE;
+	if (argc == 0) {
+		value = original_attributes;
+	} else {
+		value = wcstol(argv[0], NULL, 16);
+		if (value > 0xFFFF) {
+			return FALSE;
+		}
 	}
 
 	return SetConsoleTextAttribute(consoleOutput, value);
@@ -300,13 +310,15 @@ BOOL SetColor(int argc, LPCWSTR argv[])
 	DWORD value;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-	if (argc != 1 || !haveOutputHandle()) {
-		return FALSE;
-	}
+	CHECK_CONSOLE_AND_ARG(argc);
 
-	value = wcstol(argv[0], NULL, 16);
-	if (value > 0xFF) {
-		return FALSE;
+	if (argc == 0) {
+		value = original_attributes & 0xFF;
+	} else {
+		value = wcstol(argv[0], NULL, 16);
+		if (value > 0xFF) {
+			return FALSE;
+		}
 	}
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
@@ -333,13 +345,15 @@ BOOL SetForeground(int argc, LPCWSTR argv[])
 	DWORD value;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-	if (argc != 1 || !haveOutputHandle()) {
-		return FALSE;
-	}
+	CHECK_CONSOLE_AND_ARG(argc);
 
-	value = wcstol(argv[0], NULL, 16);
-	if (value > 0xF) {
-		return FALSE;
+	if (argc == 0) {
+		value = original_attributes & 0xF;
+	} else {
+		value = wcstol(argv[0], NULL, 16);
+		if (value > 0xF) {
+			return FALSE;
+		}
 	}
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
@@ -366,13 +380,15 @@ BOOL SetBackground(int argc, LPCWSTR argv[])
 	DWORD value;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-	if (argc != 1 || !haveOutputHandle()) {
-		return FALSE;
-	}
+	CHECK_CONSOLE_AND_ARG(argc);
 
-	value = wcstol(argv[0], NULL, 16);
-	if (value > 0xF) {
-		return FALSE;
+	if (argc == 0) {
+		value = (original_attributes >> 4) & 0xF;
+	} else {
+		value = wcstol(argv[0], NULL, 16);
+		if (value > 0xF) {
+			return FALSE;
+		}
 	}
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
@@ -400,8 +416,14 @@ BOOL SetUnderline(int argc, LPCWSTR argv[])
 	WORD value;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-	if (!haveOutputHandle() || !setBoolean(&ul, *argv)) {
-		return FALSE;
+	CHECK_CONSOLE_AND_ARG(argc);
+
+	if (argc == 0) {
+		ul = original_attributes >> 15;
+	} else {
+		if (!setBoolean(&ul, *argv)) {
+			return FALSE;
+		}
 	}
 
 	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
@@ -591,8 +613,10 @@ BOOL SetConsoleCursor(int argc, LPCWSTR argv[])
 	CONSOLE_CURSOR_INFO cci;
 	int iValue;
 
-	if (argc != 1 || !haveOutputHandle()) {
-		return FALSE;
+	CHECK_CONSOLE_AND_ARG(argc);
+
+	if (argc == 0) {
+		return SetConsoleCursorInfo(consoleOutput, &original_cci);
 	}
 
 	GetConsoleCursorInfo(consoleOutput, &cci);
@@ -605,7 +629,7 @@ BOOL SetConsoleCursor(int argc, LPCWSTR argv[])
 	}
 	if (iValue == 0 || iValue == 1) {
 		cci.bVisible = iValue;
-	} else if (iValue >= 2 && iValue <= 100) {
+	} else {
 		cci.dwSize = iValue;
 		cci.bVisible = TRUE;
 	}

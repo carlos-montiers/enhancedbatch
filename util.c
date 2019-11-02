@@ -144,6 +144,15 @@ BOOL haveOutputHandle(void)
 		// need to keep trying.
 		consoleOutput = CreateFile(L"CONOUT$", (GENERIC_READ | GENERIC_WRITE),
 			(FILE_SHARE_READ | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, 0, NULL);
+
+		if (consoleOutput != INVALID_HANDLE_VALUE) {
+			extern WORD original_attributes;
+			extern CONSOLE_CURSOR_INFO original_cci;
+			CONSOLE_SCREEN_BUFFER_INFO csbi;
+			GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+			original_attributes = csbi.wAttributes;
+			GetConsoleCursorInfo(consoleOutput, &original_cci);
+		}
 	}
 
 	return consoleOutput != INVALID_HANDLE_VALUE;

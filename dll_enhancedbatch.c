@@ -187,14 +187,14 @@ struct sSetExt {
 };
 
 const struct sSetExt setExtensionList[] = {
-	{ L"@attr", 			SetAttributes, 1 },
+	{ L"@attr", 			SetAttributes, 0 },
 	{ L"@batchfile",		SetBatchFile, 1 },
-	{ L"@bg",				SetBackground, 1 },
+	{ L"@bg",				SetBackground, 0 },
 	{ L"@codepage", 		SetCodePage, 0 },
-	{ L"@color",			SetColor, 1 },
+	{ L"@color",			SetColor, 0 },
 	{ L"@column",			SetColumn, 1 },
 	{ L"@ctrlcaborts",		SetCtrlCAborts, 0 },
-	{ L"@cursor",			SetConsoleCursor, 1 },
+	{ L"@cursor",			SetConsoleCursor, 0 },
 	{ L"@decsep",			SetDecSep, 0 },
 	{ L"@delayedexpansion", SetDelayedExpansion, 0 },
 	{ L"@dumpparse",		SetDumpParse, 0 },
@@ -203,7 +203,7 @@ const struct sSetExt setExtensionList[] = {
 	{ L"@echooptions", 		SetEchoOptions, 0 },
 	{ L"@english",			SetEnglish, 0 },
 	{ L"@extensions",		SetExtensions, 0 },
-	{ L"@fg",				SetForeground, 1 },
+	{ L"@fg",				SetForeground, 0 },
 	{ L"@inputcp", 			SetInputCodePage, 0 },
 	{ L"@next", 			Next, 0 },
 	{ L"@opacity",			SetOpacity, 1 },
