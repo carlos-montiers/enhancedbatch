@@ -853,74 +853,151 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 	return size;
 }
 
+
+struct sEchoOptions {
+	BOOL vertical;
+	BOOL console;
+	BOOL escapes;
+	WCHAR esc_ch;
+};
+
+static void doEcho(LPCWSTR text, const struct sEchoOptions *options);
+
 int CallEcho(int argc, LPCWSTR argv[])
 {
-	LPWSTR text;
-	int len;
+	struct sEchoOptions opts = {
+		.vertical = FALSE,
+		.console = FALSE,
+		.escapes = FALSE,
+		.esc_ch = L'\\',
+	};
 	LPCWSTR ending = L"\r\n";
-	BOOL vertical = FALSE;
 	BOOL console = FALSE;
-	BOOL escapes = FALSE;
-	WCHAR esc_ch = L'\\';
+	BOOL space = FALSE;
+	BOOL opts_done = FALSE;
+	int got_org = 0;
+	BOOL underline = FALSE;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	LPCWSTR arg;
+
+	void getOrg(void)
+	{
+		if (got_org == 0) {
+			if (haveOutputHandle()) {
+				got_org = 1;
+				GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+				underline = csbi.wAttributes >> 15;
+			} else {
+				got_org = -1;
+			}
+		}
+	}
+
+	for (int i = 0; i < argc; ++i) {
+		if (opts_done || *argv[i] != L'/') {
+			if (space) {
+				doEcho(L" ", &opts);
+			}
+			doEcho(argv[i], &opts);
+			space = TRUE;
+		} else {
+			space = FALSE;
+			if (WCSIBEG(argv[i], L"/c")) {
+				argv[i] += 2;
+				if (*argv[i] == L'\0') {
+					console ^= TRUE;
+					if (console) {
+						opts.console = haveOutputHandle();
+					} else {
+						opts.console = FALSE;
+					}
+				} else {
+					getOrg();
+					ending = NULL;
+					SetColumn(1, argv+i);
+				}
+			} else if (WCSIBEG(argv[i], L"/r")) {
+				argv[i] += 2;
+				if (*argv[i] != L'\0') {
+					getOrg();
+					ending = NULL;
+					SetRow(1, argv+i);
+				}
+			} else if (WCSIBEG(argv[i], L"/p")) {
+				argv[i] += 2;
+				if (*argv[i] != L'\0' && i+1 < argc) {
+					getOrg();
+					ending = NULL;
+					SetPosition(2, argv+i);
+					++i;
+				}
+			} else if (WCSIBEG(argv[i], L"/f")) {
+				getOrg();
+				argv[i] += 2;
+				SetForeground(*argv[i] == L'\0' ? 0 : 1, argv+i);
+			} else if (WCSIBEG(argv[i], L"/b")) {
+				getOrg();
+				argv[i] += 2;
+				SetBackground(*argv[i] == L'\0' ? 0 : 1, argv+i);
+			} else if (WCSIBEG(argv[i], L"/a")) {
+				getOrg();
+				argv[i] += 2;
+				SetColor(*argv[i] == L'\0' ? 0 : 1, argv+i);
+			} else if (WCSIBEG(argv[i], L"/e")) {
+				if (argv[i][2] == L'?') {
+					cmd_printf(L"%s\r\n", EscapeHelpStr);
+					return EXIT_SUCCESS;
+				}
+				opts.escapes = TRUE;
+				if (argv[i][2] != L'\0' && !iswalnum(argv[i][2])) {
+					opts.esc_ch = argv[i][2];
+				}
+			} else if (WCSIEQ(argv[i], L"/l")) {
+				getOrg();
+				underline ^= TRUE;
+				arg = underline ? L"1" : L"0";
+				SetUnderline(1, &arg);
+			} else if (WCSIEQ(argv[i], L"/n")) {
+				ending = NULL;
+			} else if (WCSIEQ(argv[i], L"/u")) {
+				ending = L"\n";
+			} else if (WCSIEQ(argv[i], L"/v")) {
+				opts.vertical ^= TRUE;
+			} else if (WCSEQ(argv[i], L"//")) {
+				opts_done = TRUE;
+			}
+		}
+	}
+
+	if (got_org == 1) {
+		SetConsoleTextAttribute(consoleOutput, csbi.wAttributes);
+		SetConsoleCursorPosition(consoleOutput, csbi.dwCursorPosition);
+	}
+
+	if (ending != NULL) {
+		if (opts.console) {
+			DWORD dummy;
+			WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
+		} else {
+			cmd_printf(ending);
+		}
+	}
+
+	return EXIT_SUCCESS;
+}
+
+static void doEcho(LPCWSTR text, const struct sEchoOptions *options)
+{
 	DWORD dummy;
 
-	int i;
-	for (i = 0; i < argc; ++i) {
-		if (*argv[i] != L'/') {
-			break;
-		}
-		if (WCSIEQ(argv[i], L"/c")) {
-			console = haveOutputHandle();
-		} else if (WCSIBEG(argv[i], L"/e")) {
-			if (argv[i][2] == L'?') {
-				cmd_printf(L"%s\r\n", EscapeHelpStr);
-				return EXIT_SUCCESS;
-			}
-			escapes = TRUE;
-			if (argv[i][2] != L'\0' && !iswalnum(argv[i][2])) {
-				esc_ch = argv[i][2];
-			}
-		} else if (WCSIEQ(argv[i], L"/n")) {
-			ending = L"";
-		} else if (WCSIEQ(argv[i], L"/u")) {
-			ending = L"\n";
-		} else if (WCSIEQ(argv[i], L"/v")) {
-			vertical = TRUE;
-		} else if (WCSEQ(argv[i], L"//")) {
-			++i;
-			break;
-		}
-	}
-
-	if (i == argc) {
-		if (*ending != L'\0') {
-			if (console) {
-				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
-			} else {
-				cmd_printf(ending);
-			}
-		}
-		return EXIT_SUCCESS;
-	}
-
-	if (i == argc-1) {
-		len = sbcpy(stringBuffer, argv[i]);
-	} else {
-		text = stringBuffer;
-		for (; i < argc; ++i) {
-			text += sbprintf(text, L"%s ", argv[i]);
-		}
-		*--text = L'\0';
-		len = text - stringBuffer;
-	}
-
-	if (escapes) {
-		for (text = stringBuffer; *text != L'\0'; ++text) {
-			if (*text == esc_ch) {
+	if (options->escapes) {
+		LPWSTR p = stringBuffer, end = p + STRINGBUFFERMAX - 1;
+		for (; *text != L'\0' && p < end;) {
+			if (*text == options->esc_ch) {
 				WCHAR esc = 0;
 				LPCWSTR hex = NULL;
-				if (text[1] == esc_ch) {
-					esc = esc_ch;
+				if (text[1] == options->esc_ch) {
+					esc = options->esc_ch;
 				} else switch (text[1]) {
 					case L'a': esc = L'\a'; break;
 					case L'b': esc = L'\b'; break;
@@ -935,47 +1012,42 @@ int CallEcho(int argc, LPCWSTR argv[])
 					case L'U': hex = L"%6x%n"; break;
 				}
 				if (esc != 0) {
-					*text = esc;
-					wcscpy(text+1, text+2);
-					--len;
+					*p++ = esc;
+					text += 2;
+					continue;
 				} else if (hex != NULL) {
 					DWORD code;
 					int size = 0;
 					swscanf(text+2, hex, &code, &size);
 					if (size != 0) {
 						if (code < 0x10000) {
-							*text = code;
+							*p++ = code;
 						} else {
 							code -= 0x10000;
-							*text++ = HIGH_SURROGATE_START + (code >> 10);
-							*text = LOW_SURROGATE_START + (code & 0x3ff);
-							--size;
+							*p++ = HIGH_SURROGATE_START + (code >> 10);
+							*p++ = LOW_SURROGATE_START + (code & 0x3ff);
 						}
-						wcscpy(text+1, text+2+size);
-						len -= size;
+						text += 2 + size;
+						continue;
 					}
 				}
-				// else ignore unknown escapes and preserve the backslash
+				// else ignore unknown escapes and preserve the escape char
 			}
+			*p++ = *text++;
 		}
+		*p = L'\0';
+		text = stringBuffer;
 	}
 
-	if (!vertical) {
-		if (console) {
-			WriteConsole(consoleOutput, stringBuffer, len, &dummy, NULL);
-			if (*ending != L'\0') {
-				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
-			}
+	if (!options->vertical) {
+		if (options->console) {
+			WriteConsole(consoleOutput, text, wcslen(text), &dummy, NULL);
 		} else {
-			cmd_printf(L"%s%s", stringBuffer, ending);
+			cmd_printf(L"%s", text);
 		}
 	} else {
-		if (*ending == L'\0') {
-			ending = L"\r\n";
-		}
 		int col = getPosition().X;
 		LPWSTR next;
-		text = stringBuffer;
 		while (*text != L'\0') {
 			// CharNext skips over the high surrogate and stops at the low.
 			if (*text >= HIGH_SURROGATE_START && *text <= HIGH_SURROGATE_END
@@ -988,18 +1060,16 @@ int CallEcho(int argc, LPCWSTR argv[])
 					--next;
 				}
 			}
-			if (console) {
+			if (options->console) {
 				WriteConsole(consoleOutput, text, next - text, &dummy, NULL);
 				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
 			} else {
-				cmd_printf(L"%.*s%s", next - text, text, ending);
+				cmd_printf(L"%.*s\n", next - text, text);
 			}
 			text = next;
 			setPosition(getPosition().Y, col);
 		}
 	}
-
-	return EXIT_SUCCESS;
 }
 
 BOOL SetEcho(int argc, LPCWSTR argv[])
