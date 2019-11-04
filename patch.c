@@ -333,284 +333,285 @@ int __fastcall fastPutStdErrMsg62(int b, va_list *d, UINT a, UINT c)
 	return MyPutStdErrMsg(a, b, c, d);
 }
 
-// GCC doesn't support the naked attribute for x86, so use a single function
-// with multiple entry points, instead.  (Naked prevents the normal function
-// prologue and epilogue being used; hooking relies on ESP being a known value,
-// which the prologue/epilogue will modify.)
-void MyLexTextESI(), SFWork_mkstr(), ForFend(), ForFend_opp(), ForFbegin_jmp();
-void ParseFor_hook(), ParseForF_hook(), GotoEof();
+#define PROC(func) \
+	void func();\
+	asm("_" #func ":\n"
+#define ENDPROC );
 
-void bare_x86(void)
-{
-	asm(
-	"_MyLexTextESI:\n"
-		"call _MyLexText\n"
-		"movl %eax,%esi\n"
-		"ret\n"
+PROC(MyLexTextESI)
+	"call _MyLexText\n"
+	"movl %eax,%esi\n"
+	"ret"
+ENDPROC
 
-	"_SFWork_mkstr:\n"
-		"push %ecx\n"               // preserve possible register argument
-		"mov _SFWork_first,%eax\n"
-		"pushl (%eax,%ebp)\n"
-		"mov _SFWork_passed,%eax\n"
-		"pushl (%eax,%ebp)\n"
-		"mov _SFWork_saved,%eax\n"
-		"test %eax,%eax\n"
-		"mov (%eax,%ebp),%eax\n"
-		"js 1f\n"
-		"mov -28(%ebp),%ecx\n"      // debug version doesn't store it
-		"lea 4(%ecx,%eax,4),%eax\n"
-		"1:\n"
-		"pushl (%eax)\n"
-		"call _SFWork_hook\n"
-		"add $12,%esp\n"
-		"pop %ecx\n"
-		"test %eax,%eax\n"
-		"js 1f\n"
-		"jz org\n"
-		"mov %eax,%ecx\n"           // 6.2.9200.16384 passes in eax, 6.3+ in ecx
-		"mov %esp,_SFWork_esp\n"    // 6.2.8102.0 is stdcall, but mkstr is fast
-		"push %eax\n"
-		"call *_FreeStack\n"        // free everything allocated between loops
-		"mov _SFWork_esp,%esp\n"
-		"1:\n"
-		"mov _SFWork_passed,%eax\n"
-		"mov (%eax,%ebp),%eax\n"
-		"mov (%eax),%eax\n"         // reuse the original mkstr
-		"mov -8(%eax),%ecx\n"       // no terminator is added, reset to 0
-		"sub $8,%ecx\n"             // length that was requested
-		"push %eax\n"
-		"push %edi\n"
-		"mov %eax,%edi\n"
-		"xor %eax,%eax\n"
-		"rep stosb\n"
-		"pop %edi\n"
-		"pop %eax\n"
-		"mov _SFWork_mkstr_reg,%cl\n"
-		"test %cl,%cl\n"
-		"jnz 1f\n"                  // inline
-		"cmp %cl,_SFWork_stdcall\n"
-		"jz exit\n"                 // fastcall, just return
-		"ret $4\n"                  // stdcall, tidy up
-		"1:\n"
-		"addl $0x34,(%esp)\n"       // skip over all the inline code
-		"cmp $0xF6,%cl\n"           // select the register it uses
-		"cmove %eax,%esi\n"
-		"cmovb %eax,%ebx\n"         // 0xDB
-		"cmova %eax,%edi\n"         // 0xFF
-		"ret $8\n"
-		"org:\n"
-		"jmp *_SFWork_mkstr_org\n"
-		"exit:\n"
-		"ret\n"
+PROC(SFWork_mkstr)
+	"push %ecx\n"               // preserve possible register argument
+	"mov _SFWork_first,%eax\n"
+	"pushl (%eax,%ebp)\n"
+	"mov _SFWork_passed,%eax\n"
+	"pushl (%eax,%ebp)\n"
+	"mov _SFWork_saved,%eax\n"
+	"test %eax,%eax\n"
+	"mov (%eax,%ebp),%eax\n"
+	"js 1f\n"
+	"mov -28(%ebp),%ecx\n"      // debug version doesn't store it
+	"lea 4(%ecx,%eax,4),%eax\n"
+	"1:\n"
+	"pushl (%eax)\n"
+	"call _SFWork_hook\n"
+	"add $12,%esp\n"
+	"pop %ecx\n"
+	"test %eax,%eax\n"
+	"js 1f\n"
+	"jz org\n"
+	"mov %eax,%ecx\n"           // 6.2.9200.16384 passes in eax, 6.3+ in ecx
+	"mov %esp,_SFWork_esp\n"    // 6.2.8102.0 is stdcall, but mkstr is fast
+	"push %eax\n"
+	"call *_FreeStack\n"        // free everything allocated between loops
+	"mov _SFWork_esp,%esp\n"
+	"1:\n"
+	"mov _SFWork_passed,%eax\n"
+	"mov (%eax,%ebp),%eax\n"
+	"mov (%eax),%eax\n"         // reuse the original mkstr
+	"mov -8(%eax),%ecx\n"       // no terminator is added, reset to 0
+	"sub $8,%ecx\n"             // length that was requested
+	"push %eax\n"
+	"push %edi\n"
+	"mov %eax,%edi\n"
+	"xor %eax,%eax\n"
+	"rep stosb\n"
+	"pop %edi\n"
+	"pop %eax\n"
+	"mov _SFWork_mkstr_reg,%cl\n"
+	"test %cl,%cl\n"
+	"jnz 1f\n"                  // inline
+	"cmp %cl,_SFWork_stdcall\n"
+	"jz exit\n"                 // fastcall, just return
+	"ret $4\n"                  // stdcall, tidy up
+	"1:\n"
+	"addl $0x34,(%esp)\n"       // skip over all the inline code
+	"cmp $0xF6,%cl\n"           // select the register it uses
+	"cmove %eax,%esi\n"
+	"cmovb %eax,%ebx\n"         // 0xDB
+	"cmova %eax,%edi\n"         // 0xFF
+	"ret $8\n"
+	"org:\n"
+	"jmp *_SFWork_mkstr_org\n"
+	"exit:\n"
+	"ret"
+ENDPROC
 
-	"_ForFend:\n"
-		"pushf\n"
-		"setnc %cl\n"
-		"call _ForFend_hook\n"
-		"popf\n"
-		"jnc 1f\n"
-		"mov _ForFend_org,%eax\n"
-		"mov %eax,(%esp)\n"
-		"1:\n"
-		"ret\n"
+PROC(ForFend)
+	"pushf\n"
+	"setnc %cl\n"
+	"call _ForFend_hook\n"
+	"popf\n"
+	"jnc 1f\n"
+	"mov _ForFend_org,%eax\n"
+	"mov %eax,(%esp)\n"
+	"1:\n"
+	"ret"
+ENDPROC
 
-	"_ForFend_opp:\n"
-		"pushf\n"
-		"setnc %cl\n"
-		"call _ForFend_hook\n"
-		"popf\n"
-		"jc 1f\n"
-		"mov _ForFend_org,%eax\n"
-		"mov %eax,(%esp)\n"
-		"1:\n"
-		"ret\n"
+PROC(ForFend_opp)
+	"pushf\n"
+	"setnc %cl\n"
+	"call _ForFend_hook\n"
+	"popf\n"
+	"jc 1f\n"
+	"mov _ForFend_org,%eax\n"
+	"mov %eax,(%esp)\n"
+	"1:\n"
+	"ret"
+ENDPROC
 
-	"_ForFbegin_jmp:\n"
-		"call _ForFbegin_hook\n"
-		"jmp *_ForFbegin_org\n"
+PROC(ForFbegin_jmp)
+	"call _ForFbegin_hook\n"
+	"jmp *_ForFbegin_org"
+ENDPROC
 
-	"_ParseFor_hook:\n"
-		"push %eax\n"
-		"push %ecx\n"
-		"call _ParseFor\n"
-		"pop %ecx\n"
-		"pop %eax\n"
-		"jmp *_ParseFor_org\n"
+PROC(ParseFor_hook)
+	"push %eax\n"
+	"push %ecx\n"
+	"call _ParseFor\n"
+	"pop %ecx\n"
+	"pop %eax\n"
+	"jmp *_ParseFor_org"
+ENDPROC
 
-	"_ParseForF_hook:\n"
-		"pop _ParseForF_ret\n"
-		"call *_ParseForF_org\n"
-		"push _ParseForF_ret\n"
-		"jmp _ParseForF\n"
+PROC(ParseForF_hook)
+	"pop _ParseForF_ret\n"
+	"call *_ParseForF_org\n"
+	"push _ParseForF_ret\n"
+	"jmp _ParseForF"
+ENDPROC
 
-	"_GotoEof:\n"
-		"push 12(%esp)\n"
-		"push 12(%esp)\n"
-		"push 12(%esp)\n"
-		"call __wcsnicmp\n"             // should really call original, but meh
-		"add $12,%esp\n"
-		"test %eax,%eax\n"
-		"jz 1f\n"
-		"mov _Goto_pos,%ecx\n"
-		"mov %ebp,%eax\n"
-		"test %ecx,%ecx\n"
-		"cmovns %esp,%eax\n"
-		"add %eax,%ecx\n"
-		"add _Goto_start,%eax\n"
-		"mov (%eax),%edx\n"
-		"push %ecx\n"
-		"push (%ecx)\n"
-		"mov 8+4(%esp),%ecx\n"
-		"call _Goto\n"
-		"test %eax,%eax\n"
-		"pop %ecx\n"
-		"js 1f\n"
-		"mov %eax,(%ecx)\n"
-		"xor %eax,%eax\n"
-		"cmp _Goto_reg,%al\n"
-		"jl 2f\n"
-		"jg 3f\n"
-		"mov %ax,(%esi)\n"
-		"sub $8,%esi\n"
-		"ret\n"
-		"2:\n"
-		"mov %ax,(%edi)\n"
-		"sub $8,%edi\n"
-		"ret\n"
-		"3:\n"
-		"mov %ax,(%ebx)\n"
-		"sub $8,%ebx\n"
-		"1:\n"
-		"ret\n"
-	);
-}
+PROC(GotoEof)
+	"push 12(%esp)\n"
+	"push 12(%esp)\n"
+	"push 12(%esp)\n"
+	"call __wcsnicmp\n"             // should really call original, but meh
+	"add $12,%esp\n"
+	"test %eax,%eax\n"
+	"jz 1f\n"
+	"mov _Goto_pos,%ecx\n"
+	"mov %ebp,%eax\n"
+	"test %ecx,%ecx\n"
+	"cmovns %esp,%eax\n"
+	"add %eax,%ecx\n"
+	"add _Goto_start,%eax\n"
+	"mov (%eax),%edx\n"
+	"push %ecx\n"
+	"push (%ecx)\n"
+	"mov 8+4(%esp),%ecx\n"
+	"call _Goto\n"
+	"test %eax,%eax\n"
+	"pop %ecx\n"
+	"js 1f\n"
+	"mov %eax,(%ecx)\n"
+	"xor %eax,%eax\n"
+	"cmp _Goto_reg,%al\n"
+	"jl 2f\n"
+	"jg 3f\n"
+	"mov %ax,(%esi)\n"
+	"sub $8,%esi\n"
+	"ret\n"
+	"2:\n"
+	"mov %ax,(%edi)\n"
+	"sub $8,%edi\n"
+	"ret\n"
+	"3:\n"
+	"mov %ax,(%ebx)\n"
+	"sub $8,%ebx\n"
+	"1:\n"
+	"ret"
+ENDPROC
 
 #else
 
-void SFWork_mkstr(void)
-{
-	asm(
-		"cmpb $0,cmdDebug(%rip)\n"      // debug version (only one, so far)
-		"cmovnz 0xB0(%rsp),%r9d\n"      // retrieve the values
-		"cmovnz %r12,%rdx\n"
-		"mov %r9d,%r8d\n"
-		"push %rcx\n"
-		"push %rdx\n"
-		"movzxb SFWork_saved(%rip),%eax\n"
-		"test $0x80,%al\n"
-		"jns 2f\n"
-		"cmp $0xA0,%al\n"
-		"je 1f\n"
-		"mov 0x18(%rsp,%rax),%rax\n"    // 0x90, 0x80
-		"mov 8(%rax,%rdi,8),%rcx\n"
-		"jmp 3f\n"
-		"org:\n"
-		"jmp *SFWork_mkstr_org(%rip)\n"
-		"1:\n"
-		"mov 8(%rsp,%rax),%rax\n"       // 0xA0
-		"mov 8(%rax,%r13,8),%rcx\n"
-		"jmp 3f\n"
-		"2:\n"
-		"cmp $0x34,%al\n"
-		"jne 1f\n"
-		"mov (%r14),%rcx\n"             // 0x34
-		"jmp 3f\n"
-		"1:\n"
-		"cmova %r15,%rax\n"             // 0x3C
-		"cmovb %r13,%rax\n"             // 0x2C
-		"mov 8(%rax),%rcx\n"
-		"3:\n"
-		"sub $32,%rsp\n"                // shadow space
-		"call SFWork_hook\n"
-		"add $32,%rsp\n"
-		"pop %rdx\n"
-		"pop %rcx\n"
-		"test %eax,%eax\n"
-		"js 1f\n"
-		"jz org\n"
-		"push %rdx\n"
-		"sub $32,%rsp\n"                // shadow space
-		"mov %eax,%ecx\n"
-		"call *FreeStack(%rip)\n"       // free everything allocated between loops
-		"add $32,%rsp\n"
-		"pop %rdx\n"
-		"1:\n"
-		"mov (%rdx),%rax\n"             // reuse the original mkstr
-		"mov -16(%rax),%rcx\n"          // no terminator is added, reset to 0
-		"sub $16,%rcx\n"                // length that was requested
-		"push %rax\n"
-		"push %rdi\n"
-		"mov %rax,%rdi\n"
-		"xor %eax,%eax\n"
-		"rep stosb\n"
-		"pop %rdi\n"
-		"pop %rax\n"
-		"mov SFWork_mkstr_reg(%rip),%cl\n"
-		"test %cl,%cl\n"
-		"jz exit\n"
-		"addq $0x48,(%rsp)\n"           // skip over all the inline code
-		"cmp $0xFF,%cl\n"               // select the register it uses
-		"cmove %rax,%rdi\n"
-		"cmovne %rax,%rbx\n"
-		"exit:"
-	);
-}
+#define PROC(func) \
+	void func();\
+	asm(#func ":\n"
+#define ENDPROC );
 
-void GotoEof(void)
-{
-	asm(
-		"push %rcx\n"
-		"sub $40,%rsp\n"
-		"call _wcsnicmp\n"
-		"add $40,%rsp\n"
-		"pop %rcx\n"
-		"test %eax,%eax\n"
-		"jz 1f\n"
-		"mov Goto_pos(%rip),%al\n"
-		"test %al,%al\n"
-		"mov 0x58(%rsp),%r8d\n"         // only one in the stack
-		"jns 2f\n"
-		"cmp $0xe0,%al\n"
-		"mov %esi,%r8d\n"               // F0
-		"cmove %r12,%r8\n"              // E0
-		"cmovb %r14,%r8\n"              // 8B
-		"2:\n"
-		"movzxb Goto_start(%rip),%edx\n"
-		"mov (%rsp,%rdx),%edx\n"
-		"push %rcx\n"
-		"sub $40,%rsp\n"
-		"call Goto\n"
-		"add $40,%rsp\n"
-		"pop %rcx\n"
-		"test %eax,%eax\n"
-		"js 1f\n"
-		"mov Goto_pos(%rip),%dl\n"
-		"test %dl,%dl\n"
-		"js 3f\n"
-		"mov %eax,0x58(%rsp)\n"         // only one in the stack
-		"jmp 4f\n"
-		"3:\n"
-		"cmp $0xe0,%dl\n"
-		"cmova %rax,%rsi\n"             // F0
-		"cmove %rax,%r12\n"             // E0
-		"cmovb %rax,%r14\n"             // 8B
-		"4:\n"
-		"xor %eax,%eax\n"
-		"cmp %rcx,%rbx\n"
-		"jne 2f\n"
-		"mov %ax,(%rbx)\n"
-		"sub $8,%rbx\n"
-		"ret\n"
-		"2:\n"
-		"mov %ax,(%rdi)\n"
-		"sub $8,%rdi\n"
-		"1:\n"
-	);
-}
+PROC(SFWork_mkstr)
+	"cmpb $0,cmdDebug(%rip)\n"      // debug version (only one, so far)
+	"cmovnz 0xB0(%rsp),%r9d\n"      // retrieve the values
+	"cmovnz %r12,%rdx\n"
+	"mov %r9d,%r8d\n"
+	"push %rcx\n"
+	"push %rdx\n"
+	"movzxb SFWork_saved(%rip),%eax\n"
+	"test $0x80,%al\n"
+	"jns 2f\n"
+	"cmp $0xA0,%al\n"
+	"je 1f\n"
+	"mov 0x18(%rsp,%rax),%rax\n"    // 0x90, 0x80
+	"mov 8(%rax,%rdi,8),%rcx\n"
+	"jmp 3f\n"
+	"org:\n"
+	"jmp *SFWork_mkstr_org(%rip)\n"
+	"1:\n"
+	"mov 8(%rsp,%rax),%rax\n"       // 0xA0
+	"mov 8(%rax,%r13,8),%rcx\n"
+	"jmp 3f\n"
+	"2:\n"
+	"cmp $0x34,%al\n"
+	"jne 1f\n"
+	"mov (%r14),%rcx\n"             // 0x34
+	"jmp 3f\n"
+	"1:\n"
+	"cmova %r15,%rax\n"             // 0x3C
+	"cmovb %r13,%rax\n"             // 0x2C
+	"mov 8(%rax),%rcx\n"
+	"3:\n"
+	"sub $32,%rsp\n"                // shadow space
+	"call SFWork_hook\n"
+	"add $32,%rsp\n"
+	"pop %rdx\n"
+	"pop %rcx\n"
+	"test %eax,%eax\n"
+	"js 1f\n"
+	"jz org\n"
+	"push %rdx\n"
+	"sub $32,%rsp\n"                // shadow space
+	"mov %eax,%ecx\n"
+	"call *FreeStack(%rip)\n"       // free everything allocated between loops
+	"add $32,%rsp\n"
+	"pop %rdx\n"
+	"1:\n"
+	"mov (%rdx),%rax\n"             // reuse the original mkstr
+	"mov -16(%rax),%rcx\n"          // no terminator is added, reset to 0
+	"sub $16,%rcx\n"                // length that was requested
+	"push %rax\n"
+	"push %rdi\n"
+	"mov %rax,%rdi\n"
+	"xor %eax,%eax\n"
+	"rep stosb\n"
+	"pop %rdi\n"
+	"pop %rax\n"
+	"mov SFWork_mkstr_reg(%rip),%cl\n"
+	"test %cl,%cl\n"
+	"jz exit\n"
+	"addq $0x48,(%rsp)\n"           // skip over all the inline code
+	"cmp $0xFF,%cl\n"               // select the register it uses
+	"cmove %rax,%rdi\n"
+	"cmovne %rax,%rbx\n"
+	"exit:\n"
+	"ret"
+ENDPROC
 
-// Using the labels in C isn't as efficient as storing the offsets in the
-// function and reading them from there.
+PROC(GotoEof)
+	"push %rcx\n"
+	"sub $40,%rsp\n"
+	"call _wcsnicmp\n"
+	"add $40,%rsp\n"
+	"pop %rcx\n"
+	"test %eax,%eax\n"
+	"jz 1f\n"
+	"mov Goto_pos(%rip),%al\n"
+	"test %al,%al\n"
+	"mov 0x58(%rsp),%r8d\n"         // only one in the stack
+	"jns 2f\n"
+	"cmp $0xe0,%al\n"
+	"mov %esi,%r8d\n"               // F0
+	"cmove %r12,%r8\n"              // E0
+	"cmovb %r14,%r8\n"              // 8B
+	"2:\n"
+	"movzxb Goto_start(%rip),%edx\n"
+	"mov (%rsp,%rdx),%edx\n"
+	"push %rcx\n"
+	"sub $40,%rsp\n"
+	"call Goto\n"
+	"add $40,%rsp\n"
+	"pop %rcx\n"
+	"test %eax,%eax\n"
+	"js 1f\n"
+	"mov Goto_pos(%rip),%dl\n"
+	"test %dl,%dl\n"
+	"js 3f\n"
+	"mov %eax,0x58(%rsp)\n"         // only one in the stack
+	"jmp 4f\n"
+	"3:\n"
+	"cmp $0xe0,%dl\n"
+	"cmova %rax,%rsi\n"             // F0
+	"cmove %rax,%r12\n"             // E0
+	"cmovb %rax,%r14\n"             // 8B
+	"4:\n"
+	"xor %eax,%eax\n"
+	"cmp %rcx,%rbx\n"
+	"jne 2f\n"
+	"mov %ax,(%rbx)\n"
+	"sub $8,%rbx\n"
+	"ret\n"
+	"2:\n"
+	"mov %ax,(%rdi)\n"
+	"sub $8,%rdi\n"
+	"1:\n"
+	"ret"
+ENDPROC
+
+// Using the labels in C isn't as efficient as storing the offsets directly.
 #define redirect_data		((LPDWORD) redirect_code + 1)
 #define redirect_code_start ((LPBYTE) redirect_code + redirect_data[0])
 #define redirect_code_size	redirect_data[1]
@@ -631,127 +632,124 @@ void GotoEof(void)
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
-void redirect_code(void)
-{
-	asm(
-		"ret\n"                 // never called, but it avoids dereferencing
-		".align 4\n"            // redirect_code and the strict alias warning
-		".long redirect_code_start - redirect_code\n"
-		".macro rel label\n"
-		".long \\label - redirect_code_start\n"
-		".endm\n"
-		"rel redirect_code_end\n"
-		"rel rMyPutStdErrMsg\n"
-		"rel rMyLexText\n"
-		"rel rPromptUser\n"
-		"rel rAbortFlag+1\n"
-		"rel rPromptUserOrg\n"
-		"rel rSFWork_mkstr\n"
-		"rel rForFbegin\n"
-		"rel rForFend\n"
-		"rel rForFendj\n"
-		"rel rParseFor\n"
-		"rel rParseForF\n"
-		"rel aParseFor_org\n"
-		"rel aGotoEof\n"
+asm(".align 4");
+PROC(redirect_code)
+	".long 0\n"                     // avoid type-punning on redirect_code
+	".long redirect_code_start - redirect_code\n"
+	".macro rel label\n"
+	".long \\label - redirect_code_start\n"
+	".endm\n"
+	"rel redirect_code_end\n"
+	"rel rMyPutStdErrMsg\n"
+	"rel rMyLexText\n"
+	"rel rPromptUser\n"
+	"rel rAbortFlag+1\n"
+	"rel rPromptUserOrg\n"
+	"rel rSFWork_mkstr\n"
+	"rel rForFbegin\n"
+	"rel rForFend\n"
+	"rel rForFendj\n"
+	"rel rParseFor\n"
+	"rel rParseForF\n"
+	"rel aParseFor_org\n"
+	"rel aGotoEof\n"
 
-		"redirect_code_start:\n"
+"redirect_code_start:\n"
 
-		"rMyPutStdErrMsg:\n"
-		"jmp *aMyPutStdErrMsg(%rip)\n"
+"rMyPutStdErrMsg:\n"
+	"jmp *aMyPutStdErrMsg(%rip)\n"
 
-		"mov $0x4000,%ebx\n"            // used by the debug version
-		"rMyLexText:\n"
-		"jmp *aMyLexText(%rip)\n"
+	"mov $0x4000,%ebx\n"            // used by the debug version
+"rMyLexText:\n"
+	"jmp *aMyLexText(%rip)\n"
 
-		"rPromptUser:\n"
-		"cmp $0x237b,%edx\n"            // Terminate batch job?
-		"jne 1f\n"
-		"rAbortFlag:\n"
-		"mov $0,%eax\n"                 // value patched in
-		"ret\n"
-		"1:\n"
-		"pop %rax\n"                    // return address
-		"add $2,%rax\n"                 // skip RET/NOP
-		"rPromptUserOrg:\n"
-		".fill 7,1,0x90\n"              // original code patched in
-		"push %rax\n"
-		"ret\n"
+"rPromptUser:\n"
+	"cmp $0x237b,%edx\n"            // Terminate batch job?
+	"jne 1f\n"
+"rAbortFlag:\n"
+	"mov $0,%eax\n"                 // value patched in
+	"ret\n"
+	"1:\n"
+	"pop %rax\n"                    // return address
+	"add $2,%rax\n"                 // skip RET/NOP
+"rPromptUserOrg:\n"
+	".fill 7,1,0x90\n"              // original code patched in
+	"push %rax\n"
+	"ret\n"
 
-		"rSFWork_mkstr:\n"
-		"jmp *aSFWork_mkstr(%rip)\n"
+"rSFWork_mkstr:\n"
+	"jmp *aSFWork_mkstr(%rip)\n"
 
-		"rForFbegin:\n"
-		"push %rdx\n"                   // one of these registers may contain LF
-		//"push %r8\n"                  // these registers aren't used by the hook
-		//"push %r9\n"
-		//"push %r10\n"
-		//"sub $32,%rsp\n"              // shadow space not needed
-		"call *aForFbegin_hook(%rip)\n"
-		//"add $32,%rsp\n"
-		//"pop %r10\n"
-		//"pop %r9\n"
-		//"pop %r8\n"
-		"pop %rdx\n"
-		"ret\n"
+"rForFbegin:\n"
+	"push %rdx\n"                   // one of these registers may contain LF
+	//"push %r8\n"                  // these registers aren't used by the hook
+	//"push %r9\n"
+	//"push %r10\n"
+	//"sub $32,%rsp\n"              // shadow space not needed
+	"call *aForFbegin_hook(%rip)\n"
+	//"add $32,%rsp\n"
+	//"pop %r10\n"
+	//"pop %r9\n"
+	//"pop %r8\n"
+	"pop %rdx\n"
+	"ret\n"
 
-		"rForFend:\n"
-		"pushf\n"
-		"push %rdx\n"
-		//"push %r8\n"
-		//"push %r9\n"
-		//"push %r10\n"
-		"setnc %cl\n"
-		//"sub $32,%rsp\n"
-		"call *aForFend_hook(%rip)\n"
-		//"add $32,%rsp\n"
-		//"pop %r10\n"
-		//"pop %r9\n"
-		//"pop %r8\n"
-		"pop %rdx\n"
-		"popf\n"
-		"rForFendj:\n"
-		"jnc 1f\n"                      // possibly patched to jc
-		"movabs ForFend_org,%rax\n"
-		"mov %rax,(%rsp)\n"
-		"1:\n"
-		"ret\n"
+"rForFend:\n"
+	"pushf\n"
+	"push %rdx\n"
+	//"push %r8\n"
+	//"push %r9\n"
+	//"push %r10\n"
+	"setnc %cl\n"
+	//"sub $32,%rsp\n"
+	"call *aForFend_hook(%rip)\n"
+	//"add $32,%rsp\n"
+	//"pop %r10\n"
+	//"pop %r9\n"
+	//"pop %r8\n"
+	"pop %rdx\n"
+	"popf\n"
+"rForFendj:\n"
+	"jnc 1f\n"                      // possibly patched to jc
+	"movabs ForFend_org,%rax\n"
+	"mov %rax,(%rsp)\n"
+	"1:\n"
+	"ret\n"
 
-		"rParseFor:\n"
-		"push %rcx\n"
-		"push %rdx\n"
-		"call *aParseFor(%rip)\n"
-		"pop %rdx\n"
-		"pop %rcx\n"
-		"jmp *aParseFor_org(%rip)\n"
+"rParseFor:\n"
+	"push %rcx\n"
+	"push %rdx\n"
+	"call *aParseFor(%rip)\n"
+	"pop %rdx\n"
+	"pop %rcx\n"
+	"jmp *aParseFor_org(%rip)\n"
 
-		"rParseForF:\n"
-		"sub $32,%rsp\n"
-		"call *aParseForF_org(%rip)\n"
-		"add $32,%rsp\n"
-		"push %rax\n"
-		"call *aParseForF(%rip)\n"
-		"pop %rax\n"
-		"ret\n"
+"rParseForF:\n"
+	"sub $32,%rsp\n"
+	"call *aParseForF_org(%rip)\n"
+	"add $32,%rsp\n"
+	"push %rax\n"
+	"call *aParseForF(%rip)\n"
+	"pop %rax\n"
+	"ret\n"
 
-		".align 8\n"
-		".macro abs label\n"
-		"a\\label: .quad \\label\n"
-		".endm\n"
-		"abs MyPutStdErrMsg\n"
-		"abs MyLexText\n"
-		"abs SFWork_mkstr\n"
-		"abs ForFbegin_hook\n"
-		"abs ForFend_hook\n"
-		"abs ParseFor\n"
-		"abs ParseForF\n"
-		"aParseFor_org: .quad 0\n"
-		"aParseForF_org: .quad 0\n"
-		"abs GotoEof\n"
+	".align 8\n"
+	".macro abs label\n"
+	"a\\label: .quad \\label\n"
+	".endm\n"
+	"abs MyPutStdErrMsg\n"
+	"abs MyLexText\n"
+	"abs SFWork_mkstr\n"
+	"abs ForFbegin_hook\n"
+	"abs ForFend_hook\n"
+	"abs ParseFor\n"
+	"abs ParseForF\n"
+	"aParseFor_org: .quad 0\n"
+	"aParseForF_org: .quad 0\n"
+	"abs GotoEof\n"
 
-		"redirect_code_end:\n"
-	);
-}
+"redirect_code_end:"
+ENDPROC
 
 #endif
 
