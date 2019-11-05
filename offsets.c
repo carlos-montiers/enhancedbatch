@@ -1669,8 +1669,8 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x0dff9,	// SFWork:resize (inline)
 	0x0df35,	// SFWork:saved
 	0x30042,	// GotoFlag
-	0x0e7d9,	// FOR /F begin
-	0x0d57a,	// FOR /F end
+	0x0d57a,	// FOR /F begin
+	0x0e7d9,	// FOR /F end
 	0x0dc04,	// ParseFor initial token
 	0x30144,	// LexBufPtr
 	0x4ba62,	// LexBuffer end

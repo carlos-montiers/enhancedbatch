@@ -79,6 +79,11 @@ int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
 		kh_val(sfwork_map, k) = 0;
 		return 0;
 	}
+	if CMD_VERSION(6,2,8102,0) {
+		// This version inlines SFWork within SubFor, so FreeStack frees more
+		// than it should.
+		return -1;
+	}
 	k = kh_get(ptrdw, sfwork_map, (DWORD_PTR) passed);
 	if (kh_val(sfwork_map, k) == 0 || first) {
 		kh_val(sfwork_map, k) = *pDCount;
