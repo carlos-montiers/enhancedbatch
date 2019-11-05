@@ -1,4 +1,6 @@
-# Enhanced Batch makefile using TDM GCC MinGW-w64.
+# Enhanced Batch makefile using TDM GCC MinGW-w64 5.1.0-2
+# To compile, type:
+#    mingw32-make
 
 CC=gcc
 CFLAGS=-O3 -Wall
@@ -26,7 +28,7 @@ all: enhancedbatch_amd64.dll enhancedbatch_x86.dll
 
 enhancedbatch_amd64.dll: $(X64OBJ)
 	$(CC) -m64 $(LDFLAGS) -Wl,-e,_dllstart $^ -o $@ $(LIBS)
-	
+
 enhancedbatch_x86.dll: $(X86OBJ)
 	$(CC) -m32 $(LDFLAGS) -Wl,-e,__dllstart,--enable-stdcall-fixup $^ -o $@ $(LIBS)
 
