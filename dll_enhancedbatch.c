@@ -696,7 +696,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 	LPWSTR name = NULL;
 	LPWSTR varbuf = varBuffer;
 	BOOL append = FALSE;
-		
+
 	if (lpName != NULL) {
 
 		DWORD varmax = STRINGBUFFERMAX;
