@@ -21,7 +21,7 @@ set $temp2=@tempfile
 2>>%$temp2% set /a
 fc >nul %$temp% %$temp2% && goto :passed
 :: It may have failed because language resources are missing.
-findstr >nul 0x2371 %$temp2% && goto :passed
+findstr >nul 0x2371 %$temp2% && echo Passed (1 skipped).&goto :out
 echo FAILED!
 echo;~"Expected: "
 type %$temp%
