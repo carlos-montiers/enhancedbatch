@@ -530,9 +530,9 @@ PROC(SFWork_mkstr)
 	"cmovb %r13,%rax\n"             // 0x2C
 	"mov 8(%rax),%rcx\n"
 	"3:\n"
-	"sub $32,%rsp\n"                // shadow space
+	"sub $40,%rsp\n"                // shadow space and alignment
 	"call SFWork_hook\n"
-	"add $32,%rsp\n"
+	"add $40,%rsp\n"
 	"pop %rdx\n"
 	"pop %rcx\n"
 	"test %eax,%eax\n"
@@ -568,9 +568,9 @@ ENDPROC
 
 PROC(GotoEof)
 	"push %rcx\n"
-	"sub $40,%rsp\n"
+	"sub $32,%rsp\n"
 	"call _wcsnicmp\n"
-	"add $40,%rsp\n"
+	"add $32,%rsp\n"
 	"pop %rcx\n"
 	"test %eax,%eax\n"
 	"jz 1f\n"
@@ -586,9 +586,9 @@ PROC(GotoEof)
 	"movzxb Goto_start(%rip),%edx\n"
 	"mov (%rsp,%rdx),%edx\n"
 	"push %rcx\n"
-	"sub $40,%rsp\n"
+	"sub $32,%rsp\n"
 	"call Goto\n"
-	"add $40,%rsp\n"
+	"add $32,%rsp\n"
 	"pop %rcx\n"
 	"test %eax,%eax\n"
 	"js 1f\n"
@@ -690,9 +690,9 @@ PROC(redirect_code)
 	//"push %r8\n"                  // these registers aren't used by the hook
 	//"push %r9\n"
 	//"push %r10\n"
-	//"sub $32,%rsp\n"              // shadow space not needed
+	//"sub $40,%rsp\n"              // shadow space not needed
 	"call *aForFbegin_hook(%rip)\n"
-	//"add $32,%rsp\n"
+	//"add $40,%rsp\n"
 	//"pop %r10\n"
 	//"pop %r9\n"
 	//"pop %r8\n"
@@ -730,9 +730,9 @@ PROC(redirect_code)
 	"jmp *aParseFor_org(%rip)\n"
 
 "rParseForF:\n"
-	"sub $32,%rsp\n"
+	"sub $40,%rsp\n"
 	"call *aParseForF_org(%rip)\n"
-	"add $32,%rsp\n"
+	"add $40,%rsp\n"
 	"push %rax\n"
 	"call *aParseForF(%rip)\n"
 	"pop %rax\n"
