@@ -1061,7 +1061,7 @@ int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 		if CMD_MAJOR_MINOR(>, 6,2) {
 			((fastPutMsg) pPutMsg)(0x2371, b, 1, (va_list *) &pargs);
 		} else if CMD_MAJOR_MINOR(==, 6,2) {
-			((fastPutMsg62) pPutMsg)(b, (va_list *) &pargs, 0x2371, c);
+			((fastPutMsg62) pPutMsg)(b, (va_list *) &pargs, 0x2371, 1);
 		} else {
 			((stdPutMsg) pPutMsg)(0x2371, b, 1, (va_list *) &pargs);
 		}
