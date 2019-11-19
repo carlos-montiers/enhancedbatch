@@ -1043,7 +1043,7 @@ void hookCmd(void)
 							 "\x89\xD7");				// mov edi,edx
 	} else if (CMD_MAJOR_MINOR(==, 10,0) && CMD_BUILD(>=, 17763)) {
 		// 10.0.17763.1
-		// 10.0.18362.1
+		// 10.0.18362.*
 		WriteCode(pForMkstr, "\x90" 					// nop
 							 "\x48\xFF\xC2" 			// inc rdx
 							 "\x66\x44\x39\x34\x51"		// cmp [rcx+rdx*2],r14w

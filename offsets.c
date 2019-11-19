@@ -920,6 +920,43 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0de7e,	// Goto start
 };
 
+const DWORD cmd_10_0_18362_449[] = {
+	0x09754,	// eol
+	0x10bac,	// MSCmdVar
+	0x0ea7b,	// Lex:text
+	0x520f0,	// TmpBuf
+	0x15140,	// PutStdErr:PutMsg
+	0x43a90,	// CurrentBatchFile
+	0x56aa4,	// fOutputUnicode
+	0x43aa4,	// fDelayedExpansion
+	0x43aa5,	// fEnableExtensions
+	0x56ab1,	// fDumpTokens
+	0x56ab2,	// fDumpParse
+	0x07d52,	// ForMkstr
+	0x07dad,	// ForResize
+	0x1263f,	// eEcho:CheckOnOff
+	0x3b110,	// EchoFlag
+	0x0be69,	// START /?
+	0x0b4c3,	// ECHO /?
+	0x2c9ac,	// PromptUser
+	0x11f60,	// FreeStack
+	0x43ad0,	// DCount
+	0x10970,	// SFWork:mkstr (inline)
+	0x10a5c,	// SFWork:resize (inline)
+	0x10962,	// SFWork:saved
+	0x43a88,	// GotoFlag
+	0x09b12,	// FOR /F begin
+	0x09ccb,	// FOR /F end
+	0x15db4,	// ParseFor initial token
+	0x438f0,	// LexBufPtr
+	0x438e2,	// LexBuffer end
+	0x15f4c,	// ParseFor /F options
+	0x43a34,	// TokLen
+	0x0dedd,	// Goto:EOF
+	0x0deaf,	// Goto pos
+	0x0de7e,	// Goto start
+};
+
 #else
 
 const DWORD cmd_5_0_2144_1[] = {
@@ -2214,6 +2251,44 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0b37e,	// SFWork:passed
 };
 
+const DWORD cmd_10_0_18362_449[] = {
+	0x10b79,	// eol
+	0x0ed43,	// MSCmdVar
+	0x0d15a,	// Lex:text
+	0x43ae0,	// TmpBuf
+	0x07854,	// PutStdErr:PutMsg
+	0x35738,	// CurrentBatchFile
+	0x4803c,	// fOutputUnicode
+	0x35744,	// fDelayedExpansion
+	0x35745,	// fEnableExtensions
+	0x48045,	// fDumpTokens
+	0x48046,	// fDumpParse
+	0x06f5d,	// ForMkstr
+	0x06fad,	// ForResize
+	0x09d10,	// eEcho:CheckOnOff
+	0x2d0c0,	// EchoFlag
+	0x0adb3,	// START /?
+	0x0a788,	// ECHO /?
+	0x2970b,	// CtrlCAbort:PromptUser
+	0x1190f,	// FreeStack
+	0x35768,	// DCount
+	0x0b4f6,	// SFWork:mkstr
+	0x0b568,	// SFWork:resize
+	0x0b4e1,	// SFWork:saved
+	0x35734,	// GotoFlag
+	0x10e50,	// FOR /F begin
+	0x10ff4,	// FOR /F end
+	0x129d7,	// ParseFor initial token
+	0x355bc,	// LexBufPtr
+	0x355b2,	// LexBuffer end
+	0x12b18,	// ParseFor /F options
+	0x356ec,	// TokLen
+	0x0c6bb,	// Goto:EOF
+	0x0c69b,	// Goto pos
+	0x0c669,	// Goto start
+	0x0b4ce,	// SFWork:passed
+};
+
 #endif
 
 #define CMD(a,b,c,d) \
@@ -2221,6 +2296,7 @@ const DWORD cmd_10_0_18362_1[] = {
 
 const struct sCMD cmd_versions[] = {
 #ifdef _WIN64
+	CMD(10,0,18362,449)
 	CMD(10,0,18362,1)
 	CMD(10,0,17763,1)
 	CMD(10,0,17134,1)
@@ -2245,6 +2321,7 @@ const struct sCMD cmd_versions[] = {
 	CMD(5,2,3790,3959)
 	CMD(5,2,3790,1830)
 #else
+	CMD(10,0,18362,449)
 	CMD(10,0,18362,1)
 	CMD(10,0,17763,1)
 	CMD(10,0,17134,1)
