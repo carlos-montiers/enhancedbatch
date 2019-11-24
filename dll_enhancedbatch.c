@@ -283,6 +283,7 @@ void setChars(void)
 	setVar(L"$COMMA",  L",");
 	setVar(L"$EQ",     L"=");
 	setVar(L"$AT",     L"@");
+	setVar(L"$NBSP",   L"\xA0");
 
 	setVar(L"$KEY_UP",     L"-72");
 	setVar(L"$KEY_DOWN",   L"-80");
