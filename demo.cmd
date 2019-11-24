@@ -6,8 +6,9 @@ Goto :Eof
 )
 set "@delayedexpansion=1"
 
+call @clear
 call @say "Welcome to the test demo of Enhanced Batch"
-pause & cls
+pause & call @clear
 
 ::Save the current state.
 set $prevcolor=!@color!
@@ -16,14 +17,14 @@ set $prevopacity=!@opacity!
 set @opacity=80
 Echo Using %@opacity% %% of opacity.
 
-pause & cls
+pause & call @clear
 
 echo You can configure echo for not show or use options
 set "@echooptions=no"
 echo
 echo /?
 
-pause & cls
+pause & call @clear
 
 echo Playing with forline and forlines
 set "file=!$0;~dp!LICENSE.txt"
@@ -32,17 +33,27 @@ for /f "usebackq" %%a in ("!file!") do (
 )
 echo TOTAL lines:!@forlines!
 
-pause & cls
+pause & call @clear
 
+set $spinner=\
 echo Playing with infinite
 for %%j in (:*) do (
-  echo j = %%j press a key for stop
+  echo;j = %%j press a key for stop !$spinner!!$CR!
+  if !$spinner!==\ (
+	set $spinner=^|
+  ) else if !$spinner!==^| (
+	set $spinner=/
+  ) else if !$spinner!==/ (
+	set $spinner=-
+  ) else (
+	set $spinner=\
+  )
   set "lastcode=!@kbhit!"
   if !lastcode! gtr 0 set "@next="
 )
-echo key pressed.
+echo !$LF!key pressed.
 
-pause & cls
+pause & call @clear
 
 echo Playing with range
 
@@ -67,7 +78,7 @@ echo -------
 for %%j in (:range*3:0) do echo %%j
 echo -------
 
-pause & cls
+pause & call @clear
 
 set $A=1
 set $a=2
@@ -77,7 +88,7 @@ echo Left aligned:  !$A;-5!.
 echo Right aligned: !$A;5!.
 echo Zero padded:   !$A;05!.
 
-pause & cls
+pause & call @clear
 
 set "$var= oKay "
 echo   Default: !$no-var;'undefined'!.
@@ -94,7 +105,7 @@ echo LTrim[ o]: !$var;ltrim[ o]!.
 echo RTrim[ y]: !$var;rtrim[ y]!.
 echo  Trim,Cap: !$var;trim;capital!.
 
-pause & cls
+pause & call @clear
 
 echo Character TAB:!$TAB!.
 ::echo Character ESC:!$ESC!.
@@ -125,7 +136,7 @@ echo "A long string "^
                "spread across "^
                "multiple lines."
 
-pause & cls
+pause & call @clear
 
 echo @osversion=%@osversion%
 echo @osmajor=%@osmajor%
@@ -137,7 +148,7 @@ echo @cmdversion=%@cmdversion%
 
 echo @version=%@version%
 
-pause & cls
+pause & call @clear
 
 echo Changing color to A1
 set @color=A1
@@ -195,16 +206,16 @@ Echo;Current position: % %
 Echo !@position! (row !@row!, column !@column!)
 Echo Current size: !@size! (!@height! rows, !@width! columns)
 
-pause & cls
+pause & call @clear
 
 echo Restoring color.
 color !$prevcolor!
 
-pause & cls
+pause & call @clear
 
 echo Restoring opacity.
 set @opacity=!$prevopacity!
 
-pause & cls
+pause & call @clear
 
-set "@unload="
+call @unload
