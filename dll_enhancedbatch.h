@@ -152,6 +152,7 @@ extern WCHAR sayBuffer[STRINGBUFFERMAX];
 extern const WCHAR ProgramNameStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
+extern const WCHAR ClearBriefStr[], ClearHelpStr[];
 extern const WCHAR EchoBriefStr[], EchoHelpStr[], EscapeHelpStr[];
 extern const WCHAR HelpBriefStr[], HelpHelpStr[];
 extern const WCHAR SayBriefStr[], SayHelpStr[];

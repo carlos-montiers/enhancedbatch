@@ -854,6 +854,121 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 }
 
 
+int CallClear(int argc, LPCWSTR argv[])
+{
+	static BOOL called;
+	DWORD dummy;
+
+	if (!haveOutputHandle()) {
+		return EXIT_FAILURE;
+	}
+
+	SMALL_RECT sr;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+	CHAR_INFO ci;
+	ci.Char.UnicodeChar = L' ';
+	ci.Attributes = csbi.wAttributes;
+	BOOL fill = FALSE, gotchar = FALSE, gotattr = FALSE;
+	BOOL nomove = FALSE;
+
+	int i;
+	for (i = 0; i < argc; ++i) {
+		if (*argv[i] != L'/') {
+			break;
+		}
+		if (WCSIEQ(argv[i], L"/f")) {
+			fill = TRUE;
+		} else if (WCSIEQ(argv[i], L"/n")) {
+			nomove = TRUE;
+		} else {
+			if (i+1 == argc) {
+				return 1;
+			}
+			if (WCSIEQ(argv[i], L"/a")) {
+				ci.Attributes = wcstol(argv[++i], NULL, 16);
+				gotattr = TRUE;
+			} else if (WCSIEQ(argv[i], L"/c")) {
+				ci.Char.UnicodeChar = *argv[++i];
+				gotchar = TRUE;
+			}
+		}
+	}
+	if (fill && gotattr && gotchar) {
+		fill = FALSE;
+	}
+	if (i == argc) {
+		if (!called) {
+			// Scroll in a new window the simple way.
+			while (++csbi.srWindow.Top <= csbi.srWindow.Bottom) {
+				WriteConsole(consoleOutput, L"\n", 1, &dummy, NULL);
+			}
+			COORD c;
+			c.X = csbi.dwCursorPosition.X;
+			GetConsoleScreenBufferInfo(consoleOutput, &csbi);
+			c.Y = csbi.srWindow.Top;
+			SetConsoleCursorPosition(consoleOutput, c);
+		}
+		sr = csbi.srWindow;
+	} else {
+		if (i+4 != argc) {
+			return EXIT_FAILURE;
+		}
+		int rect[4];
+		toNumber(rect, 4, argv+i);
+		sr.Top = csbi.srWindow.Top + rect[0];
+		sr.Left = csbi.srWindow.Left + rect[1];
+		sr.Bottom = sr.Top + rect[2] - 1;
+		sr.Right = sr.Left + rect[3] - 1;
+		if (sr.Top < csbi.srWindow.Top) {
+			sr.Top = csbi.srWindow.Top;
+		} else if (sr.Top > csbi.srWindow.Bottom) {
+			sr.Top = csbi.srWindow.Bottom;
+		}
+		if (sr.Bottom < csbi.srWindow.Top) {
+			sr.Bottom = csbi.srWindow.Top;
+		} else if (sr.Bottom > csbi.srWindow.Bottom) {
+			sr.Bottom = csbi.srWindow.Bottom;
+		}
+		if (sr.Left < csbi.srWindow.Left) {
+			sr.Left = csbi.srWindow.Left;
+		} else if (sr.Left > csbi.srWindow.Right) {
+			sr.Left = csbi.srWindow.Right;
+		}
+		if (sr.Right < csbi.srWindow.Left) {
+			sr.Right = csbi.srWindow.Left;
+		} else if (sr.Right > csbi.srWindow.Right) {
+			sr.Right = csbi.srWindow.Right;
+		}
+
+	}
+	if (!nomove) {
+		COORD c = { sr.Left, sr.Top };
+		SetConsoleCursorPosition(consoleOutput, c);
+	}
+	if (fill) {
+		DWORD len = sr.Right - sr.Left + 1;
+		COORD c = { sr.Left, sr.Top };
+		while (sr.Top++ <= sr.Bottom) {
+			if (gotchar) {
+				FillConsoleOutputCharacter(consoleOutput, ci.Char.UnicodeChar,
+										   len, c, &dummy);
+			} else {
+				FillConsoleOutputAttribute(consoleOutput, ci.Attributes,
+										   len, c, &dummy);
+			}
+			++c.Y;
+		}
+	} else {
+		COORD c = { csbi.srWindow.Right + 1, csbi.srWindow.Bottom + 1 };
+		ScrollConsoleScreenBuffer(consoleOutput, &sr, &sr, c, &ci);
+	}
+
+	called = TRUE;
+	return EXIT_SUCCESS;
+}
+
+
 struct sEchoOptions {
 	BOOL vertical;
 	BOOL console;

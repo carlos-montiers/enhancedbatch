@@ -47,6 +47,7 @@ const WCHAR ArgErrorStr[]  = L"Failed to retrieve arguments.\n";
 const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
 const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
 
+const WCHAR ClearBriefStr[]   = L"Clear a window.";
 const WCHAR EchoBriefStr[]	  = L"Display a message.";
 const WCHAR HelpBriefStr[]	  = L"This list.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
@@ -54,6 +55,20 @@ const WCHAR SleepBriefStr[]   = L"Suspend execution.";
 const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
 const WCHAR TimerHiBriefStr[] = L"Microsecond timer.";
 const WCHAR UnloadBriefStr[]  = L"Remove Enhanced Batch.";
+
+const WCHAR ClearHelpStr[] =
+	L"Clear a window.\r\n"
+	L"\r\n"
+	L"CALL @CLEAR [/A color] [/C char] [/F] [/N] [row column rows columns]\r\n"
+	L"\r\n"
+	L"  /A        set attributes (default is current)\r\n"
+	L"  /C        set character (default is space)\r\n"
+	L"  /F        fill (set one, preserve the other)\r\n"
+	L"  /N        do not move the cursor (default is to move to row column)\r\n"
+	L"\r\n"
+	L"If a region is not specified the first time @CLEAR is used the current row will\r\n"
+	L"become the top line of a new window."
+;
 
 const WCHAR EchoHelpStr[] =
 	L"Display a message.\r\n"
