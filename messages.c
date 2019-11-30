@@ -50,8 +50,10 @@ const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provi
 const WCHAR ClearBriefStr[]   = L"Clear a window.";
 const WCHAR EchoBriefStr[]	  = L"Display a message.";
 const WCHAR HelpBriefStr[]	  = L"This list.";
+const WCHAR ImageBriefStr[]   = L"Draw an image.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";
+const WCHAR TextBriefStr[]	  = L"Draw a message.";
 const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
 const WCHAR TimerHiBriefStr[] = L"Microsecond timer.";
 const WCHAR UnloadBriefStr[]  = L"Remove Enhanced Batch.";
@@ -127,6 +129,25 @@ const WCHAR HelpHelpStr[] =
 	L"CALL @HELP"
 ;
 
+const WCHAR ImageHelpStr[] =
+	L"Draw an image.\r\n"
+	L"\r\n"
+	L"CALL @IMAGE [/C[H] column] [/F frame] [/N] [/P[H] row column] [/Q] [/R[H] row]\r\n"
+	L"            image\r\n"
+	L"\r\n"
+	L"  /C        column to place image (H adds half a character width)\r\n"
+	L"  /F        frame number to display (0 is first; invalid is ignored)\r\n"
+	L"  /N        return the number of frames (implies /Q)\r\n"
+	L"  /P        row and column to place image (H adds half a character)\r\n"
+	L"  /Q        do not display the image\r\n"
+	L"  /R        row to place image (H adds half a character height)\r\n"
+	L"  image     file name of the image\r\n"
+	L"\r\n"
+	L"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
+	L"will contain the delay (in milliseconds) and the low word will contain the size\r\n"
+	L"(in characters): columns in the low byte and rows in the high byte."
+;
+
 const WCHAR SayHelpStr[] =
 	L"Speak a message.\r\n"
 	L"\r\n"
@@ -149,6 +170,41 @@ const WCHAR SleepHelpStr[] =
 	L"Suspend execution for the specified time.\r\n"
 	L"\r\n"
 	L"CALL @SLEEP milliseconds"
+;
+
+const WCHAR TextHelpStr[] =
+	L"Draw a message.\r\n"
+	L"\r\n"
+	L"CALL @TEXT [/B] [/BG color] [/C[H] column] [/D[H | W]] [/E angle] [/F font]\r\n"
+	L"           [/FG color] [/I] [/N] [/O angle] [/P[H] row column] [/R[H] row]\r\n"
+	L"           [/RL] [/RR] [/RT] [/S] [/T] [/U] message\r\n"
+	L"\r\n"
+	L"  /B        bold text\r\n"
+	L"  /BG       background color\r\n"
+	L"  /C        column to place text (H adds half a character width)\r\n"
+	L"  /D        double height and/or width\r\n"
+	L"  /E        text escapement angle (tenths of a degree)\r\n"
+	L"  /F        face name of the font\r\n"
+	L"  /FG       text color\r\n"
+	L"  /I        italic text\r\n"
+	L"  /N        non-antialiased text\r\n"
+	L"  /O        character orientation angle (tenths of a degree)\r\n"
+	L"  /P        row and column to place text (H adds half a character)\r\n"
+	L"  /R        row to place text (H adds half a character height)\r\n"
+	L"  /RL       rotate left (90\xb0)\r\n"
+	L"  /RR       rotate right (-90\xb0)\r\n"
+	L"  /RT       rotate twice (180\xb0)\r\n"
+	L"  /S        strikeout text\r\n"
+	L"  /T        transparent background\r\n"
+	L"  /U        underlined text\r\n"
+	L"\r\n"
+	L"Tabs are not expanded.\r\n"
+	L"\r\n"
+	L"Color is either a single hexadecimal digit (normal index); two digits (decimal\r\n"
+	L"index); three hexadecimal digits (RGB expanded to RRGGBB), otherwise RRGGBB.\r\n"
+	L"\r\n"
+	L"Rotation will also rotate the origin; escapement/orientation will use the\r\n"
+	L"bottom-left as the origin."
 ;
 
 const WCHAR TimerHelpStr[] =

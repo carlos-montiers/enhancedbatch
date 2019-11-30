@@ -182,3 +182,6 @@ DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size);
 
 BOOL SetDumpTokens(int argc, LPCWSTR argv[]);
 BOOL SetDumpParse(int argc, LPCWSTR argv[]);
+
+BOOL CallText(int argc, LPCWSTR argv[]);
+BOOL CallImage(int argc, LPCWSTR argv[]);

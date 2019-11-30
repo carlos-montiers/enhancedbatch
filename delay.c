@@ -56,6 +56,7 @@ asm(
 	LPVOID p ## name;\
 	IMPORT(name, stack)
 
+
 HMODULE ole32;
 
 // This is always called first, so it can load them all.
@@ -74,9 +75,72 @@ STDAPI impCoInitializeEx(LPVOID pvReserved, DWORD dwCoInit)
 	return pCoInitializeEx(pvReserved, dwCoInit);
 }
 
+
+HMODULE gdiplus;
+
+// This is always called first, so it can load them all.
+INIT_IMPORT(GdiplusStartup, 12, int, (LPVOID, LPVOID, LPVOID));
+DECL_IMPORT(GdipLoadImageFromFile, 8);
+DECL_IMPORT(GdipCreateFromHWND, 8);
+DECL_IMPORT(GdipDrawImageRectI, 24);
+DECL_IMPORT(GdipDeleteGraphics, 4);
+DECL_IMPORT(GdipDisposeImage, 4);
+DECL_IMPORT(GdiplusShutdown, 4);
+DECL_IMPORT(GdipGetImageDimension, 12);
+DECL_IMPORT(GdipImageGetFrameCount, 12);
+DECL_IMPORT(GdipImageSelectActiveFrame, 12);
+DECL_IMPORT(GdipGetPropertyItem, 16);
+DECL_IMPORT(GdipGetPropertyItemSize, 12);
+
+int WINAPI noGdiplus(LPVOID a, LPVOID b, LPVOID c)
+{
+	return 1; /* GenericError */
+}
+
+int WINAPI impGdiplusStartup(LPVOID a, LPVOID b, LPVOID c)
+{
+	gdiplus = LoadLibrary(L"gdiplus.dll");
+	if (gdiplus == NULL) {
+		pGdiplusStartup = noGdiplus;
+		return 1; /* GenericError */
+	}
+	GETPROC(gdiplus, GdipLoadImageFromFile);
+	GETPROC(gdiplus, GdipCreateFromHWND);
+	GETPROC(gdiplus, GdipDrawImageRectI);
+	GETPROC(gdiplus, GdipDeleteGraphics);
+	GETPROC(gdiplus, GdipDisposeImage);
+	GETPROC(gdiplus, GdiplusShutdown);
+	GETPROC(gdiplus, GdiplusStartup);
+	GETPROC(gdiplus, GdipGetImageDimension);
+	GETPROC(gdiplus, GdipImageGetFrameCount);
+	GETPROC(gdiplus, GdipImageSelectActiveFrame);
+	GETPROC(gdiplus, GdipGetPropertyItem);
+	GETPROC(gdiplus, GdipGetPropertyItemSize);
+	return pGdiplusStartup(a, b, c);
+}
+
+
+HMODULE shlwapi;
+
+INIT_IMPORT(PathUnExpandEnvStringsW, 12, BOOL, (LPCWSTR, LPWSTR, UINT));
+
+BOOL WINAPI impPathUnExpandEnvStringsW(LPCWSTR a, LPWSTR b, UINT c)
+{
+	shlwapi = LoadLibrary(L"shlwapi.dll");
+	GETPROC(shlwapi, PathUnExpandEnvStringsW);
+	return pPathUnExpandEnvStringsW(a, b, c);
+}
+
+
 void unload_delayed(void)
 {
 	if (ole32 != NULL) {
 		FreeLibrary(ole32);
+	}
+	if (gdiplus != NULL) {
+		FreeLibrary(gdiplus);
+	}
+	if (shlwapi != NULL) {
+		FreeLibrary(shlwapi);
 	}
 }
