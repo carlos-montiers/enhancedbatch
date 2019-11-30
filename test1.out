@@ -1,4 +1,5 @@
 $A=1 $a=2
+Embedded: e1 e1x2y e escaped
 Left aligned:  1    .
 Right aligned:     1.
 Zero padded:   00001.

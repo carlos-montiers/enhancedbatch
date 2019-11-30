@@ -37,6 +37,11 @@ set $A=1
 set $a = 2
 echo $A=%$A% $a=%$a%
 
+set $embedded1=e1
+set $embedded1x2y=e1x2y
+set $escape$=escaped
+echo Embedded: !$embedded$A! !$embedded$A/x$a/y! !$embedded1;rtrim[$A]! !$escape$$!
+
 echo Left aligned:  !$A;-5!.
 echo Right aligned: !$A;5!.
 echo Zero padded:   !$A;05!.

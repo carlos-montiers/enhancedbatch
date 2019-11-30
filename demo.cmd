@@ -35,19 +35,15 @@ echo TOTAL lines:!@forlines!
 
 pause & call @clear
 
-set $spinner=\
+set $spinner0=\
+set $spinner1=^|
+set $spinner2=/
+set $spinner3=-
+set $i=0
 echo Playing with infinite
 for %%j in (:*) do (
-  echo;j = %%j press a key for stop !$spinner!!$CR!
-  if !$spinner!==\ (
-	set $spinner=^|
-  ) else if !$spinner!==^| (
-	set $spinner=/
-  ) else if !$spinner!==/ (
-	set $spinner=-
-  ) else (
-	set $spinner=\
-  )
+  echo;j = %%j press a key for stop !$spinner$i!!$CR!
+  set /a $i=(!$i!+1^)^&3
   call @kbhit || set @next=
 )
 echo !$LF!key pressed.

@@ -517,12 +517,50 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 	varcpy = NULL;
 
 	var = (LPWSTR) lpName;
-	if (lpName && (*lpName != L'@' || lpName[1] != L'@')) {
-		mod = wcschr(lpName, L';');
+	if (lpName != NULL && *lpName != L'\0'
+		&& (*lpName != L'@' || lpName[1] != L'@')) {
+		var = wcschr(lpName + 1, L'$');
+		if (var != NULL) {
+			sbcpy(varBuffer, lpName);
+			var += varBuffer - lpName;
+			end = varBuffer;
+			LPWSTR p = stringBuffer;
+			do {
+				if (var[1] == L'$') {
+					p += sbprintf(p, L"%.*s", var+1 - end, end);
+					end = var + 2;
+				} else {
+					p += sbprintf(p, L"%.*s", var - end, end);
+					end = var;
+					while (iswalnum(*++end)) {
+						// do nothing
+					}
+					WCHAR tmp = *end;
+					*end = L'\0';
+					int k = kh_get(wstr, variables, var);
+					if (k != kh_end(variables)) {
+						p += sbcpy(p, kh_val(variables, k));
+					}
+					if (tmp == L'/') {
+						++end;
+					} else {
+						*end = tmp;
+					}
+				}
+				var = wcschr(end, L'$');
+			} while (var != NULL);
+			sbcpy(p, end);
+			var = varcpy = _wcsdup(stringBuffer);
+		} else {
+			var = (LPWSTR) lpName;
+		}
+		mod = wcschr(var, L';');
 		if (mod != NULL) {
-			var = varcpy = _wcsdup(lpName);
-			var[mod - lpName] = L'\0';
-			mod += var - lpName + 1;
+			if (varcpy == NULL) {
+				var = varcpy = _wcsdup(var);
+				mod += var - lpName;
+			}
+			*mod++ = L'\0';
 		}
 	} else {
 		mod = NULL;
