@@ -6,13 +6,18 @@ If Defined WT_SESSION (
 rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
 If Not Defined @enhancedbatch Goto :Eof
 
+set "demoimgfile=icon-eb.png"
+
 if %$#%==0 (
+  set "imgfile=%$0;~dp%%demoimgfile%"
   Echo %0 image
-  Goto :Eof
+  Echo Using: "%demoimgfile%" as example
+) else (
+  set "imgfile=%~1"
 )
-call @image /q %1
+call @image /q "%imgfile%"
 if %errorlevel%==0 (
-  Echo Failed to load "%~1".
+  Echo Failed to load "%imgfile%".
   Goto :Eof
 )
 :: Keep it simple for now and assume all images are the same size and delay.
@@ -31,11 +36,11 @@ set @cursor=off
 set $delayedexpansion=@delayedexpansion
 set @delayedexpansion=on
 
-call @image /n %1
+call @image /n "%imgfile%"
 set $frames=%errorlevel%
 if %$delay%==0 set $delay=100
 if %$frames%==1 (
-  call @image %1
+  call @image "%imgfile%"
   call @getkb
 ) else (
   set $f=1
