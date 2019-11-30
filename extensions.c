@@ -127,6 +127,16 @@ DWORD Kbhit(LPWSTR buffer, DWORD size)
 	}
 }
 
+int CallGetkb(int argc, LPCWSTR argv[])
+{
+	return getKeyCode();
+}
+
+int CallKbhit(int argc, LPCWSTR argv[])
+{
+	return _kbhit() ? getKeyCode() : 0;
+}
+
 BOOL setPosition(int row, int column)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;

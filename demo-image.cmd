@@ -36,7 +36,7 @@ set $frames=%errorlevel%
 if %$delay%==0 set $delay=100
 if %$frames%==1 (
   call @image %1
-  set $key=!@getkb!
+  call @getkb
 ) else (
   set $f=1
   for do (
@@ -45,7 +45,7 @@ if %$frames%==1 (
     call @clear /c %$NBSP% %@position% %$height% %$width%
     call @image /f !$f! %1
     set /a $f=(!$f!+1^) %% %$frames%
-    if not !@kbhit!==-1 set @next=
+    call @kbhit || set @next=
   )
 )
 :: Legacy console will not necessarily erase spaces, so clear with no-break

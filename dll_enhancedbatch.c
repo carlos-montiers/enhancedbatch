@@ -225,8 +225,10 @@ struct sCallExt {
 const struct sCallExt callExtensionList[] = {
 	{ L"@clear",   ~0, CallClear, ClearBriefStr, ClearHelpStr },
 	{ L"@echo",    ~0, CallEcho, EchoBriefStr, EchoHelpStr },
+	{ L"@getkb",	0, CallGetkb, GetkbBriefStr, GetkbHelpStr },
 	{ L"@help", 	0, CallHelp, HelpBriefStr, HelpHelpStr },
 	{ L"@image",   ~1, CallImage, ImageBriefStr, ImageHelpStr },
+	{ L"@kbhit",	0, CallKbhit, KbhitBriefStr, KbhitHelpStr },
 	{ L"@say",	   ~1, CallSay, SayBriefStr, SayHelpStr },
 	{ L"@sleep",	1, CallSleep, SleepBriefStr, SleepHelpStr },
 	{ L"@text",    ~1, CallText, TextBriefStr, TextHelpStr },

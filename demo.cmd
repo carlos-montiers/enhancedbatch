@@ -48,8 +48,7 @@ for %%j in (:*) do (
   ) else (
 	set $spinner=\
   )
-  set "lastcode=!@kbhit!"
-  if !lastcode! gtr 0 set "@next="
+  call @kbhit || set @next=
 )
 echo !$LF!key pressed.
 

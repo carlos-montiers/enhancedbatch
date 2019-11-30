@@ -53,6 +53,8 @@ DWORD Getch(LPWSTR buffer, DWORD size);
 DWORD Chhit(LPWSTR buffer, DWORD size);
 DWORD Getkb(LPWSTR buffer, DWORD size);
 DWORD Kbhit(LPWSTR buffer, DWORD size);
+int CallGetkb(int argc, LPCWSTR argv[]);
+int CallKbhit(int argc, LPCWSTR argv[]);
 
 BOOL SetPosition(int argc, LPCWSTR argv[]);
 BOOL SetRow(int argc, LPCWSTR argv[]);

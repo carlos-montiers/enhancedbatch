@@ -49,8 +49,10 @@ const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provi
 
 const WCHAR ClearBriefStr[]   = L"Clear a window.";
 const WCHAR EchoBriefStr[]	  = L"Display a message.";
+const WCHAR GetkbBriefStr[]   = L"Wait for a key.";
 const WCHAR HelpBriefStr[]	  = L"This list.";
 const WCHAR ImageBriefStr[]   = L"Draw an image.";
+const WCHAR KbhitBriefStr[]   = L"Test for a key.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";
 const WCHAR TextBriefStr[]	  = L"Draw a message.";
@@ -123,6 +125,14 @@ const WCHAR EscapeHelpStr[] =
 	L"ignored, preserving the escape character."
 ;
 
+const WCHAR GetkbHelpStr[] =
+	L"Wait for a key.\r\n"
+	L"\r\n"
+	L"CALL @GETKB\r\n"
+	L"\r\n"
+	L"Errorlevel will contain the code of the key pressed."
+;
+
 const WCHAR HelpHelpStr[] =
 	L"Display CALL commands added by Enhanced Batch.\r\n"
 	L"\r\n"
@@ -146,6 +156,14 @@ const WCHAR ImageHelpStr[] =
 	L"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
 	L"will contain the delay (in milliseconds) and the low word will contain the size\r\n"
 	L"(in characters): columns in the low byte and rows in the high byte."
+;
+
+const WCHAR KbhitHelpStr[] =
+	L"Test if a key has been pressed.\r\n"
+	L"\r\n"
+	L"CALL @KBHIT\r\n"
+	L"\r\n"
+	L"Errorlevel will contain the code of the key pressed, 0 if none."
 ;
 
 const WCHAR SayHelpStr[] =
