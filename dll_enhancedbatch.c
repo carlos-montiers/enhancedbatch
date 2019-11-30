@@ -571,7 +571,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 
 	while (mod != NULL) {
 		if (*mod == L'\'' || *mod == L'"' || *mod == L'`') {
-			for (end = mod + 1; *end && *end != *mod; ++end) {
+			for (end = mod + 1; *end != L'\0' && *end != *mod; ++end) {
 				// do nothing
 			}
 			if (*end == L'\0') {
@@ -625,7 +625,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			mod[1] = L'\t';
 			CharLower(stringBuffer);
 			for (var = stringBuffer; *var; ++var) {
-				if (var == stringBuffer || wcschr(mod, var[-1])) {
+				if (var == stringBuffer || wcschr(mod, var[-1]) != NULL) {
 					CharUpperBuff(var, 1);
 				}
 			}
@@ -1086,7 +1086,7 @@ DWORD getBatchLine()
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 {
 	DWORD lnum = (batchfile) ? getBatchLine() : 0;
-	if (lnum && (lnum != last_lnum || last_bat != *pCurrentBatchFile)) {
+	if (lnum != 0 && (lnum != last_lnum || last_bat != *pCurrentBatchFile)) {
 		LPVOID args = &stringBuffer;
 		LPVOID pargs = &args;
 		LPCWSTR file = **pCurrentBatchFile;
@@ -1139,7 +1139,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 		}
 	}
 
-	if (pCurrentBatchFile && *pCurrentBatchFile && lpBuffer == AnsiBuf) {
+	if (*pCurrentBatchFile != NULL && lpBuffer == AnsiBuf) {
 		setBatchLine(SetFilePointer(hFile, 0, NULL, FILE_CURRENT));
 	}
 

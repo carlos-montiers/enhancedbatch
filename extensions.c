@@ -831,7 +831,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 			return size;
 		}
 		if (++argc == 10) {
-			if (rest && *rest) {
+			if (rest != NULL && *rest != L'\0') {
 				if (argc > first) {
 					*buffer++ = L' ';
 					++size;
@@ -843,7 +843,7 @@ DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size)
 							++size;
 						}
 					} else {
-						if (argc++ == last || !rest[1]) {
+						if (argc++ == last || rest[1] == L'\0') {
 							*buffer = L'\0';
 							return size;
 						}
