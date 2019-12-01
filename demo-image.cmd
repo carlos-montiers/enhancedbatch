@@ -20,11 +20,10 @@ if %errorlevel%==0 (
   Echo Failed to load "%imgfile%".
   Goto :Eof
 )
-:: Keep it simple for now and assume all images are the same size and delay.
-set $width=%errorlevel%
-set /a $delay=%$width% ^>^> 16
-set /a $height=%$width% ^>^> 8 ^& 0xFF
-set /a $width=%$width% ^& 0xFF
+:: Keep it simple for now and assume all images are the same size.
+set $size=%errorlevel%
+set /a $height=%$size% ^>^> 8 ^& 0xFF
+set /a $width=%$size% ^& 0xFF
 
 :: Make room for the image.
 for /l %%L in (2,1,%$height%) do echo.
@@ -38,17 +37,18 @@ set @delayedexpansion=on
 
 call @image /n "%imgfile%"
 set $frames=%errorlevel%
-if %$delay%==0 set $delay=100
 if %$frames%==1 (
   call @image "%imgfile%"
   call @getkb
 ) else (
-  set $f=1
+  set $f=0
   for do (
-    call @sleep %$delay%
+    call @image /f !$f! "%imgfile%"
+    set /a $delay=!errorlevel! ^>^> 16
+    if !$delay!==0 set $delay=100
+    call @sleep !$delay!
     :: Need a better way to handle transparent animation.
     call @clear /c %$NBSP% %@position% %$height% %$width%
-    call @image /f !$f! %1
     set /a $f=(!$f!+1^) %% %$frames%
     call @kbhit || set @next=
   )

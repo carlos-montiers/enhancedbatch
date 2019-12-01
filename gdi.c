@@ -495,7 +495,9 @@ int CallImage(int argc, LPCWSTR argv[])
 	if (GdipLoadImageFromFile(file, &image) == Ok) {
 		if (frame != 0) {
 			if (Ok != GdipImageSelectActiveFrame(image, &FrameDimensionTime, frame)) {
-				GdipImageSelectActiveFrame(image, &FrameDimensionPage, frame);
+				if (Ok != GdipImageSelectActiveFrame(image, &FrameDimensionPage, frame)) {
+					frame = 0;
+				}
 			}
 		}
 		if (ret_frames) {
@@ -513,7 +515,7 @@ int CallImage(int argc, LPCWSTR argv[])
 			if (size != 0) {
 				PropertyItem *pi = malloc(size);
 				GdipGetPropertyItem(image, PropertyTagFrameDelay, size, pi);
-				ret |= (*(PLONG) pi->value * 10) << 16;
+				ret |= (((PLONG) pi->value)[frame] * 10) << 16;
 				free(pi);
 			}
 		}
