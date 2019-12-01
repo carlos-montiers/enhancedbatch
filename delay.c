@@ -91,6 +91,8 @@ DECL_IMPORT(GdipImageGetFrameCount, 12);
 DECL_IMPORT(GdipImageSelectActiveFrame, 12);
 DECL_IMPORT(GdipGetPropertyItem, 16);
 DECL_IMPORT(GdipGetPropertyItemSize, 12);
+DECL_IMPORT(GdipCreateBitmapFromHBITMAP, 12);
+DECL_IMPORT(GdipGetImageGraphicsContext, 8);
 
 int WINAPI noGdiplus(LPVOID a, LPVOID b, LPVOID c)
 {
@@ -116,6 +118,8 @@ int WINAPI impGdiplusStartup(LPVOID a, LPVOID b, LPVOID c)
 	GETPROC(gdiplus, GdipImageSelectActiveFrame);
 	GETPROC(gdiplus, GdipGetPropertyItem);
 	GETPROC(gdiplus, GdipGetPropertyItemSize);
+	GETPROC(gdiplus, GdipCreateBitmapFromHBITMAP);
+	GETPROC(gdiplus, GdipGetImageGraphicsContext);
 	return pGdiplusStartup(a, b, c);
 }
 

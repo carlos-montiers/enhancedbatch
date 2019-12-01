@@ -35,7 +35,7 @@ set @cursor=off
 set $delayedexpansion=@delayedexpansion
 set @delayedexpansion=on
 
-call @image /n "%imgfile%"
+call @image /copy /n "%imgfile%"
 set $frames=%errorlevel%
 if %$frames%==1 (
   call @image "%imgfile%"
@@ -47,16 +47,11 @@ if %$frames%==1 (
     set /a $delay=!errorlevel! ^>^> 16
     if !$delay!==0 set $delay=100
     call @sleep !$delay!
-    :: Need a better way to handle transparent animation.
-    call @clear /c %$NBSP% %@position% %$height% %$width%
     set /a $f=(!$f!+1^) %% %$frames%
     call @kbhit || set @next=
   )
 )
-:: Legacy console will not necessarily erase spaces, so clear with no-break
-:: space to ensure the window will be redrawn.
-call @clear /c %$NBSP% %@position% %$height% %$width%
-call @clear %@position% %$height% %$width%
+call @image /restore "%imgfile%"
 
 set @delayedexpansion=$delayedexpansion
 set @cursor=$cursor

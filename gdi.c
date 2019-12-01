@@ -407,6 +407,14 @@ int CallText(int argc, LPCWSTR argv[])
 }
 
 
+#define MAX_BG 4
+struct sBg {
+	HBITMAP bitmap;
+	int x, y;
+	WCHAR name[MAX_PATH];
+} BgCache[MAX_BG];
+
+
 int CallImage(int argc, LPCWSTR argv[])
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -431,6 +439,7 @@ int CallImage(int argc, LPCWSTR argv[])
 	LPCWSTR file = NULL;
 	int frame = 0;
 	BOOL quiet = FALSE, ret_frames = FALSE;
+	BOOL copy = FALSE, discard = FALSE, restore = FALSE;
 
 	int i;
 	for (i = 0; i < argc; ++i) {
@@ -439,6 +448,12 @@ int CallImage(int argc, LPCWSTR argv[])
 				return 0;
 			}
 			file = argv[i];
+		} else if (WCSIEQ(argv[i], L"/copy")) {
+			copy = TRUE;
+		} else if (WCSIEQ(argv[i], L"/discard")) {
+			discard = TRUE;
+		} else if (WCSIEQ(argv[i], L"/restore")) {
+			discard = restore = TRUE;
 		} else if (WCSIEQ(argv[i], L"/n")) {
 			ret_frames = quiet = TRUE;
 		} else if (WCSIEQ(argv[i], L"/q")) {
@@ -490,6 +505,9 @@ int CallImage(int argc, LPCWSTR argv[])
 		return 0;
 	}
 
+	x = x * cfi.dwFontSize.X + half_x;
+	y = y * cfi.dwFontSize.Y + half_y;
+
 	UINT ret = 0;
 	GpImage *image = NULL;
 	if (GdipLoadImageFromFile(file, &image) == Ok) {
@@ -500,13 +518,13 @@ int CallImage(int argc, LPCWSTR argv[])
 				}
 			}
 		}
+		REAL w, h;
+		GdipGetImageDimension(image, &w, &h);
 		if (ret_frames) {
 			if (Ok != GdipImageGetFrameCount(image, &FrameDimensionTime, &ret)) {
 				GdipImageGetFrameCount(image, &FrameDimensionPage, &ret);
 			}
 		} else {
-			REAL w, h;
-			GdipGetImageDimension(image, &w, &h);
 			int cw = ((int) w + cfi.dwFontSize.X - 1) / cfi.dwFontSize.X;
 			int ch = ((int) h + cfi.dwFontSize.Y - 1) / cfi.dwFontSize.Y;
 			ret = ch << 8 | cw;
@@ -519,20 +537,66 @@ int CallImage(int argc, LPCWSTR argv[])
 				free(pi);
 			}
 		}
+		if (copy) {
+			for (int b = 0; b < MAX_BG; ++b) {
+				if (BgCache[b].bitmap == NULL) {
+					HDC dc = GetDC(consoleHwnd);
+					HDC mdc = CreateCompatibleDC(dc);
+					BgCache[b].bitmap = CreateCompatibleBitmap(dc, w, h);
+					HGDIOBJ old_mbm = SelectObject(mdc, BgCache[b].bitmap);
+					BitBlt(mdc, 0, 0, w, h, dc, x, y, SRCCOPY);
+					SelectObject(dc, old_mbm);
+					DeleteDC(mdc);
+					ReleaseDC(consoleHwnd, dc);
+					BgCache[b].x = x;
+					BgCache[b].y = y;
+					wcsncpy(BgCache[b].name, file, MAX_PATH-1);
+					break;
+				}
+			}
+		}
 		if (!quiet) {
-			REAL w, h;
-			GdipGetImageDimension(image, &w, &h);
 			GpGraphics *graphics = NULL;
 			GdipCreateFromHWND(consoleHwnd, &graphics);
-			GdipDrawImageRectI(graphics, image,
-							   x * cfi.dwFontSize.X + half_x,
-							   y * cfi.dwFontSize.Y + half_y, w, h);
+			for (int b = 0; b < MAX_BG; ++b) {
+				if (BgCache[b].bitmap != NULL
+					&& BgCache[b].x == x && BgCache[b].y == y
+					&& WCSEQ(BgCache[b].name, file)) {
+					GpImage *bg = NULL;
+					if (Ok == GdipCreateBitmapFromHBITMAP(BgCache[b].bitmap,
+														  NULL, &bg)) {
+						if (!restore) {
+							GpGraphics *graphics = NULL;
+							GdipGetImageGraphicsContext(bg, &graphics);
+							GdipDrawImageRectI(graphics, image, 0, 0, w, h);
+							GdipDeleteGraphics(graphics);
+						}
+						GdipDisposeImage(image);
+						image = bg;
+					}
+					break;
+				}
+			}
+			GdipDrawImageRectI(graphics, image, x, y, w, h);
 			GdipDeleteGraphics(graphics);
 		}
+		GdipDisposeImage(image);
 	}
-	GdipDisposeImage(image);
 
 	GdiplusShutdown(gdiplusToken);
+
+	if (discard) {
+		for (int b = 0; b < MAX_BG; ++b) {
+			if (BgCache[b].bitmap != NULL
+				&& BgCache[b].x == x && BgCache[b].y == y
+				&& WCSEQ(BgCache[b].name, file)) {
+				DeleteObject(BgCache[b].bitmap);
+				BgCache[b].bitmap = NULL;
+				*BgCache[b].name = L'\0';
+				break;
+			}
+		}
+	}
 
 	return ret;
 }
