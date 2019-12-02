@@ -437,6 +437,8 @@ int CallImage(int argc, LPCWSTR argv[])
 	int half_x = 0;
 	int half_y = 0;
 	int sx = 0, sy = 0, sw = 0, sh = 0;
+	int fcw = 0, fch = 0, fsw = 0, fsh = 0;
+	int fl = 0, fr = 0, ft = 0, fb = 0;
 	LPCWSTR file = NULL;
 	int frame = 0;
 	BOOL quiet = FALSE, ret_frames = FALSE;
@@ -488,6 +490,14 @@ int CallImage(int argc, LPCWSTR argv[])
 				x = (int) wcstol(argv[++i], NULL, 10);
 			} else if (WCSIEQ(argv[i], L"/f")) {
 				frame = (int) wcstol(argv[++i], NULL, 10);
+			} else if (WCSIEQ(argv[i], L"/fl")) {
+				fl = (int) wcstol(argv[++i], NULL, 10);
+			} else if (WCSIEQ(argv[i], L"/fr")) {
+				fr = (int) wcstol(argv[++i], NULL, 10);
+			} else if (WCSIEQ(argv[i], L"/ft")) {
+				ft = (int) wcstol(argv[++i], NULL, 10);
+			} else if (WCSIEQ(argv[i], L"/fb")) {
+				fb = (int) wcstol(argv[++i], NULL, 10);
 			} else {
 				if (i == argc-2) {
 					return 0;
@@ -498,6 +508,12 @@ int CallImage(int argc, LPCWSTR argv[])
 				} else if (WCSIEQ(argv[i], L"/s")) {
 					sw = (int) wcstol(argv[++i], NULL, 10);
 					sh = (int) wcstol(argv[++i], NULL, 10);
+				} else if (WCSIEQ(argv[i], L"/fc")) {
+					fcw = (int) wcstol(argv[++i], NULL, 10);
+					fch = (int) wcstol(argv[++i], NULL, 10);
+				} else if (WCSIEQ(argv[i], L"/fs")) {
+					fsw = (int) wcstol(argv[++i], NULL, 10);
+					fsh = (int) wcstol(argv[++i], NULL, 10);
 				}
 			}
 		}
@@ -523,7 +539,7 @@ int CallImage(int argc, LPCWSTR argv[])
 	UINT ret = 0;
 	GpImage *image = NULL;
 	if (GdipLoadImageFromFile(file, &image) == Ok) {
-		if (frame != 0) {
+		if (frame != 0 && fcw == 0 && fsw == 0) {
 			if (Ok != GdipImageSelectActiveFrame(image, &FrameDimensionTime, frame)) {
 				if (Ok != GdipImageSelectActiveFrame(image, &FrameDimensionPage, frame)) {
 					frame = 0;
@@ -539,8 +555,25 @@ int CallImage(int argc, LPCWSTR argv[])
 			if (sw < w) w = sw;
 			if (sh < h) h = sh;
 		}
+		if (fcw != 0) {
+			fsw = w / fcw - fl - fr;
+			fsh = h / fch - ft - fb;
+		}
+		if (fsw != 0) {
+			fcw = w / (fl + fsw + fr);
+			fch = h / (ft + fsh + fb);
+			if (frame >= fcw * fch) {
+				frame = 0;
+			}
+			w = fsw;
+			h = fsh;
+			sx += (frame % fcw) * (fl + fsw + fr) + fl;
+			sy += (frame / fcw) * (ft + fsh + fb) + ft;
+		}
 		if (ret_frames) {
-			if (Ok != GdipImageGetFrameCount(image, &FrameDimensionTime, &ret)) {
+			if (fcw != 0) {
+				ret = fcw * fch;
+			} else if (Ok != GdipImageGetFrameCount(image, &FrameDimensionTime, &ret)) {
 				GdipImageGetFrameCount(image, &FrameDimensionPage, &ret);
 			}
 		} else {
