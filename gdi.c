@@ -436,6 +436,7 @@ int CallImage(int argc, LPCWSTR argv[])
 	int y = csbi.dwCursorPosition.Y - csbi.srWindow.Top;
 	int half_x = 0;
 	int half_y = 0;
+	int sx = 0, sy = 0, sw = 0, sh = 0;
 	LPCWSTR file = NULL;
 	int frame = 0;
 	BOOL quiet = FALSE, ret_frames = FALSE;
@@ -487,6 +488,17 @@ int CallImage(int argc, LPCWSTR argv[])
 				x = (int) wcstol(argv[++i], NULL, 10);
 			} else if (WCSIEQ(argv[i], L"/f")) {
 				frame = (int) wcstol(argv[++i], NULL, 10);
+			} else {
+				if (i == argc-2) {
+					return 0;
+				}
+				if (WCSIEQ(argv[i], L"/o")) {
+					sx = (int) wcstol(argv[++i], NULL, 10);
+					sy = (int) wcstol(argv[++i], NULL, 10);
+				} else if (WCSIEQ(argv[i], L"/s")) {
+					sw = (int) wcstol(argv[++i], NULL, 10);
+					sh = (int) wcstol(argv[++i], NULL, 10);
+				}
 			}
 		}
 	}
@@ -518,15 +530,22 @@ int CallImage(int argc, LPCWSTR argv[])
 				}
 			}
 		}
-		REAL w, h;
-		GdipGetImageDimension(image, &w, &h);
+		int w, h;
+		REAL rw, rh;
+		GdipGetImageDimension(image, &rw, &rh);
+		w = (int) rw - sx;
+		h = (int) rh - sy;
+		if (sw != 0) {
+			if (sw < w) w = sw;
+			if (sh < h) h = sh;
+		}
 		if (ret_frames) {
 			if (Ok != GdipImageGetFrameCount(image, &FrameDimensionTime, &ret)) {
 				GdipImageGetFrameCount(image, &FrameDimensionPage, &ret);
 			}
 		} else {
-			int cw = ((int) w + cfi.dwFontSize.X - 1) / cfi.dwFontSize.X;
-			int ch = ((int) h + cfi.dwFontSize.Y - 1) / cfi.dwFontSize.Y;
+			int cw = (w + cfi.dwFontSize.X - 1) / cfi.dwFontSize.X;
+			int ch = (h + cfi.dwFontSize.Y - 1) / cfi.dwFontSize.Y;
 			ret = ch << 8 | cw;
 			UINT size = 0;
 			GdipGetPropertyItemSize(image, PropertyTagFrameDelay, &size);
@@ -568,16 +587,20 @@ int CallImage(int argc, LPCWSTR argv[])
 						if (!restore) {
 							GpGraphics *graphics = NULL;
 							GdipGetImageGraphicsContext(bg, &graphics);
-							GdipDrawImageRectI(graphics, image, 0, 0, w, h);
+							GdipDrawImageRectRectI(graphics, image, 0, 0, w, h,
+													sx, sy, w, h, UnitPixel,
+													NULL, NULL, NULL);
 							GdipDeleteGraphics(graphics);
 						}
 						GdipDisposeImage(image);
 						image = bg;
+						sx = sy = 0;
 					}
 					break;
 				}
 			}
-			GdipDrawImageRectI(graphics, image, x, y, w, h);
+			GdipDrawImageRectRectI(graphics, image, x, y, w, h, sx, sy, w, h,
+								   UnitPixel, NULL, NULL, NULL);
 			GdipDeleteGraphics(graphics);
 		}
 		GdipDisposeImage(image);

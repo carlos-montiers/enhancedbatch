@@ -82,7 +82,7 @@ HMODULE gdiplus;
 INIT_IMPORT(GdiplusStartup, 12, int, (LPVOID, LPVOID, LPVOID));
 DECL_IMPORT(GdipLoadImageFromFile, 8);
 DECL_IMPORT(GdipCreateFromHWND, 8);
-DECL_IMPORT(GdipDrawImageRectI, 24);
+DECL_IMPORT(GdipDrawImageRectRectI, 56);
 DECL_IMPORT(GdipDeleteGraphics, 4);
 DECL_IMPORT(GdipDisposeImage, 4);
 DECL_IMPORT(GdiplusShutdown, 4);
@@ -108,7 +108,7 @@ int WINAPI impGdiplusStartup(LPVOID a, LPVOID b, LPVOID c)
 	}
 	GETPROC(gdiplus, GdipLoadImageFromFile);
 	GETPROC(gdiplus, GdipCreateFromHWND);
-	GETPROC(gdiplus, GdipDrawImageRectI);
+	GETPROC(gdiplus, GdipDrawImageRectRectI);
 	GETPROC(gdiplus, GdipDeleteGraphics);
 	GETPROC(gdiplus, GdipDisposeImage);
 	GETPROC(gdiplus, GdiplusShutdown);
