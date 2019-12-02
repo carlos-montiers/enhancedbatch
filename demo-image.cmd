@@ -6,7 +6,7 @@ If Defined WT_SESSION (
 rundll32 "%~dp0enhancedbatch_%processor_architecture%" load
 If Not Defined @enhancedbatch Goto :Eof
 
-set "$demoimgfile=icon-eb.png"
+set "$demoimgfile=batch-hero.gif"
 
 if "%~1"=="/?" (
   call @image /?
