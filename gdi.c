@@ -439,6 +439,7 @@ int CallImage(int argc, LPCWSTR argv[])
 	int sx = 0, sy = 0, sw = 0, sh = 0;
 	int fcw = 0, fch = 0, fsw = 0, fsh = 0;
 	int fl = 0, fr = 0, ft = 0, fb = 0;
+	int fpc = -1, fpr = -1;
 	LPCWSTR file = NULL;
 	int frame = 0;
 	BOOL quiet = FALSE, ret_frames = FALSE;
@@ -509,11 +510,14 @@ int CallImage(int argc, LPCWSTR argv[])
 					sw = (int) wcstol(argv[++i], NULL, 10);
 					sh = (int) wcstol(argv[++i], NULL, 10);
 				} else if (WCSIEQ(argv[i], L"/fc")) {
-					fcw = (int) wcstol(argv[++i], NULL, 10);
 					fch = (int) wcstol(argv[++i], NULL, 10);
+					fcw = (int) wcstol(argv[++i], NULL, 10);
 				} else if (WCSIEQ(argv[i], L"/fs")) {
 					fsw = (int) wcstol(argv[++i], NULL, 10);
 					fsh = (int) wcstol(argv[++i], NULL, 10);
+				} else if (WCSIEQ(argv[i], L"/fp")) {
+					fpr = (int) wcstol(argv[++i], NULL, 10);
+					fpc = (int) wcstol(argv[++i], NULL, 10);
 				}
 			}
 		}
@@ -562,7 +566,10 @@ int CallImage(int argc, LPCWSTR argv[])
 		if (fsw != 0) {
 			fcw = w / (fl + fsw + fr);
 			fch = h / (ft + fsh + fb);
-			if (frame >= fcw * fch) {
+			if (fpc != -1) {
+				frame = fcw * fpr + fpc;
+			}
+			if (frame < 0 || frame >= fcw * fch) {
 				frame = 0;
 			}
 			w = fsw;
