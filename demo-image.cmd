@@ -8,16 +8,21 @@ If Not Defined @enhancedbatch Goto :Eof
 
 set "$demoimgfile=icon-eb.png"
 
-if %$#%==0 (
-  set "$imgfile=%$0;~dp%%$demoimgfile%"
-  Echo Usage: %0 image [options]
-  Echo Using "%$demoimgfile%" as example.
-) else if "%~1"=="/?" (
+if "%~1"=="/?" (
   call @image /?
   goto :eof
-) else (
-  set "$imgfile=%~1"
-  set "$options=%$2-%"
+)
+if /i "%~1"=="/D" (
+  set $fixedDelay=%2
+  shift /1
+  shift /1
+)
+set "$imgfile=%~1"
+set "$options=%$2-%"
+if not defined $imgfile (
+  set "$imgfile=%$0;~dp%%$demoimgfile%"
+  Echo Usage: %0 [/D delay] image [options]
+  Echo Using "%$demoimgfile%" as example.
 )
 call @image %$options% /q "%$imgfile%"
 if %errorlevel%==0 (
@@ -63,9 +68,13 @@ if %$frames%==1 (
   set $f=0
   for do (
     call @image %$options% /f !$f! "%$imgfile%"
-    set /a $delay=!errorlevel! ^>^> 16
-    if !$delay!==0 set $delay=100
-    call @sleep !$delay!
+    if defined $fixedDelay (
+      call @sleep %$fixedDelay%
+    ) else (
+      set /a $delay=!errorlevel! ^>^> 16
+      if !$delay!==0 set $delay=100
+      call @sleep !$delay!
+    )
     set /a $f=(!$f!+1^) %% %$frames%
     call @kbhit || set @next=
   )
