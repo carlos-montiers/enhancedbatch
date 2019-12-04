@@ -127,8 +127,8 @@ void ParseFor(void)
 		if (*pLexBufPtr + 10 + len >= pLexBufferend) {
 			return;
 		}
-		memmove(*pLexBufPtr + 10, *pLexBufPtr, (len + 1) * sizeof(wchar_t));
-		memcpy(*pLexBufPtr, L"%_ in (:*)", 10 * sizeof(wchar_t));
+		memmove(*pLexBufPtr + 10, *pLexBufPtr, WSZ(len + 1));
+		memcpy(*pLexBufPtr, L"%_ in (:*)", WSZ(10));
 	} else if (p[0] == L'%' && p[1] != L'\0' && iswspace(p[2]) &&
 			   ((p[3] | 0x20) == L'd' && (p[4] | 0x20) == L'o' && iswspace(p[5]))) {
 		// Translate "for %? do ..." to "for %? in (:range*) do ...".
@@ -137,8 +137,8 @@ void ParseFor(void)
 		if (p + 13 + len >= pLexBufferend) {
 			return;
 		}
-		memmove(p + 13, p, (len + 1) * sizeof(wchar_t));
-		memcpy(p, L"in (:range*) ", 13 * sizeof(wchar_t));
+		memmove(p + 13, p, WSZ(len + 1));
+		memcpy(p, L"in (:range*) ", WSZ(13));
 	} else if (p[0] == L'%' && p[1] != L'\0' && iswspace(p[2])
 			   && (iswdigit(p[3]) || (p[3] == L'-' && iswdigit(p[4]))
 				   || (*pfDelayedExpansion && p[3] == L'!'))) {
@@ -169,10 +169,10 @@ void ParseFor(void)
 		if (p + 12 + len >= pLexBufferend) {
 			return;
 		}
-		memmove(p + 12, p, (len + 1) * sizeof(wchar_t));
+		memmove(p + 12, p, WSZ(len + 1));
 		p[11] = L')';
-		memmove(p + 11 - digits, p - digits, digits * sizeof(wchar_t));
-		memcpy(p - digits, L"in (:range*", 11 * sizeof(wchar_t));
+		memmove(p + 11 - digits, p - digits, WSZ(digits));
+		memcpy(p - digits, L"in (:range*", WSZ(11));
 	}
 }
 
