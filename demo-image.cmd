@@ -66,7 +66,7 @@ if %$frames%==1 (
   call @getkb
 ) else (
   set $f=0
-  for do (
+  for (!@kbhit!==-1) do (
     call @image %$options% /f !$f! "%$imgfile%"
     if defined $fixedDelay (
       call @sleep %$fixedDelay%
@@ -76,7 +76,6 @@ if %$frames%==1 (
       call @sleep !$delay!
     )
     set /a $f=(!$f!+1^) %% %$frames%
-    call @kbhit || set @next=
   )
 )
 call @image %$options% /restore "%$imgfile%"

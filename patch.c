@@ -173,6 +173,57 @@ void ParseFor(void)
 		p[11] = L')';
 		memmove(p + 11 - digits, p - digits, WSZ(digits));
 		memcpy(p - digits, L"in (:range*", WSZ(11));
+	} else if (*p == L'(') {
+		// Translate "for (COND) do ..." to
+		// "for %_ in (:*) do if not COND (set @next=) else ...".
+		LPWSTR cond = ++p;
+		BOOL quote = FALSE;
+		for (; *p != L'\0'; ++p) {
+			if (quote) {
+				if (*p == L'"') {
+					quote = FALSE;
+				}
+			} else if (*p == L'"') {
+				quote = TRUE;
+			} else if (*p == L')') {
+				break;
+			}
+		}
+		if (*p == L'\0') {
+			return;
+		}
+		LPWSTR cond_end = p;
+		while (iswspace(*++p)) {
+			// do nothing
+		}
+		if ((p[0] | 0x20) != L'd' || (p[1] | 0x20) != L'o' || !iswspace(p[2])) {
+			return;
+		}
+		p += 2;
+		while (iswspace(*cond)) {
+			++cond;
+		}
+		BOOL not = TRUE;
+		if ((cond[0] | 0x20) == L'n' && (cond[1] | 0x20) == L'o'
+			&& (cond[2] | 0x20) == L't' && iswspace(cond[3])) {
+			not = FALSE;
+			cond += 4;
+		}
+		DWORD new_len = cond_end - cond + 35;
+		if (not) {
+			new_len += 4;
+		}
+		len = wcslen(p);
+		if (*pLexBufPtr + new_len + len >= pLexBufferend) {
+			return;
+		}
+		memmove(*pLexBufPtr + new_len, p, WSZ(len + 1));
+		memmove(*pLexBufPtr + 17 + (not ? 4 : 0), cond, WSZ(cond_end - cond));
+		memcpy(*pLexBufPtr + new_len - 18, L" (set @next=) else", WSZ(18));
+		if (not) {
+			memcpy(*pLexBufPtr + 17, L"not ", WSZ(4));
+		}
+		memcpy(*pLexBufPtr, L"%_ in (:*) do if ", WSZ(17));
 	}
 }
 

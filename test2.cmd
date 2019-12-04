@@ -89,6 +89,16 @@ for do (
   )
   set /a $j=!$j!+1
 )
+for (!$j! neq 1) do (
+  set /a $j=!$j!-1
+  echo;!$j!..
+)
+echo Done
+for (not !$j! == 6) do (
+  echo;!$j!..
+  set /a $j=!$j!+1
+)
+echo Done
 set @delayedexpansion=0
 for %%j do (
   echo;%%j..
