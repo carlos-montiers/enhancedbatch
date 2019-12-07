@@ -336,7 +336,7 @@ int CallText(int argc, LPCWSTR argv[])
 				}
 			}
 			done:
-			DeleteObject(SelectObject(dc, old_mbm));
+			DeleteObject(SelectObject(mdc, old_mbm));
 			SelectObject(mdc, old_mfont);
 			DeleteDC(mdc);
 			r->left = x + dx - ox;
