@@ -212,6 +212,9 @@ int CallText(int argc, LPCWSTR argv[])
 			escapement = orientation = rotation;
 		}
 	}
+	if (scale_width == scale_height) {
+		scale_width = 0;
+	}
 	font = CreateFont(cfi.dwFontSize.Y * scale_height,
 					  cfi.dwFontSize.X * scale_width,
 					  escapement, orientation,
