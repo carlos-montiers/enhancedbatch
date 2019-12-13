@@ -481,17 +481,6 @@ int CallImage(int argc, LPCWSTR argv[])
 					half_y = cfi.dwFontSize.Y / 2;
 				}
 				y = (int) wcstol(argv[++i], NULL, 10);
-			} else if (WCSIEQ(argv[i], L"/p") ||
-					   WCSIEQ(argv[i], L"/ph")) {
-				if (argv[i][2] != L'\0') {
-					half_x = cfi.dwFontSize.X / 2;
-					half_y = cfi.dwFontSize.Y / 2;
-				}
-				y = (int) wcstol(argv[++i], NULL, 10);
-				if (i == argc-1) {
-					return 0;
-				}
-				x = (int) wcstol(argv[++i], NULL, 10);
 			} else if (WCSIEQ(argv[i], L"/f")) {
 				frame = (int) wcstol(argv[++i], NULL, 10);
 			} else if (WCSIEQ(argv[i], L"/fl")) {
@@ -506,7 +495,15 @@ int CallImage(int argc, LPCWSTR argv[])
 				if (i == argc-2) {
 					return 0;
 				}
-				if (WCSIEQ(argv[i], L"/o")) {
+				if (WCSIEQ(argv[i], L"/p") ||
+						   WCSIEQ(argv[i], L"/ph")) {
+					if (argv[i][2] != L'\0') {
+						half_x = cfi.dwFontSize.X / 2;
+						half_y = cfi.dwFontSize.Y / 2;
+					}
+					y = (int) wcstol(argv[++i], NULL, 10);
+					x = (int) wcstol(argv[++i], NULL, 10);
+				} else if (WCSIEQ(argv[i], L"/o")) {
 					sx = (int) wcstol(argv[++i], NULL, 10);
 					sy = (int) wcstol(argv[++i], NULL, 10);
 				} else if (WCSIEQ(argv[i], L"/s")) {
