@@ -52,6 +52,7 @@ const WCHAR EchoBriefStr[]	  = L"Display a message.";
 const WCHAR GetkbBriefStr[]   = L"Wait for a key.";
 const WCHAR HelpBriefStr[]	  = L"This list.";
 const WCHAR ImageBriefStr[]   = L"Draw an image.";
+const WCHAR ImgBriefStr[]	  = L"Display an image.";
 const WCHAR KbhitBriefStr[]   = L"Test for a key.";
 const WCHAR SayBriefStr[]	  = L"Speak a message.";
 const WCHAR SleepBriefStr[]   = L"Suspend execution.";
@@ -174,6 +175,59 @@ const WCHAR ImageHelpStr[] =
 	L"\r\n"
 	L"Copy will preserve what the image will replace; subsequent images with the same\r\n"
 	L"position and file name will use the copy as their background."
+;
+
+const WCHAR ImgHelpStr[] =
+	L"Display an image.\r\n"
+	L"\r\n"
+	L"CALL @IMG [/C column] [/Cn] [/COPY] [/D rows columns] [/DISCARD] [/F frame]\r\n"
+	L"          [/FB pixels] [/FL pixels] [/FC rows columns] [/FP row column]\r\n"
+	L"          [/FR pixels] [/FS width height] [/FT pixels] [/H rows] [/N] [/O x y]\r\n"
+	L"          [/P row column] [/Q] [/R row] [/RESTORE] [/S width height]\r\n"
+	L"          [/T[color]] [/W columns] image\r\n"
+	L"\r\n"
+	L"  /C        column to place image\r\n"
+	L"            color quality, where n is:\r\n"
+	L"              0: system colors\r\n"
+	L"              1: use light/medium/dark shades for dithering (legacy default)\r\n"
+	L"              2: RGB control sequences (Windows 10 default)\r\n"
+	L"  /COPY     make a copy of what the image will replace\r\n"
+	L"  /D        dimensions of the image\r\n"
+	L"  /DISCARD  dispose of the copy\r\n"
+	L"  /F        frame number to display (0 or invalid is first)\r\n"
+	L"  /FB       bottom pixels between frames\r\n"
+	L"  /FC       count of frames\r\n"
+	L"  /FL       left pixels between frames\r\n"
+	L"  /FP       position of frame to display\r\n"
+	L"  /FR       right pixels between frames\r\n"
+	L"  /FS       size of a frame\r\n"
+	L"  /FT       top pixels between frames\r\n"
+	L"  /H        height of the image (determine width automatically)\r\n"
+	L"  /N        return the number of frames (implies /Q)\r\n"
+	L"  /O        display the image from this position (origin)\r\n"
+	L"  /P        row and column to place image\r\n"
+	L"  /Q        do not display the image\r\n"
+	L"  /R        row to place image\r\n"
+	L"  /RESTORE  display the copy, then dispose of it\r\n"
+	L"  /S        display this much of the image (size)\r\n"
+	L"  /T        use space for transparent pixels (default color is current bg)\r\n"
+	L"  /W        width of the image (determine height automatically)\r\n"
+	L"  image     file name of the image\r\n"
+	L"\r\n"
+	L"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
+	L"will contain the delay between this frame and the next (in milliseconds) and\r\n"
+	L"the low word will contain the size: columns in the low byte and rows in the\r\n"
+	L"high byte.\r\n"
+	L"\r\n"
+	L"Specify 0 for a dimension to use the original (up to window size); rows will\r\n"
+	L"use half the size (there are two pixel lines per character row).\r\n"
+	L"\r\n"
+	L"Color is either a single hexadecimal digit (normal index); two digits (decimal\r\n"
+	L"index); three hexadecimal digits (RGB expanded to RRGGBB), otherwise RRGGBB.\r\n"
+	L"\r\n"
+	L"Copy will preserve what the image will replace; subsequent images with the same\r\n"
+	L"position and file name will use the copy as their background.  Due to console\r\n"
+	L"limitations RGB colors are mapped back to system colors."
 ;
 
 const WCHAR KbhitHelpStr[] =

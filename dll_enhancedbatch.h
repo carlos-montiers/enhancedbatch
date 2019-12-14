@@ -157,6 +157,7 @@ extern const WCHAR EchoBriefStr[], EchoHelpStr[], EscapeHelpStr[];
 extern const WCHAR GetkbBriefStr[], GetkbHelpStr[];
 extern const WCHAR HelpBriefStr[], HelpHelpStr[];
 extern const WCHAR ImageBriefStr[], ImageHelpStr[];
+extern const WCHAR ImgBriefStr[], ImgHelpStr[];
 extern const WCHAR KbhitBriefStr[], KbhitHelpStr[];
 extern const WCHAR SayBriefStr[], SayHelpStr[];
 extern const WCHAR SleepBriefStr[], SleepHelpStr[];
