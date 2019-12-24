@@ -58,6 +58,8 @@ if not defined $r (
 
 set $cursor=@cursor
 set @cursor=off
+:: Give the cursor a chance to hide before copying the background.
+call @sleep 40
 
 call @image %$options% /copy /n "%$imgfile%"
 if not defined $frames set $frames=%errorlevel%
@@ -80,5 +82,5 @@ if %$frames%==1 (
 )
 call @image %$options% /restore "%$imgfile%"
 
-set @delayedexpansion=$delayedexpansion
-set @cursor=$cursor
+set @delayedexpansion=%$delayedexpansion%
+set @cursor=%$cursor%

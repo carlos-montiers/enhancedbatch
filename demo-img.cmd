@@ -74,5 +74,5 @@ if %$frames%==1 (
 )
 call @img %$options% /restore "%$imgfile%"
 
-set @delayedexpansion=$delayedexpansion
-set @cursor=$cursor
+set @delayedexpansion=%$delayedexpansion%
+set @cursor=%$cursor%
