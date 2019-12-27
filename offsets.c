@@ -883,6 +883,43 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0eecb,	// Goto start
 };
 
+const DWORD cmd_10_0_17763_592[] = {
+	0x0aa64,	// eol
+	0x11b9c,	// MSCmdVar
+	0x0fabb,	// Lex:text
+	0x520d0,	// TmpBuf
+	0x14990,	// PutStdErr:PutMsg
+	0x43a90,	// CurrentBatchFile
+	0x5667c,	// fOutputUnicode
+	0x43aa4,	// fDelayedExpansion
+	0x43aa5,	// fEnableExtensions
+	0x56685,	// fDumpTokens
+	0x56686,	// fDumpParse
+	0x06fd2,	// ForMkstr
+	0x0702d,	// ForResize
+	0x135bf,	// eEcho:CheckOnOff
+	0x3b110,	// EchoFlag
+	0x0cf19,	// START /?
+	0x0c7ff,	// ECHO /?
+	0x2c540,	// PromptUser
+	0x12ef0,	// FreeStack
+	0x43ad0,	// DCount
+	0x11960,	// SFWork:mkstr (inline)
+	0x11a4c,	// SFWork:resize (inline)
+	0x11952,	// SFWork:saved
+	0x43a88,	// GotoFlag
+	0x0ae22,	// FOR /F begin
+	0x0afdb,	// FOR /F end
+	0x14a04,	// ParseFor initial token
+	0x438f0,	// LexBufPtr
+	0x438e2,	// LexBuffer end
+	0x14b9c,	// ParseFor /F options
+	0x43a34,	// TokLen
+	0x0ef2a,	// Goto:EOF
+	0x0eefc,	// Goto pos
+	0x0eecb,	// Goto start
+};
+
 const DWORD cmd_10_0_18362_1[] = {
 	0x09754,	// eol
 	0x10bac,	// MSCmdVar
@@ -2213,6 +2250,44 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x09a3e,	// SFWork:passed
 };
 
+const DWORD cmd_10_0_17763_592[] = {
+	0x086f9,	// eol
+	0x09581,	// MSCmdVar
+	0x0c0fa,	// Lex:text
+	0x43ae0,	// TmpBuf
+	0x12b14,	// PutStdErr:PutMsg
+	0x35738,	// CurrentBatchFile
+	0x4803c,	// fOutputUnicode
+	0x35744,	// fDelayedExpansion
+	0x35745,	// fEnableExtensions
+	0x48045,	// fDumpTokens
+	0x48046,	// fDumpParse
+	0x06fe2,	// ForMkstr
+	0x07032,	// ForResize
+	0x0f220,	// eEcho:CheckOnOff
+	0x2d0c0,	// EchoFlag
+	0x0d933,	// START /?
+	0x09478,	// ECHO /?
+	0x299fb,	// CtrlCAbort:PromptUser
+	0x102dd,	// FreeStack
+	0x35768,	// DCount
+	0x0a118,	// SFWork:mkstr (inline)
+	0x0a1b6,	// SFWork:resize
+	0x0a101,	// SFWork:saved
+	0x35734,	// GotoFlag
+	0x08a00,	// FOR /F begin
+	0x08ba4,	// FOR /F end
+	0x11c83,	// ParseFor initial token
+	0x355bc,	// LexBufPtr
+	0x355b2,	// LexBuffer end
+	0x11ddb,	// ParseFor /F options
+	0x356ec,	// TokLen
+	0x0b67d,	// Goto:EOF
+	0x0b65e,	// Goto pos
+	0x0b629,	// Goto start
+	0x0a0ee,	// SFWork:passed
+};
+
 const DWORD cmd_10_0_18362_1[] = {
 	0x10a09,	// eol
 	0x0ebf3,	// MSCmdVar
@@ -2298,6 +2373,7 @@ const struct sCMD cmd_versions[] = {
 #ifdef _WIN64
 	CMD(10,0,18362,449)
 	CMD(10,0,18362,1)
+	CMD(10,0,17763,592)
 	CMD(10,0,17763,1)
 	CMD(10,0,17134,1)
 	CMD(10,0,16299,15)
@@ -2323,6 +2399,7 @@ const struct sCMD cmd_versions[] = {
 #else
 	CMD(10,0,18362,449)
 	CMD(10,0,18362,1)
+	CMD(10,0,17763,592)
 	CMD(10,0,17763,1)
 	CMD(10,0,17134,1)
 	CMD(10,0,16299,15)
