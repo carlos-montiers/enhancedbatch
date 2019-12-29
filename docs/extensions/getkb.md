@@ -23,4 +23,12 @@ set "code="!@getkb!"
 echo code: !code!
 ```
 
+## call @getkb
+Wait for key press and set the code in Errorlevel.
+
+```
+call @getkb
+echo code: !errorlevel!
+```
+
 {: .fs-6 .fw-300 }

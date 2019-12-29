@@ -21,7 +21,7 @@ Enhanced Batch is a solution to improve the functionality of your classic Window
 
 Applying a technique called Windows API Hooking, we have added capabilities never seen before.
 
-You can store variables internally in the heap, instead of the environment block, saving the overhead of this last.
+You can store variables internally in a space called heap, instead of the environment block, saving the overhead of this last.
 
 These heap variables begin with the `$` prefix.
 

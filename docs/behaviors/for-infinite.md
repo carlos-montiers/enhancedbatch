@@ -27,4 +27,11 @@ for %%j in (:*) do (
 echo key pressed.
 ```
 
+## Shortcut version
+You can use a more simple syntax:
+`for do`
+is equivalent to:
+`for %%_ in (:*) do`
+
+
 {: .fs-6 .fw-300 }

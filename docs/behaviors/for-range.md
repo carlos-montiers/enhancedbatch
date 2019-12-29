@@ -40,6 +40,21 @@ For stop in the next iteration, use `set @next=`
 ## Start 3 Stop 0 Step -1
 `:range*3:0`
 
+## Shortcut versions
+You can use a more simple syntax:
+
+`for %%? do`
+is equivalent to:
+`for %%? in (:range*) do`
+
+`for %%? N`
+is equivalent to:
+`for %%? in (:range*N)`
+
+`for %%? 1:5:2`
+is equivalent to:
+`for %%? in (:range*1:5:2)`
+
 ## Examples
 ```
 for %%j in (:range*) do (

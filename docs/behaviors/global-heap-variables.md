@@ -16,7 +16,7 @@ nav_order: 1
 
 ---
 
-You can save global variables in the heap prefixing it with the `$` character.
+You can save global variables in other space rather than environment block called heap prefixing it with the `$` character.
 
 That are case sensitive.
 

@@ -2,7 +2,7 @@
 layout: default
 title: Constants
 parent: Behaviors
-nav_order: 11
+nav_order: 13
 ---
 
 # Constants
@@ -16,7 +16,8 @@ nav_order: 11
 
 ---
 
-You can use the next constant alias variables for characters:
+## Aliases for characters
+You can use the next alias variables for characters:
 
 - `!$TAB!` Tab
 - `!$BS!` Backspace
@@ -52,9 +53,16 @@ You can use the next constant alias variables for characters:
 - `!$EQ!` =
 - `!$AT!` @
 - `!$ESC!` Escape
+- `!$BELL!` Bell (sound)
+- `!$NBSP!` No-break space
 
+## Localized Yes and No
 You can use the next variables for get localized `yes` and `no` first character:
 - `!$YES!` Y (english) S (spanish) J (german)
 - `!$NO!` N (english) N (spanish) N (german)
+
+## Control character variables
+You can use `$CTRL+?`, where `?` is one of "A-Z[\]^_".
+It will expand to the equivalent unicode character U+0001..U+001F.
 
 {: .fs-6 .fw-300 }

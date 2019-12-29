@@ -2,7 +2,7 @@
 layout: default
 title: Helpers
 parent: Behaviors
-nav_order: 7
+nav_order: 9
 ---
 
 # Helpers
@@ -16,30 +16,41 @@ nav_order: 7
 
 ---
 
+## Parameters Helpers
 In Batch you can pass to a subroutine more than 9 parameters.
 
 If you want count the total number of parameters, or get a parameter after the index 9 is quick way of do it.
 
 Enhanced Batch provides helpers for that.
 
-## Parameters Helpers
-`$#` returns the count of parameters.
 `$0` return  the name of the label.
-`$N` returns the parameter in the N position (from 1).
+`$#` returns the count of parameters.
+`$N` returns the parameter in the N position (1 based).
+`$-N` returns the parameters from positions 1 to N (inclusive).
+`$N-` return parameters onward position N (inclusive).
+`$N-M` returns the parameters from positions N (inclusive) to M (inclusive).
+`$-` returns all the parameters.
 
 ```
 call :test a b c d e f g h i j k l m n o p q r s t u v w x y z
 pause & goto :eof
 :test
-echo Count Args: %$#%
 echo Label: %$0%
-echo Argument 17: %$17%
+echo Count Parameters: %$#%
+echo All: %$-%
+echo Parameters 5-7: %$5-7%
+echo Parameter 17: %$17%
+echo First 3 parameters: %$-3%
+echo Four onwards: %$4-%
 goto :eof
 
-Count Args: 26
-Batch script: C:\enhancedbatch\helpers.cmd
 Label: :test
-Argument 17: q
+Count Parameters: 26
+All: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Parameters 5-7: e f g
+Parameter 17: q
+First 3 parameters: a b c
+Four onwards: d e f g h i j k l m n o p q r s t u v w x y z
 Press any key to continue . . .
 ```
 

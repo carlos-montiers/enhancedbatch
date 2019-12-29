@@ -18,6 +18,10 @@ nav_order: 2
 
 Enhanced Batch add features to the for /f command.
 
+## Read all the lines
+You can use a new option called `line` for read all the lines.
+It sets "delims" and "eol" to NUL, ensuring a complete line will be read (assuming "tokens" is still 1).
+
 ## Get line numbers
 You can get the current line in the LOOP and the total lines processed:
 ```
