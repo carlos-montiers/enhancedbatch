@@ -134,7 +134,7 @@ int CallGetkb(int argc, LPCWSTR argv[])
 
 int CallKbhit(int argc, LPCWSTR argv[])
 {
-	return _kbhit() ? getKeyCode() : 0;
+	return _kbhit() ? getKeyCode() : -1;
 }
 
 BOOL setPosition(int row, int column)

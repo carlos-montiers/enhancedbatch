@@ -44,7 +44,8 @@ echo Playing with infinite
 for %%j in (:*) do (
   echo;j = %%j press a key for stop !$spinner$i!!$CR!
   set /a $i=(!$i!+1^)^&3
-  call @kbhit || set @next=
+  call @kbhit
+  if !errorlevel! neq -1 set @next=
 )
 echo !$LF!key pressed.
 
