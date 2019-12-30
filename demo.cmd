@@ -26,7 +26,7 @@ echo /?
 
 pause & call @clear
 
-echo Playing with forline and forlines
+echo Playing with @forline and @forlines
 set "file=!$0;~dp!LICENSE.txt"
 for /f "usebackq" %%a in ("!file!") do (
   echo !@forline!:%%a
@@ -40,7 +40,7 @@ set $spinner1=^|
 set $spinner2=/
 set $spinner3=-
 set $i=0
-echo Playing with infinite
+echo Playing with for infinite
 for %%j in (:*) do (
   echo;j = %%j press a key for stop !$spinner$i!!$CR!
   set /a $i=(!$i!+1^)^&3
@@ -51,7 +51,7 @@ echo !$LF!key pressed.
 
 pause & call @clear
 
-echo Playing with range
+echo Playing with for range
 
 for %%j in (:range*) do (
   for %%k in (:range*) do (
@@ -162,11 +162,11 @@ set "$A=1"
 set "$a=2"
 echo $A = %$A% $a = %$a%
 
-echo Calling to extension getch. Enter a character ...
+echo Calling to extension @getch. Enter a character ...
 set "code=%@getch%"
 echo char: !code!
 
-echo Calling to extension chhit. Enter a character ...
+echo Calling to extension @chhit. Enter a character ...
 set $spinner=\^|/-
 set $i=0
 :chloop
@@ -176,11 +176,11 @@ set "lastcode=%@chhit%"
 if "!lastcode!" == "-1" call @sleep 100&goto chloop
 echo last char: !lastcode!
 
-echo Calling to extension getkb. Press a key ...
+echo Calling to extension @getkb. Press a key ...
 set "code=%@getkb%"
 echo code: !code! (zero padded: !code;05!)
 
-echo Calling to extension kbhit. Press a key ...
+echo Calling to extension @kbhit. Press a key ...
 set $i=0
 :kbloop
 echo;!$spinner:~%$i%,1!!$BS!
