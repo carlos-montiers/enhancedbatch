@@ -88,7 +88,7 @@ pause & call @clear
 
 set "$var= oKay "
 echo   Default: !$no-var;'undefined'!.
-echo   Invalid: !$var;invalid!.
+echo $var;typo: !$var;typo!.
 echo     Upper: !$var;upper!.
 echo     Lower: !$var;lower!.
 echo   Capital: !$var;capital!.
