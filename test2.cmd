@@ -65,6 +65,7 @@ echo Use character expansion!U+D!!U+A!for a new line.
 for /f "eol=!U+0!" %%A in (";token") do echo %%A
 for /f "line" %%A in (";line one!U+A!!U+22!line two") do echo %%A
 echo This is line %@batchline%.
+call echo ^^"^"
 call :args 1 2 3 4 5 6 7 8 9 10 11
 call :loop
 call :labels

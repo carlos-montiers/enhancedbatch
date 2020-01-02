@@ -57,10 +57,10 @@ BYTE oldCtrlCAborts[5];
 DWORD SFWork_esp, ParseForF_ret;
 BYTE SFWork_stdcall;
 int SFWork_saved, SFWork_passed, SFWork_first, Goto_pos, Goto_start;
-DWORD ForFbegin_org, ParseFor_org, ParseForF_org;
+DWORD ForFbegin_org, ParseFor_org, ParseForF_org, CallWorkresize_org;
 #endif
 
-int oldPutMsg, oldParseFor, oldParseForF;
+int oldPutMsg, oldParseFor, oldParseForF, oldCallWorkresize;
 BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
 BYTE oldForFbegin[6], oldForFend[6], oldGotoEof[6];
 DWORD_PTR SFWork_mkstr_org, FreeStack, ForFend_org;
@@ -373,6 +373,24 @@ DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
 }
 
 
+void __fastcall CallWorkresize_hook(LPWSTR line)
+{
+	BOOL in_quote = FALSE;
+
+	for (; *line != L'\0'; ++line) {
+		if (in_quote) {
+			if (*line == L'^') {
+				wcscpy(line+1, line+2);
+			} else if (*line == L'"') {
+				in_quote = FALSE;
+			}
+		} else if (*line == L'"') {
+			in_quote = TRUE;
+		}
+	}
+}
+
+
 #ifndef _WIN64
 int __stdcall stdPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 {
@@ -543,6 +561,31 @@ PROC(GotoEof)
 	"ret"
 ENDPROC
 
+PROC(CallWorkresize_stdcall_hook)
+	"mov 4(%esp),%ecx\n"
+	"call _CallWorkresize_hook\n"
+	"jmp *_CallWorkresize_org\n"
+ENDPROC
+
+PROC(CallWorkresize_fastcall_hook)
+	"push %ecx\n"
+	"push %edx\n"
+	"call _CallWorkresize_hook\n"
+	"pop %edx\n"
+	"pop %ecx\n"
+	"jmp *_CallWorkresize_org\n"
+ENDPROC
+
+PROC(CallWorkresize_fastcall62_hook)
+	"push %eax\n"
+	"push %ecx\n"
+	"mov %eax,%ecx\n"
+	"call _CallWorkresize_hook\n"
+	"pop %ecx\n"
+	"pop %eax\n"
+	"jmp *_CallWorkresize_org\n"
+ENDPROC
+
 #else
 
 #define PROC(func) \
@@ -685,6 +728,8 @@ ENDPROC
 #define rParseFor_org		(DWORD_PTR *)(redirect + redirect_data[13])
 #define rParseForF_org		(DWORD_PTR *)(redirect + redirect_data[13]+8)
 #define rGotoEof			(redirect + redirect_data[14])
+#define rCallWorkresize 	(redirect + redirect_data[15])
+#define rCallWorkresize_org (DWORD_PTR *)(redirect + redirect_data[16])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
@@ -709,6 +754,8 @@ PROC(redirect_code)
 	"rel rParseForF\n"
 	"rel aParseFor_org\n"
 	"rel aGotoEof\n"
+	"rel rCallWorkresize\n"
+	"rel aCallWorkresize_org\n"
 
 "redirect_code_start:\n"
 
@@ -789,6 +836,16 @@ PROC(redirect_code)
 	"pop %rax\n"
 	"ret\n"
 
+"rCallWorkresize:\n"
+	"push %rcx\n"
+	"push %rdx\n"
+	"sub $40,%rsp\n"
+	"call *aCallWorkresize_hook(%rip)\n"
+	"add $40,%rsp\n"
+	"pop %rdx\n"
+	"pop %rcx\n"
+	"jmp *aCallWorkresize_org(%rip)\n"
+
 	".align 8\n"
 	".macro abs label\n"
 	"a\\label: .quad \\label\n"
@@ -803,6 +860,8 @@ PROC(redirect_code)
 	"aParseFor_org: .quad 0\n"
 	"aParseForF_org: .quad 0\n"
 	"abs GotoEof\n"
+	"abs CallWorkresize_hook\n"
+	"aCallWorkresize_org: .quad 0\n"
 
 "redirect_code_end:"
 ENDPROC
@@ -944,6 +1003,7 @@ void hookCmd(void)
 	oldPutMsg = *pPutStdErrMsg;
 	oldParseFor = *pParseFortoken;
 	oldParseForF = *pForFoptions;
+	oldCallWorkresize = *pCallWorkresize;
 	memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
 	memcpy(oldLexText, pLexText, 5);
 	memcpy(oldEchoOnOff, pEchoOnOff, 5);
@@ -1232,6 +1292,20 @@ void hookCmd(void)
 	i = MKDISP(ParseForF_hook, pForFoptions+1);
 #endif
 	WriteMemory(pForFoptions, &i, 4);
+
+	// Hook when CALL resizes the line containing doubled-up carets, in order
+	// to remove incorrect doubles in strings.
+#ifdef _WIN64
+	*rCallWorkresize_org = MKABS(pCallWorkresize);
+	i = MKDISP(rCallWorkresize, pCallWorkresize+1);
+#else
+	CallWorkresize_org = MKABS(pCallWorkresize);
+	i = MKDISP(CMD_MAJOR_MINOR(<, 6,2) ? CallWorkresize_stdcall_hook :
+			   CMD_MAJOR_MINOR(>, 6,2) ? CallWorkresize_fastcall_hook
+									   : CallWorkresize_fastcall62_hook,
+			   pCallWorkresize+1);
+#endif
+	WriteMemory(pCallWorkresize, &i, 4);
 }
 
 void hookEchoOptions(BOOL options)
@@ -1345,6 +1419,7 @@ void unhookCmd(void)
 	WriteMemory(pGotoEof, oldGotoEof, 6);
 	WriteMemory(pParseFortoken, &oldParseFor, 4);
 	WriteMemory(pForFoptions, &oldParseForF, 4);
+	WriteMemory(pCallWorkresize, &oldCallWorkresize, 4);
 
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;

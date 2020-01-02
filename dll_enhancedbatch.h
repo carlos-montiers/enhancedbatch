@@ -225,10 +225,11 @@ void hookCtrlCAborts(char aborts);
 #define pGotoEof			cmd_addrs[31]
 #define pGotopos			cmd_addrs[32]
 #define pGotostart			cmd_addrs[33]
+#define pCallWorkresize 	((int *) cmd_addrs[34])
 
 #ifdef _WIN64
-#define OFFSETS 34
-#else
-#define pSFWorkpassed		((char *) cmd_addrs[34])
 #define OFFSETS 35
+#else
+#define pSFWorkpassed		((char *) cmd_addrs[35])
+#define OFFSETS 36
 #endif
