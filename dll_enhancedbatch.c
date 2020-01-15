@@ -1556,23 +1556,32 @@ void hook(HMODULE hInstance)
 {
 	hDllInstance = hInstance;
 
+	hookCmd();
+
 	Hooks = AllHooks;
 	if (LOBYTE(GetVersion()) > 5) {
 		// No need for the MultiByteToWideChar patch.
 		++Hooks;
 	}
-	HookAPIOneMod(GetModuleHandle(NULL), Hooks);
+	HMODULE cmd = GetModuleHandle(NULL);
+	HookAPIOneMod(cmd, Hooks);
 	if (AllHooks[1].oldfunc != 0) {
 		HookAPIOneMod(hInstance, Hooks);
 	} else {
 		// CmdBatNotification is delay-loaded as CmdBatNotificationStub,
 		// so point our own CmdBatNotification to the stub, too.
-		HookAPIDelayMod(GetModuleHandle(NULL), DelayedHooks);
-		AllHooks[1].oldfunc = DelayedHooks[0].oldfunc;
+		HookAPIDelayMod(cmd, DelayedHooks);
+		if (DelayedHooks[0].oldfunc >= (DWORD_PTR) cmd &&
+			DelayedHooks[0].oldfunc < (DWORD_PTR) cmd_end) {
+			// Loading from the command line before running any batch means
+			// it hasn't been imported yet, so can't hook, just replace.
+			AllHooks[1].oldfunc = (DWORD_PTR) GetProcAddress(GetModuleHandle(L"kernel32.dll"),
+														"CmdBatNotification");
+		} else {
+			AllHooks[1].oldfunc = DelayedHooks[0].oldfunc;
+		}
 		HookAPIOneMod(hInstance, Hooks);
 	}
-
-	hookCmd();
 
 	variables = kh_init(wstr);
 	batch_lnums = kh_init(line);
