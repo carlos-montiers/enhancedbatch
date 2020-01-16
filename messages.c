@@ -47,19 +47,513 @@ const WCHAR ArgErrorStr[]  = L"Failed to retrieve arguments.\n";
 const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
 const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
 
-const WCHAR ClearBriefStr[]   = L"Clear a window.";
-const WCHAR EchoBriefStr[]	  = L"Display a message.";
-const WCHAR GetkbBriefStr[]   = L"Wait for a key.";
-const WCHAR HelpBriefStr[]	  = L"This list.";
-const WCHAR ImageBriefStr[]   = L"Draw an image.";
-const WCHAR ImgBriefStr[]	  = L"Display an image.";
-const WCHAR KbhitBriefStr[]   = L"Test for a key.";
-const WCHAR SayBriefStr[]	  = L"Speak a message.";
-const WCHAR SleepBriefStr[]   = L"Suspend execution.";
-const WCHAR TextBriefStr[]	  = L"Draw a message.";
-const WCHAR TimerBriefStr[]   = L"Millisecond timer.";
-const WCHAR TimerHiBriefStr[] = L"Microsecond timer.";
-const WCHAR UnloadBriefStr[]  = L"Remove Enhanced Batch.";
+const WCHAR GetSetStr[] = L"Read/Write Variables";
+const WCHAR GetterStr[] = L"Read-only Variables";
+const WCHAR SetterStr[] = L"Write-only Variables";
+const WCHAR CallStr[] = L"Functions";
+
+const WCHAR AttrBriefStr[]				= L"Console attributes";
+const WCHAR BatchFileBriefStr[] 		= L"Batch file name in error messages";
+const WCHAR BatchLineBriefStr[] 		= L"Current batch file line number";
+const WCHAR BackgroundBriefStr[]		= L"Console background color";
+const WCHAR ReadcharBriefStr[]			= L"Read a character from the keyboard";
+const WCHAR CmdVersionBriefStr[]		= L"Version number of CMD";
+const WCHAR ColorBriefStr[] 			= L"Console colors";
+const WCHAR ColumnBriefStr[]			= L"Console window cursor column";
+const WCHAR CtrlCAbortsBriefStr[]		= L"Ctrl+C behavior";
+const WCHAR ConsoleCursorBriefStr[] 	= L"Console cursor visibility/size";
+const WCHAR DateBriefStr[]				= L"Date as YYYY-MM-DD";
+const WCHAR DateTimeBriefStr[]			= L"Date and time as YYYY-MM-DD HH:MM:SS";
+const WCHAR DateTimemsBriefStr[]		= L"Date and time as YYYY-MM-DD HH:MM:SS.mmm";
+const WCHAR DayBriefStr[]				= L"Day of month";
+const WCHAR DayNameBriefStr[]			= L"Day of week (name)";
+const WCHAR DayOfWeekBriefStr[] 		= L"Day of week (number)";
+const WCHAR DayShortBriefStr[]			= L"Day of week (short name)";
+const WCHAR DecSepBriefStr[]			= L"Decimal separator";
+const WCHAR DelayedExpansionBriefStr[]	= L"Delayed expansion behavior";
+const WCHAR EchoVarBriefStr[]			= L"Echo behavior";
+const WCHAR EchoOptionsBriefStr[]		= L"Disable ECHO's options";
+const WCHAR EnglishBriefStr[]			= L"Use English names";
+const WCHAR EnhancedBatchBriefStr[] 	= L"Enhanced Batch feature number";
+const WCHAR ExtensionsBriefStr[]		= L"Extensions behavior";
+const WCHAR ForegroundBriefStr[]		= L"Console foreground color";
+const WCHAR ForLineBriefStr[]			= L"Line number of FOR /F file";
+const WCHAR ForLinesBriefStr[]			= L"Total number of lines of FOR /F file";
+const WCHAR GetcharBriefStr[]			= L"Wait for a character from the keyboard";
+const WCHAR GetkeyBriefStr[]			= L"Wait for a key";
+const WCHAR HeightBriefStr[]			= L"Console window height";
+const WCHAR HourBriefStr[]				= L"Hour value of the current time";
+const WCHAR InputCodePageBriefStr[] 	= L"Input code page";
+const WCHAR ElevatedBriefStr[]			= L"Running as administrator";
+const WCHAR ReadkeyBriefStr[]			= L"Read a key";
+const WCHAR MillisecondsBriefStr[]		= L"Milliseconds value of the current time";
+const WCHAR MinuteBriefStr[]			= L"Minute value of the current time";
+const WCHAR MonthBriefStr[] 			= L"Month of the current date";
+const WCHAR MonthNameBriefStr[] 		= L"Name of the current month";
+const WCHAR MonthShortBriefStr[]		= L"Short name of the current month";
+const WCHAR OpacityBriefStr[]			= L"Opacity of the window";
+const WCHAR OSBuildBriefStr[]			= L"Windows build version number";
+const WCHAR OSMajorBriefStr[]			= L"Windows major version number";
+const WCHAR OSMinorBriefStr[]			= L"Windows minor version number";
+const WCHAR OSRevisionBriefStr[]		= L"Windows revision version number";
+const WCHAR OSVersionBriefStr[] 		= L"Windows version number";
+const WCHAR OutputCodePageBriefStr[]	= L"Output code page";
+const WCHAR PositionBriefStr[]			= L"Console window cursor position";
+const WCHAR RowBriefStr[]				= L"Console window cursor row";
+const WCHAR SecondBriefStr[]			= L"Seconds value of the current time";
+const WCHAR SizeBriefStr[]				= L"Console window size";
+const WCHAR StderrBriefStr[]			= L"Standard error mode";
+const WCHAR StdinBriefStr[] 			= L"Standard input mode";
+const WCHAR StdoutBriefStr[]			= L"Standard output mode";
+const WCHAR TempDirBriefStr[]			= L"Create a temporary directory";
+const WCHAR TempFileBriefStr[]			= L"Create a temporary file";
+const WCHAR TimeBriefStr[]				= L"Time as HH:MM:SS";
+const WCHAR TimemsBriefStr[]			= L"Time as HH:MM:SS.mmm";
+const WCHAR TimerVarBriefStr[]			= L"Time of the millisecond timer";
+const WCHAR HiTimerBriefStr[]			= L"Time of the microsecond timer";
+const WCHAR TitleBriefStr[] 			= L"Title of the window";
+const WCHAR TransientBriefStr[] 		= L"Transient state of CMD";
+const WCHAR UnderlineBriefStr[] 		= L"Console underline attribute";
+const WCHAR UnicodeBriefStr[]			= L"Unicode output";
+const WCHAR UniqueBriefStr[]			= L"Create a unique file";
+const WCHAR UnixTimeBriefStr[]			= L"Time as number of seconds";
+const WCHAR EBVersionBriefStr[] 		= L"Enhanced Batch version number";
+const WCHAR VoiceBriefStr[] 			= L"Text-to-speech voice";
+const WCHAR WidthBriefStr[] 			= L"Console window width";
+const WCHAR YearBriefStr[]				= L"Year of the current date";
+
+const WCHAR CodePageBriefStr[]			= L"Set both input and output code pages";
+const WCHAR DumpParseBriefStr[] 		= L"Display parser processing";
+const WCHAR DumpTokensBriefStr[]		= L"Display token processing";
+const WCHAR NextBriefStr[]				= L"Set next FOR range value";
+
+const WCHAR ClearBriefStr[] 			= L"Clear a window";
+const WCHAR EchoBriefStr[]				= L"Display a message";
+const WCHAR GetkbBriefStr[] 			= L"Wait for a key";
+const WCHAR HelpBriefStr[]				= L"This list";
+const WCHAR ImageBriefStr[] 			= L"Draw an image";
+const WCHAR ImgBriefStr[]				= L"Display an image";
+const WCHAR KbhitBriefStr[] 			= L"Test for a key";
+const WCHAR SayBriefStr[]				= L"Speak a message";
+const WCHAR SleepBriefStr[] 			= L"Suspend execution";
+const WCHAR TextBriefStr[]				= L"Draw a message";
+const WCHAR TimerBriefStr[] 			= L"Millisecond timer";
+const WCHAR TimerHiBriefStr[]			= L"Microsecond timer";
+const WCHAR UnloadBriefStr[]			= L"Remove Enhanced Batch";
+
+const WCHAR AttrHelpStr[] =
+	L"Get or set the console attributes.\r\n"
+	L"\r\n"
+	L"The attributes are a four-digit hexadecimal number.  Set an empty value to\r\n"
+	L"restore the original attributes."
+;
+
+const WCHAR BatchFileHelpStr[] =
+	L"Get or set the batch file name in error messages.\r\n"
+	L"\r\n"
+	L"  0         do not show the file name\r\n"
+	L"  1         show only the file name (default)\r\n"
+	L"  2         show the complete path\r\n"
+	L"\r\n"
+	L"If the name is shown the line number will be shown after it."
+;
+
+const WCHAR BatchLineHelpStr[] =
+	L"Get the line number of the current batch file (0 if none)."
+;
+
+const WCHAR BackgroundHelpStr[] =
+	L"Get or set the console background color.\r\n"
+	L"\r\n"
+	L"The color is a single hexadecimal digit.  Set an empty value to restore the\r\n"
+	L"original background."
+;
+
+const WCHAR ReadcharHelpStr[] =
+	L"Read a character from the keyboard.\r\n"
+	L"\r\n"
+	L"Only reads characters, other keys are discarded.  If no character is available\r\n"
+	L"uses -1."
+;
+
+const WCHAR CmdVersionHelpStr[] =
+	L"Get the version number of CMD."
+;
+
+const WCHAR ColorHelpStr[] =
+	L"Get or set the console colors.\r\n"
+	L"\r\n"
+	L"The colors are a two-digit hexadecimal number (background and foreground).  Set\r\n"
+	L"an empty value to restore the original colors."
+;
+
+const WCHAR ColumnHelpStr[] =
+	L"Get or set the window cursor column.\r\n"
+	L"\r\n"
+	L"The left column is 0; will be -1 if there is no console.\r\n"
+;
+
+const WCHAR CtrlCAbortsHelpStr[] =
+	L"Get or set the Ctrl+C behavior.\r\n"
+	L"\r\n"
+	L"  -1/empty  ask to terminate (default)\r\n"
+	L"  0/OFF     do not terminate\r\n"
+	L"  1/ON      terminate"
+;
+
+const WCHAR ConsoleCursorHelpStr[] =
+	L"Get or set the console cursor size or visibility.\r\n"
+	L"\r\n"
+	L"  0         hide\r\n"
+	L"  1         show\r\n"
+	L"  2-100     cursor size as a percentage of the font size"
+;
+
+const WCHAR DateHelpStr[] =
+	L"Get the current date.\r\n"
+	L"\r\n"
+	L"The format is always YYYY-MM-DD."
+;
+
+const WCHAR DateTimeHelpStr[] =
+	L"Get the current date and time.\r\n"
+	L"\r\n"
+	L"The format is always YYYY-MM-DD HH:MM:SS."
+;
+
+const WCHAR DateTimemsHelpStr[] =
+	L"Get the current date and time, with milliseconds.\r\n"
+	L"\r\n"
+	L"The format is always YYYY-MM-DD HH:MM:SS.mmm (but '.' is the value of @decsep)."
+;
+
+const WCHAR DayHelpStr[] =
+	L"Get the current day of the month."
+;
+
+const WCHAR DayNameHelpStr[] =
+	L"Get the current day of the week, as a name.\r\n"
+	L"\r\n"
+	L"The name will be English if @english is on, otherwise locale dependent."
+;
+
+const WCHAR DayOfWeekHelpStr[] =
+	L"Get the current day of the week, as a number.\r\n"
+	L"\r\n"
+	L"Sunday is 0."
+;
+
+const WCHAR DayShortHelpStr[] =
+	L"Get the current day of the week, as an abbreviated name.\r\n"
+	L"\r\n"
+	L"The name will be English if @english is on, otherwise locale dependent."
+;
+
+const WCHAR DecSepHelpStr[] =
+	L"Get or set the decimal separator.\r\n"
+	L"\r\n"
+	L"Any character can be used (but only the first if more than one).  Set an empty\r\n"
+	L"value to restore the original separator."
+;
+
+const WCHAR DelayedExpansionHelpStr[] =
+	L"Get or set delayed expansion."
+;
+
+const WCHAR EchoVarHelpStr[] =
+	L"Get or set the echo status."
+;
+
+const WCHAR EchoOptionsHelpStr[] =
+	L"Get or set echo options.\r\n"
+	L"\r\n"
+	L"If this is off ECHO will always output its arguments."
+;
+
+const WCHAR EnglishHelpStr[] =
+	L"Get or set English names\r\n"
+	L"\r\n"
+	L"If this is on month and day names will always be in English."
+;
+
+const WCHAR EnhancedBatchHelpStr[] =
+	L"Get the feature number of Enhanced Batch.\r\n"
+	L"\r\n"
+	L"This is currently 0; it will change to a number that will increment as features\r\n"
+	L"are added to EB after the first release."
+;
+
+const WCHAR ExtensionsHelpStr[] =
+	L"Get or set CMD extensions."
+;
+
+const WCHAR ForegroundHelpStr[] =
+	L"Get or set the console foreground color.\r\n"
+	L"\r\n"
+	L"The color is a single hexadecimal digit.  Set an empty value to restore the\r\n"
+	L"original foreground."
+;
+
+const WCHAR ForLineHelpStr[] =
+	L"Get the current line number of FOR /F.\r\n"
+	L"\r\n"
+	L"Blank lines are still skipped, but they count as line numbers."
+;
+
+const WCHAR ForLinesHelpStr[] =
+	L"Get the total number of lines of the previous FOR /F.";
+;
+
+const WCHAR GetcharHelpStr[] =
+	L"Wait for a character from the keyboard.\r\n"
+	L"\r\n"
+	L"Only reads characters, other keys are discarded."
+;
+
+const WCHAR GetkeyHelpStr[] =
+	L"Wait for a key from the keyboard."
+;
+
+const WCHAR HeightHelpStr[] =
+	L"Get the height (number of rows) of the console window."
+;
+
+const WCHAR HourHelpStr[] =
+	L"Get the hour of the current time."
+;
+
+const WCHAR InputCodePageHelpStr[] =
+	L"Get or set the input code page.\r\n"
+	L"\r\n"
+	L"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
+	L"use UTF-8; or ANSI to use the system ANSI code page."
+;
+
+const WCHAR ElevatedHelpStr[] =
+	L"Get the elevated (running as administrator) status of CMD."
+;
+
+const WCHAR ReadkeyHelpStr[] =
+	L"Read a key from the keyboard.\r\n"
+	L"\r\n"
+	L"If no key is available uses -1."
+;
+
+const WCHAR MillisecondsHelpStr[] =
+	L"Get the milliseconds of the current time."
+;
+
+const WCHAR MinuteHelpStr[] =
+	L"Get the minutes of the current time."
+;
+
+const WCHAR MonthHelpStr[] =
+	L"Get the month of the current date."
+;
+
+const WCHAR MonthNameHelpStr[] =
+	L"Get the name of the month of the current date.\r\n"
+	L"\r\n"
+	L"The name will be English if @english is on, otherwise locale dependent."
+;
+
+const WCHAR MonthShortHelpStr[] =
+	L"Get the abbreviated name of the month of the current date.\r\n"
+	L"\r\n"
+	L"The name will be English if @english is on, otherwise locale dependent."
+;
+
+const WCHAR OpacityHelpStr[] =
+	L"Get or set the opacity of the console window.\r\n"
+	L"\r\n"
+	L"This will work with Windows Terminal, but it applies to all tabs."
+;
+
+const WCHAR OSBuildHelpStr[] =
+	L"Get the build version number of Windows."
+;
+
+const WCHAR OSMajorHelpStr[] =
+	L"Get the major version number of Windows."
+;
+
+const WCHAR OSMinorHelpStr[] =
+	L"Get the minor version number of Windows."
+;
+
+const WCHAR OSRevisionHelpStr[] =
+	L"Get the revision version number of Windows."
+;
+
+const WCHAR OSVersionHelpStr[] =
+	L"Get the version number of Windows."
+;
+
+const WCHAR OutputCodePageHelpStr[] =
+	L"Get or set the output code page.\r\n"
+	L"\r\n"
+	L"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
+	L"use UTF-8; or ANSI to use the system ANSI code page."
+;
+
+const WCHAR PositionHelpStr[] =
+	L"Get or set the window cursor position.\r\n"
+	L"\r\n"
+	L"  row column\r\n"
+	L"\r\n"
+	L"Top left is 0 0; will be -1 -1 if there is no console."
+;
+
+const WCHAR RowHelpStr[] =
+	L"Get or set the window cursor row.\r\n"
+	L"\r\n"
+	L"The top row is 0; will be -1 if there is no console."
+;
+
+const WCHAR SecondHelpStr[] =
+	L"Get the seconds of the current time."
+;
+
+const WCHAR SizeHelpStr[] =
+	L"Get the size (rows columns) of the console window."
+;
+
+const WCHAR StderrHelpStr[] =
+	L"Get the mode of standard error.\r\n"
+	L"\r\n"
+	L"  0     redirected\r\n"
+	L"  1     the console"
+;
+
+const WCHAR StdinHelpStr[] =
+	L"Get the mode of standard input.\r\n"
+	L"\r\n"
+	L"  0     redirected\r\n"
+	L"  1     the keyboard"
+;
+
+const WCHAR StdoutHelpStr[] =
+	L"Get the mode of standard output.\r\n"
+	L"\r\n"
+	L"  0     redirected\r\n"
+	L"  1     the console"
+;
+
+const WCHAR TempDirHelpStr[] =
+	L"Create a temporary directory.\r\n"
+	L"\r\n"
+	L"The directory is created in the user's temporary folder."
+;
+
+const WCHAR TempFileHelpStr[] =
+	L"Create a temporary file.\r\n"
+	L"\r\n"
+	L"The file is created in the user's temporary folder."
+;
+
+const WCHAR TimeHelpStr[] =
+	L"Get the current time.\r\n"
+	L"\r\n"
+	L"The format is always HH:MM:SS."
+;
+
+const WCHAR TimemsHelpStr[] =
+	L"Get the current time, with milliseconds.\r\n"
+	L"\r\n"
+	L"The format is always HH:MM:SS.mmm (but '.' is the value of @decsep)."
+;
+
+const WCHAR TimerVarHelpStr[] =
+	L"Get the time of the millisecond timer."
+;
+
+const WCHAR HiTimerHelpStr[] =
+	L"Get the time of the microsecond timer."
+;
+
+const WCHAR TitleHelpStr[] =
+	L"Get the title of the console window.\r\n"
+	L"\r\n"
+	L"The \"Administrator: \" prefix is removed."
+;
+
+const WCHAR TransientHelpStr[] =
+	L"Get the transient state of CMD.\r\n"
+	L"\r\n"
+	L"  0     CMD is not transient\r\n"
+	L"  1     CMD is transient (/C)"
+;
+
+const WCHAR UnderlineHelpStr[] =
+	L"Get or set the console's underline attribute.\r\n"
+	L"\r\n"
+	L"This is only effective with DBCS or Windows 10."
+;
+
+const WCHAR UnicodeHelpStr[] =
+	L"Get or set Unicode output."
+;
+
+const WCHAR UniqueHelpStr[] =
+	L"Create a unique file.\r\n"
+	L"\r\n"
+	L"The file is created in the current directory."
+;
+
+const WCHAR UnixTimeHelpStr[] =
+	L"Get the current time as a number of seconds.\r\n"
+	L"\r\n"
+	L"The time is the number of seconds since 1970-01-01 0:00:00 UTC."
+;
+
+const WCHAR EBVersionHelpStr[] =
+	L"Get the version number of Enhanced Batch.\r\n"
+	L"\r\n"
+	L"This is currently the date of compilation; it will change to a version number\r\n"
+	L"after the first release."
+;
+
+const WCHAR VoiceHelpStr[] =
+	L"Get or set the text-to-speech voice.\r\n"
+	L"\r\n"
+	L"  empty     restore the default voice\r\n"
+	L"\r\n"
+	L"Use \"CALL @SAY /V\" to list available voices.  Only a portion of the voice need\r\n"
+	L"be given, the first match will be used."
+;
+
+const WCHAR WidthHelpStr[] =
+	L"Get the width (number of columns) of the console window."
+;
+
+const WCHAR YearHelpStr[] =
+	L"Get the year of the current date."
+;
+
+
+const WCHAR CodePageHelpStr[] =
+	L"Set both the input and output code pages.\r\n"
+	L"\r\n"
+	L"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
+	L"use UTF-8; or ANSI to use the system ANSI code page."
+;
+
+const WCHAR DumpParseHelpStr[] =
+	L"Set CMD's internal parser processing."
+;
+
+const WCHAR DumpTokensHelpStr[] =
+	L"Set CMD's internal token processing."
+;
+
+const WCHAR NextHelpStr[] =
+	L"Set the next value of EB's range loops.\r\n"
+	L"\r\n"
+	L"  empty     terminate the loop\r\n"
+	L"\r\n"
+	L"The value takes effect on the next iteration."
+;
+
 
 const WCHAR ClearHelpStr[] =
 	L"Clear a window.\r\n"
@@ -135,9 +629,12 @@ const WCHAR GetkbHelpStr[] =
 ;
 
 const WCHAR HelpHelpStr[] =
-	L"Display CALL commands added by Enhanced Batch.\r\n"
+	L"Display the extensions added by Enhanced Batch.\r\n"
 	L"\r\n"
-	L"CALL @HELP"
+	L"CALL @HELP [extension | ALL]\r\n"
+	L"\r\n"
+	L"  extension  display the help for this extension\r\n"
+	L"  ALL        display the help for all extensions"
 ;
 
 const WCHAR ImageHelpStr[] =

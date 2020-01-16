@@ -152,19 +152,44 @@ extern WCHAR sayBuffer[STRINGBUFFERMAX];
 extern const WCHAR ProgramNameStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
-extern const WCHAR ClearBriefStr[], ClearHelpStr[];
-extern const WCHAR EchoBriefStr[], EchoHelpStr[], EscapeHelpStr[];
-extern const WCHAR GetkbBriefStr[], GetkbHelpStr[];
-extern const WCHAR HelpBriefStr[], HelpHelpStr[];
-extern const WCHAR ImageBriefStr[], ImageHelpStr[];
-extern const WCHAR ImgBriefStr[], ImgHelpStr[];
-extern const WCHAR KbhitBriefStr[], KbhitHelpStr[];
-extern const WCHAR SayBriefStr[], SayHelpStr[];
-extern const WCHAR SleepBriefStr[], SleepHelpStr[];
-extern const WCHAR TextBriefStr[], TextHelpStr[];
-extern const WCHAR TimerBriefStr[], TimerHelpStr[];
-extern const WCHAR TimerHiBriefStr[], TimerHiHelpStr[];
-extern const WCHAR UnloadBriefStr[], UnloadHelpStr[];
+extern const WCHAR EscapeHelpStr[];
+
+extern const WCHAR GetSetStr[], GetterStr[], SetterStr[], CallStr[];
+
+#define DEFHELPSTR(ext) ext##BriefStr[], ext##HelpStr[]
+
+extern const WCHAR
+	DEFHELPSTR(Attr), DEFHELPSTR(BatchFile), DEFHELPSTR(BatchLine),
+	DEFHELPSTR(Background), DEFHELPSTR(Readchar), DEFHELPSTR(CmdVersion),
+	DEFHELPSTR(Color), DEFHELPSTR(Column), DEFHELPSTR(CtrlCAborts),
+	DEFHELPSTR(ConsoleCursor), DEFHELPSTR(Date), DEFHELPSTR(DateTime),
+	DEFHELPSTR(DateTimems), DEFHELPSTR(Day), DEFHELPSTR(DayName),
+	DEFHELPSTR(DayOfWeek), DEFHELPSTR(DayShort), DEFHELPSTR(DecSep),
+	DEFHELPSTR(DelayedExpansion), DEFHELPSTR(EchoVar), DEFHELPSTR(EchoOptions),
+	DEFHELPSTR(English), DEFHELPSTR(EnhancedBatch), DEFHELPSTR(Extensions),
+	DEFHELPSTR(Foreground), DEFHELPSTR(ForLine), DEFHELPSTR(ForLines),
+	DEFHELPSTR(Getchar), DEFHELPSTR(Getkey), DEFHELPSTR(Height),
+	DEFHELPSTR(Hour), DEFHELPSTR(InputCodePage), DEFHELPSTR(Elevated),
+	DEFHELPSTR(Readkey), DEFHELPSTR(Milliseconds), DEFHELPSTR(Minute),
+	DEFHELPSTR(Month), DEFHELPSTR(MonthName), DEFHELPSTR(MonthShort),
+	DEFHELPSTR(Opacity), DEFHELPSTR(OSBuild), DEFHELPSTR(OSMajor),
+	DEFHELPSTR(OSMinor), DEFHELPSTR(OSRevision), DEFHELPSTR(OSVersion),
+	DEFHELPSTR(OutputCodePage), DEFHELPSTR(Position), DEFHELPSTR(Row),
+	DEFHELPSTR(Second), DEFHELPSTR(Size), DEFHELPSTR(Stderr), DEFHELPSTR(Stdin),
+	DEFHELPSTR(Stdout), DEFHELPSTR(TempDir), DEFHELPSTR(TempFile),
+	DEFHELPSTR(Time), DEFHELPSTR(Timems), DEFHELPSTR(TimerVar),
+	DEFHELPSTR(HiTimer), DEFHELPSTR(Title), DEFHELPSTR(Transient),
+	DEFHELPSTR(Underline), DEFHELPSTR(Unicode), DEFHELPSTR(Unique),
+	DEFHELPSTR(UnixTime), DEFHELPSTR(EBVersion), DEFHELPSTR(Voice),
+	DEFHELPSTR(Width), DEFHELPSTR(Year),
+
+	DEFHELPSTR(CodePage), DEFHELPSTR(DumpParse), DEFHELPSTR(DumpTokens),
+	DEFHELPSTR(Next),
+
+	DEFHELPSTR(Clear), DEFHELPSTR(Echo), DEFHELPSTR(Getkb), DEFHELPSTR(Help),
+	DEFHELPSTR(Image), DEFHELPSTR(Img), DEFHELPSTR(Kbhit), DEFHELPSTR(Say),
+	DEFHELPSTR(Sleep), DEFHELPSTR(Text), DEFHELPSTR(Timer), DEFHELPSTR(TimerHi),
+	DEFHELPSTR(Unload);
 
 
 int wsnprintf(LPWSTR buf, size_t size, LPCWSTR fmt, ...);

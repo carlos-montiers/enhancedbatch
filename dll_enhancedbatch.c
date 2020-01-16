@@ -103,139 +103,130 @@ int batchfile = 1;
 DWORD last_lnum;
 LPWSTR *last_bat;
 
-struct sGetExt {
+struct sExt {
 	LPCWSTR name;
-	fnGetExt fn;
-};
-
-const struct sGetExt getExtensionList[] = {
-	{ L"@attr", 			GetAttributes },
-	{ L"@batchfile",		GetBatchFile },
-	{ L"@batchline",		GetBatchLine },
-	{ L"@bg",				GetBackground },
-	{ L"@chhit",			Chhit },
-	{ L"@cmdversion",		GetCmdVersion },
-	{ L"@color",			GetColor },
-	{ L"@column",			GetColumn },
-	{ L"@ctrlcaborts",		GetCtrlCAborts },
-	{ L"@cursor",			GetConsoleCursor },
-	{ L"@date", 			GetDate },
-	{ L"@datetime", 		GetDateTime },
-	{ L"@datetimems",		GetDateTimems },
-	{ L"@day",				GetDay },
-	{ L"@dayname",			GetDayName },
-	{ L"@dayofweek",		GetDayOfWeek },
-	{ L"@dayshort", 		GetDayShort },
-	{ L"@decsep",			GetDecSep },
-	{ L"@delayedexpansion", GetDelayedExpansion },
-	{ L"@echo", 			GetEcho },
-	{ L"@echooptions",		GetEchoOptions },
-	{ L"@english",			GetEnglish },
-	{ L"@enhancedbatch",	GetEnhancedBatch},
-	{ L"@extensions",		GetExtensions },
-	{ L"@fg",				GetForeground },
-	{ L"@forline",			GetForLine },
-	{ L"@forlines", 		GetForLines },
-	{ L"@getch",			Getch },
-	{ L"@getkb",			Getkb },
-	{ L"@height",			GetHeight },
-	{ L"@hour", 			GetHour },
-	{ L"@inputcp", 		 	GetInputCodePage },
-	{ L"@iselevated", 		GetElevated },
-	{ L"@kbhit",			Kbhit },
-	{ L"@milliseconds", 	GetMilliseconds },
-	{ L"@minute",			GetMinute },
-	{ L"@month",			GetMonth },
-	{ L"@monthname",		GetMonthName },
-	{ L"@monthshort",		GetMonthShort },
-	{ L"@opacity",			GetOpacity },
-	{ L"@osbuild",			GetOSBuild },
-	{ L"@osmajor",			GetOSMajor },
-	{ L"@osminor",			GetOSMinor },
-	{ L"@osrevision",		GetOSRevision },
-	{ L"@osversion",		GetOSVersion },
-	{ L"@outputcp", 		GetOutputCodePage },
-	{ L"@position", 		GetPosition },
-	{ L"@row",				GetRow },
-	{ L"@second",			GetSecond },
-	{ L"@size", 			GetSize },
-	{ L"@stderr",			GetStderr },
-	{ L"@stdin",			GetStdin },
-	{ L"@stdout",			GetStdout },
-	{ L"@tempdir",			GetTempDir },
-	{ L"@tempfile", 		GetTempFile },
-	{ L"@time", 			GetTime },
-	{ L"@timems",			GetTimems },
-	{ L"@timer",			GetTimer },
-	{ L"@timerhi",			GetHiTimer },
-	{ L"@title",			GetTitle },
-	{ L"@transient",		GetTransient },
-	{ L"@ul",				GetUnderline },
-	{ L"@unicode",			GetUnicode },
-	{ L"@unique",			GetUnique },
-	{ L"@unixtime",			GetUnixTime },
-	{ L"@version",			GetEBVersion },
-	{ L"@voice",			GetVoice },
-	{ L"@width",			GetWidth },
-	{ L"@year", 			GetYear },
-};
-
-struct sSetExt {
-	LPCWSTR name;
-	fnSetExt fn;
-	int args;
-};
-
-const struct sSetExt setExtensionList[] = {
-	{ L"@attr", 			SetAttributes, 0 },
-	{ L"@batchfile",		SetBatchFile, 1 },
-	{ L"@bg",				SetBackground, 0 },
-	{ L"@codepage", 		SetCodePage, 0 },
-	{ L"@color",			SetColor, 0 },
-	{ L"@column",			SetColumn, 1 },
-	{ L"@ctrlcaborts",		SetCtrlCAborts, 0 },
-	{ L"@cursor",			SetConsoleCursor, 0 },
-	{ L"@decsep",			SetDecSep, 0 },
-	{ L"@delayedexpansion", SetDelayedExpansion, 0 },
-	{ L"@dumpparse",		SetDumpParse, 0 },
-	{ L"@dumptokens",		SetDumpTokens, 0 },
-	{ L"@echo", 			SetEcho, 0 },
-	{ L"@echooptions", 		SetEchoOptions, 0 },
-	{ L"@english",			SetEnglish, 0 },
-	{ L"@extensions",		SetExtensions, 0 },
-	{ L"@fg",				SetForeground, 0 },
-	{ L"@inputcp", 			SetInputCodePage, 0 },
-	{ L"@next", 			Next, 0 },
-	{ L"@opacity",			SetOpacity, 1 },
-	{ L"@outputcp", 		SetOutputCodePage, 0 },
-	{ L"@position", 		SetPosition, 2 },
-	{ L"@row",				SetRow, 1 },
-	{ L"@ul",				SetUnderline, 0 },
-	{ L"@unicode",			SetUnicode, 0 },
-	{ L"@voice",			SetVoice, 0 },
-};
-
-struct sCallExt {
-	LPCWSTR name;
-	int args;
-	fnCallExt fn;
+	int args;			// getters use this as a help flag for setter, too
+	LPVOID fn;
 	LPCWSTR brief, help;
 };
 
-const struct sCallExt callExtensionList[] = {
-	{ L"@clear",   ~0, CallClear, ClearBriefStr, ClearHelpStr },
-	{ L"@echo",    ~0, CallEcho, EchoBriefStr, EchoHelpStr },
-	{ L"@getkb",	0, CallGetkb, GetkbBriefStr, GetkbHelpStr },
-	{ L"@help", 	0, CallHelp, HelpBriefStr, HelpHelpStr },
-	{ L"@image",   ~1, CallImage, ImageBriefStr, ImageHelpStr },
-	{ L"@img",	   ~1, CallImg, ImgBriefStr, ImgHelpStr },
-	{ L"@kbhit",	0, CallKbhit, KbhitBriefStr, KbhitHelpStr },
-	{ L"@say",	   ~1, CallSay, SayBriefStr, SayHelpStr },
-	{ L"@sleep",	1, CallSleep, SleepBriefStr, SleepHelpStr },
-	{ L"@text",    ~1, CallText, TextBriefStr, TextHelpStr },
-	{ L"@timer",	0, CallTimer, TimerBriefStr, TimerHelpStr },
-	{ L"@timerhi",	0, CallTimerHi, TimerHiBriefStr, TimerHiHelpStr },
-	{ L"@unload",	0, CallUnload, UnloadBriefStr, UnloadHelpStr },
+#define HELPSTR(ext) ext##BriefStr, ext##HelpStr
+
+const struct sExt getExtensionList[] = {
+	{ L"@attr",             1, GetAttributes, HELPSTR(Attr) },
+	{ L"@batchfile",        1, GetBatchFile, HELPSTR(BatchFile) },
+	{ L"@batchline",        0, GetBatchLine, HELPSTR(BatchLine) },
+	{ L"@bg",               1, GetBackground, HELPSTR(Background) },
+	{ L"@chhit",            0, Chhit, HELPSTR(Readchar) },
+	{ L"@cmdversion",       0, GetCmdVersion, HELPSTR(CmdVersion) },
+	{ L"@color",            1, GetColor, HELPSTR(Color) },
+	{ L"@column",           1, GetColumn, HELPSTR(Column) },
+	{ L"@ctrlcaborts",      1, GetCtrlCAborts, HELPSTR(CtrlCAborts) },
+	{ L"@cursor",           1, GetConsoleCursor, HELPSTR(ConsoleCursor) },
+	{ L"@date",             0, GetDate, HELPSTR(Date) },
+	{ L"@datetime",         0, GetDateTime, HELPSTR(DateTime) },
+	{ L"@datetimems",       0, GetDateTimems, HELPSTR(DateTimems) },
+	{ L"@day",              0, GetDay, HELPSTR(Day) },
+	{ L"@dayname",          0, GetDayName, HELPSTR(DayName) },
+	{ L"@dayofweek",        0, GetDayOfWeek, HELPSTR(DayOfWeek) },
+	{ L"@dayshort",         0, GetDayShort, HELPSTR(DayShort) },
+	{ L"@decsep",           1, GetDecSep, HELPSTR(DecSep) },
+	{ L"@delayedexpansion", 1, GetDelayedExpansion, HELPSTR(DelayedExpansion) },
+	{ L"@echo",             1, GetEcho, HELPSTR(EchoVar) },
+	{ L"@echooptions",      1, GetEchoOptions, HELPSTR(EchoOptions) },
+	{ L"@english",          1, GetEnglish, HELPSTR(English) },
+	{ L"@enhancedbatch",    0, GetEnhancedBatch, HELPSTR(EnhancedBatch) },
+	{ L"@extensions",       1, GetExtensions, HELPSTR(Extensions) },
+	{ L"@fg",               1, GetForeground, HELPSTR(Foreground) },
+	{ L"@forline",          0, GetForLine, HELPSTR(ForLine) },
+	{ L"@forlines",         0, GetForLines, HELPSTR(ForLines) },
+	{ L"@getch",            0, Getch, HELPSTR(Getchar) },
+	{ L"@getkb",            0, Getkb, HELPSTR(Getkey) },
+	{ L"@height",           0, GetHeight, HELPSTR(Height) },
+	{ L"@hour",             0, GetHour, HELPSTR(Hour) },
+	{ L"@inputcp",          1, GetInputCodePage, HELPSTR(InputCodePage) },
+	{ L"@iselevated",       0, GetElevated, HELPSTR(Elevated) },
+	{ L"@kbhit",            0, Kbhit, HELPSTR(Readkey) },
+	{ L"@milliseconds",     0, GetMilliseconds, HELPSTR(Milliseconds) },
+	{ L"@minute",           0, GetMinute, HELPSTR(Minute) },
+	{ L"@month",            0, GetMonth, HELPSTR(Month) },
+	{ L"@monthname",        0, GetMonthName, HELPSTR(MonthName) },
+	{ L"@monthshort",       0, GetMonthShort, HELPSTR(MonthShort) },
+	{ L"@opacity",          1, GetOpacity, HELPSTR(Opacity) },
+	{ L"@osbuild",          0, GetOSBuild, HELPSTR(OSBuild) },
+	{ L"@osmajor",          0, GetOSMajor, HELPSTR(OSMajor) },
+	{ L"@osminor",          0, GetOSMinor, HELPSTR(OSMinor) },
+	{ L"@osrevision",       0, GetOSRevision, HELPSTR(OSRevision) },
+	{ L"@osversion",        0, GetOSVersion, HELPSTR(OSVersion) },
+	{ L"@outputcp",         1, GetOutputCodePage, HELPSTR(OutputCodePage) },
+	{ L"@position",         1, GetPosition, HELPSTR(Position) },
+	{ L"@row",              1, GetRow, HELPSTR(Row) },
+	{ L"@second",           0, GetSecond, HELPSTR(Second) },
+	{ L"@size",             0, GetSize, HELPSTR(Size) },
+	{ L"@stderr",           0, GetStderr, HELPSTR(Stderr) },
+	{ L"@stdin",            0, GetStdin, HELPSTR(Stdin) },
+	{ L"@stdout",           0, GetStdout, HELPSTR(Stdout) },
+	{ L"@tempdir",          0, GetTempDir, HELPSTR(TempDir) },
+	{ L"@tempfile",         0, GetTempFile, HELPSTR(TempFile) },
+	{ L"@time",             0, GetTime, HELPSTR(Time) },
+	{ L"@timems",           0, GetTimems, HELPSTR(Timems) },
+	{ L"@timer",            0, GetTimer, HELPSTR(TimerVar) },
+	{ L"@timerhi",          0, GetHiTimer, HELPSTR(HiTimer) },
+	{ L"@title",            0, GetTitle, HELPSTR(Title) },
+	{ L"@transient",        0, GetTransient, HELPSTR(Transient) },
+	{ L"@ul",               1, GetUnderline, HELPSTR(Underline) },
+	{ L"@unicode",          1, GetUnicode, HELPSTR(Unicode) },
+	{ L"@unique",           0, GetUnique, HELPSTR(Unique) },
+	{ L"@unixtime",         0, GetUnixTime, HELPSTR(UnixTime) },
+	{ L"@version",          0, GetEBVersion, HELPSTR(EBVersion) },
+	{ L"@voice",            1, GetVoice, HELPSTR(Voice) },
+	{ L"@width",            0, GetWidth, HELPSTR(Width) },
+	{ L"@year",             0, GetYear, HELPSTR(Year) },
+};
+
+const struct sExt setExtensionList[] = {
+	{ L"@attr",             0, SetAttributes, NULL, NULL },
+	{ L"@batchfile",        1, SetBatchFile, NULL, NULL },
+	{ L"@bg",               0, SetBackground, NULL, NULL },
+	{ L"@codepage",         0, SetCodePage, HELPSTR(CodePage) },
+	{ L"@color",            0, SetColor, NULL, NULL },
+	{ L"@column",           1, SetColumn, NULL, NULL },
+	{ L"@ctrlcaborts",      0, SetCtrlCAborts, NULL, NULL },
+	{ L"@cursor",           0, SetConsoleCursor, NULL, NULL },
+	{ L"@decsep",           0, SetDecSep, NULL, NULL },
+	{ L"@delayedexpansion", 0, SetDelayedExpansion, NULL, NULL },
+	{ L"@dumpparse",		0, SetDumpParse, HELPSTR(DumpParse) },
+	{ L"@dumptokens",		0, SetDumpTokens, HELPSTR(DumpTokens) },
+	{ L"@echo",             0, SetEcho, NULL, NULL },
+	{ L"@echooptions",      0, SetEchoOptions, NULL, NULL },
+	{ L"@english",          0, SetEnglish, NULL, NULL },
+	{ L"@extensions",       0, SetExtensions, NULL, NULL },
+	{ L"@fg",               0, SetForeground, NULL, NULL },
+	{ L"@inputcp",          0, SetInputCodePage, NULL, NULL },
+	{ L"@next",             0, Next, HELPSTR(Next) },
+	{ L"@opacity",          1, SetOpacity, NULL, NULL },
+	{ L"@outputcp",         0, SetOutputCodePage, NULL, NULL },
+	{ L"@position",         2, SetPosition, NULL, NULL },
+	{ L"@row",              1, SetRow, NULL, NULL },
+	{ L"@ul",               0, SetUnderline, NULL, NULL },
+	{ L"@unicode",          0, SetUnicode, NULL, NULL },
+	{ L"@voice",            0, SetVoice, NULL, NULL },
+};
+
+const struct sExt callExtensionList[] = {
+	{ L"@clear",   ~0, CallClear, HELPSTR(Clear) },
+	{ L"@echo",    ~0, CallEcho, HELPSTR(Echo) },
+	{ L"@getkb",	0, CallGetkb, HELPSTR(Getkb) },
+	{ L"@help",    ~0, CallHelp, HELPSTR(Help) },
+	{ L"@image",   ~1, CallImage, HELPSTR(Image) },
+	{ L"@img",	   ~1, CallImg, HELPSTR(Img) },
+	{ L"@kbhit",	0, CallKbhit, HELPSTR(Kbhit) },
+	{ L"@say",	   ~1, CallSay, HELPSTR(Say) },
+	{ L"@sleep",	1, CallSleep, HELPSTR(Sleep) },
+	{ L"@text",    ~1, CallText, HELPSTR(Text) },
+	{ L"@timer",	0, CallTimer, HELPSTR(Timer) },
+	{ L"@timerhi",	0, CallTimerHi, HELPSTR(TimerHi) },
+	{ L"@unload",	0, CallUnload, HELPSTR(Unload) },
 };
 
 void setVar(LPCWSTR var, LPCWSTR val)
@@ -374,10 +365,10 @@ DWORD getVar(LPCWSTR lpName)
 			if (lpName[1] == L'@') {
 				return GetRun(lpName+2, stringBuffer, STRINGBUFFERMAX);
 			} else {
-				const struct sGetExt *ext = bsearch(lpName, getExtensionList,
-					lenof(getExtensionList), sizeof(struct sGetExt), extcmp);
+				const struct sExt *ext = bsearch(lpName, getExtensionList,
+					lenof(getExtensionList), sizeof(struct sExt), extcmp);
 				if (ext != NULL) {
-					return ext->fn(stringBuffer, STRINGBUFFERMAX);
+					return ((fnGetExt) ext->fn)(stringBuffer, STRINGBUFFERMAX);
 				}
 			}
 		}
@@ -781,12 +772,12 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 			if (*lpName == L'@') {
 
-				const struct sSetExt *ext = bsearch(lpName, setExtensionList,
-					lenof(setExtensionList), sizeof(struct sSetExt), extcmp);
+				const struct sExt *ext = bsearch(lpName, setExtensionList,
+					lenof(setExtensionList), sizeof(struct sExt), extcmp);
 				if (ext != NULL) {
 					BOOL ret;
 					if (ext->args == 0) {
-						ret = ext->fn(lpValue == NULL ? 0 : 1, &lpValue);
+						ret = ((fnSetExt) ext->fn)(lpValue == NULL ? 0 : 1, &lpValue);
 					} else {
 						LPWSTR *szArglist = NULL;
 						int nArgs = 0;
@@ -802,7 +793,7 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 							fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
 							ret = FALSE;
 						} else {
-							ret = ext->fn(nArgs, (LPCWSTR *) szArglist);
+							ret = ((fnSetExt) ext->fn)(nArgs, (LPCWSTR *) szArglist);
 						}
 						if (szArglist != NULL) {
 							LocalFree(szArglist);
@@ -853,8 +844,8 @@ int WINAPI MyCall(struct cmdnode *node)
 				fwprintf(stderr, ArgErrorStr);
 				return *pLastRetCode = EXIT_FAILURE;
 			}
-			const struct sCallExt *ext = bsearch(szArglist[0], callExtensionList,
-				lenof(callExtensionList), sizeof(struct sCallExt), extcmp);
+			const struct sExt *ext = bsearch(szArglist[0], callExtensionList,
+				lenof(callExtensionList), sizeof(struct sExt), extcmp);
 			if (NULL == ext) {
 				LocalFree(szArglist);
 				return *pLastRetCode = EXIT_FAILURE;
@@ -874,7 +865,7 @@ int WINAPI MyCall(struct cmdnode *node)
 						++arg;
 					} while (*arg == L' ' || *arg == L'\t');
 				}
-				ret = ext->fn(*arg == L'\0' ? 0 : 1, (LPCWSTR *) &arg);
+				ret = ((fnCallExt) ext->fn)(*arg == L'\0' ? 0 : 1, (LPCWSTR *) &arg);
 			} else {
 				--nArgs;
 				if (ext->args < 0 && ~ext->args > nArgs) {
@@ -884,7 +875,7 @@ int WINAPI MyCall(struct cmdnode *node)
 					fwprintf(stderr, WrongArgsStr, ext->args, nArgs);
 					ret = EXIT_FAILURE;
 				} else {
-					ret = ext->fn(nArgs, (LPCWSTR *) szArglist + 1);
+					ret = ((fnCallExt) ext->fn)(nArgs, (LPCWSTR *) szArglist + 1);
 				}
 				LocalFree(szArglist);
 			}
@@ -897,23 +888,109 @@ int WINAPI MyCall(struct cmdnode *node)
 
 int CallHelp(int argc, LPCWSTR argv[])
 {
-	const struct sCallExt *ext;
-	const struct sCallExt *end = callExtensionList + lenof(callExtensionList);
-	int width = 0;
-	int len;
-	for (ext = callExtensionList; ext < end; ++ext) {
-		len = wcslen(ext->name);
-		if (len > width) {
-			width = len;
+	void printTitle(LPCWSTR title)
+	{
+		cmd_printf(L"%s\r\n", title);
+		int len = wcslen(title);
+		while (len-- > 0) {
+			cmd_printf(L"%c", L'=');
 		}
+		cmd_printf(L"\r\n\r\n");
 	}
-	width += 3;
-	if (width < 12) {
-		width = 12;
+
+	if (argc == 0) {
+		int width = 0;
+
+		void findMaxLen(const struct sExt *ext, int count)
+		{
+			const struct sExt *end = ext + count;
+			for (; ext < end; ++ext) {
+				if (ext->brief != NULL) {
+					int len = wcslen(ext->name);
+					if (len > width) {
+						width = len;
+					}
+				}
+			}
+		}
+
+		findMaxLen(getExtensionList, lenof(getExtensionList));
+		findMaxLen(setExtensionList, lenof(setExtensionList));
+		findMaxLen(callExtensionList, lenof(callExtensionList));
+
+		width += 3;
+		if (width < 12) {
+			width = 12;
+		}
+
+		void printBriefHelp(const struct sExt *ext, int count, int flag)
+		{
+			const struct sExt *end = ext + count;
+			for (; ext < end; ++ext) {
+				if (ext->brief != NULL && (flag < 0 || flag == ext->args)) {
+					cmd_printf(L"%-*s%s\r\n", width, ext->name, ext->brief);
+				}
+			}
+		}
+
+		printTitle(GetSetStr);
+		printBriefHelp(getExtensionList, lenof(getExtensionList), 1);
+
+		cmd_printf(L"\r\n");
+		printTitle(GetterStr);
+		printBriefHelp(getExtensionList, lenof(getExtensionList), 0);
+
+		cmd_printf(L"\r\n");
+		printTitle(SetterStr);
+		printBriefHelp(setExtensionList, lenof(setExtensionList), -1);
+
+		cmd_printf(L"\r\n");
+		printTitle(CallStr);
+		printBriefHelp(callExtensionList, lenof(callExtensionList), -1);
+
+		return EXIT_SUCCESS;
 	}
-	for (ext = callExtensionList; ext < end; ++ext) {
-		cmd_printf(L"%-*s%s\r\n", width, ext->name, ext->brief);
+
+	if (WCSIEQ(argv[0], L"all")) {
+		void printHelp(const struct sExt *ext, int count, int flag)
+		{
+			const struct sExt *end = ext + count;
+			for (; ext < end; ++ext) {
+				if (ext->help != NULL && (flag < 0 || flag == ext->args)) {
+					printTitle(ext->name);
+					cmd_printf(L"%s\r\n\r\n", ext->help);
+				}
+			}
+		}
+
+		printHelp(getExtensionList, lenof(getExtensionList), 1);
+		printHelp(getExtensionList, lenof(getExtensionList), 0);
+		printHelp(setExtensionList, lenof(setExtensionList), -1);
+		printHelp(callExtensionList, lenof(callExtensionList), -1);
+
+		return EXIT_SUCCESS;
 	}
+
+	const struct sExt *ext = bsearch(argv[0], getExtensionList,
+					lenof(getExtensionList), sizeof(struct sExt), extcmp);
+	if (ext == NULL) {
+		ext = bsearch(argv[0], setExtensionList,
+					lenof(setExtensionList), sizeof(struct sExt), extcmp);
+	}
+	BOOL var = ext != NULL;
+	if (var) {
+		cmd_printf(L"%s\r\n", ext->help);
+	}
+	ext = bsearch(argv[0], callExtensionList,
+			lenof(callExtensionList), sizeof(struct sExt), extcmp);
+	if (ext == NULL) {
+		return var ? EXIT_SUCCESS : EXIT_FAILURE;
+	}
+	if (var) {
+		cmd_printf(L"\r\n--------------------\r\n\r\n");
+	}
+	cmd_printf(L"%s\r\n", ext->help);
+
 	return EXIT_SUCCESS;
 }
 
