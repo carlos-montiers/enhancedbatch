@@ -653,7 +653,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		} else if (*mod == L'~') {
 			int unused;
 			DWORD ext;
-			var = (end) ? end - 1 : mod + wcslen(mod);
+			var = (end != NULL) ? end - 1 : mod + wcslen(mod);
 			*var = L'?';
 			var = stringBuffer;
 			if (WCSBEG(lpName, L"$0;~")) {
@@ -1086,7 +1086,7 @@ DWORD getBatchLine()
 
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 {
-	DWORD lnum = (batchfile) ? getBatchLine() : 0;
+	DWORD lnum = (batchfile != 0) ? getBatchLine() : 0;
 	if (lnum != 0 && (lnum != last_lnum || last_bat != *pCurrentBatchFile)) {
 		LPVOID args = &stringBuffer;
 		LPVOID pargs = &args;
