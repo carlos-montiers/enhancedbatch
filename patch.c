@@ -69,6 +69,15 @@ BYTE SFWork_mkstr_reg, Goto_reg;
 int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
 
 
+#define LABEL_WS 1
+#define LABEL_DELIM 2
+
+static char label_type[256];
+
+#define islabel_ws(ch) (label_type[(BYTE) (ch)] & LABEL_WS)
+#define islabel_delim(ch) (label_type[(BYTE) (ch)] != 0) // & (LABEL_WS | LABEL_DELIM))
+
+
 int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
 {
 	khint_t k;
@@ -263,17 +272,23 @@ void ParseForF(void)
 
 LPCSTR findLabelForward(LPCSTR label, DWORD len, LPCSTR batch, DWORD size)
 {
-	LPCSTR p;
+	LPCSTR p, q;
 
 	for (p = batch;; ++p) {
 		p = memchr(p, ':', size - (DWORD)(p - batch));
 		if (p == NULL) {
 			break;
 		}
-		if ((p++ == batch || p[-2] == '\n')
-			&& p+len < batch+size && isspace(p[len])
-			&& _memicmp(p, label, len) == 0) {
-			break;
+		if (p+1+len < batch+size && islabel_delim(p[1+len])
+			&& _memicmp(p+1, label, len) == 0) {
+			for (q = p;;) {
+				if (q == batch || q[-1] == '\n') {
+					return p;
+				}
+				if (!islabel_ws(*--q)) {
+					break;
+				}
+			}
 		}
 	}
 
@@ -282,35 +297,40 @@ LPCSTR findLabelForward(LPCSTR label, DWORD len, LPCSTR batch, DWORD size)
 
 LPCSTR findLabelBackward(LPCSTR label, DWORD len, LPCSTR batch, DWORD size)
 {
-	LPCSTR p;
+	LPCSTR p, q;
 	char first;
 
 	first = tolower(*label++);
 	--len;
-	for (p = batch + size - len - 2; p >= batch + 2; p -= 3) {
-		if (*(LPWORD) p == 0x3a0a && tolower(p[2]) == first) {
-			p += 3;
-		} else if (*(LPWORD)(p-1) == 0x3a0a && tolower(p[1]) == first) {
+	for (p = batch + size - len - 1; p >= batch + 1; p -= 2) {
+		if (*p == ':' && tolower(p[1]) == first) {
 			p += 2;
-		} else if (*(LPWORD)(p-2) == 0x3a0a && tolower(p[0]) == first) {
+		} else if (p[-1] == ':' && tolower(*p) == first) {
 			++p;
 		} else {
 			continue;
 		}
-		if (isspace(p[len]) && _memicmp(p, label, len) == 0) {
-			return p;
+		if (islabel_delim(p[len]) && _memicmp(p, label, len) == 0) {
+			for (q = p - 2;;) {
+				if (q == batch || q[-1] == '\n') {
+					return p - 1;
+				}
+				if (!islabel_ws(*--q)) {
+					break;
+				}
+			}
 		}
-		p -= 3; 		// back to the newline before this non-matching label
+		p -= 2; 		// back to the colon before this non-matching label
 	}
 
 	return NULL;
 }
 
-DWORD findLabel(LPCSTR label, DWORD start, DWORD fsize)
+DWORD findLabel(LPCSTR label, int len, DWORD start, DWORD fsize)
 {
 	LPSTR batch;
 	LPCSTR p;
-	DWORD pos, len;
+	DWORD pos;
 	char buf[65536];
 
 	batch = readBatchFile(fsize, buf, sizeof(buf));
@@ -318,7 +338,6 @@ DWORD findLabel(LPCSTR label, DWORD start, DWORD fsize)
 		return -1;
 	}
 
-	len = strlen(label);
 	if (*label == '~' && label[1] != '\0') {
 		++label;
 		--len;
@@ -353,14 +372,14 @@ DWORD findLabel(LPCSTR label, DWORD start, DWORD fsize)
 
 DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
 {
-	char label[256];		// maximum label size is 128, double it for DBCS
+	char label[512];		// maximum label size is 128, quadruple for UTF-8
 	LPCWSTR w;
 
 	if (*line == L':') {
 		++line;
 	}
 	w = line;
-	while (*w != L'\0' && !iswspace(*w)) {
+	while (!(*w < 256 && islabel_delim(*w))) {
 		++w;
 	}
 	int len = WideCharToMultiByte(GetConsoleOutputCP(), 0, line, w - line,
@@ -368,8 +387,7 @@ DWORD __fastcall Goto(LPCWSTR line, DWORD start, DWORD fsize)
 	if (len == 0) {
 		return -1;
 	}
-	label[len] = '\0';
-	return findLabel(label, start, fsize);
+	return findLabel(label, len, start, fsize);
 }
 
 
@@ -1051,6 +1069,22 @@ void hookCmd(void)
 	call.disp = MKDISP(GotoEof, pGotoEof+6);
 	WriteMemory(pGotoEof, &call, 6);
 #endif
+	label_type['\f'] =
+	label_type['\v'] = LABEL_WS;
+	label_type['\t'] =
+	label_type['\n'] =
+	label_type['\r'] =
+	label_type[' '] =
+	label_type['='] =
+	label_type[','] =
+	label_type[';'] = LABEL_WS | LABEL_DELIM;
+	label_type['\0'] =
+	label_type['+'] =
+	label_type[':'] =
+	label_type['&'] =
+	label_type['<'] =
+	label_type['|'] =
+	label_type['>'] = LABEL_DELIM;
 
 	// Patch FOR to fix a substitute inefficiency: each loop has its own
 	// memory.	Allocate once and reuse it.  Also free other memory allocated

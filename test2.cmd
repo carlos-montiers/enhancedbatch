@@ -132,10 +132,10 @@ goto :eof
 
 :labels
 goto one
-:two
+:two<
 echo first two
 goto ~one
-:one
+=,; :one>
 echo first one
 goto ~two
 :two
