@@ -94,9 +94,9 @@ echo Character SEMI:!$SEMI!.
 echo Character COMMA:!$COMMA!.
 echo Character EQ:!$EQ!.
 
-echo;~"No quotes or newline."
+call @echo /n "No quotes or newline."
 echo.
-echo,LF line.!$CR!
+call @echo /u LF line.!$CR!
 echo "A long string "^
      "spread across "^
      "multiple lines."
@@ -118,7 +118,7 @@ for %%j in (:range*3:1) do echo %%j
 
 set $j=1
 for %%_ in (:*) do (
-  echo;!$j!..
+  call @echo /n !$j!..
   if !$j! == 5 (
     echo Stop
     set @next=

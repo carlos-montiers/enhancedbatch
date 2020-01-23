@@ -41,10 +41,8 @@ LPBYTE cmd_addrs[] = {
 	0,			// fDumpParse
 	0,			// ForMkstr
 	0,			// ForResize
-	0,			// eEcho:CheckOnOff
-	0,			// EchoFlag
-	0,			// START /?
-	0,			// ECHO /?
+	0,			// CheckHelp first arg
+	0,			// cmd_printf
 	0,			// (CtrlCAbort:)PromptUser
 	0,			// FreeStack
 	0,			// DCount
@@ -84,10 +82,8 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x4b384,	// fDumpParse
 	0x1d2f8,	// ForMkstr
 	0x1d3d1,	// ForResize
-	0x0c6b3,	// eEcho:CheckOnOff
-	0x53820,	// EchoFlag
-	0x0223a,	// START /?
-	0x05849,	// ECHO /?
+	0x0584a,	// CheckHelp first arg
+	0x33da0,	// cmd_printf
 	0x32ac3,	// PromptUser
 	0x0b830,	// FreeStack
 	0x42c50,	// DCount
@@ -122,10 +118,8 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x4b384,	// fDumpParse
 	0x1d2f8,	// ForMkstr
 	0x1d3d1,	// ForResize
-	0x0c6d3,	// eEcho:CheckOnOff
-	0x53820,	// EchoFlag
-	0x0225a,	// START /?
-	0x05869,	// ECHO /?
+	0x0586a,	// CheckHelp first arg
+	0x33db0,	// cmd_printf
 	0x32ad3,	// PromptUser
 	0x0b850,	// FreeStack
 	0x42c50,	// DCount
@@ -160,10 +154,8 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x3beb0,	// fDumpParse
 	0x12622,	// ForMkstr
 	0x126bb,	// ForResize
-	0x06baf,	// eEcho:CheckOnOff
-	0x2e0a8,	// EchoFlag
-	0x038ff,	// START /?
-	0x044b1,	// ECHO /?
+	0x044b2,	// CheckHelp first arg
+	0x04850,	// cmd_printf
 	0x282d0,	// PromptUser
 	0x032e0,	// FreeStack
 	0x2e0e4,	// DCount
@@ -198,10 +190,8 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x3bd80,	// fDumpParse
 	0x1235a,	// ForMkstr
 	0x123f3,	// ForResize
-	0x0407b,	// eEcho:CheckOnOff
-	0x2e0a4,	// EchoFlag
-	0x019d7,	// START /?
-	0x014ad,	// ECHO /?
+	0x014ae,	// CheckHelp first arg
+	0x04274,	// cmd_printf
 	0x2353c,	// PromptUser
 	0x02e50,	// FreeStack
 	0x2e0e0,	// DCount
@@ -236,10 +226,8 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x3afa0,	// fDumpParse
 	0x103c7,	// ForMkstr
 	0x10425,	// ForResize
-	0x05fc3,	// eEcho:CheckOnOff
-	0x2d0e8,	// EchoFlag
-	0x02ad7,	// START /?
-	0x04f2e,	// ECHO /?
+	0x04f2f,	// CheckHelp first arg
+	0x05dec,	// cmd_printf
 	0x24b00,	// PromptUser
 	0x02240,	// FreeStack
 	0x2d128,	// DCount
@@ -274,10 +262,8 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x3ae05,	// fDumpParse
 	0x10562,	// ForMkstr
 	0x105c0,	// ForResize
-	0x05ccb,	// eEcho:CheckOnOff
-	0x2d0e8,	// EchoFlag
-	0x028cf,	// START /?
-	0x039ba,	// ECHO /?
+	0x039bb,	// CheckHelp first arg
+	0x05dd4,	// cmd_printf
 	0x24b50,	// PromptUser
 	0x01360,	// FreeStack
 	0x2d128,	// DCount
@@ -312,10 +298,8 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x3bd85,	// fDumpParse
 	0x0febc,	// ForMkstr
 	0x0ff1a,	// ForResize
-	0x0610b,	// eEcho:CheckOnOff
-	0x2e0e8,	// EchoFlag
-	0x0199f,	// START /?
-	0x035b2,	// ECHO /?
+	0x035b3,	// CheckHelp first arg
+	0x05fc4,	// cmd_printf
 	0x24de0,	// PromptUser
 	0x017e0,	// FreeStack
 	0x2e128,	// DCount
@@ -350,10 +334,8 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x3bd85,	// fDumpParse
 	0x0febc,	// ForMkstr
 	0x0ff1a,	// ForResize
-	0x0610b,	// eEcho:CheckOnOff
-	0x2e0e8,	// EchoFlag
-	0x0199f,	// START /?
-	0x035b2,	// ECHO /?
+	0x035b3,	// CheckHelp first arg
+	0x05fc4,	// cmd_printf
 	0x24de0,	// PromptUser
 	0x017e0,	// FreeStack
 	0x2e128,	// DCount
@@ -388,10 +370,8 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x4d350,	// fDumpParse
 	0x0ef23,	// ForMkstr
 	0x0ef95,	// ForResize
-	0x0798b,	// eEcho:CheckOnOff
-	0x3c09c,	// EchoFlag
-	0x013e6,	// START /?
-	0x0ee1e,	// ECHO /?
+	0x0ee1f,	// CheckHelp first arg
+	0x074d0,	// cmd_printf
 	0x25818,	// PromptUser
 	0x0d020,	// FreeStack
 	0x3c1b8,	// DCount
@@ -426,10 +406,8 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x496e0,	// fDumpParse
 	0x1102a,	// ForMkstr
 	0x1109b,	// ForResize
-	0x08c4d,	// eEcho:CheckOnOff
-	0x380dc,	// EchoFlag
-	0x01766,	// START /?
-	0x0e2da,	// ECHO /?
+	0x0e2db,	// CheckHelp first arg
+	0x07e20,	// cmd_printf
 	0x26640,	// PromptUser
 	0x07700,	// FreeStack
 	0x381f8,	// DCount
@@ -464,10 +442,8 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x3f488,	// fDumpParse
 	0x0dcef,	// ForMkstr
 	0x0dd45,	// ForResize
-	0x0827b,	// eEcho:CheckOnOff
-	0x2e0a8,	// EchoFlag
-	0x0117c,	// START /?
-	0x07645,	// ECHO /?
+	0x07646,	// CheckHelp first arg
+	0x08458,	// cmd_printf
 	0x280a0,	// PromptUser
 	0x076e8,	// FreeStack
 	0x2e0ec,	// DCount
@@ -502,10 +478,8 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x33f08,	// fDumpParse
 	0x092b9,	// ForMkstr
 	0x0931d,	// ForResize
-	0x07de3,	// eEcho:CheckOnOff
-	0x2f018,	// EchoFlag
-	0x18210,	// START /?
-	0x2362c,	// ECHO /?
+	0x2362d,	// CheckHelp first arg
+	0x246ec,	// cmd_printf
 	0x23252,	// PromptUser
 	0x1915c,	// FreeStack
 	0x33ce8,	// DCount
@@ -540,10 +514,8 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x309e8,	// fDumpParse
 	0x14b4f,	// ForMkstr
 	0x14ba5,	// ForResize
-	0x1088b,	// eEcho:CheckOnOff
-	0x2c018,	// EchoFlag
-	0x0da2c,	// START /?
-	0x0e501,	// ECHO /?
+	0x0e502,	// CheckHelp first arg
+	0x10a98,	// cmd_printf
 	0x26f34,	// PromptUser
 	0x11f44,	// FreeStack
 	0x2c7c0,	// DCount
@@ -578,10 +550,8 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x3e378,	// fDumpParse
 	0x0dc33,	// ForMkstr
 	0x0dc89,	// ForResize
-	0x081a7,	// eEcho:CheckOnOff
-	0x2d0a8,	// EchoFlag
-	0x0117c,	// START /?
-	0x07625,	// ECHO /?
+	0x07626,	// CheckHelp first arg
+	0x07c88,	// cmd_printf
 	0x27fe0,	// PromptUser
 	0x076d4,	// FreeStack
 	0x2d0ec,	// DCount
@@ -616,10 +586,8 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x3f200,	// fDumpParse
 	0x0fde1,	// ForMkstr
 	0x0fe37,	// ForResize
-	0x086ef,	// eEcho:CheckOnOff
-	0x2e028,	// EchoFlag
-	0x0116c,	// START /?
-	0x074b0,	// ECHO /?
+	0x074b1,	// CheckHelp first arg
+	0x087a8,	// cmd_printf
 	0x2815c,	// PromptUser
 	0x02110,	// FreeStack
 	0x2e06c,	// DCount
@@ -654,10 +622,8 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x2f848,	// fDumpParse
 	0x01e9a,	// ForMkstr
 	0x01ef3,	// ForResize
-	0x1000f,	// eEcho:CheckOnOff
-	0x2f020,	// EchoFlag
-	0x0795b,	// START /?
-	0x07f3c,	// ECHO /?
+	0x07f3d,	// CheckHelp first arg
+	0x10054,	// cmd_printf
 	0x23dd4,	// PromptUser
 	0x0b960,	// FreeStack
 	0x4b138,	// DCount
@@ -692,10 +658,8 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x30868,	// fDumpParse
 	0x0162a,	// ForMkstr
 	0x01683,	// ForResize
-	0x0dccf,	// eEcho:CheckOnOff
-	0x30020,	// EchoFlag
-	0x0b51b,	// START /?
-	0x0bafc,	// ECHO /?
+	0x0bafd,	// CheckHelp first arg
+	0x0de08,	// cmd_printf
 	0x24c2c,	// PromptUser
 	0x0ea60,	// FreeStack
 	0x4c158,	// DCount
@@ -730,10 +694,8 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x46d10,	// fDumpParse
 	0x026ea,	// ForMkstr
 	0x02743,	// ForResize
-	0x0eacf,	// eEcho:CheckOnOff
-	0x2f020,	// EchoFlag
-	0x0c86b,	// START /?
-	0x0ce3c,	// ECHO /?
+	0x0ce3d,	// CheckHelp first arg
+	0x0ed0c,	// cmd_printf
 	0x248fc,	// PromptUser
 	0x0bc30,	// FreeStack
 	0x46d58,	// DCount
@@ -768,10 +730,8 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x4c070,	// fDumpParse
 	0x055c7,	// ForMkstr
 	0x05620,	// ForResize
-	0x1184f,	// eEcho:CheckOnOff
-	0x39118,	// EchoFlag
-	0x0f670,	// START /?
-	0x101e4,	// ECHO /?
+	0x101e5,	// CheckHelp first arg
+	0x119dc,	// cmd_printf
 	0x2af05,	// PromptUser
 	0x12984,	// FreeStack
 	0x502d0,	// DCount
@@ -806,10 +766,8 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x4c070,	// fDumpParse
 	0x05737,	// ForMkstr
 	0x05790,	// ForResize
-	0x11acf,	// eEcho:CheckOnOff
-	0x39118,	// EchoFlag
-	0x0f8e9,	// START /?
-	0x10460,	// ECHO /?
+	0x10461,	// CheckHelp first arg
+	0x11bf8,	// cmd_printf
 	0x2b0d5,	// PromptUser
 	0x12c04,	// FreeStack
 	0x502d0,	// DCount
@@ -844,10 +802,8 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x4c070,	// fDumpParse
 	0x04f06,	// ForMkstr
 	0x04f5f,	// ForResize
-	0x122ff,	// eEcho:CheckOnOff
-	0x39118,	// EchoFlag
-	0x10119,	// START /?
-	0x10c97,	// ECHO /?
+	0x10c98,	// CheckHelp first arg
+	0x1242c,	// cmd_printf
 	0x2b314,	// PromptUser
 	0x13438,	// FreeStack
 	0x502d0,	// DCount
@@ -882,10 +838,8 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x56686,	// fDumpParse
 	0x06fd2,	// ForMkstr
 	0x0702d,	// ForResize
-	0x135bf,	// eEcho:CheckOnOff
-	0x3b110,	// EchoFlag
-	0x0cf19,	// START /?
-	0x0c7ff,	// ECHO /?
+	0x0c800,	// CheckHelp first arg
+	0x136fc,	// cmd_printf
 	0x2c5f0,	// PromptUser
 	0x12ef0,	// FreeStack
 	0x43ad0,	// DCount
@@ -920,10 +874,8 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x56686,	// fDumpParse
 	0x06fd2,	// ForMkstr
 	0x0702d,	// ForResize
-	0x135bf,	// eEcho:CheckOnOff
-	0x3b110,	// EchoFlag
-	0x0cf19,	// START /?
-	0x0c7ff,	// ECHO /?
+	0x0c800,	// CheckHelp first arg
+	0x136fc,	// cmd_printf
 	0x2c540,	// PromptUser
 	0x12ef0,	// FreeStack
 	0x43ad0,	// DCount
@@ -958,10 +910,8 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x56ab2,	// fDumpParse
 	0x07d52,	// ForMkstr
 	0x07dad,	// ForResize
-	0x1263f,	// eEcho:CheckOnOff
-	0x3b110,	// EchoFlag
-	0x0be69,	// START /?
-	0x0b4c3,	// ECHO /?
+	0x0b4c4,	// CheckHelp first arg
+	0x1277c,	// cmd_printf
 	0x2c9ac,	// PromptUser
 	0x11f60,	// FreeStack
 	0x43ad0,	// DCount
@@ -996,10 +946,8 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x56ab2,	// fDumpParse
 	0x07d52,	// ForMkstr
 	0x07dad,	// ForResize
-	0x1263f,	// eEcho:CheckOnOff
-	0x3b110,	// EchoFlag
-	0x0be69,	// START /?
-	0x0b4c3,	// ECHO /?
+	0x0b4c4,	// CheckHelp first arg
+	0x1277c,	// cmd_printf
 	0x2c9ac,	// PromptUser
 	0x11f60,	// FreeStack
 	0x43ad0,	// DCount
@@ -1036,10 +984,8 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x1f9d8,	// fDumpParse
 	0x03a2a,	// ForMkstr
 	0x03a83,	// ForResize
-	0x02bbe,	// eEcho:CheckOnOff
-	0x1c010,	// EchoFlag
-	0x0cd97,	// START /?
-	0x14a07,	// ECHO /?
+	0x14a08,	// CheckHelp first arg
+	0x157bf,	// cmd_printf
 	0x12d0d,	// CtrlCAbort:PromptUser
 	0x0d883,	// FreeStack
 	0x1cfbc,	// DCount
@@ -1075,10 +1021,8 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x1f9d8,	// fDumpParse
 	0x03a2f,	// ForMkstr
 	0x03a88,	// ForResize
-	0x02bbe,	// eEcho:CheckOnOff
-	0x1c010,	// EchoFlag
-	0x0cd8b,	// START /?
-	0x149fb,	// ECHO /?
+	0x149fc,	// CheckHelp first arg
+	0x157b3,	// cmd_printf
 	0x12d01,	// CtrlCAbort:PromptUser
 	0x0d877,	// FreeStack
 	0x1cfbc,	// DCount
@@ -1114,10 +1058,8 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x1f9d8,	// fDumpParse
 	0x03a2f,	// ForMkstr
 	0x03a88,	// ForResize
-	0x02bbe,	// eEcho:CheckOnOff
-	0x1c010,	// EchoFlag
-	0x0cd87,	// START /?
-	0x149f7,	// ECHO /?
+	0x149f8,	// CheckHelp first arg
+	0x157af,	// cmd_printf
 	0x12cfd,	// CtrlCAbort:PromptUser
 	0x0d873,	// FreeStack
 	0x1cfbc,	// DCount
@@ -1153,10 +1095,8 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x1f9d8,	// fDumpParse
 	0x03a2f,	// ForMkstr
 	0x03a88,	// ForResize
-	0x02bbe,	// eEcho:CheckOnOff
-	0x1c010,	// EchoFlag
-	0x0cdde,	// START /?
-	0x14a4e,	// ECHO /?
+	0x14a4f,	// CheckHelp first arg
+	0x15806,	// cmd_printf
 	0x12d54,	// CtrlCAbort:PromptUser
 	0x0d8ca,	// FreeStack
 	0x1cfbc,	// DCount
@@ -1192,10 +1132,8 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x1f9d8,	// fDumpParse
 	0x03a3f,	// ForMkstr
 	0x03a98,	// ForResize
-	0x02bce,	// eEcho:CheckOnOff
-	0x1c010,	// EchoFlag
-	0x0ce12,	// START /?
-	0x14a7d,	// ECHO /?
+	0x14a7e,	// CheckHelp first arg
+	0x15830,	// cmd_printf
 	0x12d88,	// CtrlCAbort:PromptUser
 	0x0d8fe,	// FreeStack
 	0x1cfbc,	// DCount
@@ -1231,10 +1169,8 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x1f9d8,	// fDumpParse
 	0x03af6,	// ForMkstr
 	0x03b4f,	// ForResize
-	0x02bce,	// eEcho:CheckOnOff
-	0x1c010,	// EchoFlag
-	0x0ced0,	// START /?
-	0x14b3b,	// ECHO /?
+	0x14b3c,	// CheckHelp first arg
+	0x158ee,	// cmd_printf
 	0x12e46,	// CtrlCAbort:PromptUser
 	0x0d9bc,	// FreeStack
 	0x1cfbc,	// DCount
@@ -1270,10 +1206,8 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x31704,	// fDumpParse
 	0x0e8c2,	// ForMkstr
 	0x0e786,	// ForResize
-	0x03cd0,	// eEcho:CheckOnOff
-	0x2cac8,	// EchoFlag
-	0x03a77,	// START /?
-	0x01f90,	// ECHO /?
+	0x01f91,	// CheckHelp first arg
+	0x03e14,	// cmd_printf
 	0x1b30e,	// CtrlCAbort:PromptUser
 	0x01817,	// FreeStack
 	0x289f0,	// DCount
@@ -1309,10 +1243,8 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x346c9,	// fDumpParse
 	0x0d84b,	// ForMkstr
 	0x0d8b5,	// ForResize
-	0x10608,	// eEcho:CheckOnOff
-	0x2fac8,	// EchoFlag
-	0x05b2a,	// START /?
-	0x05c68,	// ECHO /?
+	0x05c69,	// CheckHelp first arg
+	0x05e0c,	// cmd_printf
 	0x0c60c,	// CtrlCAbort:PromptUser
 	0x014fd,	// FreeStack
 	0x2b9f0,	// DCount
@@ -1348,10 +1280,8 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x346c9,	// fDumpParse
 	0x0e130,	// ForMkstr
 	0x0e19a,	// ForResize
-	0x0895d,	// eEcho:CheckOnOff
-	0x2fac8,	// EchoFlag
-	0x05b1a,	// START /?
-	0x05c58,	// ECHO /?
+	0x05c59,	// CheckHelp first arg
+	0x05e00,	// cmd_printf
 	0x10a9f,	// CtrlCAbort:PromptUser
 	0x014f8,	// FreeStack
 	0x2b9f0,	// DCount
@@ -1387,10 +1317,8 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x346c9,	// fDumpParse
 	0x0e130,	// ForMkstr
 	0x0e19a,	// ForResize
-	0x0895d,	// eEcho:CheckOnOff
-	0x2fac8,	// EchoFlag
-	0x05b1a,	// START /?
-	0x05c58,	// ECHO /?
+	0x05c59,	// CheckHelp first arg
+	0x05e00,	// cmd_printf
 	0x10a9f,	// CtrlCAbort:PromptUser
 	0x014f8,	// FreeStack
 	0x2b9f0,	// DCount
@@ -1426,10 +1354,8 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x28db4,	// fDumpParse
 	0x10e69,	// ForMkstr
 	0x10ee2,	// ForResize
-	0x02da5,	// eEcho:CheckOnOff
-	0x20064,	// EchoFlag
-	0x02005,	// START /?
-	0x01c20,	// ECHO /?
+	0x01c21,	// CheckHelp first arg
+	0x02cd9,	// cmd_printf
 	0x1cf1f,	// CtrlCAbort:PromptUser
 	0x01b4f,	// FreeStack
 	0x20014,	// DCount
@@ -1465,10 +1391,8 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x346c0,	// fDumpParse
 	0x0ed53,	// ForMkstr
 	0x0ebe8,	// ForResize
-	0x08975,	// eEcho:CheckOnOff
-	0x2fa80,	// EchoFlag
-	0x05306,	// START /?
-	0x0552e,	// ECHO /?
+	0x0552f,	// CheckHelp first arg
+	0x058bf,	// cmd_printf
 	0x1ab43,	// CtrlCAbort:PromptUser
 	0x01c6c,	// FreeStack
 	0x2b9b0,	// DCount
@@ -1504,10 +1428,8 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x34454,	// fDumpParse
 	0x1183d,	// ForMkstr
 	0x118a7,	// ForResize
-	0x05770,	// eEcho:CheckOnOff
-	0x2fa80,	// EchoFlag
-	0x01815,	// START /?
-	0x045a6,	// ECHO /?
+	0x045a7,	// CheckHelp first arg
+	0x04115,	// cmd_printf
 	0x11c16,	// CtrlCAbort:PromptUser
 	0x01fe6,	// FreeStack
 	0x2b9b0,	// DCount
@@ -1543,10 +1465,8 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x40661,	// fDumpParse
 	0x13272,	// ForMkstr
 	0x132c5,	// ForResize
-	0x06ffd,	// eEcho:CheckOnOff
-	0x2404c,	// EchoFlag
-	0x028d7,	// START /?
-	0x0313e,	// ECHO /?
+	0x0313f,	// CheckHelp first arg
+	0x0469f,	// cmd_printf
 	0x14c7f,	// CtrlCAbort:PromptUser
 	0x022b7,	// FreeStack
 	0x240c8,	// DCount
@@ -1582,10 +1502,8 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x40600,	// fDumpParse
 	0x1144c,	// ForMkstr
 	0x1132a,	// ForResize
-	0x04e83,	// eEcho:CheckOnOff
-	0x2404c,	// EchoFlag
-	0x02297,	// START /?
-	0x03258,	// ECHO /?
+	0x03259,	// CheckHelp first arg
+	0x040bf,	// cmd_printf
 	0x1f312,	// CtrlCAbort:PromptUser
 	0x03031,	// FreeStack
 	0x240bc,	// DCount
@@ -1621,10 +1539,8 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x40619,	// fDumpParse
 	0x10035,	// ForMkstr
 	0x1007f,	// ForResize
-	0x067bd,	// eEcho:CheckOnOff
-	0x2408c,	// EchoFlag
-	0x02597,	// START /?
-	0x04cf2,	// ECHO /?
+	0x04cf3,	// CheckHelp first arg
+	0x066b0,	// cmd_printf
 	0x1fa56,	// CtrlCAbort:PromptUser
 	0x01963,	// FreeStack
 	0x240fc,	// DCount
@@ -1660,10 +1576,8 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x40619,	// fDumpParse
 	0x10245,	// ForMkstr
 	0x10122,	// ForResize
-	0x07409,	// eEcho:CheckOnOff
-	0x2408c,	// EchoFlag
-	0x02313,	// START /?
-	0x047c5,	// ECHO /?
+	0x047c6,	// CheckHelp first arg
+	0x0735f,	// cmd_printf
 	0x1fab6,	// CtrlCAbort:PromptUser
 	0x019aa,	// FreeStack
 	0x240fc,	// DCount
@@ -1699,10 +1613,8 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x40660,	// fDumpParse
 	0x0ffed,	// ForMkstr
 	0x0feca,	// ForResize
-	0x0599d,	// eEcho:CheckOnOff
-	0x2408c,	// EchoFlag
-	0x0220e,	// START /?
-	0x041c4,	// ECHO /?
+	0x041c5,	// CheckHelp first arg
+	0x058f3,	// cmd_printf
 	0x1fcce,	// CtrlCAbort:PromptUser
 	0x01911,	// FreeStack
 	0x24104,	// DCount
@@ -1738,10 +1650,8 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x40660,	// fDumpParse
 	0x0ffed,	// ForMkstr
 	0x0feca,	// ForResize
-	0x0599d,	// eEcho:CheckOnOff
-	0x2408c,	// EchoFlag
-	0x0220e,	// START /?
-	0x041c4,	// ECHO /?
+	0x041c5,	// CheckHelp first arg
+	0x058f3,	// cmd_printf
 	0x1fcce,	// CtrlCAbort:PromptUser
 	0x01911,	// FreeStack
 	0x24104,	// DCount
@@ -1777,10 +1687,8 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x4ba71,	// fDumpParse
 	0x0ee69,	// ForMkstr
 	0x0ec8d,	// ForResize
-	0x0833b,	// eEcho:CheckOnOff
-	0x30050,	// EchoFlag
-	0x01667,	// START /?
-	0x016a5,	// ECHO /?
+	0x016a6,	// CheckHelp first arg
+	0x07bd0,	// cmd_printf
 	0x22ed6,	// CtrlCAbort:PromptUser
 	0x0c4d8,	// FreeStack
 	0x300b8,	// DCount
@@ -1816,10 +1724,8 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x49ad1,	// fDumpParse
 	0x0f23b,	// ForMkstr
 	0x0f0cd,	// ForResize
-	0x07d80,	// eEcho:CheckOnOff (inline)
-	0x2e090,	// EchoFlag
-	0x011a1,	// START /?
-	0x011e2,	// ECHO /?
+	0x011e3,	// CheckHelp first arg
+	0x07184,	// cmd_printf
 	0x18660,	// CtrlCAbort:PromptUser
 	0x06b67,	// FreeStack
 	0x2e0f8,	// DCount
@@ -1855,10 +1761,8 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x40850,	// fDumpParse
 	0x0d735,	// ForMkstr
 	0x0d785,	// ForResize
-	0x06b7b,	// eEcho:CheckOnOff
-	0x2505c,	// EchoFlag
-	0x01920,	// START /?
-	0x0576f,	// ECHO /?
+	0x05770,	// CheckHelp first arg
+	0x0618d,	// cmd_printf
 	0x23078,	// CtrlCAbort:PromptUser
 	0x057df,	// FreeStack
 	0x250bc,	// DCount
@@ -1894,10 +1798,8 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x2c8dc,	// fDumpParse
 	0x085eb,	// ForMkstr
 	0x0863b,	// ForResize
-	0x073f3,	// eEcho:CheckOnOff
-	0x2800c,	// EchoFlag
-	0x15305,	// START /?
-	0x1eb93,	// ECHO /?
+	0x1eb94,	// CheckHelp first arg
+	0x1faa5,	// cmd_printf
 	0x1c976,	// CtrlCAbort:PromptUser
 	0x16019,	// FreeStack
 	0x284f4,	// DCount
@@ -1933,10 +1835,8 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x2969c,	// fDumpParse
 	0x10f19,	// ForMkstr
 	0x10f69,	// ForResize
-	0x0dfe6,	// eEcho:CheckOnOff
-	0x2500c,	// EchoFlag
-	0x0bd6f,	// START /?
-	0x0c6df,	// ECHO /?
+	0x0c6e0,	// CheckHelp first arg
+	0x0e18a,	// cmd_printf
 	0x224db,	// CtrlCAbort:PromptUser
 	0x0e902,	// FreeStack
 	0x254c8,	// DCount
@@ -1972,10 +1872,8 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x40850,	// fDumpParse
 	0x0f39f,	// ForMkstr
 	0x0f3ef,	// ForResize
-	0x06ff7,	// eEcho:CheckOnOff
-	0x2505c,	// EchoFlag
-	0x0126c,	// START /?
-	0x052e3,	// ECHO /?
+	0x052e4,	// CheckHelp first arg
+	0x06570,	// cmd_printf
 	0x23008,	// CtrlCAbort:PromptUser
 	0x05353,	// FreeStack
 	0x250bc,	// DCount
@@ -2011,10 +1909,8 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x41810,	// fDumpParse
 	0x0f334,	// ForMkstr
 	0x0f384,	// ForResize
-	0x066b0,	// eEcho:CheckOnOff
-	0x2601c,	// EchoFlag
-	0x0148b,	// START /?
-	0x058ef,	// ECHO /?
+	0x058f0,	// CheckHelp first arg
+	0x06992,	// cmd_printf
 	0x234fb,	// CtrlCAbort:PromptUser
 	0x059a0,	// FreeStack
 	0x2607c,	// DCount
@@ -2050,10 +1946,8 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x2559c,	// fDumpParse
 	0x03cc7,	// ForMkstr
 	0x03d17,	// ForResize
-	0x0f070,	// eEcho:CheckOnOff
-	0x25010,	// EchoFlag
-	0x08d4f,	// START /?
-	0x08260,	// ECHO /?
+	0x08261,	// CheckHelp first arg
+	0x0f0fc,	// cmd_printf
 	0x219d4,	// CtrlCAbort:PromptUser
 	0x0c410,	// FreeStack
 	0x3c9e4,	// DCount
@@ -2089,10 +1983,8 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x2659c,	// fDumpParse
 	0x042b7,	// ForMkstr
 	0x04307,	// ForResize
-	0x0e560,	// eEcho:CheckOnOff
-	0x26010,	// EchoFlag
-	0x0ca1e,	// START /?
-	0x0878f,	// ECHO /?
+	0x08790,	// CheckHelp first arg
+	0x0e6c4,	// cmd_printf
 	0x22849,	// CtrlCAbort:PromptUser
 	0x0f31b,	// FreeStack
 	0x3d9e4,	// DCount
@@ -2128,10 +2020,8 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x3d798,	// fDumpParse
 	0x04307,	// ForMkstr
 	0x04357,	// ForResize
-	0x0e270,	// eEcho:CheckOnOff
-	0x26010,	// EchoFlag
-	0x0c68f,	// START /?
-	0x084ce,	// ECHO /?
+	0x084cf,	// CheckHelp first arg
+	0x0e363,	// cmd_printf
 	0x22a8f,	// CtrlCAbort:PromptUser
 	0x0bf40,	// FreeStack
 	0x3d7cc,	// DCount
@@ -2167,10 +2057,8 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x3fa98,	// fDumpParse
 	0x09b6e,	// ForMkstr
 	0x09bbe,	// ForResize
-	0x0c610,	// eEcho:CheckOnOff
-	0x2d0c8,	// EchoFlag
-	0x0d3fa,	// START /?
-	0x0cc7f,	// ECHO /?
+	0x0cc80,	// CheckHelp first arg
+	0x0c37c,	// cmd_printf
 	0x28ff7,	// CtrlCAbort:PromptUser
 	0x11bd6,	// FreeStack
 	0x43ce8,	// DCount
@@ -2206,10 +2094,8 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x3da04,	// fDumpParse
 	0x1835d,	// ForMkstr
 	0x183ad,	// ForResize
-	0x0d47e,	// eEcho:CheckOnOff
-	0x2b0c0,	// EchoFlag
-	0x092b3,	// START /?
-	0x05162,	// ECHO /?
+	0x05163,	// CheckHelp first arg
+	0x0c6ff,	// cmd_printf
 	0x24d99,	// CtrlCAbort:PromptUser
 	0x096e0,	// FreeStack
 	0x41c68,	// DCount
@@ -2245,10 +2131,8 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x3fa88,	// fDumpParse
 	0x08094,	// ForMkstr
 	0x080e4,	// ForResize
-	0x12370,	// eEcho:CheckOnOff
-	0x2d0c8,	// EchoFlag
-	0x108f3,	// START /?
-	0x0dd6c,	// ECHO /?
+	0x0dd6d,	// CheckHelp first arg
+	0x125d9,	// cmd_printf
 	0x29230,	// CtrlCAbort:PromptUser
 	0x12a06,	// FreeStack
 	0x43cd8,	// DCount
@@ -2284,10 +2168,8 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x48046,	// fDumpParse
 	0x06942,	// ForMkstr
 	0x06992,	// ForResize
-	0x0eb70,	// eEcho:CheckOnOff
-	0x2d0c0,	// EchoFlag
-	0x0d283,	// START /?
-	0x08dc8,	// ECHO /?
+	0x08dc9,	// CheckHelp first arg
+	0x0edec,	// cmd_printf
 	0x29b3b,	// CtrlCAbort:PromptUser
 	0x0fc2d,	// FreeStack
 	0x35768,	// DCount
@@ -2323,10 +2205,8 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x48046,	// fDumpParse
 	0x06fe2,	// ForMkstr
 	0x07032,	// ForResize
-	0x0f220,	// eEcho:CheckOnOff
-	0x2d0c0,	// EchoFlag
-	0x0d933,	// START /?
-	0x09478,	// ECHO /?
+	0x09479,	// CheckHelp first arg
+	0x0f49c,	// cmd_printf
 	0x299fb,	// CtrlCAbort:PromptUser
 	0x102dd,	// FreeStack
 	0x35768,	// DCount
@@ -2362,10 +2242,8 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x48046,	// fDumpParse
 	0x06f3b,	// ForMkstr
 	0x06f8b,	// ForResize
-	0x09bc0,	// eEcho:CheckOnOff
-	0x2d0c0,	// EchoFlag
-	0x0ac63,	// START /?
-	0x0a638,	// ECHO /?
+	0x0a639,	// CheckHelp first arg
+	0x09740,	// cmd_printf
 	0x2970b,	// CtrlCAbort:PromptUser
 	0x1179f,	// FreeStack
 	0x35768,	// DCount
@@ -2401,10 +2279,8 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x48046,	// fDumpParse
 	0x06f5d,	// ForMkstr
 	0x06fad,	// ForResize
-	0x09d10,	// eEcho:CheckOnOff
-	0x2d0c0,	// EchoFlag
-	0x0adb3,	// START /?
-	0x0a788,	// ECHO /?
+	0x0a789,	// CheckHelp first arg
+	0x09890,	// cmd_printf
 	0x2970b,	// CtrlCAbort:PromptUser
 	0x1190f,	// FreeStack
 	0x35768,	// DCount

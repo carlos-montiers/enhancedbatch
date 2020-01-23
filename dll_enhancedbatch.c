@@ -90,8 +90,7 @@ BOOL Next(int argc, LPCWSTR argv[]);
 void unhook(void);
 int CallUnload(int argc, LPCWSTR argv[]);
 
-fnCmdFunc *peEcho, eEcho, *peCall, eCall;
-LPWSTR Fmt17;
+fnCmdFunc *peCall, eCall;
 int *pLastRetCode;
 DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 #ifdef _WIN64
@@ -132,8 +131,6 @@ const struct sExt getExtensionList[] = {
 	{ L"@dayshort",         0, GetDayShort, HELPSTR(DayShort) },
 	{ L"@decsep",           1, GetDecSep, HELPSTR(DecSep) },
 	{ L"@delayedexpansion", 1, GetDelayedExpansion, HELPSTR(DelayedExpansion) },
-	{ L"@echo",             1, GetEcho, HELPSTR(EchoVar) },
-	{ L"@echooptions",      1, GetEchoOptions, HELPSTR(EchoOptions) },
 	{ L"@english",          1, GetEnglish, HELPSTR(English) },
 	{ L"@enhancedbatch",    0, GetEnhancedBatch, HELPSTR(EnhancedBatch) },
 	{ L"@extensions",       1, GetExtensions, HELPSTR(Extensions) },
@@ -197,8 +194,6 @@ const struct sExt setExtensionList[] = {
 	{ L"@delayedexpansion", 0, SetDelayedExpansion, NULL, NULL },
 	{ L"@dumpparse",		0, SetDumpParse, HELPSTR(DumpParse) },
 	{ L"@dumptokens",		0, SetDumpTokens, HELPSTR(DumpTokens) },
-	{ L"@echo",             0, SetEcho, NULL, NULL },
-	{ L"@echooptions",      0, SetEchoOptions, NULL, NULL },
 	{ L"@english",          0, SetEnglish, NULL, NULL },
 	{ L"@extensions",       0, SetExtensions, NULL, NULL },
 	{ L"@fg",               0, SetForeground, NULL, NULL },
@@ -992,53 +987,6 @@ int CallHelp(int argc, LPCWSTR argv[])
 	cmd_printf(L"%s\r\n", ext->help);
 
 	return EXIT_SUCCESS;
-}
-
-int WINAPI MyEcho(struct cmdnode *node)
-{
-	BOOL modified_newline = FALSE;
-	BOOL suppressed_quotes = FALSE;
-	int  arg_ofs;
-	int  ret;
-
-	if (node->arg == NULL) {
-		static WCHAR space[] = L" ";
-		node->arg = space;
-		ret = eEcho(node);
-		node->arg = NULL;
-		return ret;
-	}
-
-	if (*node->arg == L';') {
-		WriteByte(Fmt17+2, 0);
-		modified_newline = TRUE;
-	} else if (*node->arg == L',') {
-		WriteMemory(Fmt17+2, L"\n", 4);
-		modified_newline = TRUE;
-	}
-
-	if ((node->arg[1] == L'~' && node->arg[2] == L'"') ||
-		(modified_newline && WCSBEG(node->arg+1, L" ~\""))) {
-		DWORD len = (DWORD) wcslen(node->arg);
-		if (node->arg[len-1] == L'"') {
-			node->arg[len-1] = L'\0';
-			arg_ofs = (node->arg[2] == L'~') ? 3 : 2;
-			node->arg += arg_ofs;
-			suppressed_quotes = TRUE;
-		}
-	}
-
-	ret = eEcho(node);
-
-	if (suppressed_quotes) {
-		node->arg -= arg_ofs;
-	}
-
-	if (modified_newline) {
-		WriteMemory(Fmt17+2, L"\r\n", 4);
-	}
-
-	return ret;
 }
 
 BOOL DwFlagsForCodepageMustBeZero(UINT CodePage)

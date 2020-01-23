@@ -1197,31 +1197,6 @@ static void doEcho(LPCWSTR text, const struct sEchoOptions *options)
 	}
 }
 
-BOOL SetEcho(int argc, LPCWSTR argv[])
-{
-	return setBoolean(pEchoFlag, *argv);
-}
-
-DWORD GetEcho(LPWSTR buffer, DWORD size)
-{
-	return toString(*pEchoFlag, buffer, size);
-}
-
-BOOL SetEchoOptions(int argc, LPCWSTR argv[])
-{
-	BYTE options;
-	if (setBoolean(&options, *argv)) {
-		hookEchoOptions(options);
-		return TRUE;
-	}
-	return FALSE;
-}
-
-DWORD GetEchoOptions(LPWSTR buffer, DWORD size)
-{
-	return toString(*pStartHelp == 31, buffer, size);
-}
-
 BOOL SetUnicode(int argc, LPCWSTR argv[])
 {
 	return setBoolean(pfOutputUnicode, *argv);

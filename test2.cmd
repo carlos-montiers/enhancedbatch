@@ -2,7 +2,6 @@
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
 set $temp=@tempfile
-set @echooptions=off
 >>%$temp% call :test
 ::copy %$temp% test2.out
 fc >nul test2.out %$temp% || (
@@ -14,7 +13,7 @@ fc >nul test2.out %$temp% || (
 
 set @batchfile=0
 set /a $lnum=%@batchline% + 5
->%$temp% echo;~"%~nx0:%$lnum%: "
+>%$temp% call @echo /n "%~nx0:%$lnum%: "
 2>>%$temp% set /a
 set @batchfile=1
 set $temp2=@tempfile
@@ -23,12 +22,12 @@ fc >nul %$temp% %$temp2% && goto :passed
 :: It may have failed because language resources are missing.
 findstr >nul 0x2371 %$temp2% && echo Passed (1 skipped).&goto :out
 echo FAILED!
-echo;~"Expected: "
+call @echo /n "Expected: "
 type %$temp%
-echo
-echo;~"Actual:   "
+echo.
+call @echo /n "Actual:   "
 type %$temp2%
-echo
+echo.
 goto :out
 :passed
 echo Passed.
@@ -37,21 +36,6 @@ del %$temp% %$temp2%
 goto :eof
 
 :test
-echo /?
-echo on
-echo
-echo off
-set $prompt=%PROMPT%
-prompt $G
-set @echo=on
-set @echo=off
-set @echooptions=on
-echo Echo options: %@echooptions%
-echo on
-echo off
-set @echooptions=off
-echo Echo options: %@echooptions%
-prompt %$prompt%
 set @extensions=no
 echo Extensions off, colon part of variable: %OS:_= %
 echo Tilde expansion: %$0;~nx%.
@@ -74,16 +58,16 @@ set @dumpparse=false
 set @dumptokens=1
 set @dumptokens=
 set @unicode=1
-echo;Unicode
+call @echo /n Unicode
 set @unicode=0
-echo
+echo.
 goto :eof
 
 :loop
 set @delayedexpansion=1
 set $j=1
 for do (
-  echo;!$j!..
+  call @echo /n !$j!..
   if !$j! == 5 (
     echo Stop
     set @next=
@@ -92,25 +76,25 @@ for do (
 )
 for (!$j! neq 1) do (
   set /a $j=!$j!-1
-  echo;!$j!..
+  call @echo /n !$j!..
 )
 echo Done
 for (not !$j! == 6) do (
-  echo;!$j!..
+  call @echo /n !$j!..
   set /a $j=!$j!+1
 )
 echo Done
 set @delayedexpansion=0
 for %%j do (
-  echo;%%j..
+  call @echo /n %%j..
   if %%j == 5 (
     echo Stop
     set @next=
   )
 )
-for %%j 10 do echo;%%j..
+for %%j 10 do call @echo /n %%j..
 echo Done
-for %%j -10 do echo;%%j..
+for %%j -10 do call @echo /n %%j..
 echo Done
 goto :eof
 

@@ -108,11 +108,9 @@ struct cmdnode {		// partial definition
 
 typedef int (WINAPI *fnCmdFunc)(struct cmdnode *node);
 
-extern fnCmdFunc *peEcho, eEcho, *peCall, eCall;
-extern LPWSTR Fmt17;
+extern fnCmdFunc *peCall, eCall;
 extern int *pLastRetCode;
 
-int WINAPI MyEcho(struct cmdnode *node);
 int WINAPI MyCall(struct cmdnode *node);
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d);
 UINT MyLexText(void);
@@ -165,7 +163,7 @@ extern const WCHAR
 	DEFHELPSTR(ConsoleCursor), DEFHELPSTR(Date), DEFHELPSTR(DateTime),
 	DEFHELPSTR(DateTimems), DEFHELPSTR(Day), DEFHELPSTR(DayName),
 	DEFHELPSTR(DayOfWeek), DEFHELPSTR(DayShort), DEFHELPSTR(DecSep),
-	DEFHELPSTR(DelayedExpansion), DEFHELPSTR(EchoVar), DEFHELPSTR(EchoOptions),
+	DEFHELPSTR(DelayedExpansion),
 	DEFHELPSTR(English), DEFHELPSTR(EnhancedBatch), DEFHELPSTR(Extensions),
 	DEFHELPSTR(Foreground), DEFHELPSTR(ForLine), DEFHELPSTR(ForLines),
 	DEFHELPSTR(Getchar), DEFHELPSTR(Getkey), DEFHELPSTR(Height),
@@ -208,7 +206,6 @@ void WriteMemory(LPVOID dst, LPCVOID src, int size);
 DWORD getBatchLine();
 void hookCmd(void);
 void unhookCmd(void);
-void hookEchoOptions(BOOL on);
 void hookCtrlCAborts(char aborts);
 
 // The eol character is no longer modified, but still used to verify the version.
@@ -229,32 +226,30 @@ void hookCtrlCAborts(char aborts);
 #define pfDumpParse 		cmd_addrs[10]
 #define pForMkstr			cmd_addrs[11]	// storage for FOR wildcard matches
 #define pForResize			cmd_addrs[12]	// prevent resizing it
-#define pEchoOnOff			cmd_addrs[13]
-#define pEchoFlag			cmd_addrs[14]
-#define pStartHelp			cmd_addrs[15]
-#define pEchoHelp			cmd_addrs[16]
-#define pCtrlCAborts		cmd_addrs[17]
-#define pFreeStack			cmd_addrs[18]
-#define pDCount 			((LPDWORD) cmd_addrs[19])
-#define pSFWorkmkstr		cmd_addrs[20]
-#define pSFWorkresize		cmd_addrs[21]
-#define pSFWorksaved		((char *) cmd_addrs[22])
-#define pGotoFlag			cmd_addrs[23]
-#define pForFbegin			cmd_addrs[24]
-#define pForFend			cmd_addrs[25]
-#define pParseFortoken		((int *) cmd_addrs[26])
-#define pLexBufPtr			((LPWSTR *) cmd_addrs[27])
-#define pLexBufferend		((LPWSTR) cmd_addrs[28])
-#define pForFoptions		((int *) cmd_addrs[29])
-#define pTokLen 			((int *) cmd_addrs[30])
-#define pGotoEof			cmd_addrs[31]
-#define pGotopos			cmd_addrs[32]
-#define pGotostart			cmd_addrs[33]
-#define pCallWorkresize 	((int *) cmd_addrs[34])
+#define pCheckHelp1 		cmd_addrs[13]
+#define pcmd_printf 		cmd_addrs[14]
+#define pCtrlCAborts		cmd_addrs[15]
+#define pFreeStack			cmd_addrs[16]
+#define pDCount 			((LPDWORD) cmd_addrs[17])
+#define pSFWorkmkstr		cmd_addrs[18]
+#define pSFWorkresize		cmd_addrs[19]
+#define pSFWorksaved		((char *) cmd_addrs[20])
+#define pGotoFlag			cmd_addrs[21]
+#define pForFbegin			cmd_addrs[22]
+#define pForFend			cmd_addrs[23]
+#define pParseFortoken		((int *) cmd_addrs[24])
+#define pLexBufPtr			((LPWSTR *) cmd_addrs[25])
+#define pLexBufferend		((LPWSTR) cmd_addrs[26])
+#define pForFoptions		((int *) cmd_addrs[27])
+#define pTokLen 			((int *) cmd_addrs[28])
+#define pGotoEof			cmd_addrs[29]
+#define pGotopos			cmd_addrs[30]
+#define pGotostart			cmd_addrs[31]
+#define pCallWorkresize 	((int *) cmd_addrs[32])
 
 #ifdef _WIN64
-#define OFFSETS 35
+#define OFFSETS 33
 #else
-#define pSFWorkpassed		((char *) cmd_addrs[35])
-#define OFFSETS 36
+#define pSFWorkpassed		((char *) cmd_addrs[33])
+#define OFFSETS 34
 #endif

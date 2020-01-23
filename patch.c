@@ -61,7 +61,7 @@ DWORD ForFbegin_org, ParseFor_org, ParseForF_org, CallWorkresize_org;
 #endif
 
 int oldPutMsg, oldParseFor, oldParseForF, oldCallWorkresize;
-BYTE oldLexText[5], oldEchoOnOff[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
+BYTE oldLexText[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
 BYTE oldForFbegin[6], oldForFend[6], oldGotoEof[6];
 DWORD_PTR SFWork_mkstr_org, FreeStack, ForFend_org;
 BYTE SFWork_mkstr_reg, Goto_reg;
@@ -905,7 +905,7 @@ void hookCmd(void)
 	LPBYTE cmd;
 	LPDWORD data, end;
 	struct sCmdEntry *cmdentry;
-	fnCmdFunc pMyEcho, pMyCall;
+	fnCmdFunc pMyCall;
 	const struct sCMD *ver;
 	int i;
 	struct __attribute__((gcc_struct,packed)) {
@@ -920,30 +920,20 @@ void hookCmd(void)
 	pNTHeader = MakeVA(PIMAGE_NT_HEADERS, pDosHeader->e_lfanew);
 	end = MakeVA(LPDWORD, pNTHeader->OptionalHeader.SizeOfImage);
 	cmd_end = end;
-	pMyEcho = MyEcho;
 	pMyCall = MyCall;
 
 	sfwork_map = kh_init(ptrdw);
 
-	// Search the image for the ECHO & CALL help identifiers (to locate eEcho &
-	// eCall), L"%s\r\n" (for ECHO's output) and the binary file version.
+	// Search the image for the ECHO & CALL help identifiers (to locate eCall),
+	// and the binary file version.
 	while (data < end) {
-		if (eEcho == NULL) {
+		if (eCall == NULL) {
 			cmdentry = (struct sCmdEntry *) data;
 			if (cmdentry->helpid == 0x2392 &&		// ECHO
 				(cmdentry+14)->helpid == 0x238F) {	// CALL
-				peEcho = &cmdentry->func;
-				eEcho = cmdentry->func;
-				WriteMemory(peEcho, &pMyEcho, sizeof(pMyEcho));
 				peCall = &cmdentry[14].func;
 				eCall = cmdentry[14].func;
 				WriteMemory(peCall, &pMyCall, sizeof(pMyCall));
-			}
-		}
-		if (Fmt17 == NULL) {
-			if (data[0] == 0x00730025 &&	// L"%s"
-				data[1] == 0x000a000d) {	// L"\r\n"
-				Fmt17 = (LPWSTR) data;
 			}
 		}
 		if (data[0] == VS_FFI_SIGNATURE) {
@@ -976,24 +966,7 @@ void hookCmd(void)
 		cmd_addrs[i] = cmd + ver->offsets[i];
 	}
 
-	// Use eEcho:CheckOnOff to get the address of cmd_printf.
-#ifdef _WIN64
-	p = pEchoOnOff;
-	if CMD_MAJOR_MINOR(==, 5,2) {
-		p = (LPBYTE) MKABS(p+8) - 9;
-	} else {
-		while (*(LPDWORD) p != 0x02C28348) {	// add rdx,2
-			++p;
-		}
-		p += 5;
-	}
-#else
-	while (*(LPWSTR *) p != Fmt17) {
-		++p;
-	}
-	p += 5;
-#endif
-	cmd_printf = (fncmd_printf) MKABS(p);
+	cmd_printf = (fncmd_printf) pcmd_printf;
 
 #ifdef _WIN64
 	// CMD and the DLL could be more than 2GiB apart, so allocate some memory
@@ -1024,19 +997,17 @@ void hookCmd(void)
 	oldCallWorkresize = *pCallWorkresize;
 	memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
 	memcpy(oldLexText, pLexText, 5);
-	memcpy(oldEchoOnOff, pEchoOnOff, 5);
 	memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
 	memcpy(oldSFWorkresize, pSFWorkresize, 6);
 	memcpy(oldForFbegin, pForFbegin, 6);
 	memcpy(oldForFend, pForFend, 6);
 	memcpy(oldGotoEof, pGotoEof, 6);
 
-	// Only check the first argument for help (pEchoHelp points to the ECHO
-	// command byte, which is followed by je).
-	if (*++pEchoHelp == 0x0F) {
-		WriteMemory(pEchoHelp, "\x90\xE9", 2);
+	// Only check the first argument for help, so "call @ext /?" works.
+	if (*pCheckHelp1 == 0x0F) {
+		WriteMemory(pCheckHelp1, "\x90\xE9", 2);
 	} else {
-		WriteByte(pEchoHelp, 0xEB);
+		WriteByte(pCheckHelp1, 0xEB);
 	}
 
 #ifdef _WIN64
@@ -1342,64 +1313,6 @@ void hookCmd(void)
 	WriteMemory(pCallWorkresize, &i, 4);
 }
 
-void hookEchoOptions(BOOL options)
-{
-	if (!options) {
-		// Swap START & ECHO's help tests, so ECHO has no help and START only
-		// looks at its first argument (now done for all commands).
-		WriteByte(pStartHelp, 9);
-		//WriteByte(pEchoHelp, 31);
-		// Patch ECHO to always echo, ignoring options.
-#ifdef _WIN64
-		if CMD_MAJOR_MINOR(==, 5,2) {
-			// 5.2.*.*
-			WriteCode(pEchoOnOff, "\x6A\x03"			// push 3
-								  "\x59");				// pop rcx
-		} else if CMD_MAJOR_MINOR(==, 6,2) {
-			// 6.2.*.*
-			WriteCode(pEchoOnOff, "\x31\xC9"			// xor ecx,ecx
-								  "\x83\xC9\x01");		// or ecx,1
-		} else {
-			// 6.0.*.*
-			// 6.1.*.*
-			// 6.3.*.*
-			// 10.*.*.*
-			WriteCode(pEchoOnOff, "\xB8\x03\x00\x00\x00");	// mov eax,3
-		}
-#else
-		if CMD_MAJOR_MINOR(<, 6,2) {
-			// 5.*.*.*
-			// 6.0.*.*
-			// 6.1.*.*
-			WriteCode(pEchoOnOff, "\x58" 				// pop eax
-								  "\x58" 				// pop eax
-								  "\x6A\x03"			// push 3
-								  "\x58");				// pop eax
-		} else if CMD_MAJOR_MINOR(==, 6,2) {
-			if CMD_BUILD_REVISION(==, 8102,0) {
-				// 6.2.8102.0
-				WriteCode(pEchoOnOff, "\x90" 			// nop
-									  "\x58" 			// pop eax
-									  "\x6A\x03"		// push 3
-									  "\x58");			// pop eax
-			} else {
-				// 6.2.9200.16384
-				WriteCode(pEchoOnOff, "\x33\xC0"		// xor eax,eax
-									  "\x83\xC8\x01");	// or eax,1
-			}
-		} else {
-			// 6.3.*.*
-			// 10.*.*.*
-			WriteCode(pEchoOnOff, "\xB8\x03\x00\x00\x00");	// mov eax,3
-		}
-#endif
-	} else {
-		WriteByte(pStartHelp, 31);
-		//WriteByte(pEchoHelp, 9);
-		WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
-	}
-}
-
 void hookCtrlCAborts(char aborts)
 {
 	if (aborts == -1) {
@@ -1434,16 +1347,12 @@ void unhookCmd(void)
 	kh_destroy(ptrdw, sfwork_map);
 
 	WriteMemory(peCall, &eCall, sizeof(eCall));
-	WriteMemory(peEcho, &eEcho, sizeof(eEcho));
 	WriteMemory(pPutStdErrMsg, &oldPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);
-	WriteMemory(pEchoOnOff, oldEchoOnOff, 5);
-	WriteByte(pStartHelp, 31);
-	//WriteByte(pEchoHelp, 9);
-	if (*pEchoHelp == 0x90) {
-		WriteMemory(pEchoHelp, "\x0F\x84", 2);
+	if (*pCheckHelp1 == 0x90) {
+		WriteMemory(pCheckHelp1, "\x0F\x84", 2);
 	} else {
-		WriteByte(pEchoHelp, 0x74);
+		WriteByte(pCheckHelp1, 0x74);
 	}
 	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
 	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);

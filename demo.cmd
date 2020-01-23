@@ -19,13 +19,6 @@ Echo Using %@opacity% %% of opacity.
 
 pause & call @clear
 
-echo You can configure echo for not show or use options
-set "@echooptions=no"
-echo
-echo /?
-
-pause & call @clear
-
 echo Playing with @forline and @forlines
 set "file=!$0;~dp!LICENSE.txt"
 for /f "usebackq" %%a in ("!file!") do (
@@ -42,7 +35,7 @@ set $spinner3=-
 set $i=0
 echo Playing with for infinite
 for %%j in (:*) do (
-  echo;j = %%j press a key for stop !$spinner$i!!$CR!
+  call @echo /n "j = %%j press a key for stop !$spinner$i!!$CR!"
   set /a $i=(!$i!+1^)^&3
   call @kbhit
   if !errorlevel! neq -1 set @next=
@@ -125,9 +118,9 @@ echo Character SEMI:!$SEMI!.
 echo Character COMMA:!$COMMA!.
 echo Character EQ:!$EQ!.
 
-echo;~"No quotes or newline."
+call @echo /n "No quotes or newline."
 echo.
-echo,LF line.!$CR!
+call @echo /u LF line.!$CR!
 echo "A long string "^
                "spread across "^
                "multiple lines."
@@ -170,7 +163,7 @@ echo Calling to extension @chhit. Enter a character ...
 set $spinner=\^|/-
 set $i=0
 :chloop
-echo;!$spinner:~%$i%,1!!$BS!
+call @echo /n // !$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@chhit%"
 if "!lastcode!" == "-1" call @sleep 100&goto chloop
@@ -183,7 +176,7 @@ echo code: !code! (zero padded: !code;05!)
 echo Calling to extension @kbhit. Press a key ...
 set $i=0
 :kbloop
-echo;!$spinner:~%$i%,1!!$BS!
+call @echo /n // !$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@kbhit%"
 if "!lastcode!" == "-1" call @sleep 100&goto kbloop
@@ -194,11 +187,11 @@ if %$row% geq %@height% echo.&echo.&echo.&set /a $row=%@height%-1
 echo Setting position to %$row% 40 and printing text
 set "@position=%$row% 40"
 echo Hello
-echo;Setting column to 45 and printing text
+call @echo /n Setting column to 45 and printing text
 set "@column=45"
 echo world^^!
 
-Echo;Current position: % %
+call @Echo /n Current position: % %
 Echo !@position! (row !@row!, column !@column!)
 Echo Current size: !@size! (!@height! rows, !@width! columns)
 
