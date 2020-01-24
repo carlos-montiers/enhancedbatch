@@ -1216,23 +1216,30 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 				if (end_quote > 0 && buffer[end_quote-1] == '\r') {
 					--end_quote;
 				}
-				if (end_quote > 1 &&
-					buffer[end_quote-2] == '"' && buffer[end_quote-1] == '^') {
-					end_quote -= 2;
-				} else {
+				end_quote -= 3;
+				if ((int) end_quote < 0 || memcmp(buffer+end_quote, "\"^+", 3) != 0) {
 					if (discarded != 0) {
-						memset(buffer, ' ', discarded);
+						end_quote += 3;
+						discarded += pos - end_quote + 1;
+						buffer += end_quote;
+						memset(buffer, '\0', discarded - 2);
+						buffer[discarded-2] = '\r';
+						buffer[discarded-1] = '\n';
 					}
 					break;
 				}
-				for (; pos < size; ++pos) {
+				while (++pos < size) {
 					if (buffer[pos] == ' ' || buffer[pos] == '\t')
 						continue;
 					if (buffer[pos] == '"') {
-						memmove(buffer+pos+1-end_quote, buffer, end_quote);
-						discarded += pos + 1 - end_quote;
-						break;
+						++pos;
+						memcpy(buffer + end_quote, buffer + pos, size - pos);
+						DWORD len = pos - end_quote;
+						discarded += len;
+						size -= len;
+						pos -= len + 1;
 					}
+					break;
 				}
 			}
 		}

@@ -121,8 +121,8 @@ echo Character EQ:!$EQ!.
 call @write /n "No quotes or newline."
 echo.
 call @write /u LF line.!$CR!
-echo "A long string "^
-               "spread across "^
+echo "A long string "^+
+               "spread across "^+
                "multiple lines."
 
 pause & call @clear
