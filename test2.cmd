@@ -13,7 +13,7 @@ fc >nul test2.out %$temp% || (
 
 set @batchfile=0
 set /a $lnum=%@batchline% + 5
->%$temp% call @echo /n "%~nx0:%$lnum%: "
+>%$temp% call @write /n "%~nx0:%$lnum%: "
 2>>%$temp% set /a
 set @batchfile=1
 set $temp2=@tempfile
@@ -22,10 +22,10 @@ fc >nul %$temp% %$temp2% && goto :passed
 :: It may have failed because language resources are missing.
 findstr >nul 0x2371 %$temp2% && echo Passed (1 skipped).&goto :out
 echo FAILED!
-call @echo /n "Expected: "
+call @write /n "Expected: "
 type %$temp%
 echo.
-call @echo /n "Actual:   "
+call @write /n "Actual:   "
 type %$temp2%
 echo.
 goto :out
@@ -58,7 +58,7 @@ set @dumpparse=false
 set @dumptokens=1
 set @dumptokens=
 set @unicode=1
-call @echo /n Unicode
+call @write /n Unicode
 set @unicode=0
 echo.
 goto :eof
@@ -67,7 +67,7 @@ goto :eof
 set @delayedexpansion=1
 set $j=1
 for do (
-  call @echo /n !$j!..
+  call @write /n !$j!..
   if !$j! == 5 (
     echo Stop
     set @next=
@@ -76,25 +76,25 @@ for do (
 )
 for (!$j! neq 1) do (
   set /a $j=!$j!-1
-  call @echo /n !$j!..
+  call @write /n !$j!..
 )
 echo Done
 for (not !$j! == 6) do (
-  call @echo /n !$j!..
+  call @write /n !$j!..
   set /a $j=!$j!+1
 )
 echo Done
 set @delayedexpansion=0
 for %%j do (
-  call @echo /n %%j..
+  call @write /n %%j..
   if %%j == 5 (
     echo Stop
     set @next=
   )
 )
-for %%j 10 do call @echo /n %%j..
+for %%j 10 do call @write /n %%j..
 echo Done
-for %%j -10 do call @echo /n %%j..
+for %%j -10 do call @write /n %%j..
 echo Done
 goto :eof
 

@@ -13,13 +13,13 @@ If Not Defined @enhancedbatch (
 :: space to ensure the entire window will be redrawn.
 call @clear /c %$NBSP%
 
-call @echo /c /p8 16 /af0 + /c48 +
+call @write /c /p8 16 /af0 + /c48 +
 
 :: 10 will redraw the screen between the above and below characters, so having
 :: the below after the first set of @TEXT statements will erase some of that.
-call @echo /c /p12 24 /af0 + /c56 +
+call @write /c /p12 24 /af0 + /c56 +
 
-call @echo /c /p18 35 /af0 +
+call @write /c /p18 35 /af0 +
 
 :: 10 needs a bit of a delay to refresh the screen.
 call @sleep 40

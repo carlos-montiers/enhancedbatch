@@ -93,7 +93,7 @@ DWORD GetArgCount(LPWSTR buffer, DWORD size);
 DWORD GetArgs(DWORD first, DWORD last, LPWSTR buffer, DWORD size);
 
 int CallClear(int argc, LPCWSTR argv[]);
-int CallEcho(int argc, LPCWSTR argv[]);
+int CallWrite(int argc, LPCWSTR argv[]);
 
 BOOL SetUnicode(int argc, LPCWSTR argv[]);
 BOOL SetDelayedExpansion(int argc, LPCWSTR argv[]);

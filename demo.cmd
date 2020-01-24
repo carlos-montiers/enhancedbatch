@@ -35,7 +35,7 @@ set $spinner3=-
 set $i=0
 echo Playing with for infinite
 for %%j in (:*) do (
-  call @echo /n "j = %%j press a key for stop !$spinner$i!!$CR!"
+  call @write /n "j = %%j press a key for stop !$spinner$i!!$CR!"
   set /a $i=(!$i!+1^)^&3
   call @kbhit
   if !errorlevel! neq -1 set @next=
@@ -118,9 +118,9 @@ echo Character SEMI:!$SEMI!.
 echo Character COMMA:!$COMMA!.
 echo Character EQ:!$EQ!.
 
-call @echo /n "No quotes or newline."
+call @write /n "No quotes or newline."
 echo.
-call @echo /u LF line.!$CR!
+call @write /u LF line.!$CR!
 echo "A long string "^
                "spread across "^
                "multiple lines."
@@ -163,7 +163,7 @@ echo Calling to extension @chhit. Enter a character ...
 set $spinner=\^|/-
 set $i=0
 :chloop
-call @echo /n // !$spinner:~%$i%,1!!$BS!
+call @write /n // !$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@chhit%"
 if "!lastcode!" == "-1" call @sleep 100&goto chloop
@@ -176,7 +176,7 @@ echo code: !code! (zero padded: !code;05!)
 echo Calling to extension @kbhit. Press a key ...
 set $i=0
 :kbloop
-call @echo /n // !$spinner:~%$i%,1!!$BS!
+call @write /n // !$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@kbhit%"
 if "!lastcode!" == "-1" call @sleep 100&goto kbloop
@@ -187,11 +187,11 @@ if %$row% geq %@height% echo.&echo.&echo.&set /a $row=%@height%-1
 echo Setting position to %$row% 40 and printing text
 set "@position=%$row% 40"
 echo Hello
-call @echo /n Setting column to 45 and printing text
+call @write /n Setting column to 45 and printing text
 set "@column=45"
 echo world^^!
 
-call @Echo /n Current position: % %
+call @write /n Current position: % %
 Echo !@position! (row !@row!, column !@column!)
 Echo Current size: !@size! (!@height! rows, !@width! columns)
 

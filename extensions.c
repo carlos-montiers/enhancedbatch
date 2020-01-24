@@ -979,18 +979,18 @@ int CallClear(int argc, LPCWSTR argv[])
 }
 
 
-struct sEchoOptions {
+struct sWriteOptions {
 	BOOL vertical;
 	BOOL console;
 	BOOL escapes;
 	WCHAR esc_ch;
 };
 
-static void doEcho(LPCWSTR text, const struct sEchoOptions *options);
+static void doWrite(LPCWSTR text, const struct sWriteOptions *options);
 
-int CallEcho(int argc, LPCWSTR argv[])
+int CallWrite(int argc, LPCWSTR argv[])
 {
-	struct sEchoOptions opts = {
+	struct sWriteOptions opts = {
 		.vertical = FALSE,
 		.console = FALSE,
 		.escapes = FALSE,
@@ -1021,9 +1021,9 @@ int CallEcho(int argc, LPCWSTR argv[])
 	for (int i = 0; i < argc; ++i) {
 		if (opts_done || *argv[i] != L'/') {
 			if (space) {
-				doEcho(L" ", &opts);
+				doWrite(L" ", &opts);
 			}
-			doEcho(argv[i], &opts);
+			doWrite(argv[i], &opts);
 			space = TRUE;
 		} else {
 			space = FALSE;
@@ -1111,7 +1111,7 @@ int CallEcho(int argc, LPCWSTR argv[])
 	return EXIT_SUCCESS;
 }
 
-static void doEcho(LPCWSTR text, const struct sEchoOptions *options)
+static void doWrite(LPCWSTR text, const struct sWriteOptions *options)
 {
 	DWORD dummy;
 

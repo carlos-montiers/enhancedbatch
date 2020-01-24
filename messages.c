@@ -126,7 +126,6 @@ const WCHAR DumpTokensBriefStr[]		= L"Display token processing";
 const WCHAR NextBriefStr[]				= L"Set next FOR range value";
 
 const WCHAR ClearBriefStr[] 			= L"Clear a window";
-const WCHAR EchoBriefStr[]				= L"Display a message";
 const WCHAR GetkbBriefStr[] 			= L"Wait for a key";
 const WCHAR HelpBriefStr[]				= L"This list";
 const WCHAR ImageBriefStr[] 			= L"Draw an image";
@@ -138,6 +137,7 @@ const WCHAR TextBriefStr[]				= L"Draw a message";
 const WCHAR TimerBriefStr[] 			= L"Millisecond timer";
 const WCHAR TimerHiBriefStr[]			= L"Microsecond timer";
 const WCHAR UnloadBriefStr[]			= L"Remove Enhanced Batch";
+const WCHAR WriteBriefStr[] 			= L"Display a message";
 
 const WCHAR AttrHelpStr[] =
 	L"Get or set the console attributes.\r\n"
@@ -557,11 +557,11 @@ const WCHAR ClearHelpStr[] =
 	L"become the top line of a new window."
 ;
 
-const WCHAR EchoHelpStr[] =
+const WCHAR WriteHelpStr[] =
 	L"Display a message.\r\n"
 	L"\r\n"
-	L"CALL @ECHO [/A[color]] [/B[color]] [/C] [/Ccolumn] [/E[c]] [/F[color]] [/L]\r\n"
-	L"           [/N] [/Prow column] [/Rrow] [/U] [/V] [//] message ...\r\n"
+	L"CALL @WRITE [/A[color]] [/B[color]] [/C] [/Ccolumn] [/E[c]] [/F[color]] [/L]\r\n"
+	L"            [/N] [/Prow column] [/Rrow] [/U] [/V] [//] message ...\r\n"
 	L"\r\n"
 	L"  /A        set background and foreground colors\r\n"
 	L"  /B        set background color\r\n"

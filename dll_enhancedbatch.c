@@ -210,7 +210,6 @@ const struct sExt setExtensionList[] = {
 
 const struct sExt callExtensionList[] = {
 	{ L"@clear",   ~0, CallClear, HELPSTR(Clear) },
-	{ L"@echo",    ~0, CallEcho, HELPSTR(Echo) },
 	{ L"@getkb",	0, CallGetkb, HELPSTR(Getkb) },
 	{ L"@help",    ~0, CallHelp, HELPSTR(Help) },
 	{ L"@image",   ~1, CallImage, HELPSTR(Image) },
@@ -222,6 +221,7 @@ const struct sExt callExtensionList[] = {
 	{ L"@timer",	0, CallTimer, HELPSTR(Timer) },
 	{ L"@timerhi",	0, CallTimerHi, HELPSTR(TimerHi) },
 	{ L"@unload",	0, CallUnload, HELPSTR(Unload) },
+	{ L"@write",   ~0, CallWrite, HELPSTR(Write) },
 };
 
 void setVar(LPCWSTR var, LPCWSTR val)
