@@ -1027,34 +1027,12 @@ int CallWrite(int argc, LPCWSTR argv[])
 			space = TRUE;
 		} else {
 			space = FALSE;
-			if (WCSIBEG(argv[i], L"/c")) {
-				argv[i] += 2;
-				if (*argv[i] == L'\0') {
-					console ^= TRUE;
-					if (console) {
-						opts.console = haveOutputHandle();
-					} else {
-						opts.console = FALSE;
-					}
+			if (WCSIEQ(argv[i], L"/con")) {
+				console ^= TRUE;
+				if (console) {
+					opts.console = haveOutputHandle();
 				} else {
-					getOrg();
-					ending = NULL;
-					SetColumn(1, argv+i);
-				}
-			} else if (WCSIBEG(argv[i], L"/r")) {
-				argv[i] += 2;
-				if (*argv[i] != L'\0') {
-					getOrg();
-					ending = NULL;
-					SetRow(1, argv+i);
-				}
-			} else if (WCSIBEG(argv[i], L"/p")) {
-				argv[i] += 2;
-				if (*argv[i] != L'\0' && i+1 < argc) {
-					getOrg();
-					ending = NULL;
-					SetPosition(2, argv+i);
-					++i;
+					opts.console = FALSE;
 				}
 			} else if (WCSIBEG(argv[i], L"/f")) {
 				getOrg();
@@ -1073,9 +1051,11 @@ int CallWrite(int argc, LPCWSTR argv[])
 					cmd_printf(L"%s\r\n", EscapeHelpStr);
 					return EXIT_SUCCESS;
 				}
-				opts.escapes = TRUE;
 				if (argv[i][2] != L'\0' && !iswalnum(argv[i][2])) {
 					opts.esc_ch = argv[i][2];
+					opts.escapes = TRUE;
+				} else {
+					opts.escapes ^= TRUE;
 				}
 			} else if (WCSIEQ(argv[i], L"/l")) {
 				getOrg();
@@ -1090,6 +1070,32 @@ int CallWrite(int argc, LPCWSTR argv[])
 				opts.vertical ^= TRUE;
 			} else if (WCSEQ(argv[i], L"//")) {
 				opts_done = TRUE;
+			} else {
+				if (i == argc-1) {
+					return EXIT_FAILURE;
+				}
+				if (WCSIEQ(argv[i], L"/c")) {
+					++i;
+					getOrg();
+					ending = NULL;
+					SetColumn(1, argv+i);
+				} else if (WCSIEQ(argv[i], L"/r")) {
+					++i;
+					getOrg();
+					ending = NULL;
+					SetRow(1, argv+i);
+				} else {
+					if (i >= argc-2) {
+						return EXIT_FAILURE;
+					}
+					if (WCSIEQ(argv[i], L"/p")) {
+						++i;
+						getOrg();
+						ending = NULL;
+						SetPosition(2, argv+i);
+						++i;
+					}
+				}
 			}
 		}
 	}
