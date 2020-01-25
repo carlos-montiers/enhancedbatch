@@ -16,41 +16,11 @@ nav_order: 6
 
 ---
 
-Enhanced Batch add features to the echo command.
+Enhanced Batch add a feature to the echo command.
 
-## Not use options
-You can explicitly disable the echo options for take all parameters as text
-```
-set "@echooptions=no"
-echo
-echo /?
-```
-
-## Echo without new line
-Use the `;` character as separator of the echo command for not print a new line at the end
-```
-echo;single
-echo; line
-single line
-```
-
-## Echo ignoring quotes
-Use the `~` character as separator of the echo command for ignore initial and end quote character of the text.
-```
-echo~"trust, but verify"
-trust, but verify
-```
-
-## Echo ignoring quotes without new line
-Use `;~` string as separator of the echo command for ignore initial and end quote and not print a new line at the end
-```
-echo;~"dino"
-echo;~"saur"
-dinosaur
-```
-
-## String Spread
+## String Continuation
 You can echo a long string using multiple lines.
+Note: this feature only works using batch files and not in the command line.
 ```
 echo "A long string "^
                "spread across "^
