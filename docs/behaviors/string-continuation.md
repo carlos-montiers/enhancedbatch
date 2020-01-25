@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Echo Features
+title: String Continuation
 parent: Behaviors
 nav_order: 6
 ---
 
-# Echo Features
+# String Continuation
 {: .no_toc }
 
 ## Table of contents
@@ -16,14 +16,15 @@ nav_order: 6
 
 ---
 
-Enhanced Batch add a feature to the echo command.
+Enhanced Batch provides you a enhanced form of line continuation.
 
-## String Continuation
-You can echo a long string using multiple lines.
 Note: this feature only works using batch files and not in the command line.
+
+For example, you can echo a long string using multiple lines.
+
 ```
-echo "A long string "^
-               "spread across "^
+echo "A long string "^+
+               "spread across "^+
                "multiple lines."
 "A long string spread across multiple lines."
 ```
