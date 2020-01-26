@@ -226,7 +226,7 @@ void hookCtrlCAborts(char aborts);
 #define pfDumpParse 		cmd_addrs[10]
 #define pForMkstr			cmd_addrs[11]	// storage for FOR wildcard matches
 #define pForResize			cmd_addrs[12]	// prevent resizing it
-#define pCheckHelp1 		cmd_addrs[13]
+#define pCheckHelpfirstarg	cmd_addrs[13]
 #define pcmd_printf 		cmd_addrs[14]
 #define pCtrlCAborts		cmd_addrs[15]
 #define pFreeStack			cmd_addrs[16]

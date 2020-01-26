@@ -1004,10 +1004,10 @@ void hookCmd(void)
 	memcpy(oldGotoEof, pGotoEof, 6);
 
 	// Only check the first argument for help, so "call @ext /?" works.
-	if (*pCheckHelp1 == 0x0F) {
-		WriteMemory(pCheckHelp1, "\x90\xE9", 2);
+	if (*pCheckHelpfirstarg == 0x0F) {
+		WriteMemory(pCheckHelpfirstarg, "\x90\xE9", 2);
 	} else {
-		WriteByte(pCheckHelp1, 0xEB);
+		WriteByte(pCheckHelpfirstarg, 0xEB);
 	}
 
 #ifdef _WIN64
@@ -1349,10 +1349,10 @@ void unhookCmd(void)
 	WriteMemory(peCall, &eCall, sizeof(eCall));
 	WriteMemory(pPutStdErrMsg, &oldPutMsg, 4);
 	WriteMemory(pLexText, oldLexText, 5);
-	if (*pCheckHelp1 == 0x90) {
-		WriteMemory(pCheckHelp1, "\x0F\x84", 2);
+	if (*pCheckHelpfirstarg == 0x90) {
+		WriteMemory(pCheckHelpfirstarg, "\x0F\x84", 2);
 	} else {
-		WriteByte(pCheckHelp1, 0x74);
+		WriteByte(pCheckHelpfirstarg, 0x74);
 	}
 	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
 	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);
