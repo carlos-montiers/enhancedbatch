@@ -25,6 +25,7 @@ if not exist %$temp% echo Failed: temporary file doesn't exist.&goto :eof
 ::copy %$temp% test1.out
 fc >nul /b test1.out %$temp% && (
   echo Passed.
+  :: Silent test removing colon comments (this would normally error).
 ) || (
   echo FAILED^^!
   fc /n test1.out %$temp%

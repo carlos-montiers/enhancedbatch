@@ -1211,7 +1211,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 	// line starts with '"' (ignoring space and tab) join the lines together by
 	// removing the quotes and everything between.	Fill the discarded space
 	// with CR so the file offset of the next line remains valid.
-	if (lpBuffer == AnsiBuf && ret && *lpNumberOfBytesRead > 4) {
+	if (lpBuffer == AnsiBuf && ret) {
 		DWORD pos, size = *lpNumberOfBytesRead, discarded = 0;
 		DWORD end_quote;
 		LPSTR buffer = lpBuffer;
@@ -1226,15 +1226,15 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 					if (discarded != 0) {
 						end_quote += 3;
 						discarded += pos - end_quote + 1;
-						buffer += end_quote;
-						memset(buffer, '\r', discarded - 1);
-						buffer[discarded-1] = '\n';
+						memset(buffer + end_quote, '\r', discarded - 1);
+						buffer[end_quote+discarded-1] = '\n';
 					}
 					break;
 				}
 				while (++pos < size) {
-					if (buffer[pos] == ' ' || buffer[pos] == '\t')
+					if (buffer[pos] == ' ' || buffer[pos] == '\t') {
 						continue;
+					}
 					if (buffer[pos] == '"') {
 						++pos;
 						memcpy(buffer + end_quote, buffer + pos, size - pos);
@@ -1246,6 +1246,26 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 					break;
 				}
 			}
+		}
+
+		// Treat a line starting with '::' (igoring space and tab) as a real
+		// comment and blank it out (unless it ends with a caret).
+		for (pos = 0; pos < size; ++pos) {
+			if (buffer[pos] == ' ' || buffer[pos] == '\t') {
+				continue;
+			}
+			if (buffer[pos] == ':' && buffer[pos+1] == ':') {
+				LPSTR end = memchr(buffer + pos, '\n', size - pos);
+				if (end != NULL) {
+					if (end[-1] == '\r') {
+						--end;
+					}
+					if (end[-1] != '^') {
+						memset(buffer + pos, '\r', end - (buffer + pos));
+					}
+				}
+			}
+			break;
 		}
 	}
 
