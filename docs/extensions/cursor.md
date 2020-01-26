@@ -4,7 +4,7 @@ title: Cursor
 parent: Extensions
 ---
 
-# Opacity
+# Cursor
 {: .no_toc }
 
 ## Table of contents
@@ -27,7 +27,7 @@ Parameters: Number between 0 and 100.
 set @cursor=50
 ```
 
-## get @opacity
+## get @cursor
 Get the console cursor size.
 
 ```
