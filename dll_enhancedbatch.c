@@ -1185,6 +1185,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 	ret = ReadFile(hFile, lpBuffer, nNumberOfBytesToRead,
 				   lpNumberOfBytesRead, lpOverlapped);
 
+	// Prevent splitting a UTF-8 sequence.
 	if (ret && utf8file) {
 		BYTE lead = 0x80, mask = 0xC0, *utf8 = lpBuffer;
 		DWORD size = *lpNumberOfBytesRead;
@@ -1206,6 +1207,10 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 		}
 	}
 
+	// Check for string continuation: if this line ends with '"^+' and the next
+	// line starts with '"' (ignoring space and tab) join the lines together by
+	// removing the quotes and everything between.	Fill the discarded space
+	// with CR so the file offset of the next line remains valid.
 	if (lpBuffer == AnsiBuf && ret && *lpNumberOfBytesRead > 4) {
 		DWORD pos, size = *lpNumberOfBytesRead, discarded = 0;
 		DWORD end_quote;
