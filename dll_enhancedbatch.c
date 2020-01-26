@@ -1222,8 +1222,7 @@ MyReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 						end_quote += 3;
 						discarded += pos - end_quote + 1;
 						buffer += end_quote;
-						memset(buffer, '\0', discarded - 2);
-						buffer[discarded-2] = '\r';
+						memset(buffer, '\r', discarded - 1);
 						buffer[discarded-1] = '\n';
 					}
 					break;
