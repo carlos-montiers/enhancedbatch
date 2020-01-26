@@ -70,6 +70,7 @@ const WCHAR DayNameBriefStr[]			= L"Day of week (name)";
 const WCHAR DayOfWeekBriefStr[] 		= L"Day of week (number)";
 const WCHAR DayShortBriefStr[]			= L"Day of week (short name)";
 const WCHAR DecSepBriefStr[]			= L"Decimal separator";
+const WCHAR EchoBriefStr[]				= L"Echo status";
 const WCHAR DelayedExpansionBriefStr[]	= L"Delayed expansion behavior";
 const WCHAR EnglishBriefStr[]			= L"Use English names";
 const WCHAR EnhancedBatchBriefStr[] 	= L"Enhanced Batch feature number";
@@ -256,6 +257,10 @@ const WCHAR DecSepHelpStr[] =
 
 const WCHAR DelayedExpansionHelpStr[] =
 	L"Get or set delayed expansion."
+;
+
+const WCHAR EchoHelpStr[] =
+	L"Get or set the echo status."
 ;
 
 const WCHAR EnglishHelpStr[] =

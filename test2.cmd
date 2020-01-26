@@ -36,6 +36,13 @@ del %$temp% %$temp2%
 goto :eof
 
 :test
+set $prompt=%PROMPT%
+prompt $G
+set @echo=on
+echo Echo on status: %@echo%
+set @echo=off
+echo Echo off status: %@echo%
+prompt %$prompt%
 set @extensions=no
 echo Extensions off, colon part of variable: %OS:_= %
 echo Tilde expansion: %$0;~nx%.

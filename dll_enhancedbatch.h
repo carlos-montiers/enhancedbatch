@@ -163,7 +163,7 @@ extern const WCHAR
 	DEFHELPSTR(ConsoleCursor), DEFHELPSTR(Date), DEFHELPSTR(DateTime),
 	DEFHELPSTR(DateTimems), DEFHELPSTR(Day), DEFHELPSTR(DayName),
 	DEFHELPSTR(DayOfWeek), DEFHELPSTR(DayShort), DEFHELPSTR(DecSep),
-	DEFHELPSTR(DelayedExpansion),
+	DEFHELPSTR(DelayedExpansion), DEFHELPSTR(Echo),
 	DEFHELPSTR(English), DEFHELPSTR(EnhancedBatch), DEFHELPSTR(Extensions),
 	DEFHELPSTR(Foreground), DEFHELPSTR(ForLine), DEFHELPSTR(ForLines),
 	DEFHELPSTR(Getchar), DEFHELPSTR(Getkey), DEFHELPSTR(Height),
@@ -226,30 +226,31 @@ void hookCtrlCAborts(char aborts);
 #define pfDumpParse 		cmd_addrs[10]
 #define pForMkstr			cmd_addrs[11]	// storage for FOR wildcard matches
 #define pForResize			cmd_addrs[12]	// prevent resizing it
-#define pCheckHelpfirstarg	cmd_addrs[13]
-#define pcmd_printf 		cmd_addrs[14]
-#define pCtrlCAborts		cmd_addrs[15]
-#define pFreeStack			cmd_addrs[16]
-#define pDCount 			((LPDWORD) cmd_addrs[17])
-#define pSFWorkmkstr		cmd_addrs[18]
-#define pSFWorkresize		cmd_addrs[19]
-#define pSFWorksaved		((char *) cmd_addrs[20])
-#define pGotoFlag			cmd_addrs[21]
-#define pForFbegin			cmd_addrs[22]
-#define pForFend			cmd_addrs[23]
-#define pParseFortoken		((int *) cmd_addrs[24])
-#define pLexBufPtr			((LPWSTR *) cmd_addrs[25])
-#define pLexBufferend		((LPWSTR) cmd_addrs[26])
-#define pForFoptions		((int *) cmd_addrs[27])
-#define pTokLen 			((int *) cmd_addrs[28])
-#define pGotoEof			cmd_addrs[29]
-#define pGotopos			cmd_addrs[30]
-#define pGotostart			cmd_addrs[31]
-#define pCallWorkresize 	((int *) cmd_addrs[32])
+#define pEchoFlag			cmd_addrs[13]
+#define pCheckHelpfirstarg	cmd_addrs[14]
+#define pcmd_printf 		cmd_addrs[15]
+#define pCtrlCAborts		cmd_addrs[16]
+#define pFreeStack			cmd_addrs[17]
+#define pDCount 			((LPDWORD) cmd_addrs[18])
+#define pSFWorkmkstr		cmd_addrs[19]
+#define pSFWorkresize		cmd_addrs[20]
+#define pSFWorksaved		((char *) cmd_addrs[21])
+#define pGotoFlag			cmd_addrs[22]
+#define pForFbegin			cmd_addrs[23]
+#define pForFend			cmd_addrs[24]
+#define pParseFortoken		((int *) cmd_addrs[25])
+#define pLexBufPtr			((LPWSTR *) cmd_addrs[26])
+#define pLexBufferend		((LPWSTR) cmd_addrs[27])
+#define pForFoptions		((int *) cmd_addrs[28])
+#define pTokLen 			((int *) cmd_addrs[29])
+#define pGotoEof			cmd_addrs[30]
+#define pGotopos			cmd_addrs[31]
+#define pGotostart			cmd_addrs[32]
+#define pCallWorkresize 	((int *) cmd_addrs[33])
 
 #ifdef _WIN64
-#define OFFSETS 33
-#else
-#define pSFWorkpassed		((char *) cmd_addrs[33])
 #define OFFSETS 34
+#else
+#define pSFWorkpassed		((char *) cmd_addrs[34])
+#define OFFSETS 35
 #endif

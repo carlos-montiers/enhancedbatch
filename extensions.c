@@ -1203,6 +1203,16 @@ static void doWrite(LPCWSTR text, const struct sWriteOptions *options)
 	}
 }
 
+BOOL SetEcho(int argc, LPCWSTR argv[])
+{
+	return setBoolean(pEchoFlag, *argv);
+}
+
+DWORD GetEcho(LPWSTR buffer, DWORD size)
+{
+	return toString(*pEchoFlag, buffer, size);
+}
+
 BOOL SetUnicode(int argc, LPCWSTR argv[])
 {
 	return setBoolean(pfOutputUnicode, *argv);
