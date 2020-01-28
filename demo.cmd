@@ -37,8 +37,7 @@ echo Playing with for infinite
 for %%j in (:*) do (
   call @write /n "j = %%j press a key for stop !$spinner$i!!$CR!"
   set /a $i=(!$i!+1^)^&3
-  call @kbhit
-  if !errorlevel! neq -1 set @next=
+  call @checkkey && set @next=
 )
 echo !$LF!key pressed.
 

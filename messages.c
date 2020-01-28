@@ -126,6 +126,7 @@ const WCHAR DumpParseBriefStr[] 		= L"Display parser processing";
 const WCHAR DumpTokensBriefStr[]		= L"Display token processing";
 const WCHAR NextBriefStr[]				= L"Set next FOR range value";
 
+const WCHAR CheckkeyBriefStr[] 			= L"Check is a key was pressed";
 const WCHAR ClearBriefStr[] 			= L"Clear a window";
 const WCHAR GetkbBriefStr[] 			= L"Wait for a key";
 const WCHAR HelpBriefStr[]				= L"This list";
@@ -547,6 +548,14 @@ const WCHAR NextHelpStr[] =
 	L"The value takes effect on the next iteration."
 ;
 
+
+const WCHAR CheckkeyHelpStr[] =
+	L"Check if a key was pressed.\r\n"
+	L"\r\n"
+	L"CALL @CHECKKEY\r\n"
+	L"\r\n"
+	L"Errorlevel will be 0 if a key was pressed, else 1."
+;
 
 const WCHAR ClearHelpStr[] =
 	L"Clear a window.\r\n"

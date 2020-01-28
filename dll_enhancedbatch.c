@@ -211,12 +211,12 @@ const struct sExt setExtensionList[] = {
 };
 
 const struct sExt callExtensionList[] = {
+	{ L"@checkkey",	0, CallCheckkey, HELPSTR(Checkkey) },
 	{ L"@clear",   ~0, CallClear, HELPSTR(Clear) },
 	{ L"@getkb",	0, CallGetkb, HELPSTR(Getkb) },
 	{ L"@help",    ~0, CallHelp, HELPSTR(Help) },
 	{ L"@image",   ~1, CallImage, HELPSTR(Image) },
 	{ L"@img",	   ~1, CallImg, HELPSTR(Img) },
-	{ L"@kbhit",	0, CallKbhit, HELPSTR(Kbhit) },
 	{ L"@say",	   ~1, CallSay, HELPSTR(Say) },
 	{ L"@sleep",	1, CallSleep, HELPSTR(Sleep) },
 	{ L"@text",    ~1, CallText, HELPSTR(Text) },
