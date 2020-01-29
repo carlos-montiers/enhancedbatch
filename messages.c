@@ -126,13 +126,12 @@ const WCHAR DumpParseBriefStr[] 		= L"Display parser processing";
 const WCHAR DumpTokensBriefStr[]		= L"Display token processing";
 const WCHAR NextBriefStr[]				= L"Set next FOR range value";
 
-const WCHAR CheckkeyBriefStr[] 			= L"Check is a key was pressed";
+const WCHAR CheckkeyBriefStr[]			= L"Check if any key was pressed";
 const WCHAR ClearBriefStr[] 			= L"Clear a window";
 const WCHAR GetkbBriefStr[] 			= L"Wait for a key";
 const WCHAR HelpBriefStr[]				= L"This list";
 const WCHAR ImageBriefStr[] 			= L"Draw an image";
 const WCHAR ImgBriefStr[]				= L"Display an image";
-const WCHAR KbhitBriefStr[] 			= L"Test for a key";
 const WCHAR SayBriefStr[]				= L"Speak a message";
 const WCHAR SleepBriefStr[] 			= L"Suspend execution";
 const WCHAR TextBriefStr[]				= L"Draw a message";
@@ -550,7 +549,7 @@ const WCHAR NextHelpStr[] =
 
 
 const WCHAR CheckkeyHelpStr[] =
-	L"Check if a key was pressed.\r\n"
+	L"Check if any key was pressed.\r\n"
 	L"\r\n"
 	L"CALL @CHECKKEY\r\n"
 	L"\r\n"
@@ -727,14 +726,6 @@ const WCHAR ImgHelpStr[] =
 	L"Copy will preserve what the image will replace; subsequent images with the same\r\n"
 	L"position and file name will use the copy as their background.  Due to console\r\n"
 	L"limitations RGB colors are mapped back to system colors."
-;
-
-const WCHAR KbhitHelpStr[] =
-	L"Test if a key has been pressed.\r\n"
-	L"\r\n"
-	L"CALL @KBHIT\r\n"
-	L"\r\n"
-	L"Errorlevel will contain the code of the key pressed, 0 if none."
 ;
 
 const WCHAR SayHelpStr[] =
