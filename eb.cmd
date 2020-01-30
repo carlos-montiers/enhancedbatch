@@ -15,7 +15,7 @@ if "%~1"=="load" (
   2>nul goto&rundll32.exe "%~dp0enhancedbatch_%processor_architecture%.dll" load
 )
 
-:: Unload from the command line (DON'T call from a batch).
+:: Unload from the command line (or a batch).
 if "%~1"=="unload" (
   if not defined @enhancedbatch goto :eof
   :: Not really necessary, but it's nice symmetry.

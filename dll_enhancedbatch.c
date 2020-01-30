@@ -1416,6 +1416,7 @@ BOOL Next(int argc, LPCWSTR argv[])
 DWORD WINAPI
 FreeLibraryThread(LPVOID param)
 {
+	Sleep(10);	// give CALLs a chance to return
 	FreeLibraryAndExitThread(hDllInstance, 0);
 	return 0;
 }
