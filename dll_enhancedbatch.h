@@ -209,49 +209,57 @@ void hookCmd(void);
 void unhookCmd(void);
 void hookCtrlCAborts(char aborts);
 
-// The eol character is no longer modified, but still used to verify the version.
-//#define peol				cmd_addrs[0]			// expected first!
-#ifdef _WIN64
-#define pMSCmdVar			((fnMSCmdVar) cmd_addrs[1])
-#else
-#define pMSCmdVar			cmd_addrs[1]
+enum {
+	ieol, iMSCmdVar, iLexText, iTmpBuf, iPutStdErrMsg, iCurrentBatchFile,
+	ifOutputUnicode, ifDelayedExpansion, ifEnableExtensions, ifDumpTokens,
+	ifDumpParse, iForMkstr, iForResize, iEchoFlag, iCheckHelpfirstarg,
+	icmd_printf, iCtrlCAborts, iFreeStack, iDCount, iSFWorkmkstr,
+	iSFWorkresize, iSFWorksaved, iGotoFlag, iForFbegin, iForFend,
+	iParseFortoken, iLexBufPtr, iLexBufferend, iForFoptions, iTokLen,
+	iGotoEof, iGotopos, iGotostart, iCallWorkresize,
+#ifndef _WIN64
+	iSFWorkpassed,
 #endif
-#define pLexText			cmd_addrs[2]
-#define pTmpBuf 			((LPWSTR) cmd_addrs[3])
-#define pPutStdErrMsg		((int *) cmd_addrs[4])
-#define pCurrentBatchFile	((LPWSTR **) cmd_addrs[5])
-#define pfOutputUnicode 	cmd_addrs[6]
-#define pfDelayedExpansion	cmd_addrs[7]
-#define pfEnableExtensions	cmd_addrs[8]
-#define pfDumpTokens		cmd_addrs[9]
-#define pfDumpParse 		cmd_addrs[10]
-#define pForMkstr			cmd_addrs[11]	// storage for FOR wildcard matches
-#define pForResize			cmd_addrs[12]	// prevent resizing it
-#define pEchoFlag			cmd_addrs[13]
-#define pCheckHelpfirstarg	cmd_addrs[14]
-#define pcmd_printf 		cmd_addrs[15]
-#define pCtrlCAborts		cmd_addrs[16]
-#define pFreeStack			cmd_addrs[17]
-#define pDCount 			((LPDWORD) cmd_addrs[18])
-#define pSFWorkmkstr		cmd_addrs[19]
-#define pSFWorkresize		cmd_addrs[20]
-#define pSFWorksaved		((char *) cmd_addrs[21])
-#define pGotoFlag			cmd_addrs[22]
-#define pForFbegin			cmd_addrs[23]
-#define pForFend			cmd_addrs[24]
-#define pParseFortoken		((int *) cmd_addrs[25])
-#define pLexBufPtr			((LPWSTR *) cmd_addrs[26])
-#define pLexBufferend		((LPWSTR) cmd_addrs[27])
-#define pForFoptions		((int *) cmd_addrs[28])
-#define pTokLen 			((int *) cmd_addrs[29])
-#define pGotoEof			cmd_addrs[30]
-#define pGotopos			cmd_addrs[31]
-#define pGotostart			cmd_addrs[32]
-#define pCallWorkresize 	((int *) cmd_addrs[33])
+	OFFSETS
+};
 
+// The eol character is no longer modified, but still used to verify the version.
+//#define peol				cmd_addrs[ieol]			// expected first!
 #ifdef _WIN64
-#define OFFSETS 34
+#define pMSCmdVar			((fnMSCmdVar) cmd_addrs[iMSCmdVar])
 #else
-#define pSFWorkpassed		((char *) cmd_addrs[34])
-#define OFFSETS 35
+#define pMSCmdVar			cmd_addrs[iMSCmdVar]
+#define pSFWorkpassed		((char *) cmd_addrs[iSFWorkpassed])  // placed last
 #endif
+#define pLexText			cmd_addrs[iLexText]
+#define pTmpBuf 			((LPWSTR) cmd_addrs[iTmpBuf])
+#define pPutStdErrMsg		((int *) cmd_addrs[iPutStdErrMsg])
+#define pCurrentBatchFile	((LPWSTR **) cmd_addrs[iCurrentBatchFile])
+#define pfOutputUnicode 	cmd_addrs[ifOutputUnicode]
+#define pfDelayedExpansion	cmd_addrs[ifDelayedExpansion]
+#define pfEnableExtensions	cmd_addrs[ifEnableExtensions]
+#define pfDumpTokens		cmd_addrs[ifDumpTokens]
+#define pfDumpParse 		cmd_addrs[ifDumpParse]
+#define pForMkstr			cmd_addrs[iForMkstr]	// storage for FOR wildcard matches
+#define pForResize			cmd_addrs[iForResize]	// prevent resizing it
+#define pEchoFlag			cmd_addrs[iEchoFlag]
+#define pCheckHelpfirstarg	cmd_addrs[iCheckHelpfirstarg]
+#define pcmd_printf 		cmd_addrs[icmd_printf]
+#define pCtrlCAborts		cmd_addrs[iCtrlCAborts]
+#define pFreeStack			cmd_addrs[iFreeStack]
+#define pDCount 			((LPDWORD) cmd_addrs[iDCount])
+#define pSFWorkmkstr		cmd_addrs[iSFWorkmkstr]
+#define pSFWorkresize		cmd_addrs[iSFWorkresize]
+#define pSFWorksaved		((char *) cmd_addrs[iSFWorksaved])
+#define pGotoFlag			cmd_addrs[iGotoFlag]
+#define pForFbegin			cmd_addrs[iForFbegin]
+#define pForFend			cmd_addrs[iForFend]
+#define pParseFortoken		((int *) cmd_addrs[iParseFortoken])
+#define pLexBufPtr			((LPWSTR *) cmd_addrs[iLexBufPtr])
+#define pLexBufferend		((LPWSTR) cmd_addrs[iLexBufferend])
+#define pForFoptions		((int *) cmd_addrs[iForFoptions])
+#define pTokLen 			((int *) cmd_addrs[iTokLen])
+#define pGotoEof			cmd_addrs[iGotoEof]
+#define pGotopos			cmd_addrs[iGotopos]
+#define pGotostart			cmd_addrs[iGotostart]
+#define pCallWorkresize 	((int *) cmd_addrs[iCallWorkresize])
