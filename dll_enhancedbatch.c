@@ -820,6 +820,11 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 	BOOL ret = SetEnvironmentVariable(lpName, lpValue);
 
+	// XP fails if removing an undefined name, make it succeed.
+	if (!ret && lpValue == NULL && GetLastError() == ERROR_ENVVAR_NOT_FOUND) {
+		ret = TRUE;
+	}
+
 	if (name != NULL) {
 		free(name);
 	}
