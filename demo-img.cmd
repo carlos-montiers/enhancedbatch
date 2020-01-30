@@ -57,7 +57,7 @@ call @img %$options% /copy /n "%$imgfile%"
 if not defined $frames set $frames=%errorlevel%
 if %$frames%==1 (
   call @img %$options% "%$imgfile%"
-  call @getkb
+  call @waitkey
 ) else (
   set $f=0
   for (!@kbhit!==-1) do (

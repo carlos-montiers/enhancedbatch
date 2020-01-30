@@ -148,6 +148,7 @@ extern WCHAR sayBuffer[STRINGBUFFERMAX];
 
 
 extern const WCHAR ProgramNameStr[];
+extern const WCHAR CloseWindowStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
 extern const WCHAR EscapeHelpStr[];
@@ -184,11 +185,10 @@ extern const WCHAR
 	DEFHELPSTR(CodePage), DEFHELPSTR(DumpParse), DEFHELPSTR(DumpTokens),
 	DEFHELPSTR(Next),
 
-	DEFHELPSTR(Checkkey),
-	DEFHELPSTR(Clear), DEFHELPSTR(Getkb), DEFHELPSTR(Help),
+	DEFHELPSTR(Checkkey), DEFHELPSTR(Clear), DEFHELPSTR(Help),
 	DEFHELPSTR(Image), DEFHELPSTR(Img), DEFHELPSTR(Say),
 	DEFHELPSTR(Sleep), DEFHELPSTR(Text), DEFHELPSTR(Timer), DEFHELPSTR(TimerHi),
-	DEFHELPSTR(Unload), DEFHELPSTR(Write);
+	DEFHELPSTR(Unload), DEFHELPSTR(Waitkey), DEFHELPSTR(Write);
 
 
 int wsnprintf(LPWSTR buf, size_t size, LPCWSTR fmt, ...);

@@ -127,9 +127,45 @@ DWORD Kbhit(LPWSTR buffer, DWORD size)
 	}
 }
 
-int CallGetkb(int argc, LPCWSTR argv[])
+int CallWaitkey(int argc, LPCWSTR argv[])
 {
-	return getKeyCode();
+	BOOL flush = FALSE, close = FALSE;
+	for (int i = 0; i < argc; ++i) {
+		if (WCSIEQ(argv[i], L"/c")) {
+			close = flush = TRUE;
+		} else if (WCSIEQ(argv[i], L"/f")) {
+			flush = TRUE;
+		}
+	}
+	if (flush) {
+		while (_kbhit()) {
+			_getch();
+		}
+	}
+	if (close) {
+		if (!haveWindowHandle()) {
+			return 0;
+		}
+		// This is a trick from Stack Overflow to determine if this process is
+		// the one that started the console.  See:
+		//		https://stackoverflow.com/questions/8610489/distinguish-if-program-runs-by-clicking-on-the-icon-typing-its-name-in-the-cons
+		//		https://stackoverflow.com/questions/1482604/how-to-tell-if-a-delphi-app-owns-its-console
+		// XP and later could use GetConsoleProcessList, but we still support
+		// 2000, so I need this anyway and it's just as good.
+		DWORD pid;
+		GetWindowThreadProcessId(consoleHwnd, &pid);
+		if (pid != GetCurrentProcessId()) {
+			return 0;
+		}
+		WCHAR buf[4];
+		GetTransient(buf, 4);
+		if (*buf == L'0') {
+			return 0;
+		}
+		cmd_printf(CloseWindowStr);
+	}
+	getKeyCode();
+	return 0;
 }
 
 int CallCheckkey(int argc, LPCWSTR argv[])

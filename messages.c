@@ -31,6 +31,8 @@ typedef unsigned short WCHAR;
 // Not sure if this should be translated, but I'll put it here, anyway.
 const WCHAR ProgramNameStr[] = L"Enhanced Batch";
 
+const WCHAR CloseWindowStr[] = L"\r\nPress any key to close the window.";
+
 const WCHAR ParentErrStr[] = L"The parent process cannot be accessed.";
 
 const WCHAR ArchErrStr[] =
@@ -128,7 +130,6 @@ const WCHAR NextBriefStr[]				= L"Set next FOR range value";
 
 const WCHAR CheckkeyBriefStr[]			= L"Check if any key was pressed";
 const WCHAR ClearBriefStr[] 			= L"Clear a window";
-const WCHAR GetkbBriefStr[] 			= L"Wait for a key";
 const WCHAR HelpBriefStr[]				= L"This list";
 const WCHAR ImageBriefStr[] 			= L"Draw an image";
 const WCHAR ImgBriefStr[]				= L"Display an image";
@@ -138,6 +139,7 @@ const WCHAR TextBriefStr[]				= L"Draw a message";
 const WCHAR TimerBriefStr[] 			= L"Millisecond timer";
 const WCHAR TimerHiBriefStr[]			= L"Microsecond timer";
 const WCHAR UnloadBriefStr[]			= L"Remove Enhanced Batch";
+const WCHAR WaitkeyBriefStr[]			= L"Wait for any key";
 const WCHAR WriteBriefStr[] 			= L"Display a message";
 
 const WCHAR AttrHelpStr[] =
@@ -621,14 +623,6 @@ const WCHAR EscapeHelpStr[] =
 	L"ignored, preserving the escape character."
 ;
 
-const WCHAR GetkbHelpStr[] =
-	L"Wait for a key.\r\n"
-	L"\r\n"
-	L"CALL @GETKB\r\n"
-	L"\r\n"
-	L"Errorlevel will contain the code of the key pressed."
-;
-
 const WCHAR HelpHelpStr[] =
 	L"Display the extensions added by Enhanced Batch.\r\n"
 	L"\r\n"
@@ -819,4 +813,13 @@ const WCHAR UnloadHelpStr[] =
 	L"CALL @UNLOAD\r\n"
 	L"\r\n"
 	L"This happens automatically when the batch exits, so is not normally needed."
+;
+
+const WCHAR WaitkeyHelpStr[] =
+	L"Wait for any key to be pressed.\r\n"
+	L"\r\n"
+	L"CALL @WAITKEY [/C] [/F]\r\n"
+	L"\r\n"
+	L"  /C        only wait if the window would close (implies /F)\r\n"
+	L"  /F        flush all keys before waiting"
 ;
