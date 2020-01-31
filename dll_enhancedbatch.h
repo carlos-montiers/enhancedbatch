@@ -208,6 +208,7 @@ DWORD getBatchLine();
 void hookCmd(void);
 void unhookCmd(void);
 void hookCtrlCAborts(char aborts);
+DWORD getVar(LPCWSTR lpName);
 
 enum {
 	ieol, iMSCmdVar, iLexText, iTmpBuf, iPutStdErrMsg, iCurrentBatchFile,
@@ -216,7 +217,7 @@ enum {
 	icmd_printf, iCtrlCAborts, iFreeStack, iDCount, iSFWorkmkstr,
 	iSFWorkresize, iSFWorksaved, iGotoFlag, iForFbegin, iForFend,
 	iParseFortoken, iLexBufPtr, iLexBufferend, iForFoptions, iTokLen,
-	iGotoEof, iGotopos, iGotostart, iCallWorkresize,
+	iGotoEof, iGotopos, iGotostart, iCallWorkresize, iMyGetEnvVarPtr,
 #ifndef _WIN64
 	iSFWorkpassed,
 #endif
@@ -263,3 +264,4 @@ enum {
 #define pGotopos			cmd_addrs[iGotopos]
 #define pGotostart			cmd_addrs[iGotostart]
 #define pCallWorkresize 	((int *) cmd_addrs[iCallWorkresize])
+#define pMyGetEnvVarPtr 	cmd_addrs[iMyGetEnvVarPtr]

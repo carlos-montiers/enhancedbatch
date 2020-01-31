@@ -58,7 +58,9 @@ DWORD SFWork_esp, ParseForF_ret;
 BYTE SFWork_stdcall;
 int SFWork_saved, SFWork_passed, SFWork_first, Goto_pos, Goto_start;
 DWORD ForFbegin_org, ParseFor_org, ParseForF_org, CallWorkresize_org;
+DWORD MyGetEnvVarPtr_org;
 #endif
+DWORD MyGetEnvVarPtr_size;
 
 int oldPutMsg, oldParseFor, oldParseForF, oldCallWorkresize;
 BYTE oldLexText[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
@@ -409,6 +411,17 @@ void __fastcall CallWorkresize_hook(LPWSTR line)
 }
 
 
+LPCWSTR __fastcall MyGetEnvVarPtr_hook(LPWSTR var)
+{
+	if (var != NULL && (*var == L'$' || *var == L'@')) {
+		if (getVar(var) != 0) {
+			return stringBuffer;
+		}
+	}
+	return NULL;
+}
+
+
 #ifndef _WIN64
 int __stdcall stdPutStdErrMsg(UINT a, int b, UINT c, va_list *d)
 {
@@ -604,6 +617,40 @@ PROC(CallWorkresize_fastcall62_hook)
 	"jmp *_CallWorkresize_org\n"
 ENDPROC
 
+void MyGetEnvVarPtr_fastcall_hook(), MyGetEnvVarPtr_fastcall62_hook();
+void MyGetEnvVarPtrOrg();
+
+PROC(MyGetEnvVarPtr_stdcall_hook)
+	"mov 4(%esp),%ecx\n"
+	"call _MyGetEnvVarPtr_hook\n"
+	"test %eax,%eax\n"
+	"jz 1f\n"
+	"ret $4\n"
+
+	"_MyGetEnvVarPtr_fastcall_hook:\n"
+	"push %ecx\n"
+	"call _MyGetEnvVarPtr_hook\n"
+	"pop %ecx\n"
+	"test %eax,%eax\n"
+	"jz 1f\n"
+	"2:\n"
+	"ret\n"
+
+	"_MyGetEnvVarPtr_fastcall62_hook:\n"
+	"push %eax\n"
+	"mov %eax,%ecx\n"
+	"call _MyGetEnvVarPtr_hook\n"
+	"pop %ecx\n"
+	"test %eax,%eax\n"
+	"jnz 2b\n"
+	"mov %ecx,%eax\n"
+
+	"1:\n"
+	"_MyGetEnvVarPtrOrg:\n"
+	".fill 7,1,0x90\n"              // original code patched in
+	"jmp *_MyGetEnvVarPtr_org\n"
+ENDPROC
+
 #else
 
 #define PROC(func) \
@@ -748,6 +795,9 @@ ENDPROC
 #define rGotoEof			(redirect + redirect_data[14])
 #define rCallWorkresize 	(redirect + redirect_data[15])
 #define rCallWorkresize_org (DWORD_PTR *)(redirect + redirect_data[16])
+#define rMyGetEnvVarPtr 	(redirect + redirect_data[17])
+#define rMyGetEnvVarPtrOrg	(redirect + redirect_data[18])
+#define rMyGetEnvVarPtr_org (DWORD_PTR *)(redirect + redirect_data[19])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
@@ -774,6 +824,9 @@ PROC(redirect_code)
 	"rel aGotoEof\n"
 	"rel rCallWorkresize\n"
 	"rel aCallWorkresize_org\n"
+	"rel rMyGetEnvVarPtr\n"
+	"rel rMyGetEnvVarPtrOrg\n"
+	"rel aMyGetEnvVarPtr_org\n"
 
 "redirect_code_start:\n"
 
@@ -852,6 +905,7 @@ PROC(redirect_code)
 	"push %rax\n"
 	"call *aParseForF(%rip)\n"
 	"pop %rax\n"
+"1:\n"
 	"ret\n"
 
 "rCallWorkresize:\n"
@@ -863,6 +917,18 @@ PROC(redirect_code)
 	"pop %rdx\n"
 	"pop %rcx\n"
 	"jmp *aCallWorkresize_org(%rip)\n"
+
+"rMyGetEnvVarPtr:\n"
+	"push %rcx\n"
+	"sub $32,%rsp\n"
+	"call *aMyGetEnvVarPtr_hook(%rip)\n"
+	"add $32,%rsp\n"
+	"pop %rcx\n"
+	"test %rax,%rax\n"
+	"jnz 1b\n"
+"rMyGetEnvVarPtrOrg:\n"
+	".fill 8,1,0x90\n"              // original code patched in
+	"jmp *aMyGetEnvVarPtr_org(%rip)\n"
 
 	".align 8\n"
 	".macro abs label\n"
@@ -880,6 +946,8 @@ PROC(redirect_code)
 	"abs GotoEof\n"
 	"abs CallWorkresize_hook\n"
 	"aCallWorkresize_org: .quad 0\n"
+	"abs MyGetEnvVarPtr_hook\n"
+	"aMyGetEnvVarPtr_org: .quad 0\n"
 
 "redirect_code_end:"
 ENDPROC
@@ -1311,6 +1379,41 @@ void hookCmd(void)
 			   pCallWorkresize+1);
 #endif
 	WriteMemory(pCallWorkresize, &i, 4);
+
+	// Hook MyGetEnvVarPtr to recognise heap variables and extensions.	This
+	// allows SET /A to use them directly.
+#ifdef _WIN64
+	if (CMD_MAJOR_MINOR(<, 6,2) || CMD_VERSION(6,2,8102,0) || cmdDebug) {
+		MyGetEnvVarPtr_size = 7;
+	} else if (CMD_MAJOR_MINOR(==, 10,0) && CMD_BUILD_REVISION(>=, 17763,1)) {
+		MyGetEnvVarPtr_size = 8;
+	} else {
+		MyGetEnvVarPtr_size = 6;
+	}
+	memcpy(rMyGetEnvVarPtrOrg, pMyGetEnvVarPtr, MyGetEnvVarPtr_size);
+	*rMyGetEnvVarPtr_org = (DWORD_PTR) pMyGetEnvVarPtr + MyGetEnvVarPtr_size;
+	call.disp = MKDISP(rMyGetEnvVarPtr, pMyGetEnvVarPtr+5);
+#else
+	if (CMD_VERSION(5,0,2195,6656) || CMD_VERSION(5,0,2195,6995)) {
+		MyGetEnvVarPtr_size = 6;
+	} else if (CMD_VERSION(5,1,2600,0) || CMD_VERSION(5,2,3790,0)) {
+		MyGetEnvVarPtr_size = 7;
+	} else {
+		MyGetEnvVarPtr_size = 5;
+	}
+	// Patch our own code to store the original bytes.
+	DWORD flOldProtect, flDummy;
+	VirtualProtect(MyGetEnvVarPtrOrg, MyGetEnvVarPtr_size, PAGE_READWRITE, &flOldProtect);
+	memcpy(MyGetEnvVarPtrOrg, pMyGetEnvVarPtr, MyGetEnvVarPtr_size);
+	VirtualProtect(MyGetEnvVarPtrOrg, MyGetEnvVarPtr_size, flOldProtect, &flDummy);
+	MyGetEnvVarPtr_org = (DWORD) pMyGetEnvVarPtr + MyGetEnvVarPtr_size;
+	call.disp = MKDISP(CMD_MAJOR_MINOR(<, 6,2) ? MyGetEnvVarPtr_stdcall_hook :
+					   CMD_MAJOR_MINOR(>, 6,2) ? MyGetEnvVarPtr_fastcall_hook
+											   : MyGetEnvVarPtr_fastcall62_hook,
+					   pMyGetEnvVarPtr+5);
+#endif
+	call.op = 0xE9; 	// jmp
+	WriteMemory(pMyGetEnvVarPtr, &call.op, 5);
 }
 
 void hookCtrlCAborts(char aborts)
@@ -1363,6 +1466,11 @@ void unhookCmd(void)
 	WriteMemory(pParseFortoken, &oldParseFor, 4);
 	WriteMemory(pForFoptions, &oldParseForF, 4);
 	WriteMemory(pCallWorkresize, &oldCallWorkresize, 4);
+#ifdef _WIN64
+	WriteMemory(pMyGetEnvVarPtr, rMyGetEnvVarPtrOrg, MyGetEnvVarPtr_size);
+#else
+	WriteMemory(pMyGetEnvVarPtr, MyGetEnvVarPtrOrg, MyGetEnvVarPtr_size);
+#endif
 
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;

@@ -62,6 +62,7 @@ LPBYTE cmd_addrs[] = {
 	0,			// Goto pos
 	0,			// Goto start
 	0,			// CallWork:resize
+	0,			// MyGetEnvVarPtr
 #ifndef _WIN64
 	0,			// SFWork:passed (EBP offset to the text)
 #endif
@@ -104,6 +105,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x08e7d,	// Goto pos
 	0x08e40,	// Goto start
 	0x13b68,	// CallWork:resize
+	0x06f90,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -141,6 +143,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x08e9d,	// Goto pos
 	0x08e60,	// Goto start
 	0x13b68,	// CallWork:resize
+	0x06fb0,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -178,6 +181,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x07e69,	// Goto pos
 	0x07e3c,	// Goto start
 	0x194b0,	// CallWork:resize
+	0x05e40,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -215,6 +219,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x08705,	// Goto pos
 	0x086d8,	// Goto start
 	0x14157,	// CallWork:resize
+	0x093b0,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -252,6 +257,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x06585,	// Goto pos
 	0x06558,	// Goto start
 	0x1706b,	// CallWork:resize
+	0x0410c,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -289,6 +295,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x06735,	// Goto pos
 	0x06708,	// Goto start
 	0x1735b,	// CallWork:resize
+	0x05228,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -326,6 +333,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x066e9,	// Goto pos
 	0x066bc,	// Goto start
 	0x17470,	// CallWork:resize
+	0x04a34,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -363,6 +371,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x066e9,	// Goto pos
 	0x066bc,	// Goto start
 	0x17470,	// CallWork:resize
+	0x04a34,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -400,6 +409,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x0a2b2,	// Goto pos
 	0x0a251,	// Goto start
 	0x27e0d,	// CallWork:resize
+	0x03670,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -437,6 +447,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x09bad,	// Goto pos
 	0x09b54,	// Goto start
 	0x286d4,	// CallWork:resize
+	0x02a30,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -474,6 +485,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x090b4,	// Goto pos
 	0x0907a,	// Goto start
 	0x203d9,	// CallWork:resize
+	0x032e0,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -511,6 +523,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x09db0,	// Goto pos
 	0x09d51,	// Goto start
 	0x0ae39,	// CallWork:resize
+	0x0d74c,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -548,6 +561,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x09c04,	// Goto pos
 	0x09bca,	// Goto start
 	0x1f4cb,	// CallWork:resize
+	0x123e0,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -585,6 +599,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x08b54,	// Goto pos
 	0x08b1a,	// Goto start
 	0x20894,	// CallWork:resize
+	0x03420,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -622,6 +637,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x09bf4,	// Goto pos
 	0x09bba,	// Goto start
 	0x1a9ff,	// CallWork:resize
+	0x02e90,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -659,6 +675,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x09a34,	// Goto pos
 	0x099fa,	// Goto start
 	0x1939f,	// CallWork:resize
+	0x0f900,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -696,6 +713,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x08a94,	// Goto pos
 	0x08a5a,	// Goto start
 	0x1a63f,	// CallWork:resize
+	0x0eff0,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -733,6 +751,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x09d8c,	// Goto pos
 	0x09d5a,	// Goto start
 	0x187b9,	// CallWork:resize
+	0x10700,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -770,6 +789,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x02f85,	// Goto pos
 	0x02f53,	// Goto start
 	0x20e6f,	// CallWork:resize
+	0x0ba50,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -807,6 +827,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x03067,	// Goto pos
 	0x03032,	// Goto start
 	0x20fa4,	// CallWork:resize
+	0x0bc90,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -844,6 +865,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x02776,	// Goto pos
 	0x02744,	// Goto start
 	0x2119b,	// CallWork:resize
+	0x0c450,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -881,6 +903,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0eefc,	// Goto pos
 	0x0eecb,	// Goto start
 	0x1b13c,	// CallWork:resize
+	0x13b70,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_17763_592[] = {
@@ -918,6 +941,7 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x0eefc,	// Goto pos
 	0x0eecb,	// Goto start
 	0x1c322,	// CallWork:resize
+	0x13b70,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -955,6 +979,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0deaf,	// Goto pos
 	0x0de7e,	// Goto start
 	0x1b0bc,	// CallWork:resize
+	0x12bf0,	// MyGetEnvVarPtr
 };
 
 const DWORD cmd_10_0_18362_449[] = {
@@ -992,6 +1017,7 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x0deaf,	// Goto pos
 	0x0de7e,	// Goto start
 	0x1b20c,	// CallWork:resize
+	0x12bf0,	// MyGetEnvVarPtr
 };
 
 #else
@@ -1031,6 +1057,7 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x03f95,	// Goto pos
 	0x03f66,	// Goto start
 	0x04856,	// CallWork:resize
+	0x061f1,	// MyGetEnvVarPtr
 	0x03d33,	// SFWork:passed
 };
 
@@ -1069,6 +1096,7 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x03f9a,	// Goto pos
 	0x03f6b,	// Goto start
 	0x0485b,	// CallWork:resize
+	0x061f6,	// MyGetEnvVarPtr
 	0x03d38,	// SFWork:passed
 };
 
@@ -1107,6 +1135,7 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x03f9a,	// Goto pos
 	0x03f6b,	// Goto start
 	0x0485b,	// CallWork:resize
+	0x061f6,	// MyGetEnvVarPtr
 	0x03d38,	// SFWork:passed
 };
 
@@ -1145,6 +1174,7 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x03f9a,	// Goto pos
 	0x03f6b,	// Goto start
 	0x0485b,	// CallWork:resize
+	0x0623c,	// MyGetEnvVarPtr
 	0x03d38,	// SFWork:passed
 };
 
@@ -1183,6 +1213,7 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x03faa,	// Goto pos
 	0x03f7b,	// Goto start
 	0x04877,	// CallWork:resize
+	0x0625d,	// MyGetEnvVarPtr
 	0x03d48,	// SFWork:passed
 };
 
@@ -1221,6 +1252,7 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x04061,	// Goto pos
 	0x04032,	// Goto start
 	0x0492e,	// CallWork:resize
+	0x06314,	// MyGetEnvVarPtr
 	0x03dff,	// SFWork:passed
 };
 
@@ -1259,6 +1291,7 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x05b48,	// Goto pos
 	0x05b1c,	// Goto start
 	0x10545,	// CallWork:resize
+	0x0210b,	// MyGetEnvVarPtr
 	0x0284e,	// SFWork:passed
 };
 
@@ -1297,6 +1330,7 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x0a13f,	// Goto pos
 	0x0a111,	// Goto start
 	0x126da,	// CallWork:resize
+	0x02be1,	// MyGetEnvVarPtr
 	0x1019b,	// SFWork:passed
 };
 
@@ -1335,6 +1369,7 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x0a29e,	// Goto pos
 	0x0a270,	// Goto start
 	0x126eb,	// CallWork:resize
+	0x02bc9,	// MyGetEnvVarPtr
 	0x08082,	// SFWork:passed
 };
 
@@ -1373,6 +1408,7 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x0a29e,	// Goto pos
 	0x0a270,	// Goto start
 	0x126eb,	// CallWork:resize
+	0x02bc9,	// MyGetEnvVarPtr
 	0x08082,	// SFWork:passed
 };
 
@@ -1411,6 +1447,7 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x04568,	// Goto pos
 	0x0453c,	// Goto start
 	0x1264a,	// CallWork:resize
+	0x03709,	// MyGetEnvVarPtr
 	0x06556,	// SFWork:passed
 };
 
@@ -1449,6 +1486,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x07c32,	// Goto pos
 	0x07c04,	// Goto start
 	0x109ce,	// CallWork:resize
+	0x037df,	// MyGetEnvVarPtr
 	0x0a189,	// SFWork:passed
 };
 
@@ -1487,6 +1525,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x05f6b,	// Goto pos
 	0x05f3d,	// Goto start
 	0x12c9d,	// CallWork:resize
+	0x032ed,	// MyGetEnvVarPtr
 	0x0aba4,	// SFWork:passed
 };
 
@@ -1525,6 +1564,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x0667d,	// Goto pos
 	0x0664f,	// Goto start
 	0x1653d,	// CallWork:resize
+	0x0363a,	// MyGetEnvVarPtr
 	0x087e5,	// SFWork:passed
 };
 
@@ -1563,6 +1603,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x065bd,	// Goto pos
 	0x0658f,	// Goto start
 	0x144ed,	// CallWork:resize
+	0x01d61,	// MyGetEnvVarPtr
 	0x09d37,	// SFWork:passed
 };
 
@@ -1601,6 +1642,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x06d04,	// Goto pos
 	0x06cd6,	// Goto start
 	0x147ca,	// CallWork:resize
+	0x02f25,	// MyGetEnvVarPtr
 	0x0ddff,	// SFWork:passed
 };
 
@@ -1639,6 +1681,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x07f63,	// Goto pos
 	0x07f35,	// Goto start
 	0x14a6e,	// CallWork:resize
+	0x0308d,	// MyGetEnvVarPtr
 	0x0e103,	// SFWork:passed
 };
 
@@ -1677,6 +1720,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x064d9,	// Goto pos
 	0x064ab,	// Goto start
 	0x14b02,	// CallWork:resize
+	0x0321b,	// MyGetEnvVarPtr
 	0x0dd8c,	// SFWork:passed
 };
 
@@ -1715,6 +1759,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x064d9,	// Goto pos
 	0x064ab,	// Goto start
 	0x14b02,	// CallWork:resize
+	0x0321b,	// MyGetEnvVarPtr
 	0x0dd8c,	// SFWork:passed
 };
 
@@ -1753,6 +1798,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x0a0c5,	// Goto pos
 	0x09ff2,	// Goto start
 	0x25025,	// CallWork:resize
+	0x03291,	// MyGetEnvVarPtr
 	0x0df22,	// SFWork:passed
 };
 
@@ -1791,6 +1837,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x09c93,	// Goto pos
 	0x09bc1,	// Goto start
 	0x256bb,	// CallWork:resize
+	0x02fcb,	// MyGetEnvVarPtr
 	0x0bfce,	// SFWork:passed
 };
 
@@ -1829,6 +1876,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x078b8,	// Goto pos
 	0x07884,	// Goto start
 	0x1a280,	// CallWork:resize
+	0x03507,	// MyGetEnvVarPtr
 	0x098e6,	// SFWork:passed
 };
 
@@ -1867,6 +1915,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x08fbe,	// Goto pos
 	0x08f63,	// Goto start
 	0x09da7,	// CallWork:resize
+	0x0c074,	// MyGetEnvVarPtr
 	0x08890,	// SFWork:passed
 };
 
@@ -1905,6 +1954,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x0835d,	// Goto pos
 	0x08329,	// Goto start
 	0x1a9d2,	// CallWork:resize
+	0x06f30,	// MyGetEnvVarPtr
 	0x0dd7e,	// SFWork:passed
 };
 
@@ -1943,6 +1993,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x07cdd,	// Goto pos
 	0x07ca9,	// Goto start
 	0x175bc,	// CallWork:resize
+	0x029c9,	// MyGetEnvVarPtr
 	0x0a28f,	// SFWork:passed
 };
 
@@ -1981,6 +2032,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x0761b,	// Goto pos
 	0x075e9,	// Goto start
 	0x1769f,	// CallWork:resize
+	0x036cb,	// MyGetEnvVarPtr
 	0x0d94e,	// SFWork:passed
 };
 
@@ -2019,6 +2071,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x0a9ab,	// Goto pos
 	0x0a979,	// Goto start
 	0x183ef,	// CallWork:resize
+	0x0eca0,	// MyGetEnvVarPtr
 	0x099de,	// SFWork:passed
 };
 
@@ -2057,6 +2110,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0a6ab,	// Goto pos
 	0x0a679,	// Goto start
 	0x07b91,	// CallWork:resize
+	0x10000,	// MyGetEnvVarPtr
 	0x08fae,	// SFWork:passed
 };
 
@@ -2095,6 +2149,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0a34b,	// Goto pos
 	0x0a319,	// Goto start
 	0x170f6,	// CallWork:resize
+	0x0fc80,	// MyGetEnvVarPtr
 	0x08d0e,	// SFWork:passed
 };
 
@@ -2133,6 +2188,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x0857e,	// Goto pos
 	0x08549,	// Goto start
 	0x18280,	// CallWork:resize
+	0x12570,	// MyGetEnvVarPtr
 	0x09830,	// SFWork:passed
 };
 
@@ -2171,6 +2227,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x19fab,	// Goto pos
 	0x19f82,	// Goto start
 	0x17943,	// CallWork:resize
+	0x0b180,	// MyGetEnvVarPtr
 	0x19726,	// SFWork:passed
 };
 
@@ -2209,6 +2266,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x06a1e,	// Goto pos
 	0x069e9,	// Goto start
 	0x209f1,	// CallWork:resize
+	0x13320,	// MyGetEnvVarPtr
 	0x07d3e,	// SFWork:passed
 };
 
@@ -2247,6 +2305,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0afae,	// Goto pos
 	0x0af79,	// Goto start
 	0x1c642,	// CallWork:resize
+	0x07f10,	// MyGetEnvVarPtr
 	0x09a3e,	// SFWork:passed
 };
 
@@ -2285,6 +2344,7 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x0b65e,	// Goto pos
 	0x0b629,	// Goto start
 	0x1c4ff,	// CallWork:resize
+	0x085b0,	// MyGetEnvVarPtr
 	0x0a0ee,	// SFWork:passed
 };
 
@@ -2323,6 +2383,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0c54b,	// Goto pos
 	0x0c519,	// Goto start
 	0x1c0a4,	// CallWork:resize
+	0x11ba0,	// MyGetEnvVarPtr
 	0x0b37e,	// SFWork:passed
 };
 
@@ -2361,6 +2422,7 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x0c69b,	// Goto pos
 	0x0c669,	// Goto start
 	0x1c096,	// CallWork:resize
+	0x11d10,	// MyGetEnvVarPtr
 	0x0b4ce,	// SFWork:passed
 };
 

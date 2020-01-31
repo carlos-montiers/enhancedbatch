@@ -79,16 +79,16 @@ for do (
     echo Stop
     set @next=
   )
-  set /a $j=!$j!+1
+  set /a $j+=1
 )
 for (!$j! neq 1) do (
-  set /a $j=!$j!-1
+  set /a $j-=1
   call @write /n !$j!..
 )
 echo Done
 for (not !$j! == 6) do (
   call @write /n !$j!..
-  set /a $j=!$j!+1
+  set /a $j+=1
 )
 echo Done
 set @delayedexpansion=0
