@@ -509,7 +509,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 	if (lpName != NULL && *lpName != L'\0'
 		&& (*lpName != L'@' || lpName[1] != L'@')) {
 		var = wcschr(lpName + 1, L'$');
-		if (var != NULL) {
+		if (var != NULL && var[1] != L'\0') {
 			sbcpy(varBuffer, lpName);
 			var += varBuffer - lpName;
 			end = varBuffer;
