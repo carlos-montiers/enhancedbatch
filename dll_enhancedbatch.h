@@ -207,6 +207,7 @@ void WriteMemory(LPVOID dst, LPCVOID src, int size);
 DWORD getBatchLine();
 void hookCmd(void);
 void unhookCmd(void);
+void doneCmdBat(void);
 void hookCtrlCAborts(char aborts);
 DWORD getVar(LPCWSTR lpName);
 
@@ -214,13 +215,10 @@ enum {
 	ieol, iMSCmdVar, iLexText, iTmpBuf, iPutStdErrMsg, iCurrentBatchFile,
 	ifOutputUnicode, ifDelayedExpansion, ifEnableExtensions, ifDumpTokens,
 	ifDumpParse, iForMkstr, iForResize, iEchoFlag, iCheckHelpfirstarg,
-	icmd_printf, iCtrlCAborts, iFreeStack, iDCount, iSFWorkmkstr,
-	iSFWorkresize, iSFWorksaved, iGotoFlag, iForFbegin, iForFend,
-	iParseFortoken, iLexBufPtr, iLexBufferend, iForFoptions, iTokLen,
+	icmd_printf, iCtrlCAborts, imkstr, iFreeStack, iDCount, iSFWorkmkstr,
+	iSFWorkresize, iSFWorksaved, iDESubWorkFreeStr, iGotoFlag, iForFbegin,
+	iForFend, iParseFortoken, iLexBufPtr, iLexBufferend, iForFoptions, iTokLen,
 	iGotoEof, iGotopos, iGotostart, iCallWorkresize, iMyGetEnvVarPtr,
-#ifndef _WIN64
-	iSFWorkpassed,
-#endif
 	OFFSETS
 };
 
@@ -230,7 +228,6 @@ enum {
 #define pMSCmdVar			((fnMSCmdVar) cmd_addrs[iMSCmdVar])
 #else
 #define pMSCmdVar			cmd_addrs[iMSCmdVar]
-#define pSFWorkpassed		((char *) cmd_addrs[iSFWorkpassed])  // placed last
 #endif
 #define pLexText			cmd_addrs[iLexText]
 #define pTmpBuf 			((LPWSTR) cmd_addrs[iTmpBuf])
@@ -247,11 +244,13 @@ enum {
 #define pCheckHelpfirstarg	cmd_addrs[iCheckHelpfirstarg]
 #define pcmd_printf 		cmd_addrs[icmd_printf]
 #define pCtrlCAborts		cmd_addrs[iCtrlCAborts]
+#define pmkstr				cmd_addrs[imkstr]
 #define pFreeStack			cmd_addrs[iFreeStack]
 #define pDCount 			((LPDWORD) cmd_addrs[iDCount])
 #define pSFWorkmkstr		cmd_addrs[iSFWorkmkstr]
 #define pSFWorkresize		cmd_addrs[iSFWorkresize]
 #define pSFWorksaved		((char *) cmd_addrs[iSFWorksaved])
+#define pDESubWorkFreeStr	cmd_addrs[iDESubWorkFreeStr]
 #define pGotoFlag			cmd_addrs[iGotoFlag]
 #define pForFbegin			cmd_addrs[iForFbegin]
 #define pForFend			cmd_addrs[iForFend]

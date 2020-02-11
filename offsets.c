@@ -45,11 +45,13 @@ LPBYTE cmd_addrs[] = {
 	0,			// CheckHelp first arg
 	0,			// cmd_printf
 	0,			// (CtrlCAbort:)PromptUser
+	0,			// mkstr
 	0,			// FreeStack
 	0,			// DCount
 	0,			// SFWork:mkstr
 	0,			// SFWork:resize
 	0,			// SFWork:saved
+	0,			// DESubWork:FreeStr
 	0,			// GotoFlag
 	0,			// FOR /F begin
 	0,			// FOR /F end
@@ -63,9 +65,6 @@ LPBYTE cmd_addrs[] = {
 	0,			// Goto start
 	0,			// CallWork:resize
 	0,			// MyGetEnvVarPtr
-#ifndef _WIN64
-	0,			// SFWork:passed (EBP offset to the text)
-#endif
 };
 
 #ifdef _WIN64
@@ -88,11 +87,13 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x0584a,	// CheckHelp first arg
 	0x33da0,	// cmd_printf
 	0x32ac3,	// PromptUser
+	0x05980,	// mkstr
 	0x0b830,	// FreeStack
 	0x42c50,	// DCount
 	0x07d4d,	// SFWork:mkstr (inline)
 	0x07e0f,	// SFWork:resize
 	0x0980c,	// SFWork:saved
+	0x27b53,	// DESubWork:FreeStr (inline)
 	0x42c40,	// GotoFlag
 	0x07388,	// FOR /F begin
 	0x075b4,	// FOR /F end
@@ -126,11 +127,13 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x0586a,	// CheckHelp first arg
 	0x33db0,	// cmd_printf
 	0x32ad3,	// PromptUser
+	0x059a0,	// mkstr
 	0x0b850,	// FreeStack
 	0x42c50,	// DCount
 	0x07d6d,	// SFWork:mkstr (inline)
 	0x07e2f,	// SFWork:resize
 	0x0982c,	// SFWork:saved
+	0x27b53,	// DESubWork:FreeStr (inline)
 	0x42c40,	// GotoFlag
 	0x073a8,	// FOR /F begin
 	0x075d4,	// FOR /F end
@@ -164,11 +167,13 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x044b2,	// CheckHelp first arg
 	0x04850,	// cmd_printf
 	0x282d0,	// PromptUser
+	0x02820,	// mkstr
 	0x032e0,	// FreeStack
 	0x2e0e4,	// DCount
 	0x0b0c8,	// SFWork:mkstr
 	0x0b140,	// SFWork:resize
 	0x0b402,	// SFWork:saved
+	0x08301,	// DESubWork:FreeStr
 	0x2e089,	// GotoFlag
 	0x0bbe4,	// FOR /F begin
 	0x0bdb5,	// FOR /F end
@@ -202,11 +207,13 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x014ae,	// CheckHelp first arg
 	0x04274,	// cmd_printf
 	0x2353c,	// PromptUser
+	0x01588,	// mkstr
 	0x02e50,	// FreeStack
 	0x2e0e0,	// DCount
 	0x0b808,	// SFWork:mkstr
 	0x0b87c,	// SFWork:resize
 	0x0b8a8,	// SFWork:saved
+	0x0df7a,	// DESubWork:FreeStr
 	0x2e089,	// GotoFlag
 	0x0c24e,	// FOR /F begin
 	0x0c3fb,	// FOR /F end
@@ -240,11 +247,13 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x04f2f,	// CheckHelp first arg
 	0x05dec,	// cmd_printf
 	0x24b00,	// PromptUser
+	0x013e8,	// mkstr
 	0x02240,	// FreeStack
 	0x2d128,	// DCount
 	0x0d3a8,	// SFWork:mkstr
 	0x0d431,	// SFWork:resize
 	0x0d40d,	// SFWork:saved
+	0x04bf5,	// DESubWork:FreeStr
 	0x2d0c9,	// GotoFlag
 	0x0d893,	// FOR /F begin
 	0x0da8c,	// FOR /F end
@@ -278,11 +287,13 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x039bb,	// CheckHelp first arg
 	0x05dd4,	// cmd_printf
 	0x24b50,	// PromptUser
+	0x01118,	// mkstr
 	0x01360,	// FreeStack
 	0x2d128,	// DCount
 	0x0d3d4,	// SFWork:mkstr
 	0x0d45d,	// SFWork:resize
 	0x0d439,	// SFWork:saved
+	0x04b70,	// DESubWork:FreeStr
 	0x2d0c9,	// GotoFlag
 	0x0df6d,	// FOR /F begin
 	0x0e166,	// FOR /F end
@@ -316,11 +327,13 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x035b3,	// CheckHelp first arg
 	0x05fc4,	// cmd_printf
 	0x24de0,	// PromptUser
+	0x016dc,	// mkstr
 	0x017e0,	// FreeStack
 	0x2e128,	// DCount
 	0x0da58,	// SFWork:mkstr
 	0x0dae1,	// SFWork:resize
 	0x0dabd,	// SFWork:saved
+	0x04425,	// DESubWork:FreeStr
 	0x2e0c9,	// GotoFlag
 	0x0e591,	// FOR /F begin
 	0x0e78a,	// FOR /F end
@@ -354,11 +367,13 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x035b3,	// CheckHelp first arg
 	0x05fc4,	// cmd_printf
 	0x24de0,	// PromptUser
+	0x016dc,	// mkstr
 	0x017e0,	// FreeStack
 	0x2e128,	// DCount
 	0x0da58,	// SFWork:mkstr
 	0x0dae1,	// SFWork:resize
 	0x0dabd,	// SFWork:saved
+	0x04425,	// DESubWork:FreeStr
 	0x2ec09,	// GotoFlag
 	0x0e591,	// FOR /F begin
 	0x0e78a,	// FOR /F end
@@ -392,11 +407,13 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x0ee1f,	// CheckHelp first arg
 	0x074d0,	// cmd_printf
 	0x25818,	// PromptUser
+	0x07a70,	// mkstr
 	0x0d020,	// FreeStack
 	0x3c1b8,	// DCount
 	0x0f228,	// SFWork:mkstr (inline)
 	0x0f31b,	// SFWork:resize (inline)
 	0x0f20e,	// SFWork:saved
+	0x0a02b,	// DESubWork:FreeStr (inline)
 	0x3c092,	// GotoFlag
 	0x0d6a6,	// FOR /F begin
 	0x0d905,	// FOR /F end (opposite jump)
@@ -430,11 +447,13 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x0e2db,	// CheckHelp first arg
 	0x07e20,	// cmd_printf
 	0x26640,	// PromptUser
+	0x05c20,	// mkstr
 	0x07700,	// FreeStack
 	0x381f8,	// DCount
 	0x0d486,	// SFWork:mkstr (inline)
 	0x0d56c,	// SFWork:resize (inline)
 	0x0d469,	// SFWork:saved
+	0x0a77e,	// DESubWork:FreeStr (inline)
 	0x380d2,	// GotoFlag
 	0x0dc2d,	// FOR /F begin
 	0x0de7e,	// FOR /F end
@@ -468,11 +487,13 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x07646,	// CheckHelp first arg
 	0x08458,	// cmd_printf
 	0x280a0,	// PromptUser
+	0x01e40,	// mkstr
 	0x076e8,	// FreeStack
 	0x2e0ec,	// DCount
 	0x0bb26,	// SFWork:mkstr (inline)
 	0x0bc0c,	// SFWork:resize (inline)
 	0x0bb09,	// SFWork:saved
+	0x0a0f9,	// DESubWork:FreeStr
 	0x2e092,	// GotoFlag
 	0x0c277,	// FOR /F begin
 	0x0c046,	// FOR /F end
@@ -506,11 +527,13 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x2362d,	// CheckHelp first arg
 	0x246ec,	// cmd_printf
 	0x23252,	// PromptUser
+	0x19444,	// mkstr
 	0x1915c,	// FreeStack
 	0x33ce8,	// DCount
 	0x09642,	// SFWork:mkstr
 	0x09973,	// SFWork:resize
 	0x095f2,	// SFWork:saved
+	0x18f74,	// DESubWork:FreeStr
 	0x2f760,	// GotoFlag
 	0x08e1b,	// FOR /F begin
 	0x09006,	// FOR /F end
@@ -544,11 +567,13 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x0e502,	// CheckHelp first arg
 	0x10a98,	// cmd_printf
 	0x26f34,	// PromptUser
+	0x0b760,	// mkstr
 	0x11f44,	// FreeStack
 	0x2c7c0,	// DCount
 	0x105f6,	// SFWork:mkstr (inline)
 	0x106dc,	// SFWork:resize (inline)
 	0x105d9,	// SFWork:saved
+	0x0d679,	// DESubWork:FreeStr
 	0x2c760,	// GotoFlag
 	0x08d0d,	// FOR /F begin
 	0x08ebb,	// FOR /F end
@@ -582,11 +607,13 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x07626,	// CheckHelp first arg
 	0x07c88,	// cmd_printf
 	0x27fe0,	// PromptUser
+	0x01ed0,	// mkstr
 	0x076d4,	// FreeStack
 	0x2d0ec,	// DCount
 	0x0b9d6,	// SFWork:mkstr (inline)
 	0x0babc,	// SFWork:resize (inline)
 	0x0b9b9,	// SFWork:saved
+	0x0a2a2,	// DESubWork:FreeStr
 	0x2d092,	// GotoFlag
 	0x0c02b,	// FOR /F begin
 	0x0c1d0,	// FOR /F end
@@ -620,11 +647,13 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x074b1,	// CheckHelp first arg
 	0x087a8,	// cmd_printf
 	0x2815c,	// PromptUser
+	0x018d0,	// mkstr
 	0x02110,	// FreeStack
 	0x2e06c,	// DCount
 	0x0d9a3,	// SFWork:mkstr
 	0x0da21,	// SFWork:resize
 	0x0d97d,	// SFWork:saved
+	0x08e64,	// DESubWork:FreeStr
 	0x2e012,	// GotoFlag
 	0x0e376,	// FOR /F begin
 	0x0e514,	// FOR /F end
@@ -658,11 +687,13 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x07f3d,	// CheckHelp first arg
 	0x10054,	// cmd_printf
 	0x23dd4,	// PromptUser
+	0x0b6c0,	// mkstr
 	0x0b960,	// FreeStack
 	0x4b138,	// DCount
 	0x08533,	// SFWork:mkstr
 	0x085b5,	// SFWork:resize
 	0x0850d,	// SFWork:saved
+	0x0772e,	// DESubWork:FreeStr
 	0x46b88,	// GotoFlag
 	0x054e5,	// FOR /F begin
 	0x0569d,	// FOR /F end
@@ -696,11 +727,13 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0bafd,	// CheckHelp first arg
 	0x0de08,	// cmd_printf
 	0x24c2c,	// PromptUser
+	0x0ac90,	// mkstr
 	0x0ea60,	// FreeStack
 	0x4c158,	// DCount
 	0x071a3,	// SFWork:mkstr
 	0x07225,	// SFWork:resize
 	0x0717d,	// SFWork:saved
+	0x0b2d8,	// DESubWork:FreeStr
 	0x47ba8,	// GotoFlag
 	0x05721,	// FOR /F begin
 	0x058c3,	// FOR /F end
@@ -734,11 +767,13 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0ce3d,	// CheckHelp first arg
 	0x0ed0c,	// cmd_printf
 	0x248fc,	// PromptUser
+	0x0b530,	// mkstr
 	0x0bc30,	// FreeStack
 	0x46d58,	// DCount
 	0x0d15e,	// SFWork:mkstr (inline)
 	0x0d215,	// SFWork:resize
 	0x0d13d,	// SFWork:saved
+	0x0c62a,	// DESubWork:FreeStr
 	0x30350,	// GotoFlag
 	0x0fff2,	// FOR /F begin
 	0x10193,	// FOR /F end
@@ -772,11 +807,13 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x101e5,	// CheckHelp first arg
 	0x119dc,	// cmd_printf
 	0x2af05,	// PromptUser
+	0x0f340,	// mkstr
 	0x12984,	// FreeStack
 	0x502d0,	// DCount
 	0x04449,	// SFWork:mkstr (inline)
 	0x04504,	// SFWork:resize
 	0x0441d,	// SFWork:saved
+	0x06dc2,	// DESubWork:FreeStr
 	0x39890,	// GotoFlag
 	0x03b27,	// FOR /F begin
 	0x03cc5,	// FOR /F end
@@ -810,11 +847,13 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x10461,	// CheckHelp first arg
 	0x11bf8,	// cmd_printf
 	0x2b0d5,	// PromptUser
+	0x0f5e0,	// mkstr
 	0x12c04,	// FreeStack
 	0x502d0,	// DCount
 	0x04599,	// SFWork:mkstr (inline)
 	0x0465b,	// SFWork:resize
 	0x0456d,	// SFWork:saved
+	0x06fe2,	// DESubWork:FreeStr
 	0x39890,	// GotoFlag
 	0x03c62,	// FOR /F begin
 	0x03e03,	// FOR /F end
@@ -848,11 +887,13 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x10c98,	// CheckHelp first arg
 	0x1242c,	// cmd_printf
 	0x2b314,	// PromptUser
+	0x0fe10,	// mkstr
 	0x13438,	// FreeStack
 	0x502d0,	// DCount
 	0x03cce,	// SFWork:mkstr (inline)
 	0x03d97,	// SFWork:resize
 	0x03cad,	// SFWork:saved
+	0x067b4,	// DESubWork:FreeStr
 	0x39890,	// GotoFlag
 	0x0337a,	// FOR /F begin
 	0x03537,	// FOR /F end
@@ -886,11 +927,13 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0c800,	// CheckHelp first arg
 	0x136fc,	// cmd_printf
 	0x2c5f0,	// PromptUser
+	0x0d540,	// mkstr
 	0x12ef0,	// FreeStack
 	0x43ad0,	// DCount
 	0x11960,	// SFWork:mkstr (inline)
 	0x11a4c,	// SFWork:resize (inline)
 	0x11952,	// SFWork:saved
+	0x0cc51,	// DESubWork:FreeStr
 	0x43a88,	// GotoFlag
 	0x0ae22,	// FOR /F begin
 	0x0afdb,	// FOR /F end
@@ -924,11 +967,13 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x0c800,	// CheckHelp first arg
 	0x136fc,	// cmd_printf
 	0x2c540,	// PromptUser
+	0x0d540,	// mkstr
 	0x12ef0,	// FreeStack
 	0x43ad0,	// DCount
 	0x11960,	// SFWork:mkstr (inline)
 	0x11a4c,	// SFWork:resize (inline)
 	0x11952,	// SFWork:saved
+	0x0cc51,	// DESubWork:FreeStr
 	0x43a88,	// GotoFlag
 	0x0ae22,	// FOR /F begin
 	0x0afdb,	// FOR /F end
@@ -962,11 +1007,13 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0b4c4,	// CheckHelp first arg
 	0x1277c,	// cmd_printf
 	0x2c9ac,	// PromptUser
+	0x0c480,	// mkstr
 	0x11f60,	// FreeStack
 	0x43ad0,	// DCount
 	0x10970,	// SFWork:mkstr (inline)
 	0x10a5c,	// SFWork:resize (inline)
 	0x10962,	// SFWork:saved
+	0x0bc03,	// DESubWork:FreeStr
 	0x43a88,	// GotoFlag
 	0x09b12,	// FOR /F begin
 	0x09ccb,	// FOR /F end
@@ -1000,11 +1047,13 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x0b4c4,	// CheckHelp first arg
 	0x1277c,	// cmd_printf
 	0x2c9ac,	// PromptUser
+	0x0c480,	// mkstr
 	0x11f60,	// FreeStack
 	0x43ad0,	// DCount
 	0x10970,	// SFWork:mkstr (inline)
 	0x10a5c,	// SFWork:resize (inline)
 	0x10962,	// SFWork:saved
+	0x0bc03,	// DESubWork:FreeStr
 	0x43a88,	// GotoFlag
 	0x09b12,	// FOR /F begin
 	0x09ccb,	// FOR /F end
@@ -1040,11 +1089,13 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x14a08,	// CheckHelp first arg
 	0x157bf,	// cmd_printf
 	0x12d0d,	// CtrlCAbort:PromptUser
+	0x0d9da,	// mkstr
 	0x0d883,	// FreeStack
 	0x1cfbc,	// DCount
 	0x03d6d,	// SFWork:mkstr
 	0x03ec8,	// SFWork:resize
 	0x03d4b,	// SFWork:saved
+	0x0d6d9,	// DESubWork:FreeStr
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x0382b,	// FOR /F end
@@ -1058,7 +1109,6 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x03f66,	// Goto start
 	0x04856,	// CallWork:resize
 	0x061f1,	// MyGetEnvVarPtr
-	0x03d33,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_1600[] = {
@@ -1079,11 +1129,13 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x149fc,	// CheckHelp first arg
 	0x157b3,	// cmd_printf
 	0x12d01,	// CtrlCAbort:PromptUser
+	0x0d9ce,	// mkstr
 	0x0d877,	// FreeStack
 	0x1cfbc,	// DCount
 	0x03d72,	// SFWork:mkstr
 	0x03ecd,	// SFWork:resize
 	0x03d50,	// SFWork:saved
+	0x0d6cd,	// DESubWork:FreeStr
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x03830,	// FOR /F end
@@ -1097,7 +1149,6 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x03f6b,	// Goto start
 	0x0485b,	// CallWork:resize
 	0x061f6,	// MyGetEnvVarPtr
-	0x03d38,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_2104[] = {
@@ -1118,11 +1169,13 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x149f8,	// CheckHelp first arg
 	0x157af,	// cmd_printf
 	0x12cfd,	// CtrlCAbort:PromptUser
+	0x0d9ca,	// mkstr
 	0x0d873,	// FreeStack
 	0x1cfbc,	// DCount
 	0x03d72,	// SFWork:mkstr
 	0x03ecd,	// SFWork:resize
 	0x03d50,	// SFWork:saved
+	0x0d6c9,	// DESubWork:FreeStr
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x03830,	// FOR /F end
@@ -1136,7 +1189,6 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x03f6b,	// Goto start
 	0x0485b,	// CallWork:resize
 	0x061f6,	// MyGetEnvVarPtr
-	0x03d38,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_4803[] = {
@@ -1157,11 +1209,13 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x14a4f,	// CheckHelp first arg
 	0x15806,	// cmd_printf
 	0x12d54,	// CtrlCAbort:PromptUser
+	0x0da21,	// mkstr
 	0x0d8ca,	// FreeStack
 	0x1cfbc,	// DCount
 	0x03d72,	// SFWork:mkstr
 	0x03ecd,	// SFWork:resize
 	0x03d50,	// SFWork:saved
+	0x0d720,	// DESubWork:FreeStr
 	0x1cf44,	// GotoFlag
 	0x036b0,	// FOR /F begin
 	0x03830,	// FOR /F end
@@ -1175,7 +1229,6 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x03f6b,	// Goto start
 	0x0485b,	// CallWork:resize
 	0x0623c,	// MyGetEnvVarPtr
-	0x03d38,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_6656[] = {
@@ -1196,11 +1249,13 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x14a7e,	// CheckHelp first arg
 	0x15830,	// cmd_printf
 	0x12d88,	// CtrlCAbort:PromptUser
+	0x0da55,	// mkstr
 	0x0d8fe,	// FreeStack
 	0x1cfbc,	// DCount
 	0x03d82,	// SFWork:mkstr
 	0x03edd,	// SFWork:resize
 	0x03d60,	// SFWork:saved
+	0x0d754,	// DESubWork:FreeStr
 	0x1cf44,	// GotoFlag
 	0x036c0,	// FOR /F begin
 	0x03840,	// FOR /F end
@@ -1214,7 +1269,6 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x03f7b,	// Goto start
 	0x04877,	// CallWork:resize
 	0x0625d,	// MyGetEnvVarPtr
-	0x03d48,	// SFWork:passed
 };
 
 const DWORD cmd_5_0_2195_6995[] = {
@@ -1235,11 +1289,13 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x14b3c,	// CheckHelp first arg
 	0x158ee,	// cmd_printf
 	0x12e46,	// CtrlCAbort:PromptUser
+	0x0db13,	// mkstr
 	0x0d9bc,	// FreeStack
 	0x1cfbc,	// DCount
 	0x03e39,	// SFWork:mkstr
 	0x03f94,	// SFWork:resize
 	0x03e17,	// SFWork:saved
+	0x0d812,	// DESubWork:FreeStr
 	0x1cf44,	// GotoFlag
 	0x03777,	// FOR /F begin
 	0x038f7,	// FOR /F end
@@ -1253,7 +1309,6 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x04032,	// Goto start
 	0x0492e,	// CallWork:resize
 	0x06314,	// MyGetEnvVarPtr
-	0x03dff,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_0[] = {
@@ -1274,11 +1329,13 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x01f91,	// CheckHelp first arg
 	0x03e14,	// cmd_printf
 	0x1b30e,	// CtrlCAbort:PromptUser
+	0x01302,	// mkstr
 	0x01817,	// FreeStack
 	0x289f0,	// DCount
 	0x02880,	// SFWork:mkstr
 	0x028e7,	// SFWork:resize
 	0x02869,	// SFWork:saved
+	0x06d1d,	// DESubWork:FreeStr
 	0x2caa0,	// GotoFlag
 	0x0673b,	// FOR /F begin
 	0x063b0,	// FOR /F end
@@ -1292,7 +1349,6 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x05b1c,	// Goto start
 	0x10545,	// CallWork:resize
 	0x0210b,	// MyGetEnvVarPtr
-	0x0284e,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_2180[] = {
@@ -1313,11 +1369,13 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x05c69,	// CheckHelp first arg
 	0x05e0c,	// cmd_printf
 	0x0c60c,	// CtrlCAbort:PromptUser
+	0x01725,	// mkstr
 	0x014fd,	// FreeStack
 	0x2b9f0,	// DCount
 	0x101cd,	// SFWork:mkstr
 	0x10234,	// SFWork:resize
 	0x101b6,	// SFWork:saved
+	0x1c2ea,	// DESubWork:FreeStr
 	0x2faa0,	// GotoFlag
 	0x0af6a,	// FOR /F begin
 	0x0ae34,	// FOR /F end
@@ -1331,7 +1389,6 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x0a111,	// Goto start
 	0x126da,	// CallWork:resize
 	0x02be1,	// MyGetEnvVarPtr
-	0x1019b,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_3311[] = {
@@ -1352,11 +1409,13 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x05c59,	// CheckHelp first arg
 	0x05e00,	// cmd_printf
 	0x10a9f,	// CtrlCAbort:PromptUser
+	0x01711,	// mkstr
 	0x014f8,	// FreeStack
 	0x2b9f0,	// DCount
 	0x080b4,	// SFWork:mkstr
 	0x0811b,	// SFWork:resize
 	0x0809d,	// SFWork:saved
+	0x1c312,	// DESubWork:FreeStr
 	0x2faa0,	// GotoFlag
 	0x0b0a6,	// FOR /F begin
 	0x0af70,	// FOR /F end
@@ -1370,7 +1429,6 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x0a270,	// Goto start
 	0x126eb,	// CallWork:resize
 	0x02bc9,	// MyGetEnvVarPtr
-	0x08082,	// SFWork:passed
 };
 
 const DWORD cmd_5_1_2600_5512[] = {
@@ -1391,11 +1449,13 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x05c59,	// CheckHelp first arg
 	0x05e00,	// cmd_printf
 	0x10a9f,	// CtrlCAbort:PromptUser
+	0x01711,	// mkstr
 	0x014f8,	// FreeStack
 	0x2b9f0,	// DCount
 	0x080b4,	// SFWork:mkstr
 	0x0811b,	// SFWork:resize
 	0x0809d,	// SFWork:saved
+	0x1c312,	// DESubWork:FreeStr
 	0x2faa0,	// GotoFlag
 	0x0b0a6,	// FOR /F begin
 	0x0af70,	// FOR /F end
@@ -1409,7 +1469,6 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x0a270,	// Goto start
 	0x126eb,	// CallWork:resize
 	0x02bc9,	// MyGetEnvVarPtr
-	0x08082,	// SFWork:passed
 };
 
 const DWORD cmd_5_2_3790_0[] = {
@@ -1430,11 +1489,13 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x01c21,	// CheckHelp first arg
 	0x02cd9,	// cmd_printf
 	0x1cf1f,	// CtrlCAbort:PromptUser
+	0x013b2,	// mkstr
 	0x01b4f,	// FreeStack
 	0x20014,	// DCount
 	0x06588,	// SFWork:mkstr
 	0x065eb,	// SFWork:resize
 	0x06571,	// SFWork:saved
+	0x049fe,	// DESubWork:FreeStr
 	0x2004c,	// GotoFlag
 	0x06e21,	// FOR /F begin
 	0x06f6d,	// FOR /F end
@@ -1448,7 +1509,6 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x0453c,	// Goto start
 	0x1264a,	// CallWork:resize
 	0x03709,	// MyGetEnvVarPtr
-	0x06556,	// SFWork:passed
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -1469,11 +1529,13 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x0552f,	// CheckHelp first arg
 	0x058bf,	// cmd_printf
 	0x1ab43,	// CtrlCAbort:PromptUser
+	0x01732,	// mkstr
 	0x01c6c,	// FreeStack
 	0x2b9b0,	// DCount
 	0x0a1bb,	// SFWork:mkstr
 	0x0a222,	// SFWork:resize
 	0x0a1a4,	// SFWork:saved
+	0x0b81a,	// DESubWork:FreeStr
 	0x2fa58,	// GotoFlag
 	0x0cd31,	// FOR /F begin
 	0x0cc3f,	// FOR /F end
@@ -1487,7 +1549,6 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x07c04,	// Goto start
 	0x109ce,	// CallWork:resize
 	0x037df,	// MyGetEnvVarPtr
-	0x0a189,	// SFWork:passed
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -1508,11 +1569,13 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x045a7,	// CheckHelp first arg
 	0x04115,	// cmd_printf
 	0x11c16,	// CtrlCAbort:PromptUser
+	0x0206b,	// mkstr
 	0x01fe6,	// FreeStack
 	0x2b9b0,	// DCount
 	0x0abd6,	// SFWork:mkstr
 	0x0ac2d,	// SFWork:resize
 	0x0abbf,	// SFWork:saved
+	0x04b7b,	// DESubWork:FreeStr
 	0x2fa58,	// GotoFlag
 	0x0b363,	// FOR /F begin
 	0x0b487,	// FOR /F end
@@ -1526,7 +1589,6 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x05f3d,	// Goto start
 	0x12c9d,	// CallWork:resize
 	0x032ed,	// MyGetEnvVarPtr
-	0x0aba4,	// SFWork:passed
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -1547,11 +1609,13 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x0313f,	// CheckHelp first arg
 	0x0469f,	// cmd_printf
 	0x14c7f,	// CtrlCAbort:PromptUser
+	0x01c0d,	// mkstr
 	0x022b7,	// FreeStack
 	0x240c8,	// DCount
 	0x08817,	// SFWork:mkstr
 	0x08879,	// SFWork:resize
 	0x08800,	// SFWork:saved
+	0x07e22,	// DESubWork:FreeStr
 	0x24078,	// GotoFlag
 	0x08c15,	// FOR /F begin
 	0x08d7a,	// FOR /F end
@@ -1565,7 +1629,6 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x0664f,	// Goto start
 	0x1653d,	// CallWork:resize
 	0x0363a,	// MyGetEnvVarPtr
-	0x087e5,	// SFWork:passed
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -1586,11 +1649,13 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x03259,	// CheckHelp first arg
 	0x040bf,	// cmd_printf
 	0x1f312,	// CtrlCAbort:PromptUser
+	0x01e3d,	// mkstr
 	0x03031,	// FreeStack
 	0x240bc,	// DCount
 	0x09d69,	// SFWork:mkstr
 	0x09dcb,	// SFWork:resize
 	0x09d52,	// SFWork:saved
+	0x06a75,	// DESubWork:FreeStr
 	0x24078,	// GotoFlag
 	0x0a713,	// FOR /F begin
 	0x0a878,	// FOR /F end
@@ -1604,7 +1669,6 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x0658f,	// Goto start
 	0x144ed,	// CallWork:resize
 	0x01d61,	// MyGetEnvVarPtr
-	0x09d37,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -1625,11 +1689,13 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x04cf3,	// CheckHelp first arg
 	0x066b0,	// cmd_printf
 	0x1fa56,	// CtrlCAbort:PromptUser
+	0x018c8,	// mkstr
 	0x01963,	// FreeStack
 	0x240fc,	// DCount
 	0x0de31,	// SFWork:mkstr
 	0x0de93,	// SFWork:resize
 	0x0de1a,	// SFWork:saved
+	0x0736d,	// DESubWork:FreeStr
 	0x240b8,	// GotoFlag
 	0x0e87b,	// FOR /F begin
 	0x0e9dc,	// FOR /F end
@@ -1643,7 +1709,6 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x06cd6,	// Goto start
 	0x147ca,	// CallWork:resize
 	0x02f25,	// MyGetEnvVarPtr
-	0x0ddff,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -1664,11 +1729,13 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x047c6,	// CheckHelp first arg
 	0x0735f,	// cmd_printf
 	0x1fab6,	// CtrlCAbort:PromptUser
+	0x018b8,	// mkstr
 	0x019aa,	// FreeStack
 	0x240fc,	// DCount
 	0x0e135,	// SFWork:mkstr
 	0x0e197,	// SFWork:resize
 	0x0e11e,	// SFWork:saved
+	0x076ca,	// DESubWork:FreeStr
 	0x240b8,	// GotoFlag
 	0x0ebc2,	// FOR /F begin
 	0x0ed23,	// FOR /F end
@@ -1682,7 +1749,6 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x07f35,	// Goto start
 	0x14a6e,	// CallWork:resize
 	0x0308d,	// MyGetEnvVarPtr
-	0x0e103,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -1703,11 +1769,13 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x041c5,	// CheckHelp first arg
 	0x058f3,	// cmd_printf
 	0x1fcce,	// CtrlCAbort:PromptUser
+	0x01896,	// mkstr
 	0x01911,	// FreeStack
 	0x24104,	// DCount
 	0x0ddbe,	// SFWork:mkstr
 	0x0de20,	// SFWork:resize
 	0x0dda7,	// SFWork:saved
+	0x0d638,	// DESubWork:FreeStr
 	0x240b8,	// GotoFlag
 	0x0e84e,	// FOR /F begin
 	0x0e9af,	// FOR /F end
@@ -1721,7 +1789,6 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x064ab,	// Goto start
 	0x14b02,	// CallWork:resize
 	0x0321b,	// MyGetEnvVarPtr
-	0x0dd8c,	// SFWork:passed
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -1742,11 +1809,13 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x041c5,	// CheckHelp first arg
 	0x058f3,	// cmd_printf
 	0x1fcce,	// CtrlCAbort:PromptUser
+	0x01896,	// mkstr
 	0x01911,	// FreeStack
 	0x24104,	// DCount
 	0x0ddbe,	// SFWork:mkstr
 	0x0de20,	// SFWork:resize
 	0x0dda7,	// SFWork:saved
+	0x0d638,	// DESubWork:FreeStr
 	0x240b8,	// GotoFlag
 	0x0e84e,	// FOR /F begin
 	0x0e9af,	// FOR /F end
@@ -1760,7 +1829,6 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x064ab,	// Goto start
 	0x14b02,	// CallWork:resize
 	0x0321b,	// MyGetEnvVarPtr
-	0x0dd8c,	// SFWork:passed
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -1781,11 +1849,13 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x016a6,	// CheckHelp first arg
 	0x07bd0,	// cmd_printf
 	0x22ed6,	// CtrlCAbort:PromptUser
+	0x01a8f,	// mkstr
 	0x0c4d8,	// FreeStack
 	0x300b8,	// DCount
 	0x0df4c,	// SFWork:mkstr (inline)
 	0x0dff9,	// SFWork:resize (inline)
 	0x0df35,	// SFWork:saved
+	0x07b60,	// DESubWork:FreeStr (inline)
 	0x30042,	// GotoFlag
 	0x0d57a,	// FOR /F begin
 	0x0e7d9,	// FOR /F end
@@ -1799,7 +1869,6 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x09ff2,	// Goto start
 	0x25025,	// CallWork:resize
 	0x03291,	// MyGetEnvVarPtr
-	0x0df22,	// SFWork:passed
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -1820,11 +1889,13 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x011e3,	// CheckHelp first arg
 	0x07184,	// cmd_printf
 	0x18660,	// CtrlCAbort:PromptUser
+	0x04d45,	// mkstr
 	0x06b67,	// FreeStack
 	0x2e0f8,	// DCount
 	0x0bff8,	// SFWork:mkstr (inline)
 	0x0c0a9,	// SFWork:resize (inline)
 	0x0bfe1,	// SFWork:saved
+	0x07061,	// DESubWork:FreeStr (inline)
 	0x2e082,	// GotoFlag
 	0x0c732,	// FOR /F begin
 	0x0c35f,	// FOR /F end
@@ -1838,7 +1909,6 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x09bc1,	// Goto start
 	0x256bb,	// CallWork:resize
 	0x02fcb,	// MyGetEnvVarPtr
-	0x0bfce,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -1859,11 +1929,13 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x05770,	// CheckHelp first arg
 	0x0618d,	// cmd_printf
 	0x23078,	// CtrlCAbort:PromptUser
+	0x02343,	// mkstr
 	0x057df,	// FreeStack
 	0x250bc,	// DCount
 	0x09910,	// SFWork:mkstr (inline)
 	0x099bf,	// SFWork:resize
 	0x098f9,	// SFWork:saved
+	0x05b24,	// DESubWork:FreeStr
 	0x25042,	// GotoFlag
 	0x0a375,	// FOR /F begin
 	0x0a553,	// FOR /F end
@@ -1877,7 +1949,6 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x07884,	// Goto start
 	0x1a280,	// CallWork:resize
 	0x03507,	// MyGetEnvVarPtr
-	0x098e6,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -1898,11 +1969,13 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x1eb94,	// CheckHelp first arg
 	0x1faa5,	// cmd_printf
 	0x1c976,	// CtrlCAbort:PromptUser
+	0x1625d,	// mkstr
 	0x16019,	// FreeStack
 	0x284f4,	// DCount
 	0x088fe,	// SFWork:mkstr
 	0x08bd7,	// SFWork:resize
 	0x088bb,	// SFWork:saved (index)
+	0x15e86,	// DESubWork:FreeStr
 	0x28498,	// GotoFlag
 	0x081f3,	// FOR /F begin
 	0x08392,	// FOR /F end
@@ -1916,7 +1989,6 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x08f63,	// Goto start
 	0x09da7,	// CallWork:resize
 	0x0c074,	// MyGetEnvVarPtr
-	0x08890,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -1937,11 +2009,13 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x0c6e0,	// CheckHelp first arg
 	0x0e18a,	// cmd_printf
 	0x224db,	// CtrlCAbort:PromptUser
+	0x09ef0,	// mkstr
 	0x0e902,	// FreeStack
 	0x254c8,	// DCount
 	0x0dda8,	// SFWork:mkstr (inline)
 	0x0de53,	// SFWork:resize (inline)
 	0x0dd91,	// SFWork:saved
+	0x0ba57,	// DESubWork:FreeStr
 	0x25478,	// GotoFlag
 	0x073bb,	// FOR /F begin
 	0x0753a,	// FOR /F end
@@ -1955,7 +2029,6 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x08329,	// Goto start
 	0x1a9d2,	// CallWork:resize
 	0x06f30,	// MyGetEnvVarPtr
-	0x0dd7e,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -1976,11 +2049,13 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x052e4,	// CheckHelp first arg
 	0x06570,	// cmd_printf
 	0x23008,	// CtrlCAbort:PromptUser
+	0x013cb,	// mkstr
 	0x05353,	// FreeStack
 	0x250bc,	// DCount
 	0x0a2b9,	// SFWork:mkstr (inline)
 	0x0a368,	// SFWork:resize (inline)
 	0x0a2a2,	// SFWork:saved
+	0x05e11,	// DESubWork:FreeStr
 	0x25042,	// GotoFlag
 	0x09720,	// FOR /F begin
 	0x0990a,	// FOR /F end
@@ -1994,7 +2069,6 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x07ca9,	// Goto start
 	0x175bc,	// CallWork:resize
 	0x029c9,	// MyGetEnvVarPtr
-	0x0a28f,	// SFWork:passed
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -2015,11 +2089,13 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x058f0,	// CheckHelp first arg
 	0x06992,	// cmd_printf
 	0x234fb,	// CtrlCAbort:PromptUser
+	0x01e20,	// mkstr
 	0x059a0,	// FreeStack
 	0x2607c,	// DCount
 	0x0d976,	// SFWork:mkstr
 	0x0d9dd,	// SFWork:resize
 	0x0d961,	// SFWork:saved
+	0x06072,	// DESubWork:FreeStr
 	0x26002,	// GotoFlag
 	0x0d2f2,	// FOR /F begin
 	0x0d467,	// FOR /F end
@@ -2033,7 +2109,6 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x075e9,	// Goto start
 	0x1769f,	// CallWork:resize
 	0x036cb,	// MyGetEnvVarPtr
-	0x0d94e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -2054,11 +2129,13 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x08261,	// CheckHelp first arg
 	0x0f0fc,	// cmd_printf
 	0x219d4,	// CtrlCAbort:PromptUser
+	0x0bdb0,	// mkstr
 	0x0c410,	// FreeStack
 	0x3c9e4,	// DCount
 	0x09a06,	// SFWork:mkstr
 	0x09a7b,	// SFWork:resize
 	0x099f1,	// SFWork:saved
+	0x08b37,	// DESubWork:FreeStr
 	0x3c974,	// GotoFlag
 	0x0fca0,	// FOR /F begin
 	0x0fe1f,	// FOR /F end
@@ -2072,7 +2149,6 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x0a979,	// Goto start
 	0x183ef,	// CallWork:resize
 	0x0eca0,	// MyGetEnvVarPtr
-	0x099de,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -2093,11 +2169,13 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x08790,	// CheckHelp first arg
 	0x0e6c4,	// cmd_printf
 	0x22849,	// CtrlCAbort:PromptUser
+	0x0bcb0,	// mkstr
 	0x0f31b,	// FreeStack
 	0x3d9e4,	// DCount
 	0x08fd6,	// SFWork:mkstr
 	0x0904b,	// SFWork:resize
 	0x08fc1,	// SFWork:saved
+	0x0c765,	// DESubWork:FreeStr
 	0x3d974,	// GotoFlag
 	0x0f9d0,	// FOR /F begin
 	0x0fb4f,	// FOR /F end
@@ -2111,7 +2189,6 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0a679,	// Goto start
 	0x07b91,	// CallWork:resize
 	0x10000,	// MyGetEnvVarPtr
-	0x08fae,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -2132,11 +2209,13 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x084cf,	// CheckHelp first arg
 	0x0e363,	// cmd_printf
 	0x22a8f,	// CtrlCAbort:PromptUser
+	0x0b920,	// mkstr
 	0x0bf40,	// FreeStack
 	0x3d7cc,	// DCount
 	0x08d36,	// SFWork:mkstr
 	0x08dab,	// SFWork:resize
 	0x08d21,	// SFWork:saved
+	0x0c477,	// DESubWork:FreeStr
 	0x2709c,	// GotoFlag
 	0x0f640,	// FOR /F begin
 	0x0f7bf,	// FOR /F end
@@ -2150,7 +2229,6 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0a319,	// Goto start
 	0x170f6,	// CallWork:resize
 	0x0fc80,	// MyGetEnvVarPtr
-	0x08d0e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -2171,11 +2249,13 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x0cc80,	// CheckHelp first arg
 	0x0c37c,	// cmd_printf
 	0x28ff7,	// CtrlCAbort:PromptUser
+	0x0f4e0,	// mkstr
 	0x11bd6,	// FreeStack
 	0x43ce8,	// DCount
 	0x09857,	// SFWork:mkstr
 	0x098b8,	// SFWork:resize
 	0x09844,	// SFWork:saved
+	0x04415,	// DESubWork:FreeStr
 	0x2d598,	// GotoFlag
 	0x09050,	// FOR /F begin
 	0x091d9,	// FOR /F end
@@ -2189,7 +2269,6 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x08549,	// Goto start
 	0x18280,	// CallWork:resize
 	0x12570,	// MyGetEnvVarPtr
-	0x09830,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -2210,11 +2289,13 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x05163,	// CheckHelp first arg
 	0x0c6ff,	// cmd_printf
 	0x24d99,	// CtrlCAbort:PromptUser
+	0x07b10,	// mkstr
 	0x096e0,	// FreeStack
 	0x41c68,	// DCount
 	0x1975a,	// SFWork:mkstr
 	0x198e5,	// SFWork:resize
 	0x1973e,	// SFWork:saved
+	0x1fd6a,	// DESubWork:FreeStr
 	0x41c44,	// GotoFlag
 	0x18c76,	// FOR /F begin
 	0x18e2d,	// FOR /F end
@@ -2228,7 +2309,6 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x19f82,	// Goto start
 	0x17943,	// CallWork:resize
 	0x0b180,	// MyGetEnvVarPtr
-	0x19726,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -2249,11 +2329,13 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x0dd6d,	// CheckHelp first arg
 	0x125d9,	// cmd_printf
 	0x29230,	// CtrlCAbort:PromptUser
+	0x100b0,	// mkstr
 	0x12a06,	// FreeStack
 	0x43cd8,	// DCount
 	0x07d66,	// SFWork:mkstr
 	0x07dd2,	// SFWork:resize
 	0x07d51,	// SFWork:saved
+	0x08df6,	// DESubWork:FreeStr
 	0x2d590,	// GotoFlag
 	0x07520,	// FOR /F begin
 	0x076cb,	// FOR /F end
@@ -2267,7 +2349,6 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x069e9,	// Goto start
 	0x209f1,	// CallWork:resize
 	0x13320,	// MyGetEnvVarPtr
-	0x07d3e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -2288,11 +2369,13 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x08dc9,	// CheckHelp first arg
 	0x0edec,	// cmd_printf
 	0x29b3b,	// CtrlCAbort:PromptUser
+	0x0ac20,	// mkstr
 	0x0fc2d,	// FreeStack
 	0x35768,	// DCount
 	0x09a68,	// SFWork:mkstr (inline)
 	0x09b06,	// SFWork:resize
 	0x09a51,	// SFWork:saved
+	0x0cfd6,	// DESubWork:FreeStr
 	0x35734,	// GotoFlag
 	0x08350,	// FOR /F begin
 	0x084f4,	// FOR /F end
@@ -2306,7 +2389,6 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x0af79,	// Goto start
 	0x1c642,	// CallWork:resize
 	0x07f10,	// MyGetEnvVarPtr
-	0x09a3e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_17763_592[] = {
@@ -2327,11 +2409,13 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x09479,	// CheckHelp first arg
 	0x0f49c,	// cmd_printf
 	0x299fb,	// CtrlCAbort:PromptUser
+	0x0b2d0,	// mkstr
 	0x102dd,	// FreeStack
 	0x35768,	// DCount
 	0x0a118,	// SFWork:mkstr (inline)
 	0x0a1b6,	// SFWork:resize
 	0x0a101,	// SFWork:saved
+	0x0d686,	// DESubWork:FreeStr
 	0x35734,	// GotoFlag
 	0x08a00,	// FOR /F begin
 	0x08ba4,	// FOR /F end
@@ -2345,7 +2429,6 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x0b629,	// Goto start
 	0x1c4ff,	// CallWork:resize
 	0x085b0,	// MyGetEnvVarPtr
-	0x0a0ee,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -2366,11 +2449,13 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0a639,	// CheckHelp first arg
 	0x09740,	// cmd_printf
 	0x2970b,	// CtrlCAbort:PromptUser
+	0x0dac0,	// mkstr
 	0x1179f,	// FreeStack
 	0x35768,	// DCount
 	0x0b3a6,	// SFWork:mkstr
 	0x0b418,	// SFWork:resize
 	0x0b391,	// SFWork:saved
+	0x0e5c6,	// DESubWork:FreeStr
 	0x35734,	// GotoFlag
 	0x10ce0,	// FOR /F begin
 	0x10e84,	// FOR /F end
@@ -2384,7 +2469,6 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x0c519,	// Goto start
 	0x1c0a4,	// CallWork:resize
 	0x11ba0,	// MyGetEnvVarPtr
-	0x0b37e,	// SFWork:passed
 };
 
 const DWORD cmd_10_0_18362_449[] = {
@@ -2405,11 +2489,13 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x0a789,	// CheckHelp first arg
 	0x09890,	// cmd_printf
 	0x2970b,	// CtrlCAbort:PromptUser
+	0x0dc10,	// mkstr
 	0x1190f,	// FreeStack
 	0x35768,	// DCount
 	0x0b4f6,	// SFWork:mkstr
 	0x0b568,	// SFWork:resize
 	0x0b4e1,	// SFWork:saved
+	0x0e716,	// DESubWork:FreeStr
 	0x35734,	// GotoFlag
 	0x10e50,	// FOR /F begin
 	0x10ff4,	// FOR /F end
@@ -2423,7 +2509,6 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x0c669,	// Goto start
 	0x1c096,	// CallWork:resize
 	0x11d10,	// MyGetEnvVarPtr
-	0x0b4ce,	// SFWork:passed
 };
 
 #endif

@@ -52,11 +52,12 @@ struct sCmdEntry {
 LPBYTE redirect;
 BYTE oldCtrlCAborts[7];
 BYTE SFWork_saved, Goto_pos, Goto_start;
+BYTE oldDESubWorkFreeStr1[4], oldDESubWorkFreeStr2[4];
 #else
 BYTE oldCtrlCAborts[5];
 DWORD SFWork_esp, ParseForF_ret;
 BYTE SFWork_stdcall;
-int SFWork_saved, SFWork_passed, SFWork_first, Goto_pos, Goto_start;
+int SFWork_saved, SFWork_first, Goto_pos, Goto_start;
 DWORD ForFbegin_org, ParseFor_org, ParseForF_org, CallWorkresize_org;
 DWORD MyGetEnvVarPtr_org;
 #endif
@@ -64,9 +65,11 @@ DWORD MyGetEnvVarPtr_size;
 
 int oldPutMsg, oldParseFor, oldParseForF, oldCallWorkresize;
 BYTE oldLexText[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
+BYTE oldDESubWorkFreeStr[5];
 BYTE oldForFbegin[6], oldForFend[6], oldGotoEof[6];
-DWORD_PTR SFWork_mkstr_org, FreeStack, ForFend_org;
+DWORD_PTR mkstr, FreeStack, DESubWork_FreeStr_org, ForFend_org;
 BYTE SFWork_mkstr_reg, Goto_reg;
+DWORD mkstr_size, mkstr_overhead, mkstr_alloc;
 
 int ForF_stack[FORF_STACKSIZE], ForF_stacktop;
 
@@ -80,25 +83,26 @@ static char label_type[256];
 #define islabel_delim(ch) (label_type[(BYTE) (ch)] != 0) // & (LABEL_WS | LABEL_DELIM))
 
 
-int SFWork_hook(LPWSTR saved, LPWSTR *passed, int first)
+int __fastcall SFWork_hook(LPWSTR *saved, int first)
 {
 	khint_t k;
 	int absent;
 
-	if (saved == NULL) {
-		k = kh_put(ptrdw, sfwork_map, (DWORD_PTR) passed, &absent);
+	if CMD_VERSION(6,2,8102,0) {
+		// This version inlines SFWork within SubFor, so there's additional
+		// allocations that should not be freed.
+		return 0;
+	}
+
+	if (*saved == NULL) {
+		k = kh_put(ptrdw, sfwork_map, (DWORD_PTR) saved, &absent);
 		kh_val(sfwork_map, k) = 0;
 		return 0;
 	}
-	if CMD_VERSION(6,2,8102,0) {
-		// This version inlines SFWork within SubFor, so FreeStack frees more
-		// than it should.
-		return -1;
-	}
-	k = kh_get(ptrdw, sfwork_map, (DWORD_PTR) passed);
+	k = kh_get(ptrdw, sfwork_map, (DWORD_PTR) saved);
 	if (kh_val(sfwork_map, k) == 0 || first) {
 		kh_val(sfwork_map, k) = *pDCount;
-		return -1;
+		return 0;
 	}
 	return kh_val(sfwork_map, k);
 }
@@ -450,59 +454,93 @@ PROC(MyLexTextESI)
 ENDPROC
 
 PROC(SFWork_mkstr)
-	"push %ecx\n"               // preserve possible register argument
+	"push %edi\n"
 	"mov _SFWork_first,%eax\n"
-	"pushl (%eax,%ebp)\n"
-	"mov _SFWork_passed,%eax\n"
-	"pushl (%eax,%ebp)\n"
+	"mov (%eax,%ebp),%edx\n"
 	"mov _SFWork_saved,%eax\n"
 	"test %eax,%eax\n"
-	"mov (%eax,%ebp),%eax\n"
+	"mov (%eax,%ebp),%edi\n"
 	"js 1f\n"
 	"mov -28(%ebp),%ecx\n"      // debug version doesn't store it
-	"lea 4(%ecx,%eax,4),%eax\n"
+	"lea 4(%ecx,%edi,4),%edi\n"
 	"1:\n"
-	"pushl (%eax)\n"
+	"mov %edi,%ecx\n"
 	"call _SFWork_hook\n"
-	"add $12,%esp\n"
-	"pop %ecx\n"
 	"test %eax,%eax\n"
-	"js 1f\n"
-	"jz org\n"
+	"jz 1f\n"
 	"mov %eax,%ecx\n"           // 6.2.9200.16384 passes in eax, 6.3+ in ecx
 	"mov %esp,_SFWork_esp\n"    // 6.2.8102.0 is stdcall, but mkstr is fast
 	"push %eax\n"
 	"call *_FreeStack\n"        // free everything allocated between loops
 	"mov _SFWork_esp,%esp\n"
 	"1:\n"
-	"mov _SFWork_passed,%eax\n"
-	"mov (%eax,%ebp),%eax\n"
-	"mov (%eax),%eax\n"         // reuse the original mkstr
+	"add $8,%edi\n"             // saved + 2, unused space in the node
+	"mov (%edi),%eax\n"
+	"test %eax,%eax\n"
+	"jnz 1f\n"                  // reuse the original mkstr
+	"mov _mkstr_size,%eax\n"
+	"mov %eax,%ecx\n"           // 6.2 passes in eax, 6.3+ in ecx
+	"mov %esp,_SFWork_esp\n"
+	"push %eax\n"               // before 6.2 is stdcall
+	"call *_mkstr\n"
+	"mov _SFWork_esp,%esp\n"
+	"mov %eax,(%edi)\n"
+	"1:\n"
 	"mov -8(%eax),%ecx\n"       // no terminator is added, reset to 0
 	"sub $8,%ecx\n"             // length that was requested
+	"shr $2,%ecx\n"             //  is a multiple of four
 	"push %eax\n"
-	"push %edi\n"
 	"mov %eax,%edi\n"
 	"xor %eax,%eax\n"
-	"rep stosb\n"
-	"pop %edi\n"
+	"rep stosl\n"
 	"pop %eax\n"
+	"pop %edi\n"
 	"mov _SFWork_mkstr_reg,%cl\n"
 	"test %cl,%cl\n"
 	"jnz 1f\n"                  // inline
 	"cmp %cl,_SFWork_stdcall\n"
-	"jz exit\n"                 // fastcall, just return
-	"ret $4\n"                  // stdcall, tidy up
+	"jnz 2f\n"
+	"ret\n"
+	"2:\n"
+	"ret $4\n"
 	"1:\n"
 	"addl $0x34,(%esp)\n"       // skip over all the inline code
 	"cmp $0xF6,%cl\n"           // select the register it uses
 	"cmove %eax,%esi\n"
 	"cmovb %eax,%ebx\n"         // 0xDB
 	"cmova %eax,%edi\n"         // 0xFF
-	"ret $8\n"
-	"org:\n"
-	"jmp *_SFWork_mkstr_org\n"
-	"exit:\n"
+	"ret $8"
+ENDPROC
+
+// Prevent DESubWork from freeing our reusable substitution string.
+PROC(DESubWork_FreeStr_stdcall)
+	"mov -8(%eax),%eax\n"
+	"cmp _mkstr_alloc,%eax\n"
+	"je 1f\n"
+	"jmp *_DESubWork_FreeStr_org\n"
+	"1:\n"
+	"ret $4"
+ENDPROC
+
+PROC(DESubWork_FreeStr_fastcall)
+	"mov -8(%ecx),%eax\n"
+	"cmp _mkstr_alloc,%eax\n"
+	"je 1f\n"
+	"jmp *_DESubWork_FreeStr_org\n"
+	"1:\n"
+	"ret"
+ENDPROC
+
+PROC(DESubWork_FreeStr_inline)
+	"mov 12(%ebp),%ecx\n"
+	"mov (%ecx),%esi\n"
+	"test %esi,%esi\n"
+	"jz 1f\n"
+	"mov _mkstr_alloc,%eax\n"
+	"cmp -8(%esi),%eax\n"
+	"jne 1f\n"
+	"xor %esi,%esi\n"
+	"1:\n"
 	"ret"
 ENDPROC
 
@@ -660,68 +698,65 @@ ENDPROC
 
 PROC(SFWork_mkstr)
 	"cmpb $0,cmdDebug(%rip)\n"      // debug version (only one, so far)
-	"cmovnz 0xB0(%rsp),%r9d\n"      // retrieve the values
-	"cmovnz %r12,%rdx\n"
-	"mov %r9d,%r8d\n"
-	"push %rcx\n"
-	"push %rdx\n"
+	"cmovnz 0xB0(%rsp),%r9d\n"      // retrieve the value
+	"mov %r9d,%edx\n"
 	"movzxb SFWork_saved(%rip),%eax\n"
 	"test $0x80,%al\n"
 	"jns 2f\n"
 	"cmp $0xA0,%al\n"
 	"je 1f\n"
-	"mov 0x18(%rsp,%rax),%rax\n"    // 0x90, 0x80
-	"mov 8(%rax,%rdi,8),%rcx\n"
+	"mov 8(%rsp,%rax),%rax\n"       // 0x90, 0x80
+	"lea 8(%rax,%rdi,8),%rcx\n"
 	"jmp 3f\n"
-	"org:\n"
-	"jmp *SFWork_mkstr_org(%rip)\n"
 	"1:\n"
-	"mov 8(%rsp,%rax),%rax\n"       // 0xA0
-	"mov 8(%rax,%r13,8),%rcx\n"
+	"mov -8(%rsp,%rax),%rax\n"      // 0xA0
+	"lea 8(%rax,%r13,8),%rcx\n"
 	"jmp 3f\n"
 	"2:\n"
 	"cmp $0x34,%al\n"
 	"jne 1f\n"
-	"mov (%r14),%rcx\n"             // 0x34
+	"mov %r14,%rcx\n"               // 0x34
 	"jmp 3f\n"
 	"1:\n"
 	"cmova %r15,%rax\n"             // 0x3C
 	"cmovb %r13,%rax\n"             // 0x2C
-	"mov 8(%rax),%rcx\n"
+	"lea 8(%rax),%rcx\n"
 	"3:\n"
-	"sub $40,%rsp\n"                // shadow space and alignment
-	"call SFWork_hook\n"
-	"add $40,%rsp\n"
-	"pop %rdx\n"
-	"pop %rcx\n"
-	"test %eax,%eax\n"
-	"js 1f\n"
-	"jz org\n"
-	"push %rdx\n"
+	"push %rdi\n"
 	"sub $32,%rsp\n"                // shadow space
+	"mov %rcx,%rdi\n"
+	"call SFWork_hook\n"
+	"test %eax,%eax\n"
+	"jz 1f\n"
 	"mov %eax,%ecx\n"
 	"call *FreeStack(%rip)\n"       // free everything allocated between loops
-	"add $32,%rsp\n"
-	"pop %rdx\n"
 	"1:\n"
-	"mov (%rdx),%rax\n"             // reuse the original mkstr
-	"mov -16(%rax),%rcx\n"          // no terminator is added, reset to 0
-	"sub $16,%rcx\n"                // length that was requested
+	"add $16,%rdi\n"                // saved + 2, unused space in the node
+	"mov (%rdi),%rax\n"
+	"test %rax,%rax\n"
+	"jnz 1f\n"                      // reuse the original mkstr
+	"mov mkstr_size(%rip),%ecx\n"
+	"call *mkstr(%rip)\n"
+	"mov %rax,(%rdi)\n"
+	"1:\n"
+	"add $32,%rsp\n"
+	"mov -16(%rax),%ecx\n"          // no terminator is added, reset to 0
+	"sub $16,%ecx\n"                // length that was requested
+	"shr $2,%ecx\n"                 //  which is a multiple of four
 	"push %rax\n"
-	"push %rdi\n"
 	"mov %rax,%rdi\n"
 	"xor %eax,%eax\n"
-	"rep stosb\n"
-	"pop %rdi\n"
+	"rep stosl\n"
 	"pop %rax\n"
+	"pop %rdi\n"
 	"mov SFWork_mkstr_reg(%rip),%cl\n"
 	"test %cl,%cl\n"
-	"jz exit\n"
+	"jz 1f\n"
 	"addq $0x48,(%rsp)\n"           // skip over all the inline code
 	"cmp $0xFF,%cl\n"               // select the register it uses
 	"cmove %rax,%rdi\n"
 	"cmovne %rax,%rbx\n"
-	"exit:\n"
+	"1:\n"
 	"ret"
 ENDPROC
 
@@ -798,6 +833,8 @@ ENDPROC
 #define rMyGetEnvVarPtr 	(redirect + redirect_data[17])
 #define rMyGetEnvVarPtrOrg	(redirect + redirect_data[18])
 #define rMyGetEnvVarPtr_org (DWORD_PTR *)(redirect + redirect_data[19])
+#define rDESubWork_FreeStr	(redirect + redirect_data[20])
+#define rDESubWork_FreeStr_inline (redirect + redirect_data[21])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
@@ -827,6 +864,8 @@ PROC(redirect_code)
 	"rel rMyGetEnvVarPtr\n"
 	"rel rMyGetEnvVarPtrOrg\n"
 	"rel aMyGetEnvVarPtr_org\n"
+	"rel rDESubWork_FreeStr\n"
+	"rel rDESubWork_FreeStr_inline\n"
 
 "redirect_code_start:\n"
 
@@ -853,6 +892,26 @@ PROC(redirect_code)
 
 "rSFWork_mkstr:\n"
 	"jmp *aSFWork_mkstr(%rip)\n"
+
+"rDESubWork_FreeStr:\n"
+	"movabs mkstr_alloc,%eax\n"
+	"cmp -16(%rcx),%eax\n"
+	"je 1f\n"
+	"movabs DESubWork_FreeStr_org,%rax\n"
+	"jmp *%rax\n"
+	"1:\n"
+	"ret\n"
+
+"rDESubWork_FreeStr_inline:\n"
+	"test %rdx,%rdx\n"
+	"jz 1f\n"
+	"movabs mkstr_alloc,%eax\n"
+	"cmp -16(%rdx),%eax\n"
+	"jne 1f\n"
+	"movabs DESubWork_FreeStr_org,%rax\n"
+	"add %rax,(%rsp)\n"
+	"1:\n"
+	"ret\n"
 
 "rForFbegin:\n"
 	"push %rdx\n"                   // one of these registers may contain LF
@@ -1067,6 +1126,7 @@ void hookCmd(void)
 	memcpy(oldLexText, pLexText, 5);
 	memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
 	memcpy(oldSFWorkresize, pSFWorkresize, 6);
+	memcpy(oldDESubWorkFreeStr, pDESubWorkFreeStr, 5);
 	memcpy(oldForFbegin, pForFbegin, 6);
 	memcpy(oldForFend, pForFend, 6);
 	memcpy(oldGotoEof, pGotoEof, 6);
@@ -1133,26 +1193,45 @@ void hookCmd(void)
 #ifdef _WIN64
 	if (*pSFWorkmkstr == 0xFF) {
 		SFWork_mkstr_reg = pSFWorkmkstr[0x47];
-		SFWork_mkstr_org = *(DWORD_PTR *) MKABS(pSFWorkmkstr+2);
 		call.disp = MKDISP(rSFWork_mkstr, pSFWorkmkstr+6);
 		WriteMemory(pSFWorkmkstr, &call, 6);
 	} else {
-		SFWork_mkstr_org = MKABS(pSFWorkmkstr+1);
 		i = MKDISP(rSFWork_mkstr, pSFWorkmkstr+5);
 		WriteMemory(pSFWorkmkstr+1, &i, 4);
 	}
 	if (*pSFWorkresize == 0xFF) {
 		WriteCode(pSFWorkresize, "\x4C\x89\xC0"		// mov rax,r8
 								 "\x0F\x1F\x00");	// nop
+		WriteCode(pSFWorkresize+18, "\x66\x90");    // nop
 	} else {
 		WriteCode(pSFWorkresize, "\x48\x89\xC8"		// mov rax,rcx
 								 "\x66\x90");		// nop
 	}
+	if (pDESubWorkFreeStr[3] == 0x74) {
+		DESubWork_FreeStr_org = pDESubWorkFreeStr[4];
+		call.disp = MKDISP(rDESubWork_FreeStr_inline, pDESubWorkFreeStr+5);
+		WriteMemory(pDESubWorkFreeStr, &call.op, 5);
+	} else {
+		DESubWork_FreeStr_org = MKABS(pDESubWorkFreeStr);
+		i = MKDISP(rDESubWork_FreeStr, pDESubWorkFreeStr+4);
+		WriteMemory(pDESubWorkFreeStr, &i, 4);
+		if (CMD_VERSION(10,0,18362,1) || CMD_VERSION(10,0,18362,449)) {
+			// DESubWork is inlined twice.
+			LPBYTE p = pDESubWorkFreeStr - 0x3AE;
+			memcpy(oldDESubWorkFreeStr1, p, 4);
+			i = MKDISP(rDESubWork_FreeStr, p+4);
+			WriteMemory(p, &i, 4);
+			p -= 0xB0;
+			memcpy(oldDESubWorkFreeStr2, p, 4);
+			i = MKDISP(rDESubWork_FreeStr, p+4);
+			WriteMemory(p, &i, 4);
+		}
+	}
+	mkstr_size = 0x4004;
+	mkstr_overhead = CMD_MAJOR_MINOR(>=, 6,0) ? 16 : 20;
 #else
-	SFWork_passed = *pSFWorkpassed;
 	SFWork_first = CMD_MAJOR_MINOR(>=, 6,2) ? 12 : 20;
 	if (*pSFWorkmkstr == 0xE8) {
-		SFWork_mkstr_org = MKABS(pSFWorkmkstr+1);
 		if (pSFWorkmkstr[-5] == 0x68) {
 			SFWork_stdcall = TRUE;
 		}
@@ -1160,7 +1239,6 @@ void hookCmd(void)
 		WriteMemory(pSFWorkmkstr+1, &i, 4);
 	} else {
 		SFWork_mkstr_reg = pSFWorkmkstr[0x33];
-		SFWork_mkstr_org = **(LPDWORD *)(pSFWorkmkstr+2);
 		call.disp = MKDISP(SFWork_mkstr, pSFWorkmkstr+6);
 		WriteMemory(pSFWorkmkstr, &call, 6);
 	}
@@ -1174,13 +1252,28 @@ void hookCmd(void)
 									 "\x66\x66\x90");	// nop
 		}
 	} else {
-		WriteCode(pSFWorkresize, "\x59"			// pop ecx
-								 "\x59"			// pop ecx
-								 "\x58"			// pop eax
-								 "\x59"			// pop ecx
-								 "\x66\x90");	// nop
+		WriteCode(pSFWorkresize, "\x59"                 // pop ecx
+								 "\x59"                 // pop ecx
+								 "\x58"                 // pop eax
+								 "\x59"                 // pop ecx
+								 "\x66\x90");           // nop
+		WriteCode(pSFWorkresize+19, "\x66\x90");        // nop
 	}
+	if CMD_MAJOR_MINOR(==, 6,2) {
+		call.disp = MKDISP(DESubWork_FreeStr_inline, pDESubWorkFreeStr+5);
+		WriteMemory(pDESubWorkFreeStr, &call.op, 5);
+	} else {
+		DESubWork_FreeStr_org = MKABS(pDESubWorkFreeStr);
+		i = MKDISP(CMD_MAJOR_MINOR(<, 6,2) ? DESubWork_FreeStr_stdcall
+										   : DESubWork_FreeStr_fastcall,
+				   pDESubWorkFreeStr+4);
+		WriteMemory(pDESubWorkFreeStr, &i, 4);
+	}
+	mkstr_size = CMD_MAJOR_MINOR(>, 5,0) ? 0x4004 : 0x2004;
+	mkstr_overhead = CMD_MAJOR_MINOR(>=, 6,0) ? 8 : 12;
 #endif
+	mkstr_alloc = mkstr_size + mkstr_overhead;
+	mkstr = (DWORD_PTR) pmkstr;
 
 	// Patch FOR to fix a bug with wildcard expansion: each name accumulates,
 	// resizing bigger and bigger (this patch is not undone on unload).
@@ -1460,6 +1553,7 @@ void unhookCmd(void)
 	WriteMemory(pCtrlCAborts, oldCtrlCAborts, sizeof(oldCtrlCAborts));
 	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
+	WriteMemory(pDESubWorkFreeStr, oldDESubWorkFreeStr, 5);
 	WriteMemory(pForFbegin, oldForFbegin, 6);
 	WriteMemory(pForFend, oldForFend, 6);
 	WriteMemory(pGotoEof, oldGotoEof, 6);
@@ -1467,6 +1561,12 @@ void unhookCmd(void)
 	WriteMemory(pForFoptions, &oldParseForF, 4);
 	WriteMemory(pCallWorkresize, &oldCallWorkresize, 4);
 #ifdef _WIN64
+	if (CMD_VERSION(10,0,18362,1) || CMD_VERSION(10,0,18362,449)) {
+		LPBYTE p = pDESubWorkFreeStr - 0x3AE;
+		WriteMemory(p, oldDESubWorkFreeStr1, 4);
+		p -= 0xB0;
+		WriteMemory(p, oldDESubWorkFreeStr2, 4);
+	}
 	WriteMemory(pMyGetEnvVarPtr, rMyGetEnvVarPtrOrg, MyGetEnvVarPtr_size);
 #else
 	WriteMemory(pMyGetEnvVarPtr, MyGetEnvVarPtrOrg, MyGetEnvVarPtr_size);
@@ -1478,4 +1578,9 @@ void unhookCmd(void)
 #ifdef _WIN64
 	VirtualFree(redirect, 0, MEM_RELEASE);
 #endif
+}
+
+void doneCmdBat(void)
+{
+	kh_clear(ptrdw, sfwork_map);
 }

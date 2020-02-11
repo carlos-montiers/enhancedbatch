@@ -1445,6 +1445,7 @@ MyCmdBatNotification(BOOL start)
 		SafeCloseHandle(CreateThread(NULL, 4096, FreeLibraryThread, NULL, 0, NULL));
 	} else {
 		kh_clear(line, batch_lnums);
+		doneCmdBat();
 	}
 
 	return rc;
