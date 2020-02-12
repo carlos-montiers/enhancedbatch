@@ -48,7 +48,7 @@ int main() {
 /*
   2019-02-25 (jmh):
 
-	* Add a map with a wide string key.
+	* Add a map with a wide string key (2020-02-12: ignore case).
 
   2013-05-02 (0.2.8):
 
@@ -419,8 +419,8 @@ static kh_inline khint_t __ac_X31_hash_string(const char *s)
  */
 static kh_inline khint_t __ac_X31_hash_wstring(const wchar_t *s)
 {
-	khint_t h = (khint_t)*s & 0xff;
-	if (h) for (++s ; *s; ++s) h = (h << 5) - h + ((khint_t)*s & 0xff);
+	khint_t h = (khint_t)towlower(*s) & 0xff;
+	if (*s) for (++s ; *s; ++s) h = (h << 5) - h + ((khint_t)towlower(*s) & 0xff);
 	return h;
 }
 /*! @function
@@ -432,7 +432,7 @@ static kh_inline khint_t __ac_X31_hash_wstring(const wchar_t *s)
 /*! @function
   @abstract 	Const wchar_t* comparison function
  */
-#define kh_wcs_hash_equal(a, b) (wcscmp(a, b) == 0)
+#define kh_wcs_hash_equal(a, b) (_wcsicmp(a, b) == 0)
 
 static kh_inline khint_t __ac_Wang_hash(khint_t key)
 {

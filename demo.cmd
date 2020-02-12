@@ -69,8 +69,7 @@ echo -------
 pause & call @clear
 
 set $A=1
-set $a=2
-echo $A=%$A% $a=%$a%
+echo $A=%$A%
 
 echo Left aligned:  !$A;-5!.
 echo Right aligned: !$A;5!.
@@ -148,11 +147,6 @@ set $myvar
 echo Looking in heap:
 if defined $myvar echo yep it is defined
 echo $myvar = %$myvar%
-
-echo Setting case sensitive variables:
-set "$A=1"
-set "$a=2"
-echo $A = %$A% $a = %$a%
 
 echo Calling to extension @getch. Enter a character ...
 set "code=%@getch%"
