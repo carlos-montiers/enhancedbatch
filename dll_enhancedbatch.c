@@ -734,27 +734,30 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 		DWORD varmax = STRINGBUFFERMAX;
 
-		if (lpValue != NULL && *lpValue == L' ' && *lpName != L'@') {
+		if (lpValue != NULL && *lpValue == L' ') {
 			DWORD len = wcslen(lpName);
 			if (len > 1 && lpName[len-1] == L' ') {
 				lpName = name = _wcsdup(lpName);
 				name[len-1] = L'\0';
 				++lpValue;
-			} else if (len > 2 && lpName[len-1] == L'+' && lpName[len-2] == L' ') {
-				lpName = name = _wcsdup(lpName);
-				name[len-2] = L'\0';
-				len = MyGetEnvironmentVariableW(name, varBuffer, STRINGBUFFERMAX);
-				varbuf += len;
-				varmax -= len;
-				++lpValue;
-				append = TRUE;
-			}
-		}
-
-		if (lpValue != NULL && *lpValue == L'@') {
-			if (MyGetEnvironmentVariableW(lpValue, varbuf, varmax) != 0
-				|| lpValue[1] == L'@') {
-				lpValue = varbuf;
+			} else if (len > 2 && lpName[len-2] == L' ') {
+				if (lpName[len-1] == L'+' && (*lpName != L'@' ||
+					bsearch(lpName, setExtensionList, lenof(setExtensionList),
+							sizeof(struct sExt), extcmp) == NULL)) {
+					lpName = name = _wcsdup(lpName);
+					name[len-2] = L'\0';
+					len = MyGetEnvironmentVariableW(name, varBuffer, STRINGBUFFERMAX);
+					varbuf += len;
+					varmax -= len;
+					++lpValue;
+					append = TRUE;
+				} else if (lpName[len-1] == L':') {
+					lpName = name = _wcsdup(lpName);
+					name[len-2] = L'\0';
+					if (MyGetEnvironmentVariableW(++lpValue, varbuf, varmax) != 0) {
+						lpValue = varbuf;
+					}
+				}
 			}
 		}
 

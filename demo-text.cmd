@@ -42,7 +42,7 @@ call @text /p 11 56 /fg 4 /d /t /v /rl left
 call @text /p 13 56 /fg 5 /d /t /v /rr right
 call @text /p 12 55 /fg 6 /d /t /v /rt twice
 
-set $delayedexpansion=@delayedexpansion
+set $delayedexpansion := @delayedexpansion
 set @delayedexpansion=on
 set $fg=0
 for /l %%D in (225,225,3600) do (

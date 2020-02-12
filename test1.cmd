@@ -15,13 +15,13 @@ call @timerhi start
 call @sleep 45
 call @timerhi
 call @timer
-set $hi=@timerhi
-set $lo=@timer
+set $hi := @timerhi
+set $lo := @timer
 :: These aren't as good as they could be due to testing in virtual machines.
 if %$lo% lss 30 echo Failed: low timer too short (%$lo% ^< 45).&goto :eof
 if %$hi% lss 30000 echo Failed: high timer too short (%$hi% ^< 45000).&goto :eof
 
-set $temp=@tempfile
+set $temp := @tempfile
 if not exist %$temp% echo Failed: temporary file doesn't exist.&goto :eof
 >>%$temp% call :test
 ::copy %$temp% test1.out

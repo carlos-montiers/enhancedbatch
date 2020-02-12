@@ -1,7 +1,7 @@
 @echo off
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
-set $temp=@tempfile
+set $temp := @tempfile
 >>%$temp% call :test
 ::copy %$temp% test2.out
 fc >nul test2.out %$temp% || (
@@ -16,7 +16,7 @@ set /a $lnum=%@batchline% + 5
 >%$temp% call @write /n "%~nx0:%$lnum%: "
 2>>%$temp% set /a
 set @batchfile=1
-set $temp2=@tempfile
+set $temp2 := @tempfile
 2>>%$temp2% set /a
 fc >nul %$temp% %$temp2% && goto :passed
 :: It may have failed because language resources are missing.

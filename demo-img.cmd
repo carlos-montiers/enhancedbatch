@@ -30,7 +30,7 @@ set $size=%errorlevel%
 set /a $height=%$size% ^>^> 8 ^& 0xFF
 set /a $width=%$size% ^& 0xFF
 
-set $delayedexpansion=@delayedexpansion
+set $delayedexpansion := @delayedexpansion
 set @delayedexpansion=on
 
 for /l %%O in (2,1,%$#%) do (
@@ -50,7 +50,7 @@ if not defined $r (
   set @row=!$r!
 )
 
-set $cursor=@cursor
+set $cursor := @cursor
 set @cursor=off
 
 call @img %$options% /copy /n "%$imgfile%"
