@@ -210,6 +210,7 @@ void unhookCmd(void);
 void doneCmdBat(void);
 void hookCtrlCAborts(char aborts);
 DWORD getVar(LPCWSTR lpName);
+int __fastcall displayVars(LPCWSTR prefix);
 
 enum {
 	ieol, iMSCmdVar, iLexText, iTmpBuf, iPutStdErrMsg, iCurrentBatchFile,
@@ -219,6 +220,7 @@ enum {
 	iSFWorkresize, iSFWorksaved, iDESubWorkFreeStr, iGotoFlag, iForFbegin,
 	iForFend, iParseFortoken, iLexBufPtr, iLexBufferend, iForFoptions, iTokLen,
 	iGotoEof, iGotopos, iGotostart, iCallWorkresize, iMyGetEnvVarPtr,
+	iDisplayEnv, iDisplayEnvVariable,
 	OFFSETS
 };
 
@@ -264,3 +266,5 @@ enum {
 #define pGotostart			cmd_addrs[iGotostart]
 #define pCallWorkresize 	((int *) cmd_addrs[iCallWorkresize])
 #define pMyGetEnvVarPtr 	cmd_addrs[iMyGetEnvVarPtr]
+#define pDisplayEnv 		((int *) cmd_addrs[iDisplayEnv])
+#define pDisplayEnvVariable ((int *) cmd_addrs[iDisplayEnvVariable])

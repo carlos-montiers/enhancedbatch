@@ -5,8 +5,8 @@ rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Failed: Enhanced Batch didn't load.&goto :eof
 
 set $var=1
-2>nul set $var && (echo Failed: $var is in the environment.&goto :eof)
 if not defined $var echo Failed: $var is not defined.&goto :eof
+>nul 2>nul set $var || (echo Failed: $var not displayed by SET.&goto :eof)
 set /a $var+=1
 if not %$var%==2 echo Failed: $var is not recognised by SET /A.&goto :eof
 

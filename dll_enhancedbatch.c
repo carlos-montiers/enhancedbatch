@@ -324,6 +324,48 @@ void setChars(void)
 	}
 }
 
+int sortcmp(const void *a, const void *b)
+{
+	return _wcsicmp(*(LPCWSTR *) a, *(LPCWSTR *) b);
+}
+
+int __fastcall displayVars(LPCWSTR prefix)
+{
+	LPCWSTR *vars;
+	DWORD count;
+	DWORD len;
+	khint_t k;
+
+	vars = malloc(kh_size(variables) * sizeof(LPCWSTR) * 2);
+	if (vars == NULL) {
+		return EXIT_FAILURE;
+	}
+	if (prefix != NULL) {
+		len = wcslen(prefix);
+		if (len > 0 && prefix[len-1] == L' ') {
+			--len;
+		}
+	}
+	count = 0;
+	for (k = kh_begin(variables); k != kh_end(variables); ++k) {
+		if (kh_exist(variables, k)
+			&& (prefix == NULL ||
+				_wcsnicmp(kh_key(variables, k), prefix, len) == 0)) {
+			vars[count++] = kh_key(variables, k);
+			vars[count++] = kh_val(variables, k);
+		}
+	}
+	qsort(vars, count / 2, sizeof(LPCWSTR) * 2, sortcmp);
+
+	for (k = 0; k < count; k += 2) {
+		cmd_printf(L"%s=%s\r\n", vars[k], vars[k+1]);
+	}
+
+	free(vars);
+
+	return count == 0 ? EXIT_FAILURE : EXIT_SUCCESS;
+}
+
 int extcmp(const void *a, const void *b)
 {
 	return _wcsicmp(a, *(LPCWSTR *) b);

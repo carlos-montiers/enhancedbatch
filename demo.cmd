@@ -142,11 +142,11 @@ set @color=A1
 
 echo Setting $myvar
 set "$myvar=okay"
-echo Looking in environment block:
-set $myvar
-echo Looking in heap:
-if defined $myvar echo yep it is defined
 echo $myvar = %$myvar%
+echo Displaying via SET:
+set $myvar
+echo Testing via DEFINED:
+if defined $myvar echo Yep, it is defined.
 
 echo Calling to extension @getch. Enter a character ...
 set "code=%@getch%"

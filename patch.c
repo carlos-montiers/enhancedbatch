@@ -64,10 +64,12 @@ DWORD MyGetEnvVarPtr_org;
 DWORD MyGetEnvVarPtr_size;
 
 int oldPutMsg, oldParseFor, oldParseForF, oldCallWorkresize;
+int oldDisplayEnv, oldDisplayEnvVariable;
 BYTE oldLexText[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
 BYTE oldDESubWorkFreeStr[5];
 BYTE oldForFbegin[6], oldForFend[6], oldGotoEof[6];
 DWORD_PTR mkstr, FreeStack, DESubWork_FreeStr_org, ForFend_org;
+DWORD_PTR DisplayEnv_org, DisplayEnvVariable_org;
 BYTE SFWork_mkstr_reg, Goto_reg;
 DWORD mkstr_size, mkstr_overhead, mkstr_alloc;
 
@@ -655,6 +657,31 @@ PROC(CallWorkresize_fastcall62_hook)
 	"jmp *_CallWorkresize_org\n"
 ENDPROC
 
+PROC(DisplayEnv_hook)
+	"push %ecx\n"
+	"xor %ecx,%ecx\n"
+	"call _displayVars\n"
+	"pop %ecx\n"
+	"jmp *_DisplayEnv_org"
+ENDPROC
+
+PROC(DisplayEnvVariable_hook)
+	"movzxw (%esi),%eax\n"
+	"cmp $'$',%eax\n"
+	"je 1f\n"
+	"cmp $'@',%eax\n"
+	"je 1f\n"
+	"jmp *_DisplayEnvVariable_org\n"
+	"1:\n"
+	"mov %esi,%ecx\n"
+	"call _displayVars\n"
+	"cmp 4(%esp),%esi\n"        // < 6.3 is stdcall
+	"je 1f\n"
+	"ret\n"
+	"1:\n"
+	"ret $4"
+ENDPROC
+
 void MyGetEnvVarPtr_fastcall_hook(), MyGetEnvVarPtr_fastcall62_hook();
 void MyGetEnvVarPtrOrg();
 
@@ -835,6 +862,8 @@ ENDPROC
 #define rMyGetEnvVarPtr_org (DWORD_PTR *)(redirect + redirect_data[19])
 #define rDESubWork_FreeStr	(redirect + redirect_data[20])
 #define rDESubWork_FreeStr_inline (redirect + redirect_data[21])
+#define DisplayEnv_hook 	(redirect + redirect_data[22])
+#define DisplayEnvVariable_hook (redirect + redirect_data[23])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
@@ -866,6 +895,8 @@ PROC(redirect_code)
 	"rel aMyGetEnvVarPtr_org\n"
 	"rel rDESubWork_FreeStr\n"
 	"rel rDESubWork_FreeStr_inline\n"
+	"rel DisplayEnv_hook\n"
+	"rel DisplayEnvVariable_hook\n"
 
 "redirect_code_start:\n"
 
@@ -964,7 +995,6 @@ PROC(redirect_code)
 	"push %rax\n"
 	"call *aParseForF(%rip)\n"
 	"pop %rax\n"
-"1:\n"
 	"ret\n"
 
 "rCallWorkresize:\n"
@@ -976,6 +1006,31 @@ PROC(redirect_code)
 	"pop %rdx\n"
 	"pop %rcx\n"
 	"jmp *aCallWorkresize_org(%rip)\n"
+
+"DisplayEnv_hook:\n"
+	"push %rcx\n"
+	"xor %ecx,%ecx\n"
+	"sub $32,%rsp\n"
+	"call *adisplayVars(%rip)\n"
+	"add $32,%rsp\n"
+	"pop %rcx\n"
+	"movabs DisplayEnv_org,%rax\n"
+	"jmp *%rax\n"
+
+"DisplayEnvVariable_hook:\n"
+	"movzxw (%rcx),%eax\n"
+	"cmp $'$',%eax\n"
+	"je 1f\n"
+	"cmp $'@',%eax\n"
+	"je 1f\n"
+	"movabs DisplayEnvVariable_org,%rax\n"
+	"jmp *%rax\n"
+	"1:\n"
+	"sub $40,%rsp\n"
+	"call *adisplayVars(%rip)\n"
+	"add $40,%rsp\n"
+"1:\n"
+	"ret\n"
 
 "rMyGetEnvVarPtr:\n"
 	"push %rcx\n"
@@ -1005,6 +1060,7 @@ PROC(redirect_code)
 	"abs GotoEof\n"
 	"abs CallWorkresize_hook\n"
 	"aCallWorkresize_org: .quad 0\n"
+	"abs displayVars\n"
 	"abs MyGetEnvVarPtr_hook\n"
 	"aMyGetEnvVarPtr_org: .quad 0\n"
 
@@ -1122,6 +1178,8 @@ void hookCmd(void)
 	oldParseFor = *pParseFortoken;
 	oldParseForF = *pForFoptions;
 	oldCallWorkresize = *pCallWorkresize;
+	oldDisplayEnv = *pDisplayEnv;
+	oldDisplayEnvVariable = *pDisplayEnvVariable;
 	memcpy(oldCtrlCAborts, pCtrlCAborts, sizeof(oldCtrlCAborts));
 	memcpy(oldLexText, pLexText, 5);
 	memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
@@ -1473,6 +1531,15 @@ void hookCmd(void)
 #endif
 	WriteMemory(pCallWorkresize, &i, 4);
 
+	// Hook DisplayEnv & DisplayEnvVariable to allow SET to display our heap
+	// variables.
+	DisplayEnv_org = MKABS(pDisplayEnv);
+	i = MKDISP(DisplayEnv_hook, pDisplayEnv+1);
+	WriteMemory(pDisplayEnv, &i, 4);
+	DisplayEnvVariable_org = MKABS(pDisplayEnvVariable);
+	i = MKDISP(DisplayEnvVariable_hook, pDisplayEnvVariable+1);
+	WriteMemory(pDisplayEnvVariable, &i, 4);
+
 	// Hook MyGetEnvVarPtr to recognise heap variables and extensions.	This
 	// allows SET /A to use them directly.
 #ifdef _WIN64
@@ -1571,6 +1638,8 @@ void unhookCmd(void)
 #else
 	WriteMemory(pMyGetEnvVarPtr, MyGetEnvVarPtrOrg, MyGetEnvVarPtr_size);
 #endif
+	WriteMemory(pDisplayEnv, &oldDisplayEnv, 4);
+	WriteMemory(pDisplayEnvVariable, &oldDisplayEnvVariable, 4);
 
 	*pfDumpTokens = 0;
 	*pfDumpParse = 0;
