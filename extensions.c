@@ -115,7 +115,15 @@ DWORD Chhit(LPWSTR buffer, DWORD size)
 
 DWORD Getkb(LPWSTR buffer, DWORD size)
 {
-	return toString(getKeyCode(), buffer, size);
+	int code = getKeyCode();
+	extern LPCWSTR const getch_normal[], getch_enhanced[];
+	if (code > 0 && code < 128 && getch_normal[code] != NULL) {
+		return wsnprintf(buffer, size, L"%s", getch_normal[code]);
+	}
+	if (-code > 0 && -code < 167 && getch_enhanced[-code] != NULL) {
+		return wsnprintf(buffer, size, L"%s", getch_enhanced[-code]);
+	}
+	return toString(code, buffer, size);
 }
 
 DWORD Kbhit(LPWSTR buffer, DWORD size)
@@ -123,7 +131,7 @@ DWORD Kbhit(LPWSTR buffer, DWORD size)
 	if (_kbhit()) {
 		return Getkb(buffer, size);
 	} else {
-		return toString(-1, buffer, size);
+		return wsnprintf(buffer, size, L"VK_NONE");
 	}
 }
 

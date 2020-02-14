@@ -164,7 +164,7 @@ echo last char: !lastcode!
 
 echo Calling to extension @getkb. Press a key ...
 set "code=%@getkb%"
-echo code: !code! (zero padded: !code;05!)
+echo code: !code!
 
 echo Calling to extension @kbhit. Press a key ...
 set $i=0
@@ -172,7 +172,7 @@ set $i=0
 call @write /n // !$spinner:~%$i%,1!!$BS!
 set /a $i=(%$i%+1)^&3
 set "lastcode=%@kbhit%"
-if "!lastcode!" == "-1" call @sleep 100&goto kbloop
+if "!lastcode!" == "VK_NONE" call @sleep 100&goto kbloop
 echo last code: !lastcode!
 
 set /a $row=%@row%+3

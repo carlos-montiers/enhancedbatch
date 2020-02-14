@@ -68,7 +68,7 @@ if %$frames%==1 (
   call @getkb
 ) else (
   set $f=0
-  for (!@kbhit!==-1) do (
+  for (!@kbhit!==VK_NONE) do (
     call @image %$options% /f !$f! "%$imgfile%"
     if defined $fixedDelay (
       call @sleep %$fixedDelay%
