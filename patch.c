@@ -476,7 +476,7 @@ PROC(SFWork_mkstr)
 	"call *_FreeStack\n"        // free everything allocated between loops
 	"mov _SFWork_esp,%esp\n"
 	"1:\n"
-	"add $8,%edi\n"             // saved + 2, unused space in the node
+	"add $16,%edi\n"            // saved + 4, unused space in the node
 	"mov (%edi),%eax\n"
 	"test %eax,%eax\n"
 	"jnz 1f\n"                  // reuse the original mkstr
@@ -758,7 +758,7 @@ PROC(SFWork_mkstr)
 	"mov %eax,%ecx\n"
 	"call *FreeStack(%rip)\n"       // free everything allocated between loops
 	"1:\n"
-	"add $16,%rdi\n"                // saved + 2, unused space in the node
+	"add $32,%rdi\n"                // saved + 4, unused space in the node
 	"mov (%rdi),%rax\n"
 	"test %rax,%rax\n"
 	"jnz 1f\n"                      // reuse the original mkstr
