@@ -295,7 +295,9 @@ int sortcmp(const void *a, const void *b)
 	return _wcsicmp(*(LPCWSTR *) a, *(LPCWSTR *) b);
 }
 
-int __fastcall displayVars(LPCWSTR prefix)
+enum { EV_DISPLAY, EV_ADD, EV_REMOVE };
+
+int enumVars(LPCWSTR prefix, int op)
 {
 	LPCWSTR *vars;
 	DWORD count;
@@ -324,12 +326,23 @@ int __fastcall displayVars(LPCWSTR prefix)
 	qsort(vars, count / 2, sizeof(LPCWSTR) * 2, sortcmp);
 
 	for (k = 0; k < count; k += 2) {
-		cmd_printf(L"%s=%s\r\n", vars[k], vars[k+1]);
+		if (op == EV_DISPLAY) {
+			cmd_printf(L"%s=%s\r\n", vars[k], vars[k+1]);
+		} else if (op == EV_ADD) {
+			SetEnvironmentVariable(vars[k], vars[k+1]);
+		} else if (op == EV_REMOVE) {
+			SetEnvironmentVariable(vars[k], NULL);
+		}
 	}
 
 	free(vars);
 
 	return count == 0 ? EXIT_FAILURE : EXIT_SUCCESS;
+}
+
+int __fastcall displayVars(LPCWSTR prefix)
+{
+	return enumVars(prefix, EV_DISPLAY);
 }
 
 int extcmp(const void *a, const void *b)
@@ -1496,6 +1509,88 @@ BOOL Next(int argc, LPCWSTR argv[])
 	return TRUE;
 }
 
+BOOL fPipeSet;
+LPWSTR pipeVar;
+
+FILE *My_popen(LPCSTR command, LPCSTR mode)
+{
+	fPipeSet = FALSE;
+	LPCSTR p = command;
+	while (*p == ' ' || *p == '\t') {
+		++p;
+	}
+	if (STRIBEG(p, "set")
+		&& (p[3] == '\0' || p[3] == ' ' || p[3] == '\t' || p[3] == '|')) {
+		p += 3;
+		while (*p == ' ' || *p == '\t') {
+			++p;
+		}
+		if (*p == '\0' || *p == '|') {
+			fPipeSet = TRUE;
+		} else if (*p == '$' || *p == '@') {
+			LPCSTR beg = p;
+			while (*p != '\0' && *p != ' ' && *p != '\t' && *p != '|') {
+				++p;
+			}
+			int len = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, beg, p - beg,
+										  stringBuffer, STRINGBUFFERMAX);
+			stringBuffer[len] = L'\0';
+			pipeVar = _wcsdup(stringBuffer);
+			fPipeSet = TRUE;
+		}
+		if (fPipeSet) {
+			enumVars(pipeVar, EV_ADD);
+		}
+	}
+
+	return _popen(command, mode);
+}
+
+FILE *My_wpopen(LPCWSTR command, LPCWSTR mode)
+{
+	fPipeSet = FALSE;
+	LPCWSTR p = command;
+	while (*p == L' ' || *p == L'\t') {
+		++p;
+	}
+	if (WCSIBEG(p, L"set")
+		&& (p[3] == L'\0' || p[3] == L' ' || p[3] == L'\t' || p[3] == L'|')) {
+		p += 3;
+		while (*p == L' ' || *p == L'\t') {
+			++p;
+		}
+		if (*p == L'\0' || *p == L'|') {
+			fPipeSet = TRUE;
+		} else if (*p == L'$' || *p == L'@') {
+			LPCWSTR beg = p;
+			while (*p != L'\0' && *p != L' ' && *p != L'\t' && *p != L'|') {
+				++p;
+			}
+			pipeVar = malloc(WSZ(p - beg + 1));
+			wsncpy(pipeVar, p - beg + 1, beg);
+			fPipeSet = TRUE;
+		}
+		if (fPipeSet) {
+			enumVars(pipeVar, EV_ADD);
+		}
+	}
+
+	return _wpopen(command, mode);
+}
+
+int My_pclose(FILE *stream)
+{
+	if (fPipeSet) {
+		enumVars(pipeVar, EV_REMOVE);
+		if (pipeVar != NULL) {
+			free(pipeVar);
+			pipeVar = NULL;
+		}
+	}
+
+	return _pclose(stream);
+}
+
 DWORD WINAPI
 FreeLibraryThread(LPVOID param)
 {
@@ -1613,6 +1708,7 @@ void HookAPIOneMod(HMODULE hFromModule, // Handle of the module to intercept cal
 	for (; pImportDesc->Name != 0; pImportDesc++) {
 		PSTR pszModName = MakeVA(PSTR, pImportDesc->Name);
 		if (STRIEQ(pszModName, "kernel32.dll")
+			|| STRIEQ(pszModName, "msvcrt.dll")
 			|| STRIBEG(pszModName, "API-MS-Win-Core-ProcessEnvironment-")
 			|| STRIBEG(pszModName, "API-MS-Win-Core-String-")
 			|| STRIBEG(pszModName, "API-MS-Win-Core-File-")) {
@@ -1687,6 +1783,9 @@ HookFn *Hooks, AllHooks[] = {
 	{ "FindFirstFileExW",        (DWORD_PTR) MyFindFirstFileExW,        0 },
 	{ "FindNextFileW",           (DWORD_PTR) MyFindNextFileW,           0 },
 	{ "FindFirstFileW",          (DWORD_PTR) MyFindFirstFileW,          0 },
+	{ "_popen",                  (DWORD_PTR) My_popen,                  0 },
+	{ "_wpopen",                 (DWORD_PTR) My_wpopen,                 0 },
+	{ "_pclose",                 (DWORD_PTR) My_pclose,                 0 },
 	{ NULL, 0, 0 },
 },
 

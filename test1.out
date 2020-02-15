@@ -1,5 +1,13 @@
 $A=1 $b=2
 Embedded: e1 e1x2y e escaped
+Popen set $em
+ $embedded1=e1
+ $embedded1x2y=e1x2y
+Popen set | findstr ^\$e
+ $embedded1=e1
+ $embedded1x2y=e1x2y
+ $escape$=escaped
+Pipe not implemented, but heap variables above should still be absent.
 Left aligned:  1    .
 Right aligned:     1.
 Zero padded:   00001.
