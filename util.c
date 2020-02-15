@@ -63,7 +63,7 @@ int wsnprintf(LPWSTR buf, size_t size, LPCWSTR fmt, ...)
 	va_list args;
 
 	va_start(args, fmt);
-	int len = my_vsnwprintf(buf, size - 1, fmt, args);
+	int len = my_vsnwprintf(buf, size, fmt, args);
 	va_end(args);
 
 	return len;
