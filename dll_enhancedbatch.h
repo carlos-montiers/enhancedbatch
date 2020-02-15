@@ -153,7 +153,7 @@ extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
 extern const WCHAR EscapeHelpStr[];
 
-extern const WCHAR GetSetStr[], GetterStr[], SetterStr[], CallStr[];
+extern const WCHAR ConstStr[], GetSetStr[], GetterStr[], SetterStr[], CallStr[];
 
 #define DEFHELPSTR(ext) ext##BriefStr[], ext##HelpStr[]
 
@@ -181,6 +181,7 @@ extern const WCHAR
 	DEFHELPSTR(Underline), DEFHELPSTR(Unicode), DEFHELPSTR(Unique),
 	DEFHELPSTR(UnixTime), DEFHELPSTR(EBVersion), DEFHELPSTR(Voice),
 	DEFHELPSTR(Width), DEFHELPSTR(Year),
+	DEFHELPSTR(Yes), DEFHELPSTR(No), DEFHELPSTR(Ctrl),
 
 	DEFHELPSTR(CodePage), DEFHELPSTR(DumpParse), DEFHELPSTR(DumpTokens),
 	DEFHELPSTR(Next),

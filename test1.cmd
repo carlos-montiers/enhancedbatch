@@ -75,31 +75,31 @@ echo "+=":      !$var+!.
 echo "+= ":     !$ var+!.
 echo " +=":     !$var +!.
 
-echo Character TAB:!$TAB!.
-echo Character ESC:!$ESC!.
-echo Character BS:!$BS!.
-echo Character CR+LF:!$CR!!$LF!.
-echo Character CRLF:!$CRLF!.
-echo Character EXCL:!$EXCL!.
-echo Character QUOT:!$QUOT!.
-echo Character AMP:!$AMP!.
-echo Character BAR:!$BAR!.
-echo Character GT:!$GT!.
-echo Character LT:!$LT!.
-echo Character OPAR:!$OPAR!.
-echo Character CPAR:!$CPAR!.
-echo Character OBRC:!$OBRC!.
-echo Character CBRC:!$CBRC!.
-echo Character STAR:!$STAR!.
-echo Character QUES:!$QUES!.
-echo Character DOLLAR:!$DOLLAR!.
-echo Character SEMI:!$SEMI!.
-echo Character COMMA:!$COMMA!.
-echo Character EQ:!$EQ!.
+echo Character TAB:!@TAB!.
+echo Character ESC:!@ESC!.
+echo Character BS:!@BS!.
+echo Character CR+LF:!@CR!!@LF!.
+echo Character CRLF:!@CRLF!.
+echo Character EXCL:!@EXCL!.
+echo Character QUOT:!@QUOT!.
+echo Character AMP:!@AMP!.
+echo Character BAR:!@BAR!.
+echo Character GT:!@GT!.
+echo Character LT:!@LT!.
+echo Character OPAR:!@OPAR!.
+echo Character CPAR:!@CPAR!.
+echo Character OBRC:!@OBRC!.
+echo Character CBRC:!@CBRC!.
+echo Character STAR:!@STAR!.
+echo Character QUES:!@QUES!.
+echo Character DOLLAR:!@DOLLAR!.
+echo Character SEMI:!@SEMI!.
+echo Character COMMA:!@COMMA!.
+echo Character EQ:!@EQ!.
 
 call @write /n "No quotes or newline."
 echo.
-call @write /u LF line.!$CR!
+call @write /u LF line.!@CR!
 echo "A long string "^+
      "spread across "^+
      "multiple lines."

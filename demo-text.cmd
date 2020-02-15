@@ -11,7 +11,7 @@ If Not Defined @enhancedbatch (
 
 :: Legacy console will not necessarily erase spaces, so clear with no-break
 :: space to ensure the entire window will be redrawn.
-call @clear /c %$NBSP%
+call @clear /c %@NBSP%
 
 call @write /con /p 8 16 /af0 + /c 48 +
 

@@ -1383,7 +1383,7 @@ DWORD GetTempDir(LPWSTR buffer, DWORD size)
 static SYSTEMTIME st;
 static DWORD time_retrieved;
 static WCHAR point;
-static int english;
+static BYTE english;
 static const LPCWSTR MonthNames[] = {
 	L"January", L"February", L"March", L"April", L"May", L"June",
 	L"July", L"August", L"September", L"October", L"November", L"December"
@@ -1547,6 +1547,40 @@ DWORD GetUnixTime(LPWSTR buffer, DWORD size)
 	return wsnprintf(buffer, size, L"%I64d", time(NULL));
 }
 
+static WCHAR noyes[8];
+
+static void getNoYes(void) {
+	if (*noyes == L'\0') {
+		wcscpy(noyes, L"NY");
+		FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS|FORMAT_MESSAGE_FROM_HMODULE,
+					  NULL, 0x2328, 0, noyes, lenof(noyes), NULL);
+	}
+}
+
+DWORD GetYes(LPWSTR buffer, DWORD size)
+{
+	WCHAR yes;
+	if (english) {
+		yes = L'Y';
+	} else {
+		getNoYes();
+		yes = noyes[1];
+	}
+	return wsnprintf(buffer, size, L"%c", yes);
+}
+
+DWORD GetNo(LPWSTR buffer, DWORD size)
+{
+	WCHAR no;
+	if (english) {
+		no = L'N';
+	} else {
+		getNoYes();
+		no = noyes[0];
+	}
+	return wsnprintf(buffer, size, L"%c", no);
+}
+
 DWORD GetEnglish(LPWSTR buffer, DWORD size)
 {
 	return toString(english, buffer, size);
@@ -1554,11 +1588,7 @@ DWORD GetEnglish(LPWSTR buffer, DWORD size)
 
 BOOL SetEnglish(int argc, LPCWSTR argv[])
 {
-	if (argc != 1) {
-		return FALSE;
-	}
-	toNumber(&english, 1, argv);
-	return TRUE;
+	return setBoolean(&english, *argv);
 }
 
 DWORD GetDecSep(LPWSTR buffer, DWORD size)

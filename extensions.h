@@ -149,6 +149,9 @@ DWORD GetSecond(LPWSTR buffer, DWORD size);
 DWORD GetMilliseconds(LPWSTR buffer, DWORD size);
 DWORD GetUnixTime(LPWSTR buffer, DWORD size);
 
+DWORD GetYes(LPWSTR buffer, DWORD size);
+DWORD GetNo(LPWSTR buffer, DWORD size);
+
 DWORD GetEnglish(LPWSTR buffer, DWORD size);
 DWORD GetDecSep(LPWSTR buffer, DWORD size);
 

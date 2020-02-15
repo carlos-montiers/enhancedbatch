@@ -49,6 +49,7 @@ const WCHAR ArgErrorStr[]  = L"Failed to retrieve arguments.\n";
 const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
 const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
 
+const WCHAR ConstStr[] = L"Constants";
 const WCHAR GetSetStr[] = L"Read/Write Variables";
 const WCHAR GetterStr[] = L"Read-only Variables";
 const WCHAR SetterStr[] = L"Write-only Variables";
@@ -62,6 +63,7 @@ const WCHAR ReadcharBriefStr[]			= L"Read a character from the keyboard";
 const WCHAR CmdVersionBriefStr[]		= L"Version number of CMD";
 const WCHAR ColorBriefStr[] 			= L"Console colors";
 const WCHAR ColumnBriefStr[]			= L"Console window cursor column";
+const WCHAR CtrlBriefStr[]				= L"Control characters";
 const WCHAR CtrlCAbortsBriefStr[]		= L"Ctrl+C behavior";
 const WCHAR ConsoleCursorBriefStr[] 	= L"Console cursor visibility/size";
 const WCHAR DateBriefStr[]				= L"Date as YYYY-MM-DD";
@@ -92,6 +94,7 @@ const WCHAR MinuteBriefStr[]			= L"Minute value of the current time";
 const WCHAR MonthBriefStr[] 			= L"Month of the current date";
 const WCHAR MonthNameBriefStr[] 		= L"Name of the current month";
 const WCHAR MonthShortBriefStr[]		= L"Short name of the current month";
+const WCHAR NoBriefStr[]				= L"Character for no";
 const WCHAR OpacityBriefStr[]			= L"Opacity of the window";
 const WCHAR OSBuildBriefStr[]			= L"Windows build version number";
 const WCHAR OSMajorBriefStr[]			= L"Windows major version number";
@@ -122,6 +125,7 @@ const WCHAR EBVersionBriefStr[] 		= L"Enhanced Batch version number";
 const WCHAR VoiceBriefStr[] 			= L"Text-to-speech voice";
 const WCHAR WidthBriefStr[] 			= L"Console window width";
 const WCHAR YearBriefStr[]				= L"Year of the current date";
+const WCHAR YesBriefStr[]				= L"Character for yes";
 
 const WCHAR CodePageBriefStr[]			= L"Set both input and output code pages";
 const WCHAR DumpParseBriefStr[] 		= L"Display parser processing";
@@ -192,6 +196,17 @@ const WCHAR ColumnHelpStr[] =
 	L"Get or set the window cursor column.\r\n"
 	L"\r\n"
 	L"The left column is 0; will be -1 if there is no console.\r\n"
+;
+
+const WCHAR CtrlHelpStr[] =
+	L"Get a control character.\r\n"
+	L"\r\n"
+	L"  A-Z       characters 1 to 26 (U+0001 to U+001A)\r\n"
+	L"  [         character 27 (U+001B)\r\n"
+	L"  \\         character 28 (U+001C)\r\n"
+	L"  ]         character 29 (U+001D)\r\n"
+	L"  ^         character 30 (U+001E)\r\n"
+	L"  _         character 31 (U+001F)"
 ;
 
 const WCHAR CtrlCAbortsHelpStr[] =
@@ -268,7 +283,8 @@ const WCHAR EchoHelpStr[] =
 const WCHAR EnglishHelpStr[] =
 	L"Get or set English names\r\n"
 	L"\r\n"
-	L"If this is on month and day names will always be in English."
+	L"If this is on English will be used for month and day names, as well as the Yes\r\n"
+	L"and No characters."
 ;
 
 const WCHAR EnhancedBatchHelpStr[] =
@@ -356,6 +372,12 @@ const WCHAR MonthShortHelpStr[] =
 	L"Get the abbreviated name of the month of the current date.\r\n"
 	L"\r\n"
 	L"The name will be English if @english is on, otherwise locale dependent."
+;
+
+const WCHAR NoHelpStr[] =
+	L"Get the character for no.\r\n"
+	L"\r\n"
+	L"This will be N if @english is on, otherwise locale dependent."
 ;
 
 const WCHAR OpacityHelpStr[] =
@@ -525,6 +547,12 @@ const WCHAR YearHelpStr[] =
 	L"Get the year of the current date."
 ;
 
+const WCHAR YesHelpStr[] =
+	L"Get the character for yes.\r\n"
+	L"\r\n"
+	L"This will be Y if @english is on, otherwise locale dependent."
+;
+
 
 const WCHAR CodePageHelpStr[] =
 	L"Set both the input and output code pages.\r\n"
@@ -626,10 +654,14 @@ const WCHAR EscapeHelpStr[] =
 const WCHAR HelpHelpStr[] =
 	L"Display the extensions added by Enhanced Batch.\r\n"
 	L"\r\n"
-	L"CALL @HELP [extension | ALL]\r\n"
+	L"CALL @HELP [extension | ALL | CALL | CONST | GET | SET]\r\n"
 	L"\r\n"
 	L"  extension  display the help for this extension\r\n"
-	L"  ALL        display the help for all extensions"
+	L"  ALL        display the help for all extensions\r\n"
+	L"  CALL       display the functions\r\n"
+	L"  CONST      display the constants\r\n"
+	L"  GET        display the readable variables\r\n"
+	L"  SET        display the writable variables"
 ;
 
 const WCHAR ImageHelpStr[] =
