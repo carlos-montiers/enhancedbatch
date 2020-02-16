@@ -67,6 +67,7 @@ LPBYTE cmd_addrs[] = {
 	0,			// MyGetEnvVarPtr
 	0,			// DisplayEnv
 	0,			// DisplayEnvVariable
+	0,			// Dispatch:after delayed expansion
 };
 
 #ifdef _WIN64
@@ -111,6 +112,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x06f90,	// MyGetEnvVarPtr
 	0x13f2f,	// DisplayEnv
 	0x14008,	// DisplayEnvVariable
+	0x0175e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -153,6 +155,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x06fb0,	// MyGetEnvVarPtr
 	0x13f2f,	// DisplayEnv
 	0x14008,	// DisplayEnvVariable
+	0x0175e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -195,6 +198,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x05e40,	// MyGetEnvVarPtr
 	0x1a086,	// DisplayEnv
 	0x1a075,	// DisplayEnvVariable
+	0x01b0a,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -237,6 +241,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x093b0,	// MyGetEnvVarPtr
 	0x15181,	// DisplayEnv
 	0x15170,	// DisplayEnvVariable
+	0x0105a,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -279,6 +284,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x0410c,	// MyGetEnvVarPtr
 	0x1801f,	// DisplayEnv
 	0x1800e,	// DisplayEnvVariable
+	0x0111e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -321,6 +327,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x05228,	// MyGetEnvVarPtr
 	0x183cc,	// DisplayEnv
 	0x183bb,	// DisplayEnvVariable
+	0x012b6,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -363,6 +370,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x04a34,	// MyGetEnvVarPtr
 	0x18431,	// DisplayEnv
 	0x18420,	// DisplayEnvVariable
+	0x01136,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -405,6 +413,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x04a34,	// MyGetEnvVarPtr
 	0x18431,	// DisplayEnv
 	0x18420,	// DisplayEnvVariable
+	0x01136,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -447,6 +456,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x03670,	// MyGetEnvVarPtr
 	0x29710,	// DisplayEnv
 	0x296fe,	// DisplayEnvVariable
+	0x0113d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -489,6 +499,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x02a30,	// MyGetEnvVarPtr
 	0x2a050,	// DisplayEnv
 	0x2a03e,	// DisplayEnvVariable
+	0x01359,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -531,6 +542,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x032e0,	// MyGetEnvVarPtr
 	0x1f6cc,	// DisplayEnv
 	0x18607,	// DisplayEnvVariable
+	0x0133d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -573,6 +585,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x0d74c,	// MyGetEnvVarPtr
 	0x0ea6e,	// DisplayEnv
 	0x0ea4c,	// DisplayEnvVariable
+	0x17619,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -615,6 +628,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x123e0,	// MyGetEnvVarPtr
 	0x1ebee,	// DisplayEnv
 	0x0fe0d,	// DisplayEnvVariable
+	0x0d3bd,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -657,6 +671,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x03420,	// MyGetEnvVarPtr
 	0x1ff78,	// DisplayEnv
 	0x1874b,	// DisplayEnvVariable
+	0x0133d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -699,6 +714,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x02e90,	// MyGetEnvVarPtr
 	0x1dd4f,	// DisplayEnv
 	0x18be2,	// DisplayEnvVariable
+	0x0135d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -741,6 +757,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x0f900,	// MyGetEnvVarPtr
 	0x16250,	// DisplayEnv
 	0x06bf9,	// DisplayEnvVariable
+	0x0734d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -783,6 +800,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x0eff0,	// MyGetEnvVarPtr
 	0x19f8c,	// DisplayEnv
 	0x0c5c9,	// DisplayEnvVariable
+	0x0af0d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -825,6 +843,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x10700,	// MyGetEnvVarPtr
 	0x1a6a2,	// DisplayEnv
 	0x0e269,	// DisplayEnvVariable
+	0x0c25d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -867,6 +886,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x0ba50,	// MyGetEnvVarPtr
 	0x1e57e,	// DisplayEnv
 	0x05305,	// DisplayEnvVariable
+	0x0fc7d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -909,6 +929,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x0bc90,	// MyGetEnvVarPtr
 	0x1e6c6,	// DisplayEnv
 	0x05475,	// DisplayEnvVariable
+	0x0fefd,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -951,6 +972,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x0c450,	// MyGetEnvVarPtr
 	0x1e890,	// DisplayEnv
 	0x04c45,	// DisplayEnvVariable
+	0x1072d,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -993,6 +1015,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x13b70,	// MyGetEnvVarPtr
 	0x1ae38,	// DisplayEnv
 	0x09979,	// DisplayEnvVariable
+	0x0c8dd,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_17763_592[] = {
@@ -1035,6 +1058,7 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x13b70,	// MyGetEnvVarPtr
 	0x1c01e,	// DisplayEnv
 	0x09979,	// DisplayEnvVariable
+	0x0c8dd,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -1077,6 +1101,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x12bf0,	// MyGetEnvVarPtr
 	0x1e282,	// DisplayEnv
 	0x139a9,	// DisplayEnvVariable
+	0x0b5ad,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_18362_449[] = {
@@ -1119,6 +1144,7 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x12bf0,	// MyGetEnvVarPtr
 	0x1e3d2,	// DisplayEnv
 	0x139a9,	// DisplayEnvVariable
+	0x0b5ad,	// Dispatch:after delayed expansion
 };
 
 #else
@@ -1163,6 +1189,7 @@ const DWORD cmd_5_0_2144_1[] = {
 	0x061f1,	// MyGetEnvVarPtr
 	0x06039,	// DisplayEnv
 	0x06002,	// DisplayEnvVariable
+	0x0c738,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_0_2195_1600[] = {
@@ -1205,6 +1232,7 @@ const DWORD cmd_5_0_2195_1600[] = {
 	0x061f6,	// MyGetEnvVarPtr
 	0x0603e,	// DisplayEnv
 	0x06007,	// DisplayEnvVariable
+	0x0c72c,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_0_2195_2104[] = {
@@ -1247,6 +1275,7 @@ const DWORD cmd_5_0_2195_2104[] = {
 	0x061f6,	// MyGetEnvVarPtr
 	0x0603e,	// DisplayEnv
 	0x06007,	// DisplayEnvVariable
+	0x0c725,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_0_2195_4803[] = {
@@ -1289,6 +1318,7 @@ const DWORD cmd_5_0_2195_4803[] = {
 	0x0623c,	// MyGetEnvVarPtr
 	0x06084,	// DisplayEnv
 	0x0604d,	// DisplayEnvVariable
+	0x0c77c,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_0_2195_6656[] = {
@@ -1331,6 +1361,7 @@ const DWORD cmd_5_0_2195_6656[] = {
 	0x0625d,	// MyGetEnvVarPtr
 	0x0609e,	// DisplayEnv
 	0x06061,	// DisplayEnvVariable
+	0x0c7b0,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_0_2195_6995[] = {
@@ -1373,6 +1404,7 @@ const DWORD cmd_5_0_2195_6995[] = {
 	0x06314,	// MyGetEnvVarPtr
 	0x06155,	// DisplayEnv
 	0x06118,	// DisplayEnvVariable
+	0x0c86e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_1_2600_0[] = {
@@ -1415,6 +1447,7 @@ const DWORD cmd_5_1_2600_0[] = {
 	0x0210b,	// MyGetEnvVarPtr
 	0x0b5cb,	// DisplayEnv
 	0x0b5c1,	// DisplayEnvVariable
+	0x013d8,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_1_2600_2180[] = {
@@ -1457,6 +1490,7 @@ const DWORD cmd_5_1_2600_2180[] = {
 	0x02be1,	// MyGetEnvVarPtr
 	0x09daa,	// DisplayEnv
 	0x12edc,	// DisplayEnvVariable
+	0x013b8,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_1_2600_3311[] = {
@@ -1499,6 +1533,7 @@ const DWORD cmd_5_1_2600_3311[] = {
 	0x02bc9,	// MyGetEnvVarPtr
 	0x07e0a,	// DisplayEnv
 	0x12ef0,	// DisplayEnvVariable
+	0x013b8,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_1_2600_5512[] = {
@@ -1541,6 +1576,7 @@ const DWORD cmd_5_1_2600_5512[] = {
 	0x02bc9,	// MyGetEnvVarPtr
 	0x07e0a,	// DisplayEnv
 	0x12ef0,	// DisplayEnvVariable
+	0x013b8,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_2_3790_0[] = {
@@ -1583,6 +1619,7 @@ const DWORD cmd_5_2_3790_0[] = {
 	0x03709,	// MyGetEnvVarPtr
 	0x12f11,	// DisplayEnv
 	0x0be36,	// DisplayEnvVariable
+	0x01983,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_2_3790_1830[] = {
@@ -1625,6 +1662,7 @@ const DWORD cmd_5_2_3790_1830[] = {
 	0x037df,	// MyGetEnvVarPtr
 	0x12529,	// DisplayEnv
 	0x12519,	// DisplayEnvVariable
+	0x013ea,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_5_2_3790_3959[] = {
@@ -1667,6 +1705,7 @@ const DWORD cmd_5_2_3790_3959[] = {
 	0x032ed,	// MyGetEnvVarPtr
 	0x1346b,	// DisplayEnv
 	0x1345b,	// DisplayEnvVariable
+	0x01414,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_0_6000_16386[] = {
@@ -1709,6 +1748,7 @@ const DWORD cmd_6_0_6000_16386[] = {
 	0x0363a,	// MyGetEnvVarPtr
 	0x16eab,	// DisplayEnv
 	0x16e9b,	// DisplayEnvVariable
+	0x01a1e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_0_6001_18000[] = {
@@ -1751,6 +1791,7 @@ const DWORD cmd_6_0_6001_18000[] = {
 	0x01d61,	// MyGetEnvVarPtr
 	0x14e53,	// DisplayEnv
 	0x14e43,	// DisplayEnvVariable
+	0x01836,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7100_0[] = {
@@ -1793,6 +1834,7 @@ const DWORD cmd_6_1_7100_0[] = {
 	0x02f25,	// MyGetEnvVarPtr
 	0x15176,	// DisplayEnv
 	0x15166,	// DisplayEnvVariable
+	0x01472,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7600_16385[] = {
@@ -1835,6 +1877,7 @@ const DWORD cmd_6_1_7600_16385[] = {
 	0x0308d,	// MyGetEnvVarPtr
 	0x154db,	// DisplayEnv
 	0x154cb,	// DisplayEnvVariable
+	0x01492,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7601_17514[] = {
@@ -1877,6 +1920,7 @@ const DWORD cmd_6_1_7601_17514[] = {
 	0x0321b,	// MyGetEnvVarPtr
 	0x154b7,	// DisplayEnv
 	0x154a7,	// DisplayEnvVariable
+	0x014f1,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_1_7601_23403[] = {
@@ -1919,6 +1963,7 @@ const DWORD cmd_6_1_7601_23403[] = {
 	0x0321b,	// MyGetEnvVarPtr
 	0x154b7,	// DisplayEnv
 	0x154a7,	// DisplayEnvVariable
+	0x014f1,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_2_8102_0[] = {
@@ -1961,6 +2006,7 @@ const DWORD cmd_6_2_8102_0[] = {
 	0x03291,	// MyGetEnvVarPtr
 	0x26970,	// DisplayEnv
 	0x26960,	// DisplayEnvVariable
+	0x01513,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_2_9200_16384[] = {
@@ -2003,6 +2049,7 @@ const DWORD cmd_6_2_9200_16384[] = {
 	0x02fcb,	// MyGetEnvVarPtr
 	0x1a852,	// DisplayEnv
 	0x1a842,	// DisplayEnvVariable
+	0x0106a,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9431_0[] = {
@@ -2045,6 +2092,7 @@ const DWORD cmd_6_3_9431_0[] = {
 	0x03507,	// MyGetEnvVarPtr
 	0x1b5f7,	// DisplayEnv
 	0x1420f,	// DisplayEnvVariable
+	0x017f3,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9431_0u[] = {	// debug version
@@ -2087,6 +2135,7 @@ const DWORD cmd_6_3_9431_0u[] = {	// debug version
 	0x0c074,	// MyGetEnvVarPtr
 	0x0d053,	// DisplayEnv
 	0x0d02f,	// DisplayEnvVariable
+	0x14892,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9471_0[] = {
@@ -2129,6 +2178,7 @@ const DWORD cmd_6_3_9471_0[] = {
 	0x06f30,	// MyGetEnvVarPtr
 	0x1a584,	// DisplayEnv
 	0x0d679,	// DisplayEnvVariable
+	0x0b82f,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9600_16384[] = {
@@ -2171,6 +2221,7 @@ const DWORD cmd_6_3_9600_16384[] = {
 	0x029c9,	// MyGetEnvVarPtr
 	0x1bd77,	// DisplayEnv
 	0x1332c,	// DisplayEnvVariable
+	0x0113f,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_6_3_9600_17415[] = {
@@ -2213,6 +2264,7 @@ const DWORD cmd_6_3_9600_17415[] = {
 	0x036cb,	// MyGetEnvVarPtr
 	0x19a8a,	// DisplayEnv
 	0x0e53e,	// DisplayEnvVariable
+	0x01353,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_10240_16384[] = {
@@ -2255,6 +2307,7 @@ const DWORD cmd_10_0_10240_16384[] = {
 	0x0eca0,	// MyGetEnvVarPtr
 	0x15b14,	// DisplayEnv
 	0x081ca,	// DisplayEnvVariable
+	0x0880e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_10586_0[] = {
@@ -2297,6 +2350,7 @@ const DWORD cmd_10_0_10586_0[] = {
 	0x10000,	// MyGetEnvVarPtr
 	0x190c6,	// DisplayEnv
 	0x0da8a,	// DisplayEnvVariable
+	0x0c42e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_14393_0[] = {
@@ -2339,6 +2393,7 @@ const DWORD cmd_10_0_14393_0[] = {
 	0x0fc80,	// MyGetEnvVarPtr
 	0x1912d,	// DisplayEnv
 	0x0d79a,	// DisplayEnvVariable
+	0x0c13e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_15063_0[] = {
@@ -2381,6 +2436,7 @@ const DWORD cmd_10_0_15063_0[] = {
 	0x12570,	// MyGetEnvVarPtr
 	0x1be33,	// DisplayEnv
 	0x07aa5,	// DisplayEnvVariable
+	0x0fd9e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_16299_15[] = {
@@ -2423,6 +2479,7 @@ const DWORD cmd_10_0_16299_15[] = {
 	0x0b180,	// MyGetEnvVarPtr
 	0x1c66c,	// DisplayEnv
 	0x1c648,	// DisplayEnvVariable
+	0x07055,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_17134_1[] = {
@@ -2465,6 +2522,7 @@ const DWORD cmd_10_0_17134_1[] = {
 	0x13320,	// MyGetEnvVarPtr
 	0x1a9d2,	// DisplayEnv
 	0x0604c,	// DisplayEnvVariable
+	0x10e6e,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_17763_1[] = {
@@ -2507,6 +2565,7 @@ const DWORD cmd_10_0_17763_1[] = {
 	0x07f10,	// MyGetEnvVarPtr
 	0x1c044,	// DisplayEnv
 	0x0d89c,	// DisplayEnvVariable
+	0x0cd03,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_17763_592[] = {
@@ -2549,6 +2608,7 @@ const DWORD cmd_10_0_17763_592[] = {
 	0x085b0,	// MyGetEnvVarPtr
 	0x1bf01,	// DisplayEnv
 	0x0df4c,	// DisplayEnvVariable
+	0x0d3b3,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_18362_1[] = {
@@ -2591,6 +2651,7 @@ const DWORD cmd_10_0_18362_1[] = {
 	0x11ba0,	// MyGetEnvVarPtr
 	0x1c916,	// DisplayEnv
 	0x0a91a,	// DisplayEnvVariable
+	0x0e2c3,	// Dispatch:after delayed expansion
 };
 
 const DWORD cmd_10_0_18362_449[] = {
@@ -2633,6 +2694,7 @@ const DWORD cmd_10_0_18362_449[] = {
 	0x11d10,	// MyGetEnvVarPtr
 	0x1c908,	// DisplayEnv
 	0x0aa6a,	// DisplayEnvVariable
+	0x0e413,	// Dispatch:after delayed expansion
 };
 
 #endif

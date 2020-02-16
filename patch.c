@@ -26,6 +26,7 @@
 */
 
 #include "dll_enhancedbatch.h"
+#include <io.h>
 
 #include "khash.h"
 #ifdef _WIN64
@@ -48,6 +49,8 @@ struct sCmdEntry {
 	DWORD	  helpextra;
 };
 
+BYTE trace;
+
 #ifdef _WIN64
 LPBYTE redirect;
 BYTE oldCtrlCAborts[7];
@@ -66,10 +69,10 @@ DWORD MyGetEnvVarPtr_size;
 int oldPutMsg, oldParseFor, oldParseForF, oldCallWorkresize;
 int oldDisplayEnv, oldDisplayEnvVariable;
 BYTE oldLexText[5], oldSFWorkmkstr[6], oldSFWorkresize[6];
-BYTE oldDESubWorkFreeStr[5];
+BYTE oldDESubWorkFreeStr[5], oldDispatchAfterDE[6];
 BYTE oldForFbegin[6], oldForFend[6], oldGotoEof[6];
 DWORD_PTR mkstr, FreeStack, DESubWork_FreeStr_org, ForFend_org;
-DWORD_PTR DisplayEnv_org, DisplayEnvVariable_org;
+DWORD_PTR DisplayEnv_org, DisplayEnvVariable_org, DispatchAfterDE_org;
 BYTE SFWork_mkstr_reg, Goto_reg;
 DWORD mkstr_size, mkstr_overhead, mkstr_alloc;
 
@@ -417,6 +420,37 @@ void __fastcall CallWorkresize_hook(LPWSTR line)
 }
 
 
+void __fastcall TraceCommand(struct cmdnode *node)
+{
+	LPWSTR buf = varBuffer;
+	LPCWSTR end = L"";
+	if (_isatty(2)) {
+		*buf++ = L'[';
+		end = L"]";
+	}
+	if (node->redir != NULL) {
+		struct redirnode *redir = node->redir;
+		do {
+			if ((redir->symbol == L'<' && redir->fh != 0)
+				|| (redir->symbol == L'>' && redir->fh != 1)) {
+				buf += sbprintf(buf, L"%d", redir->fh);
+			}
+			buf += sbprintf(buf, L"%c", redir->symbol);
+			if (redir->append) {
+				buf += sbprintf(buf, L">", redir->symbol);
+			}
+			buf += sbprintf(buf, L"%s ", redir->name);
+			redir = redir->next;
+		} while (redir != NULL);
+	}
+	sbprintf(buf, L"%s%s%s\r\n",
+			 node->cmd, node->arg ?: L"", end);
+	LPVOID args = &varBuffer;
+	LPVOID pargs = &args;
+	MyPutStdErrMsg(0x2371, 2, 1, (va_list *) &pargs);
+}
+
+
 LPCWSTR __fastcall MyGetEnvVarPtr_hook(LPWSTR var)
 {
 	if (var != NULL && (*var == L'$' || *var == L'@')) {
@@ -682,6 +716,28 @@ PROC(DisplayEnvVariable_hook)
 	"ret $4"
 ENDPROC
 
+void DispatchAfterDE_cc();
+
+PROC(DispatchAfterDE_hook)
+	"push %ecx\n"
+	"pushf\n"
+	"mov %esi,%ecx\n"
+	"cmpl $0,(%ecx)\n"
+	"jne 1f\n"
+	"cmpb $0,_trace\n"
+	"je 1f\n"
+	"call _TraceCommand\n"
+	"1:\n"
+	"popf\n"
+	"pop %ecx\n"
+	"_DispatchAfterDE_cc:\n"
+	"jne 1f\n"
+	"mov _DispatchAfterDE_org,%eax\n"
+	"mov %eax,(%esp)\n"
+	"1:\n"
+	"ret"
+ENDPROC
+
 void MyGetEnvVarPtr_fastcall_hook(), MyGetEnvVarPtr_fastcall62_hook();
 void MyGetEnvVarPtrOrg();
 
@@ -864,6 +920,8 @@ ENDPROC
 #define rDESubWork_FreeStr_inline (redirect + redirect_data[21])
 #define DisplayEnv_hook 	(redirect + redirect_data[22])
 #define DisplayEnvVariable_hook (redirect + redirect_data[23])
+#define DispatchAfterDE_hook (redirect + redirect_data[24])
+#define DispatchAfterDE_cc	(redirect + redirect_data[25])
 
 // This code gets relocated to a region of memory closer to CMD, to stay within
 // the 32-bit relative address range.
@@ -897,6 +955,8 @@ PROC(redirect_code)
 	"rel rDESubWork_FreeStr_inline\n"
 	"rel DisplayEnv_hook\n"
 	"rel DisplayEnvVariable_hook\n"
+	"rel DispatchAfterDE_hook\n"
+	"rel DispatchAfterDE_cc\n"
 
 "redirect_code_start:\n"
 
@@ -1029,6 +1089,25 @@ PROC(redirect_code)
 	"sub $40,%rsp\n"
 	"call *adisplayVars(%rip)\n"
 	"add $40,%rsp\n"
+	"ret\n"
+
+"DispatchAfterDE_hook:\n"
+	"pushf\n"
+	"cmpl $0,(%rbx)\n"
+	"jne 1f\n"
+	"movabs trace,%al\n"
+	"cmp $0,%al\n"
+	"je 1f\n"
+	"mov %rbx,%rcx\n"
+	"sub $32,%rsp\n"
+	"call *aTraceCommand(%rip)\n"
+	"add $32,%rsp\n"
+	"1:\n"
+	"popf\n"
+"DispatchAfterDE_cc:\n"
+	"jne 1f\n"
+	"movabs DispatchAfterDE_org,%rax\n"
+	"mov %rax,(%rsp)\n"
 "1:\n"
 	"ret\n"
 
@@ -1061,6 +1140,7 @@ PROC(redirect_code)
 	"abs CallWorkresize_hook\n"
 	"aCallWorkresize_org: .quad 0\n"
 	"abs displayVars\n"
+	"abs TraceCommand\n"
 	"abs MyGetEnvVarPtr_hook\n"
 	"aMyGetEnvVarPtr_org: .quad 0\n"
 
@@ -1185,6 +1265,7 @@ void hookCmd(void)
 	memcpy(oldSFWorkmkstr, pSFWorkmkstr, 6);
 	memcpy(oldSFWorkresize, pSFWorkresize, 6);
 	memcpy(oldDESubWorkFreeStr, pDESubWorkFreeStr, 5);
+	memcpy(oldDispatchAfterDE, pDispatchAfterDE, 6);
 	memcpy(oldForFbegin, pForFbegin, 6);
 	memcpy(oldForFend, pForFend, 6);
 	memcpy(oldGotoEof, pGotoEof, 6);
@@ -1540,6 +1621,33 @@ void hookCmd(void)
 	i = MKDISP(DisplayEnvVariable_hook, pDisplayEnvVariable+1);
 	WriteMemory(pDisplayEnvVariable, &i, 4);
 
+	// Hook Dispatch after delayed expansion to possibly trace the command.
+	DispatchAfterDE_org = MKABS(pDispatchAfterDE+2);
+	call.disp = MKDISP(DispatchAfterDE_hook, pDispatchAfterDE+6);
+	WriteMemory(pDispatchAfterDE, &call, 6);
+#ifdef _WIN64
+	if (cmdDebug) {
+		// This version use jne, not je, patch our code to match.
+		--*(LPBYTE) DispatchAfterDE_cc; 	// jne -> je
+	}
+#else
+	if (CMD_MAJOR_MINOR(==, 5,0) || cmdDebug) {
+		// These versions use jne, not je, patch our code to match.
+		DWORD flOldProtect, flDummy;
+		VirtualProtect(DispatchAfterDE_cc, 1, PAGE_READWRITE, &flOldProtect);
+		--*(LPBYTE) DispatchAfterDE_cc; 	// jne -> je
+		VirtualProtect(DispatchAfterDE_cc, 1, flOldProtect, &flDummy);
+	}
+	if (CMD_MAJOR_MINOR(==, 6,2) || CMD_VERSION(10,0,16299,15)) {
+		// These versions use EDI, not ESI, patch our code to match.
+		DWORD flOldProtect, flDummy;
+		LPBYTE r = (LPBYTE) DispatchAfterDE_hook + 3;
+		VirtualProtect(r, 1, PAGE_READWRITE, &flOldProtect);
+		*r = 0xF9;
+		VirtualProtect(r, 1, flOldProtect, &flDummy);
+	}
+#endif
+
 	// Hook MyGetEnvVarPtr to recognise heap variables and extensions.	This
 	// allows SET /A to use them directly.
 #ifdef _WIN64
@@ -1621,6 +1729,7 @@ void unhookCmd(void)
 	WriteMemory(pSFWorkmkstr, oldSFWorkmkstr, 6);
 	WriteMemory(pSFWorkresize, oldSFWorkresize, 6);
 	WriteMemory(pDESubWorkFreeStr, oldDESubWorkFreeStr, 5);
+	WriteMemory(pDispatchAfterDE, oldDispatchAfterDE, 6);
 	WriteMemory(pForFbegin, oldForFbegin, 6);
 	WriteMemory(pForFend, oldForFend, 6);
 	WriteMemory(pGotoEof, oldGotoEof, 6);
@@ -1652,4 +1761,5 @@ void unhookCmd(void)
 void doneCmdBat(void)
 {
 	kh_clear(ptrdw, sfwork_map);
+	trace = 0;
 }

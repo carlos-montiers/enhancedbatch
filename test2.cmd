@@ -2,7 +2,7 @@
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
 if not defined @enhancedbatch echo Enhanced Batch failed to load.&goto :eof
 set $temp := @tempfile
->>%$temp% call :test
+>>%$temp% 2>&1 call :test
 ::copy %$temp% test2.out
 fc >nul test2.out %$temp% || (
   echo FAILED!
@@ -43,6 +43,8 @@ echo Echo on status: %@echo%
 set @echo=off
 echo Echo off status: %@echo%
 prompt %$prompt%
+set @trace=on
+set @trace=off
 set @extensions=no
 echo Extensions off, colon part of variable: %OS:_= %
 echo Tilde expansion: %$0;~nx%.

@@ -1618,6 +1618,11 @@ DWORD GetBatchFile(LPWSTR buffer, DWORD size)
 	return toString(batchfile, buffer, size);
 }
 
+DWORD GetTrace(LPWSTR buffer, DWORD size)
+{
+	return toString(trace, buffer, size);
+}
+
 BOOL SetBatchFile(int argc, LPCWSTR argv[])
 {
 	if (argc != 1) {
@@ -1625,6 +1630,11 @@ BOOL SetBatchFile(int argc, LPCWSTR argv[])
 	}
 	toNumber(&batchfile, 1, argv);
 	return TRUE;
+}
+
+BOOL SetTrace(int argc, LPCWSTR argv[])
+{
+	return setBoolean(&trace, *argv);
 }
 
 extern int ForF_stack[FORF_STACKSIZE], ForF_stacktop;

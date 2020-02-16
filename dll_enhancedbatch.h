@@ -100,8 +100,18 @@ void unload_delayed(void);
 
 extern LPBYTE cmd_addrs[];
 
+struct redirnode {
+	int fh;
+	LPWSTR name;
+	int unknown;
+	int append;
+	WCHAR symbol;
+	struct redirnode *next;
+};
+
 struct cmdnode {		// partial definition
-	LPVOID stuff[14];
+	LPVOID stuff[13];
+	struct redirnode *redir;
 	LPWSTR cmd;
 	LPWSTR arg;
 };
@@ -131,6 +141,7 @@ typedef LPWSTR (__fastcall *fastMSCmdVar)(LPVOID, LPCWSTR, int *, LPCWSTR, LPWST
 typedef LPWSTR (__fastcall *fastMSCmdVar62)(LPCWSTR, LPVOID, LPCWSTR, int *, LPWSTR *);
 #endif
 extern int batchfile;
+extern BYTE trace;
 
 #ifdef _WIN64
 #define ARCH L"amd64"
@@ -181,7 +192,7 @@ extern const WCHAR
 	DEFHELPSTR(Underline), DEFHELPSTR(Unicode), DEFHELPSTR(Unique),
 	DEFHELPSTR(UnixTime), DEFHELPSTR(EBVersion), DEFHELPSTR(Voice),
 	DEFHELPSTR(Width), DEFHELPSTR(Year),
-	DEFHELPSTR(Yes), DEFHELPSTR(No), DEFHELPSTR(Ctrl),
+	DEFHELPSTR(Yes), DEFHELPSTR(No), DEFHELPSTR(Ctrl), DEFHELPSTR(Trace),
 
 	DEFHELPSTR(CodePage), DEFHELPSTR(DumpParse), DEFHELPSTR(DumpTokens),
 	DEFHELPSTR(Next),
@@ -221,7 +232,7 @@ enum {
 	iSFWorkresize, iSFWorksaved, iDESubWorkFreeStr, iGotoFlag, iForFbegin,
 	iForFend, iParseFortoken, iLexBufPtr, iLexBufferend, iForFoptions, iTokLen,
 	iGotoEof, iGotopos, iGotostart, iCallWorkresize, iMyGetEnvVarPtr,
-	iDisplayEnv, iDisplayEnvVariable,
+	iDisplayEnv, iDisplayEnvVariable, iDispatchAfterDE,
 	OFFSETS
 };
 
@@ -269,3 +280,4 @@ enum {
 #define pMyGetEnvVarPtr 	cmd_addrs[iMyGetEnvVarPtr]
 #define pDisplayEnv 		((int *) cmd_addrs[iDisplayEnv])
 #define pDisplayEnvVariable ((int *) cmd_addrs[iDisplayEnvVariable])
+#define pDispatchAfterDE	cmd_addrs[iDispatchAfterDE]

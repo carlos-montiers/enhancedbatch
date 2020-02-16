@@ -116,6 +116,7 @@ const WCHAR TimemsBriefStr[]			= L"Time as HH:MM:SS.mmm";
 const WCHAR TimerVarBriefStr[]			= L"Time of the millisecond timer";
 const WCHAR HiTimerBriefStr[]			= L"Time of the microsecond timer";
 const WCHAR TitleBriefStr[] 			= L"Title of the window";
+const WCHAR TraceBriefStr[] 			= L"Trace commands";
 const WCHAR TransientBriefStr[] 		= L"Transient state of CMD";
 const WCHAR UnderlineBriefStr[] 		= L"Console underline attribute";
 const WCHAR UnicodeBriefStr[]			= L"Unicode output";
@@ -492,6 +493,14 @@ const WCHAR TitleHelpStr[] =
 	L"Get the title of the console window.\r\n"
 	L"\r\n"
 	L"The \"Administrator: \" prefix is removed."
+;
+
+const WCHAR TraceHelpStr[] =
+	L"Get or set the trace status.\r\n"
+	L"\r\n"
+	L"Enabling trace will write commands to standard error, in accordance with the\r\n"
+	L"@batchfile setting.  Commands will be placed in square brackets if writing to\r\n"
+	L"the console (e.g. \"test.bat:5: [echo trace]\")."
 ;
 
 const WCHAR TransientHelpStr[] =

@@ -160,8 +160,10 @@ BOOL SetDecSep(int argc, LPCWSTR argv[]);
 
 DWORD GetBatchLine(LPWSTR buffer, DWORD size);
 DWORD GetBatchFile(LPWSTR buffer, DWORD size);
+DWORD GetTrace(LPWSTR buffer, DWORD size);
 
 BOOL SetBatchFile(int argc, LPCWSTR argv[]);
+BOOL SetTrace(int argc, LPCWSTR argv[]);
 
 DWORD GetForLine(LPWSTR buffer, DWORD size);
 DWORD GetForLines(LPWSTR buffer, DWORD size);
