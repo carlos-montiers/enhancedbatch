@@ -972,9 +972,8 @@ int CallHelp(int argc, LPCWSTR argv[])
 		{
 			const struct sExt *end = ext + count;
 			for (; ext < end; ++ext) {
-				if (ext->brief != NULL
-					&& ((flag == ~2 && ext->args != 2)
-						|| flag == -1 || flag == ext->args)) {
+				if (flag == -1 || flag == ext->args
+					|| (flag == ~2 && ext->args != 2)) {
 					int len = wcslen(ext->name);
 					if (len > width) {
 						width = len;
@@ -1006,9 +1005,9 @@ int CallHelp(int argc, LPCWSTR argv[])
 		{
 			const struct sExt *end = ext + count;
 			for (; ext < end; ++ext) {
-				if (ext->brief != NULL
-					&& ((flag == ~2 && ext->args != 2)
-						|| flag == -1 || flag == ext->args)) {
+				if (flag == -1 || flag == ext->args
+					|| (flag == -2 && ext->help != NULL)
+					|| (flag == ~2 && ext->args != 2)) {
 					cmd_printf(L"%-*s%s\r\n", width, ext->name, ext->brief);
 				}
 			}
@@ -1028,7 +1027,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 
 			cmd_printf(L"\r\n");
 			printTitle(SetterStr);
-			printBriefHelp(setExtensionList, lenof(setExtensionList), -1);
+			printBriefHelp(setExtensionList, lenof(setExtensionList), -2);
 
 			cmd_printf(L"\r\n");
 			printTitle(CallStr);
