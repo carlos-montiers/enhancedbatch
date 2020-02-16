@@ -962,6 +962,9 @@ int CallHelp(int argc, LPCWSTR argv[])
 			show_call = TRUE;
 			show_all = FALSE;
 			argc = 0;
+		} else if (WCSIEQ(argv[0], L"mod")) {
+			cmd_printf(L"%s\r\n", ModHelpStr);
+			return EXIT_SUCCESS;
 		}
 	}
 

@@ -162,7 +162,7 @@ extern const WCHAR ProgramNameStr[];
 extern const WCHAR CloseWindowStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
-extern const WCHAR EscapeHelpStr[];
+extern const WCHAR EscapeHelpStr[], ModHelpStr[];
 
 extern const WCHAR ConstStr[], GetSetStr[], GetterStr[], SetterStr[], CallStr[];
 

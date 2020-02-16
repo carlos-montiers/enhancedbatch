@@ -663,13 +663,14 @@ const WCHAR EscapeHelpStr[] =
 const WCHAR HelpHelpStr[] =
 	L"Display the extensions added by Enhanced Batch.\r\n"
 	L"\r\n"
-	L"CALL @HELP [extension | ALL | CALL | CONST | GET | SET]\r\n"
+	L"CALL @HELP [extension | ALL | CALL | CONST | GET | MOD | SET]\r\n"
 	L"\r\n"
 	L"  extension  display the help for this extension\r\n"
 	L"  ALL        display the help for all extensions\r\n"
 	L"  CALL       display the functions\r\n"
 	L"  CONST      display the constants\r\n"
 	L"  GET        display the readable variables\r\n"
+	L"  MOD        display the variable modifiers\r\n"
 	L"  SET        display the writable variables"
 ;
 
@@ -863,4 +864,30 @@ const WCHAR WaitkeyHelpStr[] =
 	L"\r\n"
 	L"  /C        only wait if the window would close (implies /F)\r\n"
 	L"  /F        flush all keys before waiting"
+;
+
+const WCHAR ModHelpStr[] =
+	L"\"...\"           default value if the variable is not defined\r\n"
+	L"'...'\r\n"
+	L"`...`\r\n"
+	L"capital         upper case characters after space or tab, lower case the rest\r\n"
+	L"capital[LIST]   as above, also upper casing after characters in LIST\r\n"
+	L"hexify          convert characters below U+0100 to hexadecimal\r\n"
+	L"length          the length of the variable at this point\r\n"
+	L"lower           convert all to lower case\r\n"
+	L"ltrim           remove leading spaces and tabs\r\n"
+	L"ltrim[LIST]     remove leading characters from LIST\r\n"
+	L"NUMBER          pad to NUMBER characters (see below)\r\n"
+	L"rtrim           remove trailing spaces and tabs\r\n"
+	L"rtrim[LIST]     remove trailing characters from LIST\r\n"
+	L"trim            remove leading and trailing spaces and tabs\r\n"
+	L"trim[LIST]      remove leading and trailing characters from LIST\r\n"
+	L"unhexify        convert a sequence of pairs of hex digits to characters\r\n"
+	L"upper           convert all to upper case\r\n"
+	L"~               same as FOR\r\n"
+	L"\r\n"
+	L"If NUMBER starts with '-' left pad instead of right; if it starts with '0' pad\r\n"
+	L"with zeros instead of spaces.  Padding is applied after all other modifiers.\r\n"
+	L"\r\n"
+	L"To include ']' in LIST place it first."
 ;
