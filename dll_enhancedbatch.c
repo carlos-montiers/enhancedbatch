@@ -278,6 +278,32 @@ const struct sExt callExtensionList[] = {
 	{ L"@write",   ~0, CallWrite, HELPSTR(Write) },
 };
 
+// Modifiers, only for the help.
+const struct sExt modExtensionList[] = {
+	{ L"\"...\"",       0, NULL, HELPSTR(Default) },
+	{ L"'...'",         0, NULL, HELPSTR(Default) },
+	{ L"`...`",         0, NULL, HELPSTR(Default) },
+	{ L"alt",           0, NULL, HELPSTR(Alt) },
+	{ L"capital",       0, NULL, HELPSTR(Capital) },
+	{ L"capital[LIST]", 0, NULL, HELPSTR(CapitalList) },
+	{ L"ctrl",          0, NULL, HELPSTR(CtrlMod) },
+	{ L"hexify",        0, NULL, HELPSTR(Hexify) },
+	{ L"key",           0, NULL, HELPSTR(Key) },
+	{ L"length",        0, NULL, HELPSTR(Length) },
+	{ L"lower",         0, NULL, HELPSTR(Lower) },
+	{ L"ltrim",         0, NULL, HELPSTR(Ltrim) },
+	{ L"ltrim[LIST]",   0, NULL, HELPSTR(LtrimList) },
+	{ L"NUMBER",        0, NULL, HELPSTR(Number) },
+	{ L"rtrim",         0, NULL, HELPSTR(Rtrim) },
+	{ L"rtrim[LIST]",   0, NULL, HELPSTR(RtrimList) },
+	{ L"shift",         0, NULL, HELPSTR(Shift) },
+	{ L"trim",          0, NULL, HELPSTR(Trim) },
+	{ L"trim[LIST]",    0, NULL, HELPSTR(TrimList) },
+	{ L"unhexify",      0, NULL, HELPSTR(Unhexify) },
+	{ L"upper",         0, NULL, HELPSTR(Upper) },
+	{ L"~",             0, NULL, HELPSTR(Tilde) },
+};
+
 void setVar(LPCWSTR var, LPCWSTR val)
 {
 	khint_t k;
@@ -991,9 +1017,9 @@ int CallHelp(int argc, LPCWSTR argv[])
 		cmd_printf(L"\r\n\r\n");
 	}
 
-	BOOL show_all, show_const, show_get, show_set, show_call;
+	BOOL show_all, show_const, show_get, show_set, show_call, show_mod;
 	show_all = TRUE;
-	show_const = show_get = show_set = show_call = FALSE;
+	show_const = show_get = show_set = show_call = show_mod = FALSE;
 	if (argc == 1) {
 		if (WCSIEQ(argv[0], L"const")) {
 			show_const = TRUE;
@@ -1012,8 +1038,9 @@ int CallHelp(int argc, LPCWSTR argv[])
 			show_all = FALSE;
 			argc = 0;
 		} else if (WCSIEQ(argv[0], L"mod")) {
-			cmd_printf(L"%s\r\n", ModHelpStr);
-			return EXIT_SUCCESS;
+			show_mod = TRUE;
+			show_all = FALSE;
+			argc = 0;
 		}
 	}
 
@@ -1038,6 +1065,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 			findMaxLen(getExtensionList, lenof(getExtensionList), -1);
 			findMaxLen(setExtensionList, lenof(setExtensionList), -1);
 			findMaxLen(callExtensionList, lenof(callExtensionList), -1);
+			findMaxLen(modExtensionList, lenof(modExtensionList), -1);
 		} else if (show_const) {
 			findMaxLen(getExtensionList, lenof(getExtensionList), 2);
 		} else if (show_get) {
@@ -1046,6 +1074,8 @@ int CallHelp(int argc, LPCWSTR argv[])
 			findMaxLen(setExtensionList, lenof(setExtensionList), -1);
 		} else if (show_call) {
 			findMaxLen(callExtensionList, lenof(callExtensionList), -1);
+		} else if (show_mod) {
+			findMaxLen(modExtensionList, lenof(modExtensionList), -1);
 		}
 
 		width += 3;
@@ -1084,6 +1114,10 @@ int CallHelp(int argc, LPCWSTR argv[])
 			cmd_printf(L"\r\n");
 			printTitle(CallStr);
 			printBriefHelp(callExtensionList, lenof(callExtensionList), -1);
+
+			cmd_printf(L"\r\n");
+			printTitle(ModStr);
+			printBriefHelp(modExtensionList, lenof(modExtensionList), -1);
 		} else if (show_const) {
 			printBriefHelp(getExtensionList, lenof(getExtensionList), 2);
 		} else if (show_get) {
@@ -1092,6 +1126,8 @@ int CallHelp(int argc, LPCWSTR argv[])
 			printBriefHelp(setExtensionList, lenof(setExtensionList), -1);
 		} else if (show_call) {
 			printBriefHelp(callExtensionList, lenof(callExtensionList), -1);
+		} else if (show_mod) {
+			printBriefHelp(modExtensionList, lenof(modExtensionList), -1);
 		}
 
 		return EXIT_SUCCESS;
@@ -1113,6 +1149,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 		printHelp(getExtensionList, lenof(getExtensionList), 0);
 		printHelp(setExtensionList, lenof(setExtensionList), -1);
 		printHelp(callExtensionList, lenof(callExtensionList), -1);
+		printHelp(modExtensionList, lenof(modExtensionList), -1);
 
 		return EXIT_SUCCESS;
 	}
@@ -1122,6 +1159,10 @@ int CallHelp(int argc, LPCWSTR argv[])
 	if (ext == NULL) {
 		ext = bsearch(argv[0], setExtensionList,
 					lenof(setExtensionList), sizeof(struct sExt), extcmp);
+	}
+	if (ext == NULL) {
+		ext = bsearch(argv[0], modExtensionList,
+					lenof(modExtensionList), sizeof(struct sExt), extcmp);
 	}
 	BOOL var = ext != NULL;
 	if (var) {

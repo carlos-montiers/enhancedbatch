@@ -54,6 +54,7 @@ const WCHAR GetSetStr[] = L"Read/Write Variables";
 const WCHAR GetterStr[] = L"Read-only Variables";
 const WCHAR SetterStr[] = L"Write-only Variables";
 const WCHAR CallStr[] = L"Functions";
+const WCHAR ModStr[] = L"Modifiers";
 
 const WCHAR AttrBriefStr[]				= L"Console attributes";
 const WCHAR BatchFileBriefStr[] 		= L"Batch file name in error messages";
@@ -147,6 +148,27 @@ const WCHAR UnloadBriefStr[]			= L"Remove Enhanced Batch";
 const WCHAR WaitkeyBriefStr[]			= L"Wait for any key";
 const WCHAR WriteBriefStr[] 			= L"Display a message";
 
+const WCHAR DefaultBriefStr[] 			= L"Default value";
+const WCHAR AltBriefStr[] 				= L"Test if a key contains Alt";
+const WCHAR CapitalBriefStr[] 			= L"Upper case characters after space or tab";
+const WCHAR CapitalListBriefStr[] 		= L"Upper case characters after those in LIST";
+const WCHAR CtrlModBriefStr[]			= L"Test if a key contains Ctrl";
+const WCHAR HexifyBriefStr[]			= L"Convert to hexadecimal";
+const WCHAR KeyBriefStr[] 				= L"The key itself, without modifiers";
+const WCHAR LengthBriefStr[]			= L"The length of the variable";
+const WCHAR LowerBriefStr[]				= L"Convert all to lower case";
+const WCHAR LtrimBriefStr[]				= L"Remove leading spaces and tabs";
+const WCHAR LtrimListBriefStr[]			= L"Remove leading characters from LIST";
+const WCHAR NumberBriefStr[]			= L"Padding";
+const WCHAR RtrimBriefStr[]				= L"Remove trailing spaces and tabs";
+const WCHAR RtrimListBriefStr[]			= L"Remove trailing characters from LIST";
+const WCHAR ShiftBriefStr[]				= L"Test if a key contains Shift";
+const WCHAR TrimBriefStr[]				= L"Remove leading and trailing spaces and tabs";
+const WCHAR TrimListBriefStr[]			= L"Remove leading and trailing characters from LIST";
+const WCHAR UnhexifyBriefStr[]			= L"Convert from hexadecimal";
+const WCHAR UpperBriefStr[]				= L"Convert all to upper case";
+const WCHAR TildeBriefStr[]				= L"Same as FOR";
+
 const WCHAR AttrHelpStr[] =
 	L"Get or set the console attributes.\r\n"
 	L"\r\n"
@@ -196,7 +218,7 @@ const WCHAR ColorHelpStr[] =
 const WCHAR ColumnHelpStr[] =
 	L"Get or set the window cursor column.\r\n"
 	L"\r\n"
-	L"The left column is 0; will be -1 if there is no console.\r\n"
+	L"The left column is 0; will be -1 if there is no console."
 ;
 
 const WCHAR CtrlHelpStr[] =
@@ -866,37 +888,133 @@ const WCHAR WaitkeyHelpStr[] =
 	L"  /F        flush all keys before waiting"
 ;
 
-const WCHAR ModHelpStr[] =
-	L"\"...\"           default value if the variable is not defined\r\n"
-	L"'...'\r\n"
-	L"`...`\r\n"
-	L"alt             1 if a key contains Alt, 0 if not\r\n"
-	L"capital         upper case characters after space or tab, lower case the rest\r\n"
-	L"capital[LIST]   as above, also upper casing after characters in LIST\r\n"
-	L"ctrl            1 if a key contains Ctrl, 0 if not\r\n"
-	L"hexify          convert characters below U+0100 to hexadecimal\r\n"
-	L"key             the key itself, without modifiers\r\n"
-	L"length          the length of the variable at this point\r\n"
-	L"lower           convert all to lower case\r\n"
-	L"ltrim           remove leading spaces and tabs\r\n"
-	L"ltrim[LIST]     remove leading characters from LIST\r\n"
-	L"NUMBER          pad to NUMBER characters (see below)\r\n"
-	L"rtrim           remove trailing spaces and tabs\r\n"
-	L"rtrim[LIST]     remove trailing characters from LIST\r\n"
-	L"shift           1 if a key contains Shift, 0 if not\r\n"
-	L"trim            remove leading and trailing spaces and tabs\r\n"
-	L"trim[LIST]      remove leading and trailing characters from LIST\r\n"
-	L"unhexify        convert a sequence of pairs of hex digits to characters\r\n"
-	L"upper           convert all to upper case\r\n"
-	L"~               same as FOR\r\n"
+const WCHAR DefaultHelpStr[] =
+	L"Default value if the variable is not defined.\r\n"
+	L"\r\n"
+	L"Currently the quote character cannot be included in the string; this may change\r\n"
+	L"in the future."
+;
+
+const WCHAR AltHelpStr[] =
+	L"Test if a key contains Alt.\r\n"
+	L"\r\n"
+	L"  0         Alt was not pressed\r\n"
+	L"  1         Alt was pressed\r\n"
+	L"\r\n"
+	L"See \"key\" for more details."
+;
+
+const WCHAR CapitalHelpStr[] =
+	L"Upper case characters after a space or tab, lower case everything else."
+;
+
+const WCHAR CapitalListHelpStr[] =
+	L"Upper case characters after a space, tab or anything in LIST, lower case\r\n"
+	L"everything else.\r\n"
+	L"\r\n"
+	L"To include ']' in the list place it first."
+;
+
+const WCHAR CtrlModHelpStr[] =
+	L"Test if a key contains Ctrl.\r\n"
+	L"\r\n"
+	L"  0         Ctrl was not pressed\r\n"
+	L"  1         Ctrl was pressed\r\n"
+	L"\r\n"
+	L"See \"key\" for more details."
+;
+
+const WCHAR HexifyHelpStr[] =
+	L"Convert characters to hexadecimal.\r\n"
+	L"\r\n"
+	L"Only characters below U+0100 will be converted, others will be ignored.  Upper\r\n"
+	L"case letters are used, with a space between each pair of digits."
+;
+
+const WCHAR KeyHelpStr[] =
+	L"The key itself, with the key modifiers specified.\r\n"
+	L"\r\n"
+	L"Key by itself will remove the modifiers, leaving just the key (or \"0\" if the\r\n"
+	L"variable is not a key).  Including modifiers (before or after \"key\" doesn't\r\n"
+	L"matter) will return \"0\" if all the modifiers are not pressed, otherwise the key\r\n"
+	L"with the modifiers.  E.g.: \"%;'C+A+VK_A';ctrl;key%\" will return \"C+VK_A\";\r\n"
+	L"\"%;'C+VK_A';key;shift%\" will return \"0\".  The order is always \"S+C+A+VK_name\".\r\n"
+	L"\r\n"
+	L"These modifiers are processed after all others, but before padding.  This means\r\n"
+	L"some modifiers may not work as you'd expect.  E.g.: \"key;length\" will return\r\n"
+	L"\"0\" - the length of the complete key, which is now no longer a key."
+;
+
+const WCHAR LengthHelpStr[] =
+	L"The length of the variable (in characters) at this point."
+;
+
+const WCHAR LowerHelpStr[] =
+	L"Convert all characters to lower case."
+;
+
+const WCHAR LtrimHelpStr[] =
+	L"Remove spaces and tabs from the start of the variable."
+;
+
+const WCHAR LtrimListHelpStr[] =
+	L"Remove the characters in LIST from the start of the variable.\r\n"
+	L"\r\n"
+	L"To include ']' in the list place it first."
+;
+
+const WCHAR NumberHelpStr[] =
+	L"Increase the variable to a specified size.\r\n"
 	L"\r\n"
 	L"If NUMBER starts with '-' left pad instead of right; if it starts with '0' pad\r\n"
 	L"with zeros instead of spaces.  Padding is applied after all other modifiers.\r\n"
+	L"Padding is only a minimum; longer variables will not be truncated."
+;
+
+const WCHAR RtrimHelpStr[] =
+	L"Remove spaces and tabs from the end of the variable."
+;
+
+const WCHAR RtrimListHelpStr[] =
+	L"Remove the characters in LIST from the end of the variable.\r\n"
 	L"\r\n"
-	L"To include ']' in LIST place it first.\r\n"
+	L"To include ']' in the list place it first."
+;
+
+const WCHAR ShiftHelpStr[] =
+	L"Test if a key contains Shift.\r\n"
 	L"\r\n"
-	L"Using both key and modifiers will return \"0\" if the modifiers are not pressed,\r\n"
-	L"otherwise the key with the modifiers (e.g. \"%;'C+A+VK_A';key;shift%\" will\r\n"
-	L"return \"0\"; \"%;'C+A+VK_A';ctrl;key%\" will return \"C+VK_A\").  The order is\r\n"
-	L"always S+C+A.  If the variable is not a key \"0\" will be returned."
+	L"  0         Shift was not pressed\r\n"
+	L"  1         Shift was pressed\r\n"
+	L"\r\n"
+	L"See \"key\" for more details."
+;
+
+const WCHAR TrimHelpStr[] =
+	L"Remove spaces and tabs from the start and end of the variable."
+;
+
+const WCHAR TrimListHelpStr[] =
+	L"Remove the characters in LIST from the start and end of the variable.\r\n"
+	L"\r\n"
+	L"To include ']' in the list place it first."
+;
+
+const WCHAR UnhexifyHelpStr[] =
+	L"Convert characters from hexadecimal.\r\n"
+	L"\r\n"
+	L"Pairs of hexadecimal digits (upper or lower case, optionally prefixed with\r\n"
+	L"\"0x\") will be converted to characters.  Whitespace and any of the characters\r\n"
+	L"\",-.:;\" will be ignored; any other characters, or an odd number of digits, will\r\n"
+	L"result in an empty value."
+;
+
+const WCHAR UpperHelpStr[] =
+	L"Convert all characters to upper case."
+;
+
+const WCHAR TildeHelpStr[] =
+	L"Perform the same conversions as FOR (please see its help for details).\r\n"
+	L"\r\n"
+	L"Note: \"%$0;~...%\" will always use the batch file name."
 ;

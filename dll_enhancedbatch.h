@@ -162,9 +162,10 @@ extern const WCHAR ProgramNameStr[];
 extern const WCHAR CloseWindowStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
 extern const WCHAR ArgErrorStr[], WrongArgsStr[], MoreArgsStr[];
-extern const WCHAR EscapeHelpStr[], ModHelpStr[];
+extern const WCHAR EscapeHelpStr[];
 
 extern const WCHAR ConstStr[], GetSetStr[], GetterStr[], SetterStr[], CallStr[];
+extern const WCHAR ModStr[];
 
 #define DEFHELPSTR(ext) ext##BriefStr[], ext##HelpStr[]
 
@@ -200,7 +201,15 @@ extern const WCHAR
 	DEFHELPSTR(Checkkey), DEFHELPSTR(Clear), DEFHELPSTR(Help),
 	DEFHELPSTR(Image), DEFHELPSTR(Img), DEFHELPSTR(Say),
 	DEFHELPSTR(Sleep), DEFHELPSTR(Text), DEFHELPSTR(Timer), DEFHELPSTR(TimerHi),
-	DEFHELPSTR(Unload), DEFHELPSTR(Waitkey), DEFHELPSTR(Write);
+	DEFHELPSTR(Unload), DEFHELPSTR(Waitkey), DEFHELPSTR(Write),
+
+	DEFHELPSTR(Default), DEFHELPSTR(Alt), DEFHELPSTR(Capital),
+	DEFHELPSTR(CapitalList), DEFHELPSTR(CtrlMod), DEFHELPSTR(Hexify),
+	DEFHELPSTR(Key), DEFHELPSTR(Length), DEFHELPSTR(Lower), DEFHELPSTR(Ltrim),
+	DEFHELPSTR(LtrimList), DEFHELPSTR(Number), DEFHELPSTR(Rtrim),
+	DEFHELPSTR(RtrimList), DEFHELPSTR(Shift), DEFHELPSTR(Trim),
+	DEFHELPSTR(TrimList), DEFHELPSTR(Unhexify), DEFHELPSTR(Upper),
+	DEFHELPSTR(Tilde);
 
 
 int wsnprintf(LPWSTR buf, size_t size, LPCWSTR fmt, ...);
