@@ -538,10 +538,12 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 {
 	DWORD length, pad, size;
 	BOOL zero, right;
+	int extract_key, extract_shift, extract_ctrl, extract_alt;
 	LPWSTR mod, end, var, varcpy, spad, padend;
 
 	pad = 0;
 	zero = right = FALSE;
+	extract_key = extract_shift = extract_ctrl = extract_alt = 0;
 	varcpy = NULL;
 
 	var = (LPWSTR) lpName;
@@ -677,6 +679,14 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 			length = hexify(length);
 		} else if (WCSIEQ(mod, L"unhexify")) {
 			length = unhexify(length);
+		} else if (WCSIEQ(mod, L"key")) {
+			extract_key = 1;
+		} else if (WCSIEQ(mod, L"shift")) {
+			extract_shift = 1;
+		} else if (WCSIEQ(mod, L"ctrl")) {
+			extract_ctrl = 2;
+		} else if (WCSIEQ(mod, L"alt")) {
+			extract_alt = 4;
 		} else if (*mod == L'~') {
 			int unused;
 			DWORD ext;
@@ -734,6 +744,45 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 		}
 		pad = 0;
 		length = sbcpy(stringBuffer, lpName);
+	}
+
+	if (extract_key || extract_shift || extract_ctrl || extract_alt) {
+		int is_key, is_shift, is_ctrl, is_alt;
+		is_key = is_shift = is_ctrl = is_alt = 0;
+		LPWSTR key = stringBuffer;
+		if (WCSIBEG(key, L"S+")) {
+			key += 2;
+			is_shift = 1;
+		}
+		if (WCSIBEG(key, L"C+")) {
+			key += 2;
+			is_ctrl = 2;
+		}
+		if (WCSIBEG(key, L"A+")) {
+			key += 2;
+			is_alt = 4;
+		}
+		if (WCSIBEG(key, L"VK_")) {
+			is_key = 1;
+		}
+		if (is_key) {
+			int flag = extract_shift | extract_ctrl | extract_alt;
+			flag = (flag & (is_shift | is_ctrl | is_alt)) == flag;
+			if (flag == 0 || !extract_key) {
+				*stringBuffer = flag + L'0';
+				stringBuffer[1] = L'\0';
+				length = 1;
+			} else {
+				length = sbprintf(stringBuffer, L"%s%s%s%s",
+								  extract_shift ? L"S+" : L"",
+								  extract_ctrl	? L"C+" : L"",
+								  extract_alt	? L"A+" : L"", key);
+			}
+		} else {
+			*stringBuffer = L'0';
+			stringBuffer[1] = L'\0';
+			length = 1;
+		}
 	}
 
 	size = (pad > length) ? pad : length;

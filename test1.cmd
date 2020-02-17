@@ -82,6 +82,15 @@ echo "+=":      !$var+!.
 echo "+= ":     !$ var+!.
 echo " +=":     !$var +!.
 
+set $key=C+A+VK_Q
+echo key:     %$key;key%
+echo shift:   %$key;shift%
+echo ctrl:    %$key;ctrl%
+echo alt:     %$key;alt%
+echo s+key:   %$key;shift;key%
+echo c+a+key: %$key;alt;key;ctrl%
+echo no key:  %$var;key%
+
 echo Character TAB:!@TAB!.
 echo Character ESC:!@ESC!.
 echo Character BS:!@BS!.

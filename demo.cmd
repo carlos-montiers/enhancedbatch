@@ -164,7 +164,13 @@ echo last char: !lastcode!
 
 echo Calling to extension @getkb. Press a key ...
 set "code=%@getkb%"
-echo code: !code!
+echo pressed: !code!
+echo key:     %code;key%
+echo shift:   %code;shift%
+echo ctrl:    %code;ctrl%
+echo alt:     %code;alt%
+echo s+key:   %code;shift;key%
+echo c+a+key: %code;key;ctrl;alt%
 
 echo Calling to extension @kbhit. Press a key ...
 set $i=0

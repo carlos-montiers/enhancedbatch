@@ -30,6 +30,13 @@ Append:     oKay  oKay .
 "+=":      var+.
 "+= ":      var+.
 " +=":     var +.
+key:     VK_Q
+shift:   0
+ctrl:    1
+alt:     1
+s+key:   0
+c+a+key: C+A+VK_Q
+no key:  0
 Character TAB:	.
 Character ESC:.
 Character BS:.
