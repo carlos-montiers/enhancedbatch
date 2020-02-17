@@ -483,7 +483,11 @@ DWORD getVar(LPCWSTR lpName)
 		return (DWORD) wcslen(stringBuffer);
 	}
 
-	return GetEnvironmentVariable(lpName, stringBuffer, STRINGBUFFERMAX);
+	DWORD len = GetEnvironmentVariable(lpName, stringBuffer, STRINGBUFFERMAX);
+	if (len == 0 && *pfEnableExtensions && WCSIEQ(lpName, L"cmdcmdline")) {
+		len = sbcpy(stringBuffer, GetCommandLine());
+	}
+	return len;
 }
 
 DWORD ltrim(DWORD length, LPCWSTR delim)
