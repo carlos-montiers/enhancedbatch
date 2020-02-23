@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <shellapi.h>
 
 
 #define CHECK_CONSOLE_AND_ARG(argc) \
@@ -624,7 +625,7 @@ BOOL SetOpacity(int argc, LPCWSTR argv[])
 				/ MAX_OPACITY_PERCENT;
 	}
 
-	if (LOBYTE(GetVersion()) >= 10) { // is Windows 10 or greater
+	if (winMajor >= 10) {		// is Windows 10 or greater
 		// Simulate wheel movements to keep the properties dialog in sync
 		// (within 4.7%, anyway).
 		BYTE curr_alpha;
@@ -1704,7 +1705,7 @@ DWORD GetOSVersion(LPWSTR buffer, DWORD size)
 AttrOptSize
 DWORD GetOSMajor(LPWSTR buffer, DWORD size)
 {
-	return toString(LOBYTE(LOWORD(GetVersion())), buffer, size);
+	return toString(winMajor, buffer, size);
 }
 
 AttrOptSize
@@ -1783,6 +1784,155 @@ DWORD GetElevated(LPWSTR buffer, DWORD size)
 		}
 	}
 	return toString(isElevated, buffer, size);
+}
+
+int CallElevate(int argc, LPCWSTR argv[])
+{
+	SHELLEXECUTEINFO sei;
+	extern WCHAR enh_dll[MAX_PATH];
+	BOOL new_window = LOWORD(GetVersion()) == 5;  // attach not supported by 2K
+	LPCWSTR cmd = NULL;
+
+	HANDLE event = CreateEvent(NULL, FALSE, FALSE, L"EB_elevate_event");
+	if (event == NULL) {
+		return 0xEBEF;
+	}
+	if (GetLastError() != ERROR_ALREADY_EXISTS) {
+		ZeroMemory(&sei, sizeof(sei));
+		sei.cbSize = sizeof(sei);
+		sei.fMask = SEE_MASK_FLAG_NO_UI | SEE_MASK_UNICODE;
+		sei.lpVerb = L"runas";
+		sei.lpFile = L"rundll32";
+		sbprintf(stringBuffer, L"\"%s\" Elevate", enh_dll);
+		sei.lpParameters = stringBuffer;
+		if (!ShellExecuteEx(&sei)) {
+			goto errexit;
+		}
+	}
+
+	HANDLE mutex = CreateMutex(NULL, FALSE, L"EB_elevate_mutex");
+	if (mutex == NULL) {
+		goto errexit;
+	}
+	WaitForSingleObject(mutex, INFINITE);
+
+	LPWSTR env = GetEnvironmentStrings();
+	LPWSTR p = env;
+	for (;; p += 2) {
+		if (*p == L'\0') {
+			if (p[-1] == L'\0') {
+				break;
+			}
+			if (p[1] == L'\0') {
+				++p;
+				break;
+			}
+		}
+	}
+	DWORD envlen = WSZ(p + 1 - env);
+	DWORD maplen = sizeof(struct sElevate) + envlen;
+	HANDLE map = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE,
+								   0, maplen, L"EB_elevate_data");
+	struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, maplen);
+	if (data == NULL) {
+		SafeCloseHandle(map);
+		ReleaseMutex(mutex);
+		CloseHandle(mutex);
+	errexit:
+		CloseHandle(event);
+		return 0xEBEF;
+	}
+	memcpy(data->env, env, envlen);
+	FreeEnvironmentStrings(env);
+
+	GetCurrentDirectory(MAX_PATH, data->curdir);
+
+	if (argc == 1) {
+		BOOL stop = FALSE;
+		cmd = *argv;
+		while (*cmd == L'/' && !stop) {
+			++cmd;
+			if ((*cmd | 0x20) == L'n') {
+				new_window = TRUE;
+				++cmd;
+			} else if (*cmd == L'/') {
+				stop = TRUE;
+				++cmd;
+			}
+			while (*cmd == L' ' || *cmd == L'\t') {
+				++cmd;
+			}
+		}
+		if (*cmd == L'\0') {
+			cmd = NULL;
+		}
+	}
+
+	if (!new_window) {
+		data->console_pid = GetCurrentProcessId();
+	}
+
+	if (cmd == NULL) {
+		wsnprintf(data->cmdline, STRINGBUFFERMAX, L"cmd /k");
+	} else {
+		wsnprintf(data->cmdline, STRINGBUFFERMAX, L"cmd /%c %s",
+				  new_window ? L'k' : L'c', cmd);
+	}
+
+	SetEvent(event);
+
+	// Wait for the elevated process to finish with the data.
+	int count = 50;
+	while (*data->env != L'\0' && --count > 0) {
+		Sleep(10);
+	}
+
+	DWORD pid = data->elevated_pid;
+
+	UnmapViewOfFile(data);
+	CloseHandle(map);
+	ReleaseMutex(mutex);
+	CloseHandle(mutex);
+	CloseHandle(event);
+
+	if (pid == 0) {
+		return 0xEBEF;
+	}
+
+	DWORD rc = EXIT_SUCCESS;
+
+	if (!new_window) {
+		if (count == 0) {
+			// Something went wrong loading EB, unhide the window.
+			BOOL CALLBACK find_window_process(HWND hwnd, LPARAM lParam)
+			{
+				DWORD pid = 0;
+				GetWindowThreadProcessId(hwnd, &pid);
+				if (pid == (DWORD) lParam) {
+					ShowWindow(hwnd, SW_SHOW);
+					SetForegroundWindow(hwnd);
+					return FALSE;
+				}
+				return TRUE;
+			}
+			EnumWindows(find_window_process, (LPARAM) pid);
+		} else {
+			DWORD info = winMajor >= 6 ? PROCESS_QUERY_LIMITED_INFORMATION
+									   : PROCESS_QUERY_INFORMATION;
+			HANDLE hProcess = OpenProcess(info | SYNCHRONIZE, FALSE, pid);
+			if (hProcess != NULL) {
+				WaitForSingleObject(hProcess, INFINITE);
+				if (!GetExitCodeProcess(hProcess, &rc)) {
+					rc = 0xDEAD;
+				}
+				CloseHandle(hProcess);
+			}
+			// It shouldn't fail, but it's a problem if it does - both
+			// processes are running simultaneously in the same console.
+		}
+	}
+
+	return rc;
 }
 
 DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size)

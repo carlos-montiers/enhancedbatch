@@ -136,6 +136,7 @@ const WCHAR NextBriefStr[]				= L"Set next FOR range value";
 
 const WCHAR CheckkeyBriefStr[]			= L"Check if any key was pressed";
 const WCHAR ClearBriefStr[] 			= L"Clear a window";
+const WCHAR ElevateBriefStr[]			= L"Run a command as administrator";
 const WCHAR HelpBriefStr[]				= L"This list";
 const WCHAR ImageBriefStr[] 			= L"Draw an image";
 const WCHAR ImgBriefStr[]				= L"Display an image";
@@ -680,6 +681,21 @@ const WCHAR EscapeHelpStr[] =
 	L"\r\n"
 	L"The escape character will generate itself; any other character will be\r\n"
 	L"ignored, preserving the escape character."
+;
+
+const WCHAR ElevateHelpStr[] =
+	L"Run a command as administrator.\r\n"
+	L"\r\n"
+	L"CALL @ELEVATE [/N] [command [arguments]]\r\n"
+	L"\r\n"
+	L"  /N         run in a new window\r\n"
+	L"\r\n"
+	L"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
+	L"variables present in the current CMD, but not the elevated CMD, will be added;\r\n"
+	L"other variables will remain unchanged.  Elevation is handled by \"Windows host\r\n"
+	L"process (Rundll32)\"; it will remain available for 15 minutes after the most\r\n"
+	L"recent command starts, avoiding multiple prompts.  Errorlevel will be 60399 if\r\n"
+	L"the elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
 ;
 
 const WCHAR HelpHelpStr[] =

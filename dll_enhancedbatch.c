@@ -61,6 +61,7 @@ HMODULE hDllInstance;
 BOOL global;			// launched outside of a batch
 LPSTR AnsiBuf;			// batch file buffer
 LPVOID cmd_end; 		// end of the CMD.EXE image
+int winMajor;			// major version of Windows
 BOOL onWindowsTerminal; 		// running on Windows Terminal
 HWND consoleHwnd; 		// Hwnd of the console
 HANDLE consoleOutput;
@@ -89,6 +90,7 @@ BOOL Next(int argc, LPCWSTR argv[]);
 
 void unhook(void);
 int CallUnload(int argc, LPCWSTR argv[]);
+void handleElevation(void);
 
 fnCmdFunc *peCall, eCall;
 int *pLastRetCode;
@@ -265,6 +267,7 @@ const struct sExt setExtensionList[] = {
 const struct sExt callExtensionList[] = {
 	{ L"@checkkey",	0, CallCheckkey, HELPSTR(Checkkey) },
 	{ L"@clear",   ~0, CallClear, HELPSTR(Clear) },
+	{ L"@elevate",  0, CallElevate, HELPSTR(Elevate) },
 	{ L"@help",    ~0, CallHelp, HELPSTR(Help) },
 	{ L"@image",   ~1, CallImage, HELPSTR(Image) },
 	{ L"@img",	   ~1, CallImg, HELPSTR(Img) },
@@ -1895,11 +1898,12 @@ DelayedHooks[] = {
 void hook(HMODULE hInstance)
 {
 	hDllInstance = hInstance;
+	winMajor = LOBYTE(GetVersion());
 
 	hookCmd();
 
 	Hooks = AllHooks;
-	if (LOBYTE(GetVersion()) > 5) {
+	if (winMajor > 5) {
 		// No need for the MultiByteToWideChar patch.
 		++Hooks;
 	}
@@ -1959,14 +1963,14 @@ BOOL WINAPI
 _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 {
 	if (dwReason == DLL_PROCESS_ATTACH) {
-		// RunDLL & RegSvr32 are GUI, CMD is console.
 		PBYTE base = GetModuleHandle(NULL);
+		GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
+		// RunDLL & RegSvr32 are GUI, CMD is console.
 		PIMAGE_NT_HEADERS phdr = (PIMAGE_NT_HEADERS)(base + *(LPDWORD)(base + 0x3C));
-		if (phdr->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_WINDOWS_GUI) {
-			GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
-		} else {
+		if (phdr->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_WINDOWS_CUI) {
 			DisableThreadLibraryCalls(hDll);
 			hook(hDll);
+			handleElevation();
 		}
 	} else if (dwReason == DLL_PROCESS_DETACH) {
 		if (variables != NULL) {
@@ -2194,3 +2198,83 @@ Export_DllLoad_Entrypoint(load);
 Export_DllLoad_Entrypoint(Load);
 // Default entry point of regsvr32 used only as a method to load the DLL into CMD
 Export_DllLoad_Entrypoint(DllRegisterServer);
+
+__declspec(dllexport)
+void Elevate(void)
+{
+	HANDLE event = OpenEvent(EVENT_ALL_ACCESS, FALSE, L"EB_elevate_event");
+	if (event == NULL) {
+		return;
+	}
+	for (;;) {
+		DWORD rc = WaitForSingleObject(event, 15*60000);
+		if (rc == WAIT_TIMEOUT) {
+			return;
+		}
+		HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE,
+									 L"EB_elevate_data");
+		if (map != NULL) {
+			struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
+			if (data != NULL) {
+				STARTUPINFO si = { sizeof(si) };
+				if (data->console_pid != 0) {
+					si.dwFlags = STARTF_USESHOWWINDOW;
+					si.wShowWindow = SW_HIDE;
+				}
+				PROCESS_INFORMATION pi;
+				if (CreateProcess(NULL, data->cmdline, NULL, NULL, TRUE,
+								  CREATE_NEW_CONSOLE | CREATE_SUSPENDED
+								  | CREATE_UNICODE_ENVIRONMENT,
+								  NULL, data->curdir, &si, &pi)) {
+					data->elevated_pid = pi.dwProcessId;
+					Inject(pi.hProcess);
+					ResumeThread(pi.hThread);
+					CloseHandle(pi.hProcess);
+					CloseHandle(pi.hThread);
+				}
+				UnmapViewOfFile(data);
+			}
+			CloseHandle(map);
+		}
+	}
+}
+
+void handleElevation(void)
+{
+	HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"EB_elevate_data");
+	if (map == NULL) {
+		return;
+	}
+
+	struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
+	if (data == NULL) {
+		CloseHandle(map);
+		return;
+	}
+
+	if (data->console_pid != 0) {
+		typedef BOOL (WINAPI *fnAttachConsole)(DWORD);
+		fnAttachConsole pAttachConsole = (fnAttachConsole)
+			GetProcAddress(GetModuleHandle(L"kernel32.dll"), "AttachConsole");
+		if (pAttachConsole != NULL) {
+			FreeConsole();
+			pAttachConsole(data->console_pid);
+		}
+	}
+
+	LPWSTR env = data->env;
+	while (*env != L'\0') {
+		LPWSTR var = wcschr(env + 1, L'=');
+		*var++ = L'\0';
+		if (GetEnvironmentVariable(env, NULL, 0) == 0) {
+			SetEnvironmentVariable(env, var);
+		}
+		env = var + wcslen(var) + 1;
+	}
+
+	// Let the caller know we've finished using it.
+	*data->env = L'\0';
+
+	UnmapViewOfFile(data);
+	CloseHandle(map);
+}

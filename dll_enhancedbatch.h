@@ -90,6 +90,7 @@ extern DWORD cmdFileVersionMS, cmdFileVersionLS, cmdDebug;
 	(cmdFileVersionMS == ((maj << 16) | min) &&\
 	 cmdFileVersionLS == ((bld << 16) | rev))
 
+extern int winMajor;
 extern BOOL onWindowsTerminal;
 extern HWND consoleHwnd;
 extern HANDLE consoleOutput;
@@ -158,6 +159,15 @@ extern WCHAR sayBuffer[STRINGBUFFERMAX];
 #define FORF_STACKSIZE 32		// should be way more than enough
 
 
+struct sElevate {
+	DWORD console_pid;
+	DWORD elevated_pid;
+	WCHAR curdir[MAX_PATH];
+	WCHAR cmdline[STRINGBUFFERMAX];
+	WCHAR env[0];
+};
+
+
 extern const WCHAR ProgramNameStr[];
 extern const WCHAR CloseWindowStr[];
 extern const WCHAR ParentErrStr[], ArchErrStr[], NotCmdStr[], NotSupportedStr[];
@@ -198,8 +208,8 @@ extern const WCHAR
 	DEFHELPSTR(CodePage), DEFHELPSTR(DumpParse), DEFHELPSTR(DumpTokens),
 	DEFHELPSTR(Next),
 
-	DEFHELPSTR(Checkkey), DEFHELPSTR(Clear), DEFHELPSTR(Help),
-	DEFHELPSTR(Image), DEFHELPSTR(Img), DEFHELPSTR(Say),
+	DEFHELPSTR(Checkkey), DEFHELPSTR(Clear), DEFHELPSTR(Elevate),
+	DEFHELPSTR(Help), DEFHELPSTR(Image), DEFHELPSTR(Img), DEFHELPSTR(Say),
 	DEFHELPSTR(Sleep), DEFHELPSTR(Text), DEFHELPSTR(Timer), DEFHELPSTR(TimerHi),
 	DEFHELPSTR(Unload), DEFHELPSTR(Waitkey), DEFHELPSTR(Write),
 

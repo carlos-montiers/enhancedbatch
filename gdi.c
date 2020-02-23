@@ -949,7 +949,7 @@ int CallImg(int argc, LPCWSTR argv[])
 	}
 
 	BOOL terminal = onWindowsTerminal;
-	if (!terminal && LOBYTE(GetVersion()) >= 10) { // is Windows 10 or greater
+	if (!terminal && winMajor >= 10) {	// is Windows 10 or greater
 		DWORD mode = 0;
 		GetConsoleMode(consoleOutput, &mode);
 		if (mode & 4/*ENABLE_VIRTUAL_TERMINAL_PROCESSING*/) {

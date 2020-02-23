@@ -182,6 +182,7 @@ DWORD GetCmdVersion(LPWSTR buffer, DWORD size);
 DWORD GetTitle(LPWSTR buffer, DWORD size);
 
 DWORD GetElevated(LPWSTR buffer, DWORD size);
+int CallElevate(int argc, LPCWSTR argv[]);
 
 DWORD GetRun(LPCWSTR cmd, LPWSTR buffer, DWORD size);
 
