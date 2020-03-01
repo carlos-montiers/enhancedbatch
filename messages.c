@@ -693,7 +693,8 @@ const WCHAR ElevateHelpStr[] =
 	L"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
 	L"variables present in the current CMD, but not the elevated CMD, will be added;\r\n"
 	L"other variables will remain unchanged.  Elevation is handled by \"Windows host\r\n"
-	L"process (Rundll32)\"; it will remain available for 15 minutes after the most\r\n"
+	L"process (Rundll32)\" (default User Account Control setting will cause a prompt\r\n"
+	L"for authorization); it will remain available for 15 minutes after the most\r\n"
 	L"recent command starts, avoiding multiple prompts.  Errorlevel will be 60399 if\r\n"
 	L"the elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
 ;
