@@ -1791,6 +1791,7 @@ int CallElevate(int argc, LPCWSTR argv[])
 	SHELLEXECUTEINFO sei;
 	extern WCHAR enh_dll[MAX_PATH];
 	BOOL new_window = LOWORD(GetVersion()) == 5;  // attach not supported by 2K
+	BOOL transient = TRUE;
 	LPCWSTR cmd = NULL;
 
 	HANDLE event = CreateEvent(NULL, FALSE, FALSE, L"EB_elevate_event");
@@ -1855,6 +1856,10 @@ int CallElevate(int argc, LPCWSTR argv[])
 			if ((*cmd | 0x20) == L'n') {
 				new_window = TRUE;
 				++cmd;
+				if ((*cmd | 0x20) == L'k') {
+					transient = FALSE;
+					++cmd;
+				}
 			} else if (*cmd == L'/') {
 				stop = TRUE;
 				++cmd;
@@ -1876,7 +1881,7 @@ int CallElevate(int argc, LPCWSTR argv[])
 		wsnprintf(data->cmdline, STRINGBUFFERMAX, L"cmd /k");
 	} else {
 		wsnprintf(data->cmdline, STRINGBUFFERMAX, L"cmd /%c %s",
-				  new_window ? L'k' : L'c', cmd);
+				  transient ? L'c' : L'k', cmd);
 	}
 
 	SetEvent(event);

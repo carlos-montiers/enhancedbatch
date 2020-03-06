@@ -686,9 +686,9 @@ const WCHAR EscapeHelpStr[] =
 const WCHAR ElevateHelpStr[] =
 	L"Run a command as administrator.\r\n"
 	L"\r\n"
-	L"CALL @ELEVATE [/N] [command [arguments]]\r\n"
+	L"CALL @ELEVATE [/N[K]] [command [arguments]]\r\n"
 	L"\r\n"
-	L"  /N         run in a new window\r\n"
+	L"  /N         run in a new window (and Keep it open)\r\n"
 	L"\r\n"
 	L"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
 	L"variables present in the current CMD, but not the elevated CMD, will be added;\r\n"
