@@ -625,12 +625,12 @@ int CallImage(int argc, LPCWSTR argv[])
 					if (Ok == GdipCreateBitmapFromHBITMAP(BgCache[b].bitmap,
 														  NULL, &bg)) {
 						if (!restore) {
-							GpGraphics *graphics = NULL;
-							GdipGetImageGraphicsContext(bg, &graphics);
-							GdipDrawImageRectRectI(graphics, image, 0, 0, w, h,
+							GpGraphics *g = NULL;
+							GdipGetImageGraphicsContext(bg, &g);
+							GdipDrawImageRectRectI(g, image, 0, 0, w, h,
 													sx, sy, w, h, UnitPixel,
 													NULL, NULL, NULL);
-							GdipDeleteGraphics(graphics);
+							GdipDeleteGraphics(g);
 						}
 						GdipDisposeImage(image);
 						image = bg;
@@ -862,16 +862,16 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 	int r, g, b;
 	float h, s, v;
 
-	void average_rgb(WCHAR ch)
+	void average_rgb(WCHAR ch, int c, int i, int j)
 	{
 		TextOut(mdc, 0, 0, &ch, 1);
 		r = g = b = 0;
 		for (int y = 0; y < pcfi->dwFontSize.Y; ++y) {
 			for (int x = 0; x < pcfi->dwFontSize.X; ++x) {
-				COLORREF c = GetPixel(mdc, x, y);
-				r += GetRValue(c);
-				g += GetGValue(c);
-				b += GetBValue(c);
+				COLORREF cr = GetPixel(mdc, x, y);
+				r += GetRValue(cr);
+				g += GetGValue(cr);
+				b += GetBValue(cr);
 			}
 		}
 		color_match[c].r = r / count;
@@ -882,15 +882,15 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 		++c;
 	}
 
-	void average_hsv(WCHAR ch)
+	void average_hsv(WCHAR ch, int c, int i, int j)
 	{
 		TextOut(mdc, 0, 0, &ch, 1);
 		h = s = v = 0;
 		for (int y = 0; y < pcfi->dwFontSize.Y; ++y) {
 			for (int x = 0; x < pcfi->dwFontSize.X; ++x) {
-				COLORREF c = GetPixel(mdc, x, y);
+				COLORREF cr = GetPixel(mdc, x, y);
 				float hh, ss, vv;
-				rgb_to_hsv(GetRValue(c), GetGValue(c), GetBValue(c),
+				rgb_to_hsv(GetRValue(cr), GetGValue(cr), GetBValue(cr),
 						   &hh, &ss, &vv);
 				h += hh;
 				s += ss;
@@ -911,10 +911,10 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 				continue;
 			SetTextColor(mdc, RGB(color_match[j].r, color_match[j].g, color_match[j].b));
 			// The medium shade averages the components.
-			average_rgb(L'\x2592');
+			average_rgb(L'\x2592', c, i, j);
 			// The light and dark shades convert to HSV and average that.
-			average_hsv(L'\x2591');
-			average_hsv(L'\x2593');
+			average_hsv(L'\x2591', c, i, j);
+			average_hsv(L'\x2593', c, i, j);
 		}
 	}
 
