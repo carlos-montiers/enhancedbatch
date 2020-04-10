@@ -1175,7 +1175,12 @@ int CallHelp(int argc, LPCWSTR argv[])
 	ext = bsearch(argv[0], callExtensionList,
 			lenof(callExtensionList), sizeof(struct sExt), extcmp);
 	if (ext == NULL) {
-		return var ? EXIT_SUCCESS : EXIT_FAILURE;
+		if (!var) {
+			fwprintf(stderr, *argv[0] == L'@' ? NotExtensionStr : NotOptionStr,
+					 argv[0]);
+			return EXIT_FAILURE;
+		}
+		return EXIT_SUCCESS;
 	}
 	if (var) {
 		cmd_printf(L"\r\n--------------------\r\n\r\n");

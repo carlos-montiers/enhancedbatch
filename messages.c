@@ -49,6 +49,9 @@ const WCHAR ArgErrorStr[]  = L"Failed to retrieve arguments.\n";
 const WCHAR WrongArgsStr[] = L"Incorrect arguments: %d needed, %d provided.\n";
 const WCHAR MoreArgsStr[]  = L"Incorrect arguments: at least %d needed, %d provided.\n";
 
+const WCHAR NotOptionStr[] = L"Unknown option: %s.\n";
+const WCHAR NotExtensionStr[] = L"Unknown extension: %s.\n";
+
 const WCHAR ConstStr[] = L"Constants";
 const WCHAR GetSetStr[] = L"Read/Write Variables";
 const WCHAR GetterStr[] = L"Read-only Variables";
