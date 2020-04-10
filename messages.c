@@ -694,7 +694,7 @@ const WCHAR ElevateHelpStr[] =
 	L"  /N         run in a new window (and Keep it open)\r\n"
 	L"\r\n"
 	L"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
-	L"variables present in the current CMD, but not the elevated CMD, will be added;\r\n"
+	L"variables present in the current CMD, but not in the elevated CMD, will be added;\r\n"
 	L"other variables will remain unchanged.  Elevation is handled by \"Windows host\r\n"
 	L"process (Rundll32)\" (default User Account Control setting will cause a prompt\r\n"
 	L"for authorization); it will remain available for the remainder of the batch\r\n"
