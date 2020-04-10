@@ -1125,7 +1125,9 @@ int CallImg(int argc, LPCWSTR argv[])
 		}
 		if (rows == 0) {
 			rows = (h + 1) / 2;
-			dh = -1;
+			dh = h;
+		} else {
+			dh = 0;
 		}
 		if (cols == -1) {
 			if (rows == -1) {
@@ -1145,9 +1147,7 @@ int CallImg(int argc, LPCWSTR argv[])
 			cols = wcols;
 			rows = cols * h * cfi.dwFontSize.X / cfi.dwFontSize.Y / w;
 		}
-		if (dh == -1 && rows == (h + 1) / 2) {
-			dh = h;
-		} else {
+		if (dh == 0 || rows != (h + 1) / 2) {
 			dh = rows * 2;
 		}
 		dw = cols;
