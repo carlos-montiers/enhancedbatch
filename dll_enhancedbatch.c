@@ -853,8 +853,6 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 
 	if (lpName != NULL) {
 
-		DWORD varmax = STRINGBUFFERMAX;
-
 		if (lpValue != NULL && *lpValue == L' ') {
 			DWORD len = wcslen(lpName);
 			if (len > 1 && lpName[len-1] == L' ') {
@@ -869,13 +867,12 @@ MySetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue)
 					name[len-2] = L'\0';
 					len = MyGetEnvironmentVariableW(name, varBuffer, STRINGBUFFERMAX);
 					varbuf += len;
-					varmax -= len;
 					++lpValue;
 					append = TRUE;
 				} else if (lpName[len-1] == L':') {
 					lpName = name = _wcsdup(lpName);
 					name[len-2] = L'\0';
-					if (MyGetEnvironmentVariableW(++lpValue, varbuf, varmax) != 0) {
+					if (MyGetEnvironmentVariableW(++lpValue, varbuf, STRINGBUFFERMAX) != 0) {
 						lpValue = varbuf;
 					}
 				}
