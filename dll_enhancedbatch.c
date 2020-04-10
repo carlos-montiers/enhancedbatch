@@ -1720,6 +1720,8 @@ MyCmdBatNotification(BOOL start)
 	} else {
 		kh_clear(line, batch_lnums);
 		doneCmdBat();
+		// Batch has exited, stop the elevated process, restoring the prompt.
+		CallElevate(-1, NULL);
 	}
 
 	return rc;
@@ -1935,6 +1937,8 @@ void hook(HMODULE hInstance)
 void unhook(void)
 {
 	khint_t k;
+
+	CallElevate(-1, NULL);	// stop the elevated process
 
 	// Wait for speech to finish before exiting.
 	WaitForSingleObject(hSpeaking, INFINITE);
@@ -2200,48 +2204,69 @@ Export_DllLoad_Entrypoint(Load);
 Export_DllLoad_Entrypoint(DllRegisterServer);
 
 __declspec(dllexport)
-void Elevate(void)
+VOID /*CALLBACK*/	// CALLBACK exports ElevateW@16
+ElevateW(HWND hwnd, HINSTANCE ModuleHandle, LPCWSTR CmdLineBuffer, INT nCmdShow)
 {
-	HANDLE event = OpenEvent(EVENT_ALL_ACCESS, FALSE, L"EB_elevate_event");
+	WCHAR name[64];
+
+	LPCWSTR key = wcsrchr(CmdLineBuffer, L' ');
+	if (key == NULL) {
+		return;
+	}
+	++key;
+	wsnprintf(name, lenof(name), L"EB-elevate-event-%s", key);
+	HANDLE event = OpenEvent(EVENT_ALL_ACCESS, FALSE, name);
 	if (event == NULL) {
 		return;
 	}
 	for (;;) {
-		DWORD rc = WaitForSingleObject(event, 15*60000);
-		if (rc == WAIT_TIMEOUT) {
+		WaitForSingleObject(event, INFINITE);
+		wsnprintf(name, lenof(name), L"EB-elevate-data-%s", key);
+		HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, name);
+		if (map == NULL) {
+			// No map means the batch is finished, prompt again next time.
 			return;
 		}
-		HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE,
-									 L"EB_elevate_data");
-		if (map != NULL) {
-			struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
-			if (data != NULL) {
-				STARTUPINFO si = { sizeof(si) };
-				if (data->console_pid != 0) {
-					si.dwFlags = STARTF_USESHOWWINDOW;
-					si.wShowWindow = SW_HIDE;
-				}
-				PROCESS_INFORMATION pi;
-				if (CreateProcess(NULL, data->cmdline, NULL, NULL, TRUE,
-								  CREATE_NEW_CONSOLE | CREATE_SUSPENDED
-								  | CREATE_UNICODE_ENVIRONMENT,
-								  NULL, data->curdir, &si, &pi)) {
-					data->elevated_pid = pi.dwProcessId;
-					Inject(pi.hProcess);
-					ResumeThread(pi.hThread);
-					CloseHandle(pi.hProcess);
-					CloseHandle(pi.hThread);
-				}
-				UnmapViewOfFile(data);
+		struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
+		if (data != NULL) {
+			STARTUPINFO si = { sizeof(si) };
+			if (data->console_pid != 0) {
+				si.dwFlags = STARTF_USESHOWWINDOW;
+				si.wShowWindow = SW_HIDE;
 			}
-			CloseHandle(map);
+			PROCESS_INFORMATION pi;
+			SetEnvironmentVariable(L"~EB-elevate-key", key);
+			if (CreateProcess(NULL, data->cmdline, NULL, NULL, TRUE,
+							  CREATE_NEW_CONSOLE | CREATE_SUSPENDED
+							  | CREATE_UNICODE_ENVIRONMENT,
+							  NULL, data->curdir, &si, &pi)) {
+				data->elevated_pid = pi.dwProcessId;
+				Inject(pi.hProcess);
+				ResumeThread(pi.hThread);
+				CloseHandle(pi.hProcess);
+				CloseHandle(pi.hThread);
+			}
+			UnmapViewOfFile(data);
+		}
+		CloseHandle(map);
+		// If the key ends in '-' it's from the command line, which should
+		// always prompt.
+		if (key[wcslen(key)-1] == L'-') {
+			return;
 		}
 	}
 }
 
 void handleElevation(void)
 {
-	HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"EB_elevate_data");
+	WCHAR name[64], key[32];
+
+	if (GetEnvironmentVariable(L"~EB-elevate-key", key, lenof(key)) == 0) {
+		return;
+	}
+	SetEnvironmentVariable(L"~EB-elevate-key", NULL);
+	wsnprintf(name, lenof(name), L"EB-elevate-data-%s", key);
+	HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, name);
 	if (map == NULL) {
 		return;
 	}

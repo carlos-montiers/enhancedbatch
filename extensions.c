@@ -1793,25 +1793,49 @@ int CallElevate(int argc, LPCWSTR argv[])
 	BOOL new_window = LOWORD(GetVersion()) == 5;  // attach not supported by 2K
 	BOOL transient = TRUE;
 	LPCWSTR cmd = NULL;
+	WCHAR name[64], key[32];
+	static LPVOID keyptr;
 
-	HANDLE event = CreateEvent(NULL, FALSE, FALSE, L"EB_elevate_event");
+	// Quick test if nothing's been elevated.
+	if (argc == -1 && keyptr == NULL) {
+		return EXIT_SUCCESS;
+	}
+	if (keyptr == NULL) {
+		keyptr = *pCurrentBatchFile;
+	}
+	wsnprintf(key, lenof(key), keyptr == NULL ? L"%u-" : L"%u-%p",
+			  GetCurrentProcessId(), keyptr);
+	wsnprintf(name, lenof(name), L"EB-elevate-event-%s", key);
+	HANDLE event = CreateEvent(NULL, FALSE, FALSE, name);
 	if (event == NULL) {
 		return 0xEBEF;
 	}
+	if (argc == -1) {
+		if (GetLastError() == ERROR_ALREADY_EXISTS) {
+			// Let the elevated process know it should exit.
+			SetEvent(event);
+			CloseHandle(event);
+			keyptr = NULL;
+		}
+		return EXIT_SUCCESS;
+	}
 	if (GetLastError() != ERROR_ALREADY_EXISTS) {
+		WCHAR title[1024];
 		ZeroMemory(&sei, sizeof(sei));
 		sei.cbSize = sizeof(sei);
 		sei.fMask = SEE_MASK_FLAG_NO_UI | SEE_MASK_UNICODE;
 		sei.lpVerb = L"runas";
 		sei.lpFile = L"rundll32";
-		sbprintf(stringBuffer, L"\"%s\" Elevate", enh_dll);
+		GetConsoleTitle(title, lenof(title));
+		sbprintf(stringBuffer, L"\"%s\" Elevate [ %s ] %s", enh_dll, title, key);
 		sei.lpParameters = stringBuffer;
 		if (!ShellExecuteEx(&sei)) {
 			goto errexit;
 		}
 	}
 
-	HANDLE mutex = CreateMutex(NULL, FALSE, L"EB_elevate_mutex");
+	wsnprintf(name, lenof(name), L"EB-elevate-mutex-%s", key);
+	HANDLE mutex = CreateMutex(NULL, FALSE, name);
 	if (mutex == NULL) {
 		goto errexit;
 	}
@@ -1832,8 +1856,9 @@ int CallElevate(int argc, LPCWSTR argv[])
 	}
 	DWORD envlen = WSZ(p + 1 - env);
 	DWORD maplen = sizeof(struct sElevate) + envlen;
+	wsnprintf(name, lenof(name), L"EB-elevate-data-%s", key);
 	HANDLE map = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE,
-								   0, maplen, L"EB_elevate_data");
+								   0, maplen, name);
 	struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, maplen);
 	if (data == NULL) {
 		SafeCloseHandle(map);

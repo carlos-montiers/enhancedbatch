@@ -694,9 +694,9 @@ const WCHAR ElevateHelpStr[] =
 	L"variables present in the current CMD, but not the elevated CMD, will be added;\r\n"
 	L"other variables will remain unchanged.  Elevation is handled by \"Windows host\r\n"
 	L"process (Rundll32)\" (default User Account Control setting will cause a prompt\r\n"
-	L"for authorization); it will remain available for 15 minutes after the most\r\n"
-	L"recent command starts, avoiding multiple prompts.  Errorlevel will be 60399 if\r\n"
-	L"the elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
+	L"for authorization); it will remain available for the remainder of the batch\r\n"
+	L"file, avoiding multiple prompts.  Errorlevel will be 60399 if the elevated\r\n"
+	L"command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
 ;
 
 const WCHAR HelpHelpStr[] =
