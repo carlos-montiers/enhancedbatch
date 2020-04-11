@@ -615,8 +615,6 @@ int CallImage(int argc, LPCWSTR argv[])
 			}
 		}
 		if (!quiet) {
-			GpGraphics *graphics = NULL;
-			GdipCreateFromHWND(consoleHwnd, &graphics);
 			for (int b = 0; b < MAX_BG; ++b) {
 				if (BgCache[b].bitmap != NULL
 					&& BgCache[b].x == x && BgCache[b].y == y
@@ -639,6 +637,8 @@ int CallImage(int argc, LPCWSTR argv[])
 					break;
 				}
 			}
+			GpGraphics *graphics = NULL;
+			GdipCreateFromHWND(consoleHwnd, &graphics);
 			GdipDrawImageRectRectI(graphics, image, x, y, w, h, sx, sy, w, h,
 								   UnitPixel, NULL, NULL, NULL);
 			GdipDeleteGraphics(graphics);
@@ -868,10 +868,10 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 		r = g = b = 0;
 		for (int y = 0; y < pcfi->dwFontSize.Y; ++y) {
 			for (int x = 0; x < pcfi->dwFontSize.X; ++x) {
-				COLORREF c = GetPixel(mdc, x, y);
-				r += GetRValue(c);
-				g += GetGValue(c);
-				b += GetBValue(c);
+				COLORREF cr = GetPixel(mdc, x, y);
+				r += GetRValue(cr);
+				g += GetGValue(cr);
+				b += GetBValue(cr);
 			}
 		}
 		color_match[c].r = r / count;
@@ -888,9 +888,9 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 		h = s = v = 0;
 		for (int y = 0; y < pcfi->dwFontSize.Y; ++y) {
 			for (int x = 0; x < pcfi->dwFontSize.X; ++x) {
-				COLORREF c = GetPixel(mdc, x, y);
+				COLORREF cr = GetPixel(mdc, x, y);
 				float hh, ss, vv;
-				rgb_to_hsv(GetRValue(c), GetGValue(c), GetBValue(c),
+				rgb_to_hsv(GetRValue(cr), GetGValue(cr), GetBValue(cr),
 						   &hh, &ss, &vv);
 				h += hh;
 				s += ss;
