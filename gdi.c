@@ -826,7 +826,6 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 {
 	float HSV[16][3];
 	int c;
-	int i, j;
 	static COLORREF ColorTable[16];
 
 	CONSOLE_SCREEN_BUFFER_INFOEX csbi;
@@ -859,13 +858,12 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 	HGDIOBJ old_bm = SelectObject(mdc, bm);
 
 	int count = pcfi->dwFontSize.X * pcfi->dwFontSize.Y;
-	int r, g, b;
-	float h, s, v;
+	int i = 0, j = 0;
 
 	void average_rgb(WCHAR ch)
 	{
 		TextOut(mdc, 0, 0, &ch, 1);
-		r = g = b = 0;
+		int r = 0, g = 0, b = 0;
 		for (int y = 0; y < pcfi->dwFontSize.Y; ++y) {
 			for (int x = 0; x < pcfi->dwFontSize.X; ++x) {
 				COLORREF cr = GetPixel(mdc, x, y);
@@ -885,7 +883,7 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 	void average_hsv(WCHAR ch)
 	{
 		TextOut(mdc, 0, 0, &ch, 1);
-		h = s = v = 0;
+		float h = 0, s = 0, v = 0;
 		for (int y = 0; y < pcfi->dwFontSize.Y; ++y) {
 			for (int x = 0; x < pcfi->dwFontSize.X; ++x) {
 				COLORREF cr = GetPixel(mdc, x, y);
@@ -904,7 +902,7 @@ static void generate_colors(PCONSOLE_FONT_INFOEX pcfi)
 		++c;
 	}
 
-	for (i = 0; i < 16; ++i) {
+	for (; i < 16; ++i) {
 		SetBkColor(mdc, RGB(color_match[i].r, color_match[i].g, color_match[i].b));
 		for (j = 0; j < 16; ++j) {
 			if (i == j)
