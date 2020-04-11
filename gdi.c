@@ -777,7 +777,7 @@ static void rgb_to_hsv(BYTE r, BYTE g, BYTE b,
 			*h = (gc - bc) / delta;
 		} else if (gc == max) {
 			*h = 2.0f + (bc - rc) / delta;
-		} else if (bc == max) {
+		} else /* (bc == max) */ {
 			*h = 4.0f + (rc - gc) / delta;
 		}
 		*h *= 60.0f;

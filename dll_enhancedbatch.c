@@ -1969,7 +1969,7 @@ BOOL WINAPI
 _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 {
 	if (dwReason == DLL_PROCESS_ATTACH) {
-		PBYTE base = GetModuleHandle(NULL);
+		PBYTE base = (PBYTE) GetModuleHandle(NULL);
 		GetModuleFileName(hDll, enh_dll, lenof(enh_dll));
 		// RunDLL & RegSvr32 are GUI, CMD is console.
 		PIMAGE_NT_HEADERS phdr = (PIMAGE_NT_HEADERS)(base + *(LPDWORD)(base + 0x3C));
