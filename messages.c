@@ -694,12 +694,12 @@ const WCHAR ElevateHelpStr[] =
 	L"  /N         run in a new window (and Keep it open)\r\n"
 	L"\r\n"
 	L"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
-	L"variables present in the current CMD, but not in the elevated CMD, will be added;\r\n"
-	L"other variables will remain unchanged.  Elevation is handled by \"Windows host\r\n"
-	L"process (Rundll32)\" (default User Account Control setting will cause a prompt\r\n"
-	L"for authorization); it will remain available for the remainder of the batch\r\n"
-	L"file, avoiding multiple prompts.  Errorlevel will be 60399 if the elevated\r\n"
-	L"command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
+	L"variables present in the current CMD, but not in the elevated CMD, will be \r\n"
+	L"added; other variables will remain unchanged.  Elevation is handled by \"Windows\r\n"
+	L"host process (Rundll32)\" (default User Account Control setting will cause a\r\n"
+	L"prompt for authorization); it will remain available for the remainder of the\r\n"
+	L"batch file (avoiding multiple prompts).  Errorlevel will be 60399 if the\r\n"
+	L"elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
 ;
 
 const WCHAR HelpHelpStr[] =
