@@ -1814,9 +1814,9 @@ int CallElevate(int argc, LPCWSTR argv[])
 		if (GetLastError() == ERROR_ALREADY_EXISTS) {
 			// Let the elevated process know it should exit.
 			SetEvent(event);
-			CloseHandle(event);
-			keyptr = NULL;
 		}
+		CloseHandle(event);
+		keyptr = NULL;
 		return EXIT_SUCCESS;
 	}
 	if (GetLastError() != ERROR_ALREADY_EXISTS) {
