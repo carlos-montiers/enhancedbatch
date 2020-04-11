@@ -1936,9 +1936,9 @@ int CallElevate(int argc, LPCWSTR argv[])
 			// Something went wrong loading EB, unhide the window.
 			BOOL CALLBACK find_window_process(HWND hwnd, LPARAM lParam)
 			{
-				DWORD pid = 0;
-				GetWindowThreadProcessId(hwnd, &pid);
-				if (pid == (DWORD) lParam) {
+				DWORD elepid = (DWORD) lParam, winpid = 0;
+				GetWindowThreadProcessId(hwnd, &winpid);
+				if (winpid == elepid) {
 					ShowWindow(hwnd, SW_SHOW);
 					SetForegroundWindow(hwnd);
 					return FALSE;
