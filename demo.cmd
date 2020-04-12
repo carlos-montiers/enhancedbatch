@@ -137,8 +137,8 @@ echo @version=%@version%
 
 pause & call @clear
 
-echo Changing color to A1
-set @color=A1
+echo Changing color to 2E
+set @color=2E
 
 echo Setting $myvar
 set "$myvar=okay"
