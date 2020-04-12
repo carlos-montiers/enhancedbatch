@@ -34,7 +34,7 @@ static HWND GetConsoleWindowInTab(void);
 
 // If the string is bigger than the buffer snwprintf fills it and returns -1.
 // If the string is the same size as the buffer snwprintf fills it.
-// These do not add the terminator.  Rectify that.
+// These do not add the terminator.  TODO: Rectify that.
 static int my_vsnwprintf(LPWSTR buf, size_t size, LPCWSTR fmt, va_list args)
 {
 	if (size == 0) {
