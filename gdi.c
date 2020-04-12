@@ -718,14 +718,14 @@ static int attr2ansi[16] = {
 static void hsv_to_rgb(float h, float s, float v,
 					   BYTE *r, BYTE *g, BYTE *b)
 {
-	float f, x, y, z;
-	int i;
-
 	v *= 255.0f;
 
 	if (s == 0.0f) {
 		*r = *g = *b = v;
 	} else {
+		float f, x, y, z;
+		int i;
+
 		h = fmod(h, 360.0) / 60.0;
 		if (h < 0) {
 			h += 6.0f;
