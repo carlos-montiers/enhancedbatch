@@ -600,7 +600,7 @@ MyGetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize)
 					}
 					WCHAR tmp = *end;
 					*end = L'\0';
-					int k = kh_get(wstr, variables, var);
+					khint_t k = kh_get(wstr, variables, var);
 					if (k != kh_end(variables)) {
 						p += sbcpy(p, kh_val(variables, k));
 					}
@@ -2175,7 +2175,7 @@ HRESULT DllLoad(void)
 
 	if (cmdpid == 0) {
 		Info(ParentErrStr);
-	} else if (cmdpid == -1) {
+	} else if (cmdpid == (DWORD)-1) {
 		Info(ArchErrStr);
 	} else if (!IsInstalled(cmdpid, cmdname, &cmdbase)) {
 		HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, cmdpid);

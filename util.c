@@ -45,16 +45,16 @@ static int my_vsnwprintf(LPWSTR buf, size_t size, LPCWSTR fmt, va_list args)
 		return 0;
 	}
 
-	int len = vsnwprintf(buf, size - 1, fmt, args);
+	size_t len = vsnwprintf(buf, size - 1, fmt, args);
 
-	if (len == -1) {
+	if (len == (size_t)-1) {
 		len = size - 1;
 	}
 	if (len == size - 1) {
 		buf[len] = L'\0';
 	}
 
-	return len;
+	return (int)len;
 }
 
 
