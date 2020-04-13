@@ -1,4 +1,4 @@
-# Enhanced Batch makefile using TDM GCC MinGW-w64 5.1.0-2
+# Enhanced Batch makefile using TDM GCC MinGW-w64
 # To compile, type:
 #    mingw32-make
 
