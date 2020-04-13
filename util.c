@@ -47,7 +47,7 @@ static int my_vsnwprintf(LPWSTR buf, size_t size, LPCWSTR fmt, va_list args)
 
 	size_t len = vsnwprintf(buf, size - 1, fmt, args);
 
-	if (len == (size_t)-1) {
+	if (len == -1u) {
 		len = size - 1;
 	}
 	if (len == size - 1) {

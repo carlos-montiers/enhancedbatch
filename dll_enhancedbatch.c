@@ -2175,7 +2175,7 @@ HRESULT DllLoad(void)
 
 	if (cmdpid == 0) {
 		Info(ParentErrStr);
-	} else if (cmdpid == (DWORD)-1) {
+	} else if (cmdpid == -1u) {
 		Info(ArchErrStr);
 	} else if (!IsInstalled(cmdpid, cmdname, &cmdbase)) {
 		HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, cmdpid);
