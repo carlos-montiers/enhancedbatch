@@ -2283,7 +2283,7 @@ void handleElevation(void)
 	if (data->console_pid != 0) {
 		typedef BOOL (WINAPI *fnAttachConsole)(DWORD);
 		fnAttachConsole pAttachConsole = (fnAttachConsole)
-			(VOID *)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "AttachConsole");
+			(LPVOID) GetProcAddress(GetModuleHandle(L"kernel32.dll"), "AttachConsole");
 		if (pAttachConsole != NULL) {
 			FreeConsole();
 			pAttachConsole(data->console_pid);

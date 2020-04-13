@@ -54,7 +54,7 @@ static int my_vsnwprintf(LPWSTR buf, size_t size, LPCWSTR fmt, va_list args)
 		buf[len] = L'\0';
 	}
 
-	return (int)len;
+	return (int) len;
 }
 
 
