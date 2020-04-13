@@ -3,7 +3,7 @@
 #    mingw32-make
 
 CC=gcc
-CFLAGS=-O3 -Wall -Wextra -Wno-unused-parameter -fno-ident
+CFLAGS=-Os -Wall -Wextra -Wno-unused-parameter -fno-ident
 LDFLAGS=-nostartfiles -s -shared
 LIBS=-lversion -lgdi32
 RC ?= windres
