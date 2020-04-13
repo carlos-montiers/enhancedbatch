@@ -2231,8 +2231,7 @@ ElevateW(HWND hwnd, HINSTANCE ModuleHandle, LPCWSTR CmdLineBuffer, INT nCmdShow)
 		}
 		struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
 		if (data != NULL) {
-			STARTUPINFO si = {0};
-			si.cb = sizeof(si);
+			STARTUPINFO si = { .cb = sizeof(si) };
 
 			if (data->console_pid != 0) {
 				si.dwFlags = STARTF_USESHOWWINDOW;
