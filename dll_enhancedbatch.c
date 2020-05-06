@@ -108,11 +108,11 @@ struct sExt {
 	LPCWSTR name;
 	int args;			// getters use this as a flag
 	LPVOID fn;
-	LPCWSTR brief, help;
+	LPCSTR brief, help;
 };
 
 #define HELPSTR(ext) ext##BriefStr, ext##HelpStr
-#define CONSTANT(str) str, str, str
+#define CONSTANT(str) TEXT(str), str, str
 #define CONSTHELP(str, help) str, help, help
 
 // args is:
@@ -120,30 +120,30 @@ struct sExt {
 //	1: getter with corresponding setter
 //	2: constant, defined in fn
 const struct sExt getExtensionList[] = {
-	{ L"@amp",              2, CONSTANT(L"&") },
-	{ L"@apos",             2, CONSTANT(L"'") },
-	{ L"@at",               2, CONSTANT(L"@") },
+	{ L"@amp",              2, CONSTANT("&") },
+	{ L"@apos",             2, CONSTANT("'") },
+	{ L"@at",               2, CONSTANT("@") },
 	{ L"@attr",             1, GetAttributes, HELPSTR(Attr) },
-	{ L"@bar",              2, CONSTANT(L"|") },
+	{ L"@bar",              2, CONSTANT("|") },
 	{ L"@batchfile",        1, GetBatchFile, HELPSTR(BatchFile) },
 	{ L"@batchline",        0, GetBatchLine, HELPSTR(BatchLine) },
-	{ L"@bell",             2, CONSTHELP(L"\a", L"Bell (U+0007)") },
+	{ L"@bell",             2, CONSTHELP(L"\a", "Bell (U+0007)") },
 	{ L"@bg",               1, GetBackground, HELPSTR(Background) },
-	{ L"@bquot",            2, CONSTANT(L"`") },
-	{ L"@bs",               2, CONSTHELP(L"\b", L"Backspace (U+0008)") },
-	{ L"@btick",            2, CONSTANT(L"`") },
-	{ L"@caret",            2, CONSTANT(L"^") },
-	{ L"@cbrc",             2, CONSTANT(L"}") },
-	{ L"@cbrs",             2, CONSTANT(L"]") },
+	{ L"@bquot",            2, CONSTANT("`") },
+	{ L"@bs",               2, CONSTHELP(L"\b", "Backspace (U+0008)") },
+	{ L"@btick",            2, CONSTANT("`") },
+	{ L"@caret",            2, CONSTANT("^") },
+	{ L"@cbrc",             2, CONSTANT("}") },
+	{ L"@cbrs",             2, CONSTANT("]") },
 	{ L"@chhit",            0, Chhit, HELPSTR(Readchar) },
 	{ L"@cmdversion",       0, GetCmdVersion, HELPSTR(CmdVersion) },
-	{ L"@colon",            2, CONSTANT(L":") },
+	{ L"@colon",            2, CONSTANT(":") },
 	{ L"@color",            1, GetColor, HELPSTR(Color) },
 	{ L"@column",           1, GetColumn, HELPSTR(Column) },
-	{ L"@comma",            2, CONSTANT(L",") },
-	{ L"@cpar",             2, CONSTANT(L")") },
-	{ L"@cr",               2, CONSTHELP(L"\r", L"Carriage return (U+000D)") },
-	{ L"@crlf",             2, CONSTHELP(L"\r\n", L"CR+LF (U+000D U+000A)") },
+	{ L"@comma",            2, CONSTANT(",") },
+	{ L"@cpar",             2, CONSTANT(")") },
+	{ L"@cr",               2, CONSTHELP(L"\r", "Carriage return (U+000D)") },
+	{ L"@crlf",             2, CONSTHELP(L"\r\n", "CR+LF (U+000D U+000A)") },
 	{ L"@ctrl+?",           2, NULL, HELPSTR(Ctrl) },
 	{ L"@ctrlcaborts",      1, GetCtrlCAborts, HELPSTR(CtrlCAborts) },
 	{ L"@cursor",           1, GetConsoleCursor, HELPSTR(ConsoleCursor) },
@@ -156,62 +156,62 @@ const struct sExt getExtensionList[] = {
 	{ L"@dayshort",         0, GetDayShort, HELPSTR(DayShort) },
 	{ L"@decsep",           1, GetDecSep, HELPSTR(DecSep) },
 	{ L"@delayedexpansion", 1, GetDelayedExpansion, HELPSTR(DelayedExpansion) },
-	{ L"@dollar",           2, CONSTANT(L"$") },
-	{ L"@dquot",            2, CONSTANT(L"\"") },
+	{ L"@dollar",           2, CONSTANT("$") },
+	{ L"@dquot",            2, CONSTANT("\"") },
 	{ L"@echo",             1, GetEcho, HELPSTR(Echo) },
 	{ L"@english",          1, GetEnglish, HELPSTR(English) },
 	{ L"@enhancedbatch",    0, GetEnhancedBatch, HELPSTR(EnhancedBatch) },
-	{ L"@eq",               2, CONSTANT(L"=") },
-	{ L"@esc",              2, CONSTHELP(L"\33", L"Escape (U+001B)") },
-	{ L"@excl",             2, CONSTANT(L"!") },
+	{ L"@eq",               2, CONSTANT("=") },
+	{ L"@esc",              2, CONSTHELP(L"\33", "Escape (U+001B)") },
+	{ L"@excl",             2, CONSTANT("!") },
 	{ L"@extensions",       1, GetExtensions, HELPSTR(Extensions) },
 	{ L"@fg",               1, GetForeground, HELPSTR(Foreground) },
 	{ L"@forline",          0, GetForLine, HELPSTR(ForLine) },
 	{ L"@forlines",         0, GetForLines, HELPSTR(ForLines) },
 	{ L"@getch",            0, Getch, HELPSTR(Getchar) },
 	{ L"@getkb",            0, Getkb, HELPSTR(Getkey) },
-	{ L"@gt",               2, CONSTANT(L">") },
+	{ L"@gt",               2, CONSTANT(">") },
 	{ L"@height",           0, GetHeight, HELPSTR(Height) },
 	{ L"@hour",             0, GetHour, HELPSTR(Hour) },
 	{ L"@inputcp",          1, GetInputCodePage, HELPSTR(InputCodePage) },
 	{ L"@iselevated",       0, GetElevated, HELPSTR(Elevated) },
 	{ L"@kbhit",            0, Kbhit, HELPSTR(Readkey) },
-	{ L"@lf",               2, CONSTHELP(L"\n", L"Line feed (U+000A)") },
-	{ L"@lt",               2, CONSTANT(L"<") },
+	{ L"@lf",               2, CONSTHELP(L"\n", "Line feed (U+000A)") },
+	{ L"@lt",               2, CONSTANT("<") },
 	{ L"@milliseconds",     0, GetMilliseconds, HELPSTR(Milliseconds) },
 	{ L"@minute",           0, GetMinute, HELPSTR(Minute) },
 	{ L"@month",            0, GetMonth, HELPSTR(Month) },
 	{ L"@monthname",        0, GetMonthName, HELPSTR(MonthName) },
 	{ L"@monthshort",       0, GetMonthShort, HELPSTR(MonthShort) },
-	{ L"@nbsp",             2, CONSTHELP(L"\xA0", L"No-break space (U+00A0)") },
+	{ L"@nbsp",             2, CONSTHELP(L"\xA0", "No-break space (U+00A0)") },
 	{ L"@no" ,              0, GetNo, HELPSTR(No) },
-	{ L"@obrc",             2, CONSTANT(L"{") },
-	{ L"@obrs",             2, CONSTANT(L"[") },
+	{ L"@obrc",             2, CONSTANT("{") },
+	{ L"@obrs",             2, CONSTANT("[") },
 	{ L"@opacity",          1, GetOpacity, HELPSTR(Opacity) },
-	{ L"@opar",             2, CONSTANT(L"(") },
+	{ L"@opar",             2, CONSTANT("(") },
 	{ L"@osbuild",          0, GetOSBuild, HELPSTR(OSBuild) },
 	{ L"@osmajor",          0, GetOSMajor, HELPSTR(OSMajor) },
 	{ L"@osminor",          0, GetOSMinor, HELPSTR(OSMinor) },
 	{ L"@osrevision",       0, GetOSRevision, HELPSTR(OSRevision) },
 	{ L"@osversion",        0, GetOSVersion, HELPSTR(OSVersion) },
 	{ L"@outputcp",         1, GetOutputCodePage, HELPSTR(OutputCodePage) },
-	{ L"@perc",             2, CONSTANT(L"%") },
+	{ L"@perc",             2, CONSTANT("%") },
 	{ L"@position",         1, GetPosition, HELPSTR(Position) },
-	{ L"@ques",             2, CONSTANT(L"?") },
-	{ L"@quot",             2, CONSTANT(L"\"") },
+	{ L"@ques",             2, CONSTANT("?") },
+	{ L"@quot",             2, CONSTANT("\"") },
 	{ L"@row",              1, GetRow, HELPSTR(Row) },
 	{ L"@second",           0, GetSecond, HELPSTR(Second) },
-	{ L"@semi",             2, CONSTANT(L";") },
+	{ L"@semi",             2, CONSTANT(";") },
 	{ L"@size",             0, GetSize, HELPSTR(Size) },
-	{ L"@squot",            2, CONSTANT(L"'") },
-	{ L"@star",             2, CONSTANT(L"*") },
+	{ L"@squot",            2, CONSTANT("'") },
+	{ L"@star",             2, CONSTANT("*") },
 	{ L"@stderr",           0, GetStderr, HELPSTR(Stderr) },
 	{ L"@stdin",            0, GetStdin, HELPSTR(Stdin) },
 	{ L"@stdout",           0, GetStdout, HELPSTR(Stdout) },
-	{ L"@tab",              2, CONSTHELP(L"\t", L"Tab (U+0009)") },
+	{ L"@tab",              2, CONSTHELP(L"\t", "Tab (U+0009)") },
 	{ L"@tempdir",          0, GetTempDir, HELPSTR(TempDir) },
 	{ L"@tempfile",         0, GetTempFile, HELPSTR(TempFile) },
-	{ L"@tilde",            2, CONSTANT(L"~") },
+	{ L"@tilde",            2, CONSTANT("~") },
 	{ L"@time",             0, GetTime, HELPSTR(Time) },
 	{ L"@timems",           0, GetTimems, HELPSTR(Timems) },
 	{ L"@timer",            0, GetTimer, HELPSTR(TimerVar) },
@@ -1094,7 +1094,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 				if (flag == -1 || flag == ext->args
 					|| (flag == -2 && ext->help != NULL)
 					|| (flag == ~2 && ext->args != 2)) {
-					cmd_printf(L"%-*s%s\r\n", width, ext->name, ext->brief);
+					cmd_printf(L"%-*s%S\r\n", width, ext->name, ext->brief);
 				}
 			}
 		}
@@ -1144,7 +1144,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 			for (; ext < end; ++ext) {
 				if (ext->help != NULL && (flag < 0 || flag == ext->args)) {
 					printTitle(ext->name);
-					cmd_printf(L"%s\r\n\r\n", ext->help);
+					cmd_printf(L"%S\r\n\r\n", ext->help);
 				}
 			}
 		}
@@ -1170,7 +1170,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 	}
 	BOOL var = ext != NULL;
 	if (var) {
-		cmd_printf(L"%s\r\n", ext->help);
+		cmd_printf(L"%S\r\n", ext->help);
 	}
 	ext = bsearch(argv[0], callExtensionList,
 			lenof(callExtensionList), sizeof(struct sExt), extcmp);
@@ -1185,7 +1185,7 @@ int CallHelp(int argc, LPCWSTR argv[])
 	if (var) {
 		cmd_printf(L"\r\n--------------------\r\n\r\n");
 	}
-	cmd_printf(L"%s\r\n", ext->help);
+	cmd_printf(L"%S\r\n", ext->help);
 
 	return EXIT_SUCCESS;
 }

@@ -180,7 +180,7 @@ extern const WCHAR ModStr[];
 
 #define DEFHELPSTR(ext) ext##BriefStr[], ext##HelpStr[]
 
-extern const WCHAR
+extern const char
 	DEFHELPSTR(Attr), DEFHELPSTR(BatchFile), DEFHELPSTR(BatchLine),
 	DEFHELPSTR(Background), DEFHELPSTR(Readchar), DEFHELPSTR(CmdVersion),
 	DEFHELPSTR(Color), DEFHELPSTR(Column), DEFHELPSTR(CtrlCAborts),

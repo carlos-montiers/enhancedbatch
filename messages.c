@@ -59,982 +59,982 @@ const WCHAR SetterStr[] = L"Write-only Variables";
 const WCHAR CallStr[] = L"Functions";
 const WCHAR ModStr[] = L"Modifiers";
 
-const WCHAR AttrBriefStr[]				= L"Console attributes";
-const WCHAR BatchFileBriefStr[] 		= L"Batch file name in error messages";
-const WCHAR BatchLineBriefStr[] 		= L"Current batch file line number";
-const WCHAR BackgroundBriefStr[]		= L"Console background color";
-const WCHAR ReadcharBriefStr[]			= L"Read a character from the keyboard";
-const WCHAR CmdVersionBriefStr[]		= L"Version number of CMD";
-const WCHAR ColorBriefStr[] 			= L"Console colors";
-const WCHAR ColumnBriefStr[]			= L"Console window cursor column";
-const WCHAR CtrlBriefStr[]				= L"Control characters";
-const WCHAR CtrlCAbortsBriefStr[]		= L"Ctrl+C behavior";
-const WCHAR ConsoleCursorBriefStr[] 	= L"Console cursor visibility/size";
-const WCHAR DateBriefStr[]				= L"Date as YYYY-MM-DD";
-const WCHAR DateTimeBriefStr[]			= L"Date and time as YYYY-MM-DD HH:MM:SS";
-const WCHAR DateTimemsBriefStr[]		= L"Date and time as YYYY-MM-DD HH:MM:SS.mmm";
-const WCHAR DayBriefStr[]				= L"Day of month";
-const WCHAR DayNameBriefStr[]			= L"Day of week (name)";
-const WCHAR DayOfWeekBriefStr[] 		= L"Day of week (number)";
-const WCHAR DayShortBriefStr[]			= L"Day of week (short name)";
-const WCHAR DecSepBriefStr[]			= L"Decimal separator";
-const WCHAR EchoBriefStr[]				= L"Echo status";
-const WCHAR DelayedExpansionBriefStr[]	= L"Delayed expansion behavior";
-const WCHAR EnglishBriefStr[]			= L"Use English names";
-const WCHAR EnhancedBatchBriefStr[] 	= L"Enhanced Batch feature number";
-const WCHAR ExtensionsBriefStr[]		= L"Extensions behavior";
-const WCHAR ForegroundBriefStr[]		= L"Console foreground color";
-const WCHAR ForLineBriefStr[]			= L"Line number of FOR /F file";
-const WCHAR ForLinesBriefStr[]			= L"Total number of lines of FOR /F file";
-const WCHAR GetcharBriefStr[]			= L"Wait for a character from the keyboard";
-const WCHAR GetkeyBriefStr[]			= L"Wait for a key";
-const WCHAR HeightBriefStr[]			= L"Console window height";
-const WCHAR HourBriefStr[]				= L"Hour value of the current time";
-const WCHAR InputCodePageBriefStr[] 	= L"Input code page";
-const WCHAR ElevatedBriefStr[]			= L"Running as administrator";
-const WCHAR ReadkeyBriefStr[]			= L"Read a key";
-const WCHAR MillisecondsBriefStr[]		= L"Milliseconds value of the current time";
-const WCHAR MinuteBriefStr[]			= L"Minute value of the current time";
-const WCHAR MonthBriefStr[] 			= L"Month of the current date";
-const WCHAR MonthNameBriefStr[] 		= L"Name of the current month";
-const WCHAR MonthShortBriefStr[]		= L"Short name of the current month";
-const WCHAR NoBriefStr[]				= L"Character for no";
-const WCHAR OpacityBriefStr[]			= L"Opacity of the window";
-const WCHAR OSBuildBriefStr[]			= L"Windows build version number";
-const WCHAR OSMajorBriefStr[]			= L"Windows major version number";
-const WCHAR OSMinorBriefStr[]			= L"Windows minor version number";
-const WCHAR OSRevisionBriefStr[]		= L"Windows revision version number";
-const WCHAR OSVersionBriefStr[] 		= L"Windows version number";
-const WCHAR OutputCodePageBriefStr[]	= L"Output code page";
-const WCHAR PositionBriefStr[]			= L"Console window cursor position";
-const WCHAR RowBriefStr[]				= L"Console window cursor row";
-const WCHAR SecondBriefStr[]			= L"Seconds value of the current time";
-const WCHAR SizeBriefStr[]				= L"Console window size";
-const WCHAR StderrBriefStr[]			= L"Standard error mode";
-const WCHAR StdinBriefStr[] 			= L"Standard input mode";
-const WCHAR StdoutBriefStr[]			= L"Standard output mode";
-const WCHAR TempDirBriefStr[]			= L"Create a temporary directory";
-const WCHAR TempFileBriefStr[]			= L"Create a temporary file";
-const WCHAR TimeBriefStr[]				= L"Time as HH:MM:SS";
-const WCHAR TimemsBriefStr[]			= L"Time as HH:MM:SS.mmm";
-const WCHAR TimerVarBriefStr[]			= L"Time of the millisecond timer";
-const WCHAR HiTimerBriefStr[]			= L"Time of the microsecond timer";
-const WCHAR TitleBriefStr[] 			= L"Title of the window";
-const WCHAR TraceBriefStr[] 			= L"Trace commands";
-const WCHAR TransientBriefStr[] 		= L"Transient state of CMD";
-const WCHAR UnderlineBriefStr[] 		= L"Console underline attribute";
-const WCHAR UnicodeBriefStr[]			= L"Unicode output";
-const WCHAR UniqueBriefStr[]			= L"Create a unique file";
-const WCHAR UnixTimeBriefStr[]			= L"Time as number of seconds";
-const WCHAR EBVersionBriefStr[] 		= L"Enhanced Batch version number";
-const WCHAR VoiceBriefStr[] 			= L"Text-to-speech voice";
-const WCHAR WidthBriefStr[] 			= L"Console window width";
-const WCHAR YearBriefStr[]				= L"Year of the current date";
-const WCHAR YesBriefStr[]				= L"Character for yes";
-
-const WCHAR CodePageBriefStr[]			= L"Set both input and output code pages";
-const WCHAR DumpParseBriefStr[] 		= L"Display parser processing";
-const WCHAR DumpTokensBriefStr[]		= L"Display token processing";
-const WCHAR NextBriefStr[]				= L"Set next FOR range value";
-
-const WCHAR CheckkeyBriefStr[]			= L"Check if any key was pressed";
-const WCHAR ClearBriefStr[] 			= L"Clear a window";
-const WCHAR ElevateBriefStr[]			= L"Run a command as administrator";
-const WCHAR HelpBriefStr[]				= L"This list";
-const WCHAR ImageBriefStr[] 			= L"Draw an image";
-const WCHAR ImgBriefStr[]				= L"Display an image";
-const WCHAR SayBriefStr[]				= L"Speak a message";
-const WCHAR SleepBriefStr[] 			= L"Suspend execution";
-const WCHAR TextBriefStr[]				= L"Draw a message";
-const WCHAR TimerBriefStr[] 			= L"Millisecond timer";
-const WCHAR TimerHiBriefStr[]			= L"Microsecond timer";
-const WCHAR UnloadBriefStr[]			= L"Remove Enhanced Batch";
-const WCHAR WaitkeyBriefStr[]			= L"Wait for any key";
-const WCHAR WriteBriefStr[] 			= L"Display a message";
-
-const WCHAR DefaultBriefStr[] 			= L"Default value";
-const WCHAR AltBriefStr[] 				= L"Test if a key contains Alt";
-const WCHAR CapitalBriefStr[] 			= L"Upper case characters after space or tab";
-const WCHAR CapitalListBriefStr[] 		= L"Upper case characters after those in LIST";
-const WCHAR CtrlModBriefStr[]			= L"Test if a key contains Ctrl";
-const WCHAR HexifyBriefStr[]			= L"Convert to hexadecimal";
-const WCHAR KeyBriefStr[] 				= L"The key itself, without modifiers";
-const WCHAR LengthBriefStr[]			= L"The length of the variable";
-const WCHAR LowerBriefStr[]				= L"Convert all to lower case";
-const WCHAR LtrimBriefStr[]				= L"Remove leading spaces and tabs";
-const WCHAR LtrimListBriefStr[]			= L"Remove leading characters from LIST";
-const WCHAR NumberBriefStr[]			= L"Padding";
-const WCHAR RtrimBriefStr[]				= L"Remove trailing spaces and tabs";
-const WCHAR RtrimListBriefStr[]			= L"Remove trailing characters from LIST";
-const WCHAR ShiftBriefStr[]				= L"Test if a key contains Shift";
-const WCHAR TrimBriefStr[]				= L"Remove leading and trailing spaces and tabs";
-const WCHAR TrimListBriefStr[]			= L"Remove leading and trailing characters from LIST";
-const WCHAR UnhexifyBriefStr[]			= L"Convert from hexadecimal";
-const WCHAR UpperBriefStr[]				= L"Convert all to upper case";
-const WCHAR TildeBriefStr[]				= L"Same as FOR";
+const char AttrBriefStr[]				= "Console attributes";
+const char BatchFileBriefStr[]			= "Batch file name in error messages";
+const char BatchLineBriefStr[]			= "Current batch file line number";
+const char BackgroundBriefStr[] 		= "Console background color";
+const char ReadcharBriefStr[]			= "Read a character from the keyboard";
+const char CmdVersionBriefStr[] 		= "Version number of CMD";
+const char ColorBriefStr[]				= "Console colors";
+const char ColumnBriefStr[] 			= "Console window cursor column";
+const char CtrlBriefStr[]				= "Control characters";
+const char CtrlCAbortsBriefStr[]		= "Ctrl+C behavior";
+const char ConsoleCursorBriefStr[]		= "Console cursor visibility/size";
+const char DateBriefStr[]				= "Date as YYYY-MM-DD";
+const char DateTimeBriefStr[]			= "Date and time as YYYY-MM-DD HH:MM:SS";
+const char DateTimemsBriefStr[] 		= "Date and time as YYYY-MM-DD HH:MM:SS.mmm";
+const char DayBriefStr[]				= "Day of month";
+const char DayNameBriefStr[]			= "Day of week (name)";
+const char DayOfWeekBriefStr[]			= "Day of week (number)";
+const char DayShortBriefStr[]			= "Day of week (short name)";
+const char DecSepBriefStr[] 			= "Decimal separator";
+const char EchoBriefStr[]				= "Echo status";
+const char DelayedExpansionBriefStr[]	= "Delayed expansion behavior";
+const char EnglishBriefStr[]			= "Use English names";
+const char EnhancedBatchBriefStr[]		= "Enhanced Batch feature number";
+const char ExtensionsBriefStr[] 		= "Extensions behavior";
+const char ForegroundBriefStr[] 		= "Console foreground color";
+const char ForLineBriefStr[]			= "Line number of FOR /F file";
+const char ForLinesBriefStr[]			= "Total number of lines of FOR /F file";
+const char GetcharBriefStr[]			= "Wait for a character from the keyboard";
+const char GetkeyBriefStr[] 			= "Wait for a key";
+const char HeightBriefStr[] 			= "Console window height";
+const char HourBriefStr[]				= "Hour value of the current time";
+const char InputCodePageBriefStr[]		= "Input code page";
+const char ElevatedBriefStr[]			= "Running as administrator";
+const char ReadkeyBriefStr[]			= "Read a key";
+const char MillisecondsBriefStr[]		= "Milliseconds value of the current time";
+const char MinuteBriefStr[] 			= "Minute value of the current time";
+const char MonthBriefStr[]				= "Month of the current date";
+const char MonthNameBriefStr[]			= "Name of the current month";
+const char MonthShortBriefStr[] 		= "Short name of the current month";
+const char NoBriefStr[] 				= "Character for no";
+const char OpacityBriefStr[]			= "Opacity of the window";
+const char OSBuildBriefStr[]			= "Windows build version number";
+const char OSMajorBriefStr[]			= "Windows major version number";
+const char OSMinorBriefStr[]			= "Windows minor version number";
+const char OSRevisionBriefStr[] 		= "Windows revision version number";
+const char OSVersionBriefStr[]			= "Windows version number";
+const char OutputCodePageBriefStr[] 	= "Output code page";
+const char PositionBriefStr[]			= "Console window cursor position";
+const char RowBriefStr[]				= "Console window cursor row";
+const char SecondBriefStr[] 			= "Seconds value of the current time";
+const char SizeBriefStr[]				= "Console window size";
+const char StderrBriefStr[] 			= "Standard error mode";
+const char StdinBriefStr[]				= "Standard input mode";
+const char StdoutBriefStr[] 			= "Standard output mode";
+const char TempDirBriefStr[]			= "Create a temporary directory";
+const char TempFileBriefStr[]			= "Create a temporary file";
+const char TimeBriefStr[]				= "Time as HH:MM:SS";
+const char TimemsBriefStr[] 			= "Time as HH:MM:SS.mmm";
+const char TimerVarBriefStr[]			= "Time of the millisecond timer";
+const char HiTimerBriefStr[]			= "Time of the microsecond timer";
+const char TitleBriefStr[]				= "Title of the window";
+const char TraceBriefStr[]				= "Trace commands";
+const char TransientBriefStr[]			= "Transient state of CMD";
+const char UnderlineBriefStr[]			= "Console underline attribute";
+const char UnicodeBriefStr[]			= "Unicode output";
+const char UniqueBriefStr[] 			= "Create a unique file";
+const char UnixTimeBriefStr[]			= "Time as number of seconds";
+const char EBVersionBriefStr[]			= "Enhanced Batch version number";
+const char VoiceBriefStr[]				= "Text-to-speech voice";
+const char WidthBriefStr[]				= "Console window width";
+const char YearBriefStr[]				= "Year of the current date";
+const char YesBriefStr[]				= "Character for yes";
+
+const char CodePageBriefStr[]			= "Set both input and output code pages";
+const char DumpParseBriefStr[]			= "Display parser processing";
+const char DumpTokensBriefStr[] 		= "Display token processing";
+const char NextBriefStr[]				= "Set next FOR range value";
+
+const char CheckkeyBriefStr[]			= "Check if any key was pressed";
+const char ClearBriefStr[]				= "Clear a window";
+const char ElevateBriefStr[]			= "Run a command as administrator";
+const char HelpBriefStr[]				= "This list";
+const char ImageBriefStr[]				= "Draw an image";
+const char ImgBriefStr[]				= "Display an image";
+const char SayBriefStr[]				= "Speak a message";
+const char SleepBriefStr[]				= "Suspend execution";
+const char TextBriefStr[]				= "Draw a message";
+const char TimerBriefStr[]				= "Millisecond timer";
+const char TimerHiBriefStr[]			= "Microsecond timer";
+const char UnloadBriefStr[] 			= "Remove Enhanced Batch";
+const char WaitkeyBriefStr[]			= "Wait for any key";
+const char WriteBriefStr[]				= "Display a message";
+
+const char DefaultBriefStr[] 			= "Default value";
+const char AltBriefStr[] 				= "Test if a key contains Alt";
+const char CapitalBriefStr[] 			= "Upper case characters after space or tab";
+const char CapitalListBriefStr[] 		= "Upper case characters after those in LIST";
+const char CtrlModBriefStr[]			= "Test if a key contains Ctrl";
+const char HexifyBriefStr[] 			= "Convert to hexadecimal";
+const char KeyBriefStr[] 				= "The key itself, without modifiers";
+const char LengthBriefStr[] 			= "The length of the variable";
+const char LowerBriefStr[]				= "Convert all to lower case";
+const char LtrimBriefStr[]				= "Remove leading spaces and tabs";
+const char LtrimListBriefStr[]			= "Remove leading characters from LIST";
+const char NumberBriefStr[] 			= "Padding";
+const char RtrimBriefStr[]				= "Remove trailing spaces and tabs";
+const char RtrimListBriefStr[]			= "Remove trailing characters from LIST";
+const char ShiftBriefStr[]				= "Test if a key contains Shift";
+const char TrimBriefStr[]				= "Remove leading and trailing spaces and tabs";
+const char TrimListBriefStr[]			= "Remove leading and trailing characters from LIST";
+const char UnhexifyBriefStr[]			= "Convert from hexadecimal";
+const char UpperBriefStr[]				= "Convert all to upper case";
+const char TildeBriefStr[]				= "Same as FOR";
 
-const WCHAR AttrHelpStr[] =
-	L"Get or set the console attributes.\r\n"
-	L"\r\n"
-	L"The attributes are a four-digit hexadecimal number.  Set an empty value to\r\n"
-	L"restore the original attributes."
+const char AttrHelpStr[] =
+	"Get or set the console attributes.\r\n"
+	"\r\n"
+	"The attributes are a four-digit hexadecimal number.  Set an empty value to\r\n"
+	"restore the original attributes."
 ;
 
-const WCHAR BatchFileHelpStr[] =
-	L"Get or set the batch file name in error messages.\r\n"
-	L"\r\n"
-	L"  0         do not show the file name\r\n"
-	L"  1         show only the file name (default)\r\n"
-	L"  2         show the complete path\r\n"
-	L"\r\n"
-	L"If the name is shown the line number will be shown after it."
+const char BatchFileHelpStr[] =
+	"Get or set the batch file name in error messages.\r\n"
+	"\r\n"
+	"  0         do not show the file name\r\n"
+	"  1         show only the file name (default)\r\n"
+	"  2         show the complete path\r\n"
+	"\r\n"
+	"If the name is shown the line number will be shown after it."
 ;
 
-const WCHAR BatchLineHelpStr[] =
-	L"Get the line number of the current batch file (0 if none)."
+const char BatchLineHelpStr[] =
+	"Get the line number of the current batch file (0 if none)."
 ;
 
-const WCHAR BackgroundHelpStr[] =
-	L"Get or set the console background color.\r\n"
-	L"\r\n"
-	L"The color is a single hexadecimal digit.  Set an empty value to restore the\r\n"
-	L"original background."
+const char BackgroundHelpStr[] =
+	"Get or set the console background color.\r\n"
+	"\r\n"
+	"The color is a single hexadecimal digit.  Set an empty value to restore the\r\n"
+	"original background."
 ;
 
-const WCHAR ReadcharHelpStr[] =
-	L"Read a character from the keyboard.\r\n"
-	L"\r\n"
-	L"Only reads characters, other keys are discarded.  If no character is available\r\n"
-	L"uses -1."
+const char ReadcharHelpStr[] =
+	"Read a character from the keyboard.\r\n"
+	"\r\n"
+	"Only reads characters, other keys are discarded.  If no character is available\r\n"
+	"uses -1."
 ;
 
-const WCHAR CmdVersionHelpStr[] =
-	L"Get the version number of CMD."
+const char CmdVersionHelpStr[] =
+	"Get the version number of CMD."
 ;
 
-const WCHAR ColorHelpStr[] =
-	L"Get or set the console colors.\r\n"
-	L"\r\n"
-	L"The colors are a two-digit hexadecimal number (background and foreground).  Set\r\n"
-	L"an empty value to restore the original colors."
+const char ColorHelpStr[] =
+	"Get or set the console colors.\r\n"
+	"\r\n"
+	"The colors are a two-digit hexadecimal number (background and foreground).  Set\r\n"
+	"an empty value to restore the original colors."
 ;
 
-const WCHAR ColumnHelpStr[] =
-	L"Get or set the window cursor column.\r\n"
-	L"\r\n"
-	L"The left column is 0; will be -1 if there is no console."
+const char ColumnHelpStr[] =
+	"Get or set the window cursor column.\r\n"
+	"\r\n"
+	"The left column is 0; will be -1 if there is no console."
 ;
 
-const WCHAR CtrlHelpStr[] =
-	L"Get a control character.\r\n"
-	L"\r\n"
-	L"  A-Z       characters 1 to 26 (U+0001 to U+001A)\r\n"
-	L"  [         character 27 (U+001B)\r\n"
-	L"  \\         character 28 (U+001C)\r\n"
-	L"  ]         character 29 (U+001D)\r\n"
-	L"  ^         character 30 (U+001E)\r\n"
-	L"  _         character 31 (U+001F)"
+const char CtrlHelpStr[] =
+	"Get a control character.\r\n"
+	"\r\n"
+	"  A-Z       characters 1 to 26 (U+0001 to U+001A)\r\n"
+	"  [         character 27 (U+001B)\r\n"
+	"  \\         character 28 (U+001C)\r\n"
+	"  ]         character 29 (U+001D)\r\n"
+	"  ^         character 30 (U+001E)\r\n"
+	"  _         character 31 (U+001F)"
 ;
 
-const WCHAR CtrlCAbortsHelpStr[] =
-	L"Get or set the Ctrl+C behavior.\r\n"
-	L"\r\n"
-	L"  -1/empty  ask to terminate (default)\r\n"
-	L"  0/OFF     do not terminate\r\n"
-	L"  1/ON      terminate"
+const char CtrlCAbortsHelpStr[] =
+	"Get or set the Ctrl+C behavior.\r\n"
+	"\r\n"
+	"  -1/empty  ask to terminate (default)\r\n"
+	"  0/OFF     do not terminate\r\n"
+	"  1/ON      terminate"
 ;
 
-const WCHAR ConsoleCursorHelpStr[] =
-	L"Get or set the console cursor size or visibility.\r\n"
-	L"\r\n"
-	L"  0         hide\r\n"
-	L"  1         show\r\n"
-	L"  2-100     cursor size as a percentage of the font size"
+const char ConsoleCursorHelpStr[] =
+	"Get or set the console cursor size or visibility.\r\n"
+	"\r\n"
+	"  0         hide\r\n"
+	"  1         show\r\n"
+	"  2-100     cursor size as a percentage of the font size"
 ;
 
-const WCHAR DateHelpStr[] =
-	L"Get the current date.\r\n"
-	L"\r\n"
-	L"The format is always YYYY-MM-DD."
+const char DateHelpStr[] =
+	"Get the current date.\r\n"
+	"\r\n"
+	"The format is always YYYY-MM-DD."
 ;
 
-const WCHAR DateTimeHelpStr[] =
-	L"Get the current date and time.\r\n"
-	L"\r\n"
-	L"The format is always YYYY-MM-DD HH:MM:SS."
+const char DateTimeHelpStr[] =
+	"Get the current date and time.\r\n"
+	"\r\n"
+	"The format is always YYYY-MM-DD HH:MM:SS."
 ;
 
-const WCHAR DateTimemsHelpStr[] =
-	L"Get the current date and time, with milliseconds.\r\n"
-	L"\r\n"
-	L"The format is always YYYY-MM-DD HH:MM:SS.mmm (but '.' is the value of @decsep)."
+const char DateTimemsHelpStr[] =
+	"Get the current date and time, with milliseconds.\r\n"
+	"\r\n"
+	"The format is always YYYY-MM-DD HH:MM:SS.mmm (but '.' is the value of @decsep)."
 ;
 
-const WCHAR DayHelpStr[] =
-	L"Get the current day of the month."
+const char DayHelpStr[] =
+	"Get the current day of the month."
 ;
 
-const WCHAR DayNameHelpStr[] =
-	L"Get the current day of the week, as a name.\r\n"
-	L"\r\n"
-	L"The name will be English if @english is on, otherwise locale dependent."
+const char DayNameHelpStr[] =
+	"Get the current day of the week, as a name.\r\n"
+	"\r\n"
+	"The name will be English if @english is on, otherwise locale dependent."
 ;
 
-const WCHAR DayOfWeekHelpStr[] =
-	L"Get the current day of the week, as a number.\r\n"
-	L"\r\n"
-	L"Sunday is 0."
+const char DayOfWeekHelpStr[] =
+	"Get the current day of the week, as a number.\r\n"
+	"\r\n"
+	"Sunday is 0."
 ;
 
-const WCHAR DayShortHelpStr[] =
-	L"Get the current day of the week, as an abbreviated name.\r\n"
-	L"\r\n"
-	L"The name will be English if @english is on, otherwise locale dependent."
+const char DayShortHelpStr[] =
+	"Get the current day of the week, as an abbreviated name.\r\n"
+	"\r\n"
+	"The name will be English if @english is on, otherwise locale dependent."
 ;
 
-const WCHAR DecSepHelpStr[] =
-	L"Get or set the decimal separator.\r\n"
-	L"\r\n"
-	L"Any character can be used (but only the first if more than one).  Set an empty\r\n"
-	L"value to restore the original separator."
+const char DecSepHelpStr[] =
+	"Get or set the decimal separator.\r\n"
+	"\r\n"
+	"Any character can be used (but only the first if more than one).  Set an empty\r\n"
+	"value to restore the original separator."
 ;
 
-const WCHAR DelayedExpansionHelpStr[] =
-	L"Get or set delayed expansion."
+const char DelayedExpansionHelpStr[] =
+	"Get or set delayed expansion."
 ;
 
-const WCHAR EchoHelpStr[] =
-	L"Get or set the echo status."
+const char EchoHelpStr[] =
+	"Get or set the echo status."
 ;
 
-const WCHAR EnglishHelpStr[] =
-	L"Get or set English names\r\n"
-	L"\r\n"
-	L"If this is on English will be used for month and day names, as well as the Yes\r\n"
-	L"and No characters."
+const char EnglishHelpStr[] =
+	"Get or set English names\r\n"
+	"\r\n"
+	"If this is on English will be used for month and day names, as well as the Yes\r\n"
+	"and No characters."
 ;
 
-const WCHAR EnhancedBatchHelpStr[] =
-	L"Get the feature number of Enhanced Batch.\r\n"
-	L"\r\n"
-	L"This is currently 0; it will change to a number that will increment as features\r\n"
-	L"are added to EB after the first release."
+const char EnhancedBatchHelpStr[] =
+	"Get the feature number of Enhanced Batch.\r\n"
+	"\r\n"
+	"This is currently 0; it will change to a number that will increment as features\r\n"
+	"are added to EB after the first release."
 ;
 
-const WCHAR ExtensionsHelpStr[] =
-	L"Get or set CMD extensions."
+const char ExtensionsHelpStr[] =
+	"Get or set CMD extensions."
 ;
 
-const WCHAR ForegroundHelpStr[] =
-	L"Get or set the console foreground color.\r\n"
-	L"\r\n"
-	L"The color is a single hexadecimal digit.  Set an empty value to restore the\r\n"
-	L"original foreground."
+const char ForegroundHelpStr[] =
+	"Get or set the console foreground color.\r\n"
+	"\r\n"
+	"The color is a single hexadecimal digit.  Set an empty value to restore the\r\n"
+	"original foreground."
 ;
 
-const WCHAR ForLineHelpStr[] =
-	L"Get the current line number of FOR /F.\r\n"
-	L"\r\n"
-	L"Blank lines are still skipped, but they count as line numbers."
+const char ForLineHelpStr[] =
+	"Get the current line number of FOR /F.\r\n"
+	"\r\n"
+	"Blank lines are still skipped, but they count as line numbers."
 ;
 
-const WCHAR ForLinesHelpStr[] =
-	L"Get the total number of lines of the previous FOR /F.";
+const char ForLinesHelpStr[] =
+	"Get the total number of lines of the previous FOR /F.";
 ;
 
-const WCHAR GetcharHelpStr[] =
-	L"Wait for a character from the keyboard.\r\n"
-	L"\r\n"
-	L"Only reads characters, other keys are discarded."
+const char GetcharHelpStr[] =
+	"Wait for a character from the keyboard.\r\n"
+	"\r\n"
+	"Only reads characters, other keys are discarded."
 ;
 
-const WCHAR GetkeyHelpStr[] =
-	L"Wait for a key from the keyboard."
+const char GetkeyHelpStr[] =
+	"Wait for a key from the keyboard."
 ;
 
-const WCHAR HeightHelpStr[] =
-	L"Get the height (number of rows) of the console window."
+const char HeightHelpStr[] =
+	"Get the height (number of rows) of the console window."
 ;
 
-const WCHAR HourHelpStr[] =
-	L"Get the hour of the current time."
+const char HourHelpStr[] =
+	"Get the hour of the current time."
 ;
 
-const WCHAR InputCodePageHelpStr[] =
-	L"Get or set the input code page.\r\n"
-	L"\r\n"
-	L"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
-	L"use UTF-8; or ANSI to use the system ANSI code page."
+const char InputCodePageHelpStr[] =
+	"Get or set the input code page.\r\n"
+	"\r\n"
+	"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
+	"use UTF-8; or ANSI to use the system ANSI code page."
 ;
 
-const WCHAR ElevatedHelpStr[] =
-	L"Get the elevated (running as administrator) status of CMD."
+const char ElevatedHelpStr[] =
+	"Get the elevated (running as administrator) status of CMD."
 ;
 
-const WCHAR ReadkeyHelpStr[] =
-	L"Read a key from the keyboard.\r\n"
-	L"\r\n"
-	L"If no key is available uses -1."
+const char ReadkeyHelpStr[] =
+	"Read a key from the keyboard.\r\n"
+	"\r\n"
+	"If no key is available uses -1."
 ;
 
-const WCHAR MillisecondsHelpStr[] =
-	L"Get the milliseconds of the current time."
+const char MillisecondsHelpStr[] =
+	"Get the milliseconds of the current time."
 ;
 
-const WCHAR MinuteHelpStr[] =
-	L"Get the minutes of the current time."
+const char MinuteHelpStr[] =
+	"Get the minutes of the current time."
 ;
 
-const WCHAR MonthHelpStr[] =
-	L"Get the month of the current date."
+const char MonthHelpStr[] =
+	"Get the month of the current date."
 ;
 
-const WCHAR MonthNameHelpStr[] =
-	L"Get the name of the month of the current date.\r\n"
-	L"\r\n"
-	L"The name will be English if @english is on, otherwise locale dependent."
+const char MonthNameHelpStr[] =
+	"Get the name of the month of the current date.\r\n"
+	"\r\n"
+	"The name will be English if @english is on, otherwise locale dependent."
 ;
 
-const WCHAR MonthShortHelpStr[] =
-	L"Get the abbreviated name of the month of the current date.\r\n"
-	L"\r\n"
-	L"The name will be English if @english is on, otherwise locale dependent."
+const char MonthShortHelpStr[] =
+	"Get the abbreviated name of the month of the current date.\r\n"
+	"\r\n"
+	"The name will be English if @english is on, otherwise locale dependent."
 ;
 
-const WCHAR NoHelpStr[] =
-	L"Get the character for no.\r\n"
-	L"\r\n"
-	L"This will be N if @english is on, otherwise locale dependent."
+const char NoHelpStr[] =
+	"Get the character for no.\r\n"
+	"\r\n"
+	"This will be N if @english is on, otherwise locale dependent."
 ;
 
-const WCHAR OpacityHelpStr[] =
-	L"Get or set the opacity of the console window.\r\n"
-	L"\r\n"
-	L"This will work with Windows Terminal, but it applies to all tabs."
+const char OpacityHelpStr[] =
+	"Get or set the opacity of the console window.\r\n"
+	"\r\n"
+	"This will work with Windows Terminal, but it applies to all tabs."
 ;
 
-const WCHAR OSBuildHelpStr[] =
-	L"Get the build version number of Windows."
+const char OSBuildHelpStr[] =
+	"Get the build version number of Windows."
 ;
 
-const WCHAR OSMajorHelpStr[] =
-	L"Get the major version number of Windows."
+const char OSMajorHelpStr[] =
+	"Get the major version number of Windows."
 ;
 
-const WCHAR OSMinorHelpStr[] =
-	L"Get the minor version number of Windows."
+const char OSMinorHelpStr[] =
+	"Get the minor version number of Windows."
 ;
 
-const WCHAR OSRevisionHelpStr[] =
-	L"Get the revision version number of Windows."
+const char OSRevisionHelpStr[] =
+	"Get the revision version number of Windows."
 ;
 
-const WCHAR OSVersionHelpStr[] =
-	L"Get the version number of Windows."
+const char OSVersionHelpStr[] =
+	"Get the version number of Windows."
 ;
 
-const WCHAR OutputCodePageHelpStr[] =
-	L"Get or set the output code page.\r\n"
-	L"\r\n"
-	L"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
-	L"use UTF-8; or ANSI to use the system ANSI code page."
+const char OutputCodePageHelpStr[] =
+	"Get or set the output code page.\r\n"
+	"\r\n"
+	"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
+	"use UTF-8; or ANSI to use the system ANSI code page."
 ;
 
-const WCHAR PositionHelpStr[] =
-	L"Get or set the window cursor position.\r\n"
-	L"\r\n"
-	L"  row column\r\n"
-	L"\r\n"
-	L"Top left is 0 0; will be -1 -1 if there is no console."
+const char PositionHelpStr[] =
+	"Get or set the window cursor position.\r\n"
+	"\r\n"
+	"  row column\r\n"
+	"\r\n"
+	"Top left is 0 0; will be -1 -1 if there is no console."
 ;
 
-const WCHAR RowHelpStr[] =
-	L"Get or set the window cursor row.\r\n"
-	L"\r\n"
-	L"The top row is 0; will be -1 if there is no console."
+const char RowHelpStr[] =
+	"Get or set the window cursor row.\r\n"
+	"\r\n"
+	"The top row is 0; will be -1 if there is no console."
 ;
 
-const WCHAR SecondHelpStr[] =
-	L"Get the seconds of the current time."
+const char SecondHelpStr[] =
+	"Get the seconds of the current time."
 ;
 
-const WCHAR SizeHelpStr[] =
-	L"Get the size (rows columns) of the console window."
+const char SizeHelpStr[] =
+	"Get the size (rows columns) of the console window."
 ;
 
-const WCHAR StderrHelpStr[] =
-	L"Get the mode of standard error.\r\n"
-	L"\r\n"
-	L"  0     redirected\r\n"
-	L"  1     the console"
+const char StderrHelpStr[] =
+	"Get the mode of standard error.\r\n"
+	"\r\n"
+	"  0     redirected\r\n"
+	"  1     the console"
 ;
 
-const WCHAR StdinHelpStr[] =
-	L"Get the mode of standard input.\r\n"
-	L"\r\n"
-	L"  0     redirected\r\n"
-	L"  1     the keyboard"
+const char StdinHelpStr[] =
+	"Get the mode of standard input.\r\n"
+	"\r\n"
+	"  0     redirected\r\n"
+	"  1     the keyboard"
 ;
 
-const WCHAR StdoutHelpStr[] =
-	L"Get the mode of standard output.\r\n"
-	L"\r\n"
-	L"  0     redirected\r\n"
-	L"  1     the console"
+const char StdoutHelpStr[] =
+	"Get the mode of standard output.\r\n"
+	"\r\n"
+	"  0     redirected\r\n"
+	"  1     the console"
 ;
 
-const WCHAR TempDirHelpStr[] =
-	L"Create a temporary directory.\r\n"
-	L"\r\n"
-	L"The directory is created in the user's temporary folder."
+const char TempDirHelpStr[] =
+	"Create a temporary directory.\r\n"
+	"\r\n"
+	"The directory is created in the user's temporary folder."
 ;
 
-const WCHAR TempFileHelpStr[] =
-	L"Create a temporary file.\r\n"
-	L"\r\n"
-	L"The file is created in the user's temporary folder."
+const char TempFileHelpStr[] =
+	"Create a temporary file.\r\n"
+	"\r\n"
+	"The file is created in the user's temporary folder."
 ;
 
-const WCHAR TimeHelpStr[] =
-	L"Get the current time.\r\n"
-	L"\r\n"
-	L"The format is always HH:MM:SS."
+const char TimeHelpStr[] =
+	"Get the current time.\r\n"
+	"\r\n"
+	"The format is always HH:MM:SS."
 ;
 
-const WCHAR TimemsHelpStr[] =
-	L"Get the current time, with milliseconds.\r\n"
-	L"\r\n"
-	L"The format is always HH:MM:SS.mmm (but '.' is the value of @decsep)."
+const char TimemsHelpStr[] =
+	"Get the current time, with milliseconds.\r\n"
+	"\r\n"
+	"The format is always HH:MM:SS.mmm (but '.' is the value of @decsep)."
 ;
 
-const WCHAR TimerVarHelpStr[] =
-	L"Get the time of the millisecond timer."
+const char TimerVarHelpStr[] =
+	"Get the time of the millisecond timer."
 ;
 
-const WCHAR HiTimerHelpStr[] =
-	L"Get the time of the microsecond timer."
+const char HiTimerHelpStr[] =
+	"Get the time of the microsecond timer."
 ;
 
-const WCHAR TitleHelpStr[] =
-	L"Get the title of the console window.\r\n"
-	L"\r\n"
-	L"The \"Administrator: \" prefix is removed."
+const char TitleHelpStr[] =
+	"Get the title of the console window.\r\n"
+	"\r\n"
+	"The \"Administrator: \" prefix is removed."
 ;
 
-const WCHAR TraceHelpStr[] =
-	L"Get or set the trace status.\r\n"
-	L"\r\n"
-	L"Enabling trace will write commands to standard error, in accordance with the\r\n"
-	L"@batchfile setting.  Commands will be placed in square brackets if writing to\r\n"
-	L"the console (e.g. \"test.bat:5: [echo trace]\")."
+const char TraceHelpStr[] =
+	"Get or set the trace status.\r\n"
+	"\r\n"
+	"Enabling trace will write commands to standard error, in accordance with the\r\n"
+	"@batchfile setting.  Commands will be placed in square brackets if writing to\r\n"
+	"the console (e.g. \"test.bat:5: [echo trace]\")."
 ;
 
-const WCHAR TransientHelpStr[] =
-	L"Get the transient state of CMD.\r\n"
-	L"\r\n"
-	L"  0     CMD is not transient\r\n"
-	L"  1     CMD is transient (/C)"
+const char TransientHelpStr[] =
+	"Get the transient state of CMD.\r\n"
+	"\r\n"
+	"  0     CMD is not transient\r\n"
+	"  1     CMD is transient (/C)"
 ;
 
-const WCHAR UnderlineHelpStr[] =
-	L"Get or set the console's underline attribute.\r\n"
-	L"\r\n"
-	L"This is only effective with DBCS or Windows 10."
+const char UnderlineHelpStr[] =
+	"Get or set the console's underline attribute.\r\n"
+	"\r\n"
+	"This is only effective with DBCS or Windows 10."
 ;
 
-const WCHAR UnicodeHelpStr[] =
-	L"Get or set Unicode output."
+const char UnicodeHelpStr[] =
+	"Get or set Unicode output."
 ;
 
-const WCHAR UniqueHelpStr[] =
-	L"Create a unique file.\r\n"
-	L"\r\n"
-	L"The file is created in the current directory."
+const char UniqueHelpStr[] =
+	"Create a unique file.\r\n"
+	"\r\n"
+	"The file is created in the current directory."
 ;
 
-const WCHAR UnixTimeHelpStr[] =
-	L"Get the current time as a number of seconds.\r\n"
-	L"\r\n"
-	L"The time is the number of seconds since 1970-01-01 0:00:00 UTC."
+const char UnixTimeHelpStr[] =
+	"Get the current time as a number of seconds.\r\n"
+	"\r\n"
+	"The time is the number of seconds since 1970-01-01 0:00:00 UTC."
 ;
 
-const WCHAR EBVersionHelpStr[] =
-	L"Get the version number of Enhanced Batch.\r\n"
-	L"\r\n"
-	L"This is currently the date of compilation; it will change to a version number\r\n"
-	L"after the first release."
+const char EBVersionHelpStr[] =
+	"Get the version number of Enhanced Batch.\r\n"
+	"\r\n"
+	"This is currently the date of compilation; it will change to a version number\r\n"
+	"after the first release."
 ;
 
-const WCHAR VoiceHelpStr[] =
-	L"Get or set the text-to-speech voice.\r\n"
-	L"\r\n"
-	L"  empty     restore the default voice\r\n"
-	L"\r\n"
-	L"Use \"CALL @SAY /V\" to list available voices.  Only a portion of the voice need\r\n"
-	L"be given, the first match will be used."
+const char VoiceHelpStr[] =
+	"Get or set the text-to-speech voice.\r\n"
+	"\r\n"
+	"  empty     restore the default voice\r\n"
+	"\r\n"
+	"Use \"CALL @SAY /V\" to list available voices.  Only a portion of the voice need\r\n"
+	"be given, the first match will be used."
 ;
 
-const WCHAR WidthHelpStr[] =
-	L"Get the width (number of columns) of the console window."
+const char WidthHelpStr[] =
+	"Get the width (number of columns) of the console window."
 ;
 
-const WCHAR YearHelpStr[] =
-	L"Get the year of the current date."
+const char YearHelpStr[] =
+	"Get the year of the current date."
 ;
 
-const WCHAR YesHelpStr[] =
-	L"Get the character for yes.\r\n"
-	L"\r\n"
-	L"This will be Y if @english is on, otherwise locale dependent."
+const char YesHelpStr[] =
+	"Get the character for yes.\r\n"
+	"\r\n"
+	"This will be Y if @english is on, otherwise locale dependent."
 ;
 
 
-const WCHAR CodePageHelpStr[] =
-	L"Set both the input and output code pages.\r\n"
-	L"\r\n"
-	L"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
-	L"use UTF-8; or ANSI to use the system ANSI code page."
+const char CodePageHelpStr[] =
+	"Set both the input and output code pages.\r\n"
+	"\r\n"
+	"Set to empty or OEM to use the system OEM code page; UTF-8, UTF8 or UTF_8 to\r\n"
+	"use UTF-8; or ANSI to use the system ANSI code page."
 ;
 
-const WCHAR DumpParseHelpStr[] =
-	L"Set CMD's internal parser processing."
+const char DumpParseHelpStr[] =
+	"Set CMD's internal parser processing."
 ;
 
-const WCHAR DumpTokensHelpStr[] =
-	L"Set CMD's internal token processing."
+const char DumpTokensHelpStr[] =
+	"Set CMD's internal token processing."
 ;
 
-const WCHAR NextHelpStr[] =
-	L"Set the next value of EB's range loops.\r\n"
-	L"\r\n"
-	L"  empty     terminate the loop\r\n"
-	L"\r\n"
-	L"The value takes effect on the next iteration."
+const char NextHelpStr[] =
+	"Set the next value of EB's range loops.\r\n"
+	"\r\n"
+	"  empty     terminate the loop\r\n"
+	"\r\n"
+	"The value takes effect on the next iteration."
 ;
 
 
-const WCHAR CheckkeyHelpStr[] =
-	L"Check if any key was pressed.\r\n"
-	L"\r\n"
-	L"CALL @CHECKKEY\r\n"
-	L"\r\n"
-	L"Errorlevel will be 0 if a key was pressed, else 1."
+const char CheckkeyHelpStr[] =
+	"Check if any key was pressed.\r\n"
+	"\r\n"
+	"CALL @CHECKKEY\r\n"
+	"\r\n"
+	"Errorlevel will be 0 if a key was pressed, else 1."
 ;
 
-const WCHAR ClearHelpStr[] =
-	L"Clear a window.\r\n"
-	L"\r\n"
-	L"CALL @CLEAR [/A color] [/C char] [/F] [/N] [row column rows columns]\r\n"
-	L"\r\n"
-	L"  /A        set attributes (default is current)\r\n"
-	L"  /C        set character (default is space)\r\n"
-	L"  /F        fill (set one, preserve the other)\r\n"
-	L"  /N        do not move the cursor (default is to move to row column)\r\n"
-	L"\r\n"
-	L"If a region is not specified the first time @CLEAR is used the current row will\r\n"
-	L"become the top line of a new window."
+const char ClearHelpStr[] =
+	"Clear a window.\r\n"
+	"\r\n"
+	"CALL @CLEAR [/A color] [/C char] [/F] [/N] [row column rows columns]\r\n"
+	"\r\n"
+	"  /A        set attributes (default is current)\r\n"
+	"  /C        set character (default is space)\r\n"
+	"  /F        fill (set one, preserve the other)\r\n"
+	"  /N        do not move the cursor (default is to move to row column)\r\n"
+	"\r\n"
+	"If a region is not specified the first time @CLEAR is used the current row will\r\n"
+	"become the top line of a new window."
 ;
 
-const WCHAR WriteHelpStr[] =
-	L"Display a message.\r\n"
-	L"\r\n"
-	L"CALL @WRITE [/A[color]] [/B[color]] [/C column] [/CON] [/E[c]] [/F[color]] [/L]\r\n"
-	L"            [/N] [/P row column] [/R row] [/U] [/V] [//] message ...\r\n"
-	L"\r\n"
-	L"  /A        set background and foreground colors\r\n"
-	L"  /B        set background color\r\n"
-	L"  /C        move to the column\r\n"
-	L"  /CON      output message to the console (toggle)\r\n"
-	L"  /E        process C-style escapes (toggle)\r\n"
-	L"  /F        set foreground color\r\n"
-	L"  /L        toggle underline\r\n"
-	L"  /N        do not output a final newline\r\n"
-	L"  /P        move to the row and column\r\n"
-	L"  /R        move to the row\r\n"
-	L"  /U        finish with a Unix line ending\r\n"
-	L"  /V        output message vertically (toggle)\r\n"
-	L"  //        no more options\r\n"
-	L"\r\n"
-	L"A single space is added between consecutive message arguments, but nothing is\r\n"
-	L"added between message, option and message.\r\n"
-	L"\r\n"
-	L"The escape character is \\ by default; supply c to use any non-alphanumeric\r\n"
-	L"except ?, which will list the supported escapes.\r\n"
-	L"\r\n"
-	L"Color is a single hexadecimal digit for /F and /B, one or two digits for /A.\r\n"
-	L"If absent the original color will be restored.  The original colors (and\r\n"
-	L"underline) are restored on exit.\r\n"
-	L"\r\n"
-	L"If row or column is used /N is implied and the original position will be\r\n"
-	L"restored on exit."
+const char WriteHelpStr[] =
+	"Display a message.\r\n"
+	"\r\n"
+	"CALL @WRITE [/A[color]] [/B[color]] [/C column] [/CON] [/E[c]] [/F[color]] [/L]\r\n"
+	"            [/N] [/P row column] [/R row] [/U] [/V] [//] message ...\r\n"
+	"\r\n"
+	"  /A        set background and foreground colors\r\n"
+	"  /B        set background color\r\n"
+	"  /C        move to the column\r\n"
+	"  /CON      output message to the console (toggle)\r\n"
+	"  /E        process C-style escapes (toggle)\r\n"
+	"  /F        set foreground color\r\n"
+	"  /L        toggle underline\r\n"
+	"  /N        do not output a final newline\r\n"
+	"  /P        move to the row and column\r\n"
+	"  /R        move to the row\r\n"
+	"  /U        finish with a Unix line ending\r\n"
+	"  /V        output message vertically (toggle)\r\n"
+	"  //        no more options\r\n"
+	"\r\n"
+	"A single space is added between consecutive message arguments, but nothing is\r\n"
+	"added between message, option and message.\r\n"
+	"\r\n"
+	"The escape character is \\ by default; supply c to use any non-alphanumeric\r\n"
+	"except ?, which will list the supported escapes.\r\n"
+	"\r\n"
+	"Color is a single hexadecimal digit for /F and /B, one or two digits for /A.\r\n"
+	"If absent the original color will be restored.  The original colors (and\r\n"
+	"underline) are restored on exit.\r\n"
+	"\r\n"
+	"If row or column is used /N is implied and the original position will be\r\n"
+	"restored on exit."
 ;
 
-const WCHAR EscapeHelpStr[] =
-	L"a   Alert (U+0007)\r\n"
-	L"b   Backspace (U+0008)\r\n"
-	L"e   Escape (U+001B)\r\n"
-	L"f   Form feed (U+000C)\r\n"
-	L"n   Line feed (U+000A)\r\n"
-	L"r   Carriage return (U+000D)\r\n"
-	L"t   Tab (U+0009)\r\n"
-	L"v   Vertical tab (U+000B)\r\n"
-	L"x   Unicode, one or two hex digits\r\n"
-	L"u   Unicode, one to four hex digits\r\n"
-	L"U   Unicode, one to six hex digits\r\n"
-	L"\r\n"
-	L"The escape character will generate itself; any other character will be\r\n"
-	L"ignored, preserving the escape character."
+const char EscapeHelpStr[] =
+	"a   Alert (U+0007)\r\n"
+	"b   Backspace (U+0008)\r\n"
+	"e   Escape (U+001B)\r\n"
+	"f   Form feed (U+000C)\r\n"
+	"n   Line feed (U+000A)\r\n"
+	"r   Carriage return (U+000D)\r\n"
+	"t   Tab (U+0009)\r\n"
+	"v   Vertical tab (U+000B)\r\n"
+	"x   Unicode, one or two hex digits\r\n"
+	"u   Unicode, one to four hex digits\r\n"
+	"U   Unicode, one to six hex digits\r\n"
+	"\r\n"
+	"The escape character will generate itself; any other character will be\r\n"
+	"ignored, preserving the escape character."
 ;
 
-const WCHAR ElevateHelpStr[] =
-	L"Run a command as administrator.\r\n"
-	L"\r\n"
-	L"CALL @ELEVATE [/N[K]] [command [arguments]]\r\n"
-	L"\r\n"
-	L"  /N         run in a new window (and Keep it open)\r\n"
-	L"\r\n"
-	L"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
-	L"variables present in the current CMD, but not in the elevated CMD, will be \r\n"
-	L"added; other variables will remain unchanged.  Elevation is handled by \"Windows\r\n"
-	L"host process (Rundll32)\" (default User Account Control setting will cause a\r\n"
-	L"prompt for authorization); it will remain available for the remainder of the\r\n"
-	L"batch file (avoiding multiple prompts).  Errorlevel will be 60399 if the\r\n"
-	L"elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
+const char ElevateHelpStr[] =
+	"Run a command as administrator.\r\n"
+	"\r\n"
+	"CALL @ELEVATE [/N[K]] [command [arguments]]\r\n"
+	"\r\n"
+	"  /N         run in a new window (and Keep it open)\r\n"
+	"\r\n"
+	"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
+	"variables present in the current CMD, but not in the elevated CMD, will be \r\n"
+	"added; other variables will remain unchanged.  Elevation is handled by \"Windows\r\n"
+	"host process (Rundll32)\" (default User Account Control setting will cause a\r\n"
+	"prompt for authorization); it will remain available for the remainder of the\r\n"
+	"batch file (avoiding multiple prompts).  Errorlevel will be 60399 if the\r\n"
+	"elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
 ;
 
-const WCHAR HelpHelpStr[] =
-	L"Display the extensions added by Enhanced Batch.\r\n"
-	L"\r\n"
-	L"CALL @HELP [extension | ALL | CALL | CONST | GET | MOD | SET]\r\n"
-	L"\r\n"
-	L"  extension  display the help for this extension\r\n"
-	L"  ALL        display the help for all extensions\r\n"
-	L"  CALL       display the functions\r\n"
-	L"  CONST      display the constants\r\n"
-	L"  GET        display the readable variables\r\n"
-	L"  MOD        display the variable modifiers\r\n"
-	L"  SET        display the writable variables"
+const char HelpHelpStr[] =
+	"Display the extensions added by Enhanced Batch.\r\n"
+	"\r\n"
+	"CALL @HELP [extension | ALL | CALL | CONST | GET | MOD | SET]\r\n"
+	"\r\n"
+	"  extension  display the help for this extension\r\n"
+	"  ALL        display the help for all extensions\r\n"
+	"  CALL       display the functions\r\n"
+	"  CONST      display the constants\r\n"
+	"  GET        display the readable variables\r\n"
+	"  MOD        display the variable modifiers\r\n"
+	"  SET        display the writable variables"
 ;
 
-const WCHAR ImageHelpStr[] =
-	L"Draw an image.\r\n"
-	L"\r\n"
-	L"CALL @IMAGE [/C[H] column] [/COPY] [/DISCARD] [/F frame] [/FB pixels]\r\n"
-	L"            [/FC rows columns] [/FL pixels] [/FP row column] [/FR pixels]\r\n"
-	L"            [/FS width height] [/FT pixels] [/N] [/O x y] [/P[H] row column]\r\n"
-	L"            [/Q] [/R[H] row] [/RESTORE] [/S width height] image\r\n"
-	L"\r\n"
-	L"  /C        column to place image (H adds half a character width)\r\n"
-	L"  /COPY     make a copy of what the image will replace\r\n"
-	L"  /DISCARD  dispose of the copy\r\n"
-	L"  /F        frame number to display (0 or invalid is first)\r\n"
-	L"  /FB       bottom pixels between frames\r\n"
-	L"  /FC       count of frames\r\n"
-	L"  /FL       left pixels between frames\r\n"
-	L"  /FP       position of frame to display\r\n"
-	L"  /FR       right pixels between frames\r\n"
-	L"  /FS       size of a frame\r\n"
-	L"  /FT       top pixels between frames\r\n"
-	L"  /N        return the number of frames (implies /Q)\r\n"
-	L"  /O        display the image from this position (origin)\r\n"
-	L"  /P        row and column to place image (H adds half a character)\r\n"
-	L"  /Q        do not display the image\r\n"
-	L"  /R        row to place image (H adds half a character height)\r\n"
-	L"  /RESTORE  display the copy, then dispose of it\r\n"
-	L"  /S        display this much of the image (size)\r\n"
-	L"  image     file name of the image\r\n"
-	L"\r\n"
-	L"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
-	L"will contain the delay between this frame and the next (in milliseconds) and\r\n"
-	L"the low word will contain the size (in characters): columns in the low byte and\r\n"
-	L"rows in the high byte.\r\n"
-	L"\r\n"
-	L"Copy will preserve what the image will replace; subsequent images with the same\r\n"
-	L"position and file name will use the copy as their background."
+const char ImageHelpStr[] =
+	"Draw an image.\r\n"
+	"\r\n"
+	"CALL @IMAGE [/C[H] column] [/COPY] [/DISCARD] [/F frame] [/FB pixels]\r\n"
+	"            [/FC rows columns] [/FL pixels] [/FP row column] [/FR pixels]\r\n"
+	"            [/FS width height] [/FT pixels] [/N] [/O x y] [/P[H] row column]\r\n"
+	"            [/Q] [/R[H] row] [/RESTORE] [/S width height] image\r\n"
+	"\r\n"
+	"  /C        column to place image (H adds half a character width)\r\n"
+	"  /COPY     make a copy of what the image will replace\r\n"
+	"  /DISCARD  dispose of the copy\r\n"
+	"  /F        frame number to display (0 or invalid is first)\r\n"
+	"  /FB       bottom pixels between frames\r\n"
+	"  /FC       count of frames\r\n"
+	"  /FL       left pixels between frames\r\n"
+	"  /FP       position of frame to display\r\n"
+	"  /FR       right pixels between frames\r\n"
+	"  /FS       size of a frame\r\n"
+	"  /FT       top pixels between frames\r\n"
+	"  /N        return the number of frames (implies /Q)\r\n"
+	"  /O        display the image from this position (origin)\r\n"
+	"  /P        row and column to place image (H adds half a character)\r\n"
+	"  /Q        do not display the image\r\n"
+	"  /R        row to place image (H adds half a character height)\r\n"
+	"  /RESTORE  display the copy, then dispose of it\r\n"
+	"  /S        display this much of the image (size)\r\n"
+	"  image     file name of the image\r\n"
+	"\r\n"
+	"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
+	"will contain the delay between this frame and the next (in milliseconds) and\r\n"
+	"the low word will contain the size (in characters): columns in the low byte and\r\n"
+	"rows in the high byte.\r\n"
+	"\r\n"
+	"Copy will preserve what the image will replace; subsequent images with the same\r\n"
+	"position and file name will use the copy as their background."
 ;
 
-const WCHAR ImgHelpStr[] =
-	L"Display an image.\r\n"
-	L"\r\n"
-	L"CALL @IMG [/C column] [/Cn] [/COPY] [/D rows columns] [/DISCARD] [/F frame]\r\n"
-	L"          [/FB pixels] [/FL pixels] [/FC rows columns] [/FP row column]\r\n"
-	L"          [/FR pixels] [/FS width height] [/FT pixels] [/H rows] [/N] [/O x y]\r\n"
-	L"          [/P row column] [/Q] [/R row] [/RESTORE] [/S width height]\r\n"
-	L"          [/T[color]] [/W columns] image\r\n"
-	L"\r\n"
-	L"  /C        column to place image\r\n"
-	L"            color quality, where n is:\r\n"
-	L"              0: system colors\r\n"
-	L"              1: use light/medium/dark shades for dithering (legacy default)\r\n"
-	L"              2: RGB control sequences (Windows 10 default)\r\n"
-	L"  /COPY     make a copy of what the image will replace\r\n"
-	L"  /D        dimensions of the image\r\n"
-	L"  /DISCARD  dispose of the copy\r\n"
-	L"  /F        frame number to display (0 or invalid is first)\r\n"
-	L"  /FB       bottom pixels between frames\r\n"
-	L"  /FC       count of frames\r\n"
-	L"  /FL       left pixels between frames\r\n"
-	L"  /FP       position of frame to display\r\n"
-	L"  /FR       right pixels between frames\r\n"
-	L"  /FS       size of a frame\r\n"
-	L"  /FT       top pixels between frames\r\n"
-	L"  /H        height of the image (determine width automatically)\r\n"
-	L"  /N        return the number of frames (implies /Q)\r\n"
-	L"  /O        display the image from this position (origin)\r\n"
-	L"  /P        row and column to place image\r\n"
-	L"  /Q        do not display the image\r\n"
-	L"  /R        row to place image\r\n"
-	L"  /RESTORE  display the copy, then dispose of it\r\n"
-	L"  /S        display this much of the image (size)\r\n"
-	L"  /T        use space for transparent pixels (default color is current bg)\r\n"
-	L"  /W        width of the image (determine height automatically)\r\n"
-	L"  image     file name of the image\r\n"
-	L"\r\n"
-	L"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
-	L"will contain the delay between this frame and the next (in milliseconds) and\r\n"
-	L"the low word will contain the size: columns in the low byte and rows in the\r\n"
-	L"high byte.\r\n"
-	L"\r\n"
-	L"Specify 0 for a dimension to use the original (up to window size); rows will\r\n"
-	L"use half the size (there are two pixel lines per character row).\r\n"
-	L"\r\n"
-	L"Color is either a single hexadecimal digit (normal index); two digits (decimal\r\n"
-	L"index); three hexadecimal digits (RGB expanded to RRGGBB), otherwise RRGGBB.\r\n"
-	L"\r\n"
-	L"Copy will preserve what the image will replace; subsequent images with the same\r\n"
-	L"position and file name will use the copy as their background.  Due to console\r\n"
-	L"limitations RGB colors are mapped back to system colors."
-;
-
-const WCHAR SayHelpStr[] =
-	L"Speak a message.\r\n"
-	L"\r\n"
-	L"CALL @SAY [/N] [/S] [/U] [/V voice] [/W] [/X] message\r\n"
-	L"CALL @SAY /V\r\n"
-	L"\r\n"
-	L"  /N        output message without newline\r\n"
-	L"  /S        do not output message\r\n"
-	L"  /U        output message with Unix line ending\r\n"
-	L"  /V        select a voice or list voices\r\n"
-	L"  /W        wait for the speech to finish\r\n"
-	L"  /X        process SAPI XML\r\n"
-	L"\r\n"
-	L"Only a substring of the voice need be given; the first match will be used.\r\n"
-	L"An invalid voice will be ignored.  A default voice can be set using the\r\n"
-	L"@VOICE variable."
-;
-
-const WCHAR SleepHelpStr[] =
-	L"Suspend execution for the specified time.\r\n"
-	L"\r\n"
-	L"CALL @SLEEP milliseconds"
-;
-
-const WCHAR TextHelpStr[] =
-	L"Draw a message.\r\n"
-	L"\r\n"
-	L"CALL @TEXT [/B] [/BG color] [/C[H] column] [/D[H | W]] [/E angle] [/F font]\r\n"
-	L"           [/FG color] [/I] [/N] [/O angle] [/P[H] row column] [/R[H] row]\r\n"
-	L"           [/RL] [/RR] [/RT] [/S] [/T] [/U] message\r\n"
-	L"\r\n"
-	L"  /B        bold text\r\n"
-	L"  /BG       background color\r\n"
-	L"  /C        column to place text (H adds half a character width)\r\n"
-	L"  /D        double height and/or width\r\n"
-	L"  /E        text escapement angle (tenths of a degree)\r\n"
-	L"  /F        face name of the font\r\n"
-	L"  /FG       text color\r\n"
-	L"  /I        italic text\r\n"
-	L"  /N        non-antialiased text\r\n"
-	L"  /O        character orientation angle (tenths of a degree)\r\n"
-	L"  /P        row and column to place text (H adds half a character)\r\n"
-	L"  /R        row to place text (H adds half a character height)\r\n"
-	L"  /RL       rotate left (90\xb0)\r\n"
-	L"  /RR       rotate right (-90\xb0)\r\n"
-	L"  /RT       rotate twice (180\xb0)\r\n"
-	L"  /S        strikeout text\r\n"
-	L"  /T        transparent background\r\n"
-	L"  /U        underlined text\r\n"
-	L"\r\n"
-	L"Tabs are not expanded.\r\n"
-	L"\r\n"
-	L"Color is either a single hexadecimal digit (normal index); two digits (decimal\r\n"
-	L"index); three hexadecimal digits (RGB expanded to RRGGBB), otherwise RRGGBB.\r\n"
-	L"\r\n"
-	L"Rotation will also rotate the origin; escapement/orientation will use the\r\n"
-	L"bottom-left as the origin."
-;
-
-const WCHAR TimerHelpStr[] =
-	L"Run a low-resolution timer.\r\n"
-	L"\r\n"
-	L"CALL @TIMER [START | STOP]\r\n"
-	L"\r\n"
-	L"  <none>    toggle start/stop\r\n"
-	L"  START     start the timer (even if it's running)\r\n"
-	L"  STOP      stop the timer\r\n"
-	L"\r\n"
-	L"The time is measured in milliseconds and has a resolution of about 10ms.\r\n"
-	L"It can be retrieved with the @TIMER variable."
-;
+const char ImgHelpStr[] =
+	"Display an image.\r\n"
+	"\r\n"
+	"CALL @IMG [/C column] [/Cn] [/COPY] [/D rows columns] [/DISCARD] [/F frame]\r\n"
+	"          [/FB pixels] [/FL pixels] [/FC rows columns] [/FP row column]\r\n"
+	"          [/FR pixels] [/FS width height] [/FT pixels] [/H rows] [/N] [/O x y]\r\n"
+	"          [/P row column] [/Q] [/R row] [/RESTORE] [/S width height]\r\n"
+	"          [/T[color]] [/W columns] image\r\n"
+	"\r\n"
+	"  /C        column to place image\r\n"
+	"            color quality, where n is:\r\n"
+	"              0: system colors\r\n"
+	"              1: use light/medium/dark shades for dithering (legacy default)\r\n"
+	"              2: RGB control sequences (Windows 10 default)\r\n"
+	"  /COPY     make a copy of what the image will replace\r\n"
+	"  /D        dimensions of the image\r\n"
+	"  /DISCARD  dispose of the copy\r\n"
+	"  /F        frame number to display (0 or invalid is first)\r\n"
+	"  /FB       bottom pixels between frames\r\n"
+	"  /FC       count of frames\r\n"
+	"  /FL       left pixels between frames\r\n"
+	"  /FP       position of frame to display\r\n"
+	"  /FR       right pixels between frames\r\n"
+	"  /FS       size of a frame\r\n"
+	"  /FT       top pixels between frames\r\n"
+	"  /H        height of the image (determine width automatically)\r\n"
+	"  /N        return the number of frames (implies /Q)\r\n"
+	"  /O        display the image from this position (origin)\r\n"
+	"  /P        row and column to place image\r\n"
+	"  /Q        do not display the image\r\n"
+	"  /R        row to place image\r\n"
+	"  /RESTORE  display the copy, then dispose of it\r\n"
+	"  /S        display this much of the image (size)\r\n"
+	"  /T        use space for transparent pixels (default color is current bg)\r\n"
+	"  /W        width of the image (determine height automatically)\r\n"
+	"  image     file name of the image\r\n"
+	"\r\n"
+	"Errorlevel will be 0 if the image could not be loaded; otherwise the high word\r\n"
+	"will contain the delay between this frame and the next (in milliseconds) and\r\n"
+	"the low word will contain the size: columns in the low byte and rows in the\r\n"
+	"high byte.\r\n"
+	"\r\n"
+	"Specify 0 for a dimension to use the original (up to window size); rows will\r\n"
+	"use half the size (there are two pixel lines per character row).\r\n"
+	"\r\n"
+	"Color is either a single hexadecimal digit (normal index); two digits (decimal\r\n"
+	"index); three hexadecimal digits (RGB expanded to RRGGBB), otherwise RRGGBB.\r\n"
+	"\r\n"
+	"Copy will preserve what the image will replace; subsequent images with the same\r\n"
+	"position and file name will use the copy as their background.  Due to console\r\n"
+	"limitations RGB colors are mapped back to system colors."
+;
+
+const char SayHelpStr[] =
+	"Speak a message.\r\n"
+	"\r\n"
+	"CALL @SAY [/N] [/S] [/U] [/V voice] [/W] [/X] message\r\n"
+	"CALL @SAY /V\r\n"
+	"\r\n"
+	"  /N        output message without newline\r\n"
+	"  /S        do not output message\r\n"
+	"  /U        output message with Unix line ending\r\n"
+	"  /V        select a voice or list voices\r\n"
+	"  /W        wait for the speech to finish\r\n"
+	"  /X        process SAPI XML\r\n"
+	"\r\n"
+	"Only a substring of the voice need be given; the first match will be used.\r\n"
+	"An invalid voice will be ignored.  A default voice can be set using the\r\n"
+	"@VOICE variable."
+;
+
+const char SleepHelpStr[] =
+	"Suspend execution for the specified time.\r\n"
+	"\r\n"
+	"CALL @SLEEP milliseconds"
+;
+
+const char TextHelpStr[] =
+	"Draw a message.\r\n"
+	"\r\n"
+	"CALL @TEXT [/B] [/BG color] [/C[H] column] [/D[H | W]] [/E angle] [/F font]\r\n"
+	"           [/FG color] [/I] [/N] [/O angle] [/P[H] row column] [/R[H] row]\r\n"
+	"           [/RL] [/RR] [/RT] [/S] [/T] [/U] message\r\n"
+	"\r\n"
+	"  /B        bold text\r\n"
+	"  /BG       background color\r\n"
+	"  /C        column to place text (H adds half a character width)\r\n"
+	"  /D        double height and/or width\r\n"
+	"  /E        text escapement angle (tenths of a degree)\r\n"
+	"  /F        face name of the font\r\n"
+	"  /FG       text color\r\n"
+	"  /I        italic text\r\n"
+	"  /N        non-antialiased text\r\n"
+	"  /O        character orientation angle (tenths of a degree)\r\n"
+	"  /P        row and column to place text (H adds half a character)\r\n"
+	"  /R        row to place text (H adds half a character height)\r\n"
+	"  /RL       rotate left (90\xb0)\r\n"
+	"  /RR       rotate right (-90\xb0)\r\n"
+	"  /RT       rotate twice (180\xb0)\r\n"
+	"  /S        strikeout text\r\n"
+	"  /T        transparent background\r\n"
+	"  /U        underlined text\r\n"
+	"\r\n"
+	"Tabs are not expanded.\r\n"
+	"\r\n"
+	"Color is either a single hexadecimal digit (normal index); two digits (decimal\r\n"
+	"index); three hexadecimal digits (RGB expanded to RRGGBB), otherwise RRGGBB.\r\n"
+	"\r\n"
+	"Rotation will also rotate the origin; escapement/orientation will use the\r\n"
+	"bottom-left as the origin."
+;
+
+const char TimerHelpStr[] =
+	"Run a low-resolution timer.\r\n"
+	"\r\n"
+	"CALL @TIMER [START | STOP]\r\n"
+	"\r\n"
+	"  <none>    toggle start/stop\r\n"
+	"  START     start the timer (even if it's running)\r\n"
+	"  STOP      stop the timer\r\n"
+	"\r\n"
+	"The time is measured in milliseconds and has a resolution of about 10ms.\r\n"
+	"It can be retrieved with the @TIMER variable."
+;
 
-const WCHAR TimerHiHelpStr[] =
-	L"Run a high-resolution timer.\r\n"
-	L"\r\n"
-	L"CALL @TIMERHI [START | STOP]\r\n"
-	L"\r\n"
-	L"  <none>    toggle start/stop\r\n"
-	L"  START     start the timer (even if it's running)\r\n"
-	L"  STOP      stop the timer\r\n"
-	L"\r\n"
-	L"The time is measured in microseconds and has a resolution dependent on the\r\n"
-	L"CPU.  It can be retrieved with the @TIMERHI variable."
-;
+const char TimerHiHelpStr[] =
+	"Run a high-resolution timer.\r\n"
+	"\r\n"
+	"CALL @TIMERHI [START | STOP]\r\n"
+	"\r\n"
+	"  <none>    toggle start/stop\r\n"
+	"  START     start the timer (even if it's running)\r\n"
+	"  STOP      stop the timer\r\n"
+	"\r\n"
+	"The time is measured in microseconds and has a resolution dependent on the\r\n"
+	"CPU.  It can be retrieved with the @TIMERHI variable."
+;
 
-const WCHAR UnloadHelpStr[] =
-	L"Remove Enhanced Batch from CMD.\r\n"
-	L"\r\n"
-	L"CALL @UNLOAD\r\n"
-	L"\r\n"
-	L"This happens automatically when the batch exits, so is not normally needed."
+const char UnloadHelpStr[] =
+	"Remove Enhanced Batch from CMD.\r\n"
+	"\r\n"
+	"CALL @UNLOAD\r\n"
+	"\r\n"
+	"This happens automatically when the batch exits, so is not normally needed."
 ;
 
-const WCHAR WaitkeyHelpStr[] =
-	L"Wait for any key to be pressed.\r\n"
-	L"\r\n"
-	L"CALL @WAITKEY [/C] [/F]\r\n"
-	L"\r\n"
-	L"  /C        only wait if the window would close (implies /F)\r\n"
-	L"  /F        flush all keys before waiting"
+const char WaitkeyHelpStr[] =
+	"Wait for any key to be pressed.\r\n"
+	"\r\n"
+	"CALL @WAITKEY [/C] [/F]\r\n"
+	"\r\n"
+	"  /C        only wait if the window would close (implies /F)\r\n"
+	"  /F        flush all keys before waiting"
 ;
 
-const WCHAR DefaultHelpStr[] =
-	L"Default value if the variable is not defined.\r\n"
-	L"\r\n"
-	L"Currently the quote character cannot be included in the string; this may change\r\n"
-	L"in the future."
+const char DefaultHelpStr[] =
+	"Default value if the variable is not defined.\r\n"
+	"\r\n"
+	"Currently the quote character cannot be included in the string; this may change\r\n"
+	"in the future."
 ;
 
-const WCHAR AltHelpStr[] =
-	L"Test if a key contains Alt.\r\n"
-	L"\r\n"
-	L"  0         Alt was not pressed\r\n"
-	L"  1         Alt was pressed\r\n"
-	L"\r\n"
-	L"See \"key\" for more details."
+const char AltHelpStr[] =
+	"Test if a key contains Alt.\r\n"
+	"\r\n"
+	"  0         Alt was not pressed\r\n"
+	"  1         Alt was pressed\r\n"
+	"\r\n"
+	"See \"key\" for more details."
 ;
 
-const WCHAR CapitalHelpStr[] =
-	L"Upper case characters after a space or tab, lower case everything else."
+const char CapitalHelpStr[] =
+	"Upper case characters after a space or tab, lower case everything else."
 ;
 
-const WCHAR CapitalListHelpStr[] =
-	L"Upper case characters after a space, tab or anything in LIST, lower case\r\n"
-	L"everything else.\r\n"
-	L"\r\n"
-	L"To include ']' in the list place it first."
+const char CapitalListHelpStr[] =
+	"Upper case characters after a space, tab or anything in LIST, lower case\r\n"
+	"everything else.\r\n"
+	"\r\n"
+	"To include ']' in the list place it first."
 ;
 
-const WCHAR CtrlModHelpStr[] =
-	L"Test if a key contains Ctrl.\r\n"
-	L"\r\n"
-	L"  0         Ctrl was not pressed\r\n"
-	L"  1         Ctrl was pressed\r\n"
-	L"\r\n"
-	L"See \"key\" for more details."
+const char CtrlModHelpStr[] =
+	"Test if a key contains Ctrl.\r\n"
+	"\r\n"
+	"  0         Ctrl was not pressed\r\n"
+	"  1         Ctrl was pressed\r\n"
+	"\r\n"
+	"See \"key\" for more details."
 ;
 
-const WCHAR HexifyHelpStr[] =
-	L"Convert characters to hexadecimal.\r\n"
-	L"\r\n"
-	L"Only characters below U+0100 will be converted, others will be ignored.  Upper\r\n"
-	L"case letters are used, with a space between each pair of digits."
+const char HexifyHelpStr[] =
+	"Convert characters to hexadecimal.\r\n"
+	"\r\n"
+	"Only characters below U+0100 will be converted, others will be ignored.  Upper\r\n"
+	"case letters are used, with a space between each pair of digits."
 ;
 
-const WCHAR KeyHelpStr[] =
-	L"The key itself, with the key modifiers specified.\r\n"
-	L"\r\n"
-	L"Key by itself will remove the modifiers, leaving just the key (or \"0\" if the\r\n"
-	L"variable is not a key).  Including modifiers (before or after \"key\" doesn't\r\n"
-	L"matter) will return \"0\" if all the modifiers are not pressed, otherwise the key\r\n"
-	L"with the modifiers.  E.g.: \"%;'C+A+VK_A';ctrl;key%\" will return \"C+VK_A\";\r\n"
-	L"\"%;'C+VK_A';key;shift%\" will return \"0\".  The order is always \"S+C+A+VK_name\".\r\n"
-	L"\r\n"
-	L"These modifiers are processed after all others, but before padding.  This means\r\n"
-	L"some modifiers may not work as you'd expect.  E.g.: \"key;length\" will return\r\n"
-	L"\"0\" - the length of the complete key, which is now no longer a key."
+const char KeyHelpStr[] =
+	"The key itself, with the key modifiers specified.\r\n"
+	"\r\n"
+	"Key by itself will remove the modifiers, leaving just the key (or \"0\" if the\r\n"
+	"variable is not a key).  Including modifiers (before or after \"key\" doesn't\r\n"
+	"matter) will return \"0\" if all the modifiers are not pressed, otherwise the key\r\n"
+	"with the modifiers.  E.g.: \"%;'C+A+VK_A';ctrl;key%\" will return \"C+VK_A\";\r\n"
+	"\"%;'C+VK_A';key;shift%\" will return \"0\".  The order is always \"S+C+A+VK_name\".\r\n"
+	"\r\n"
+	"These modifiers are processed after all others, but before padding.  This means\r\n"
+	"some modifiers may not work as you'd expect.  E.g.: \"key;length\" will return\r\n"
+	"\"0\" - the length of the complete key, which is now no longer a key."
 ;
 
-const WCHAR LengthHelpStr[] =
-	L"The length of the variable (in characters) at this point."
+const char LengthHelpStr[] =
+	"The length of the variable (in characters) at this point."
 ;
 
-const WCHAR LowerHelpStr[] =
-	L"Convert all characters to lower case."
+const char LowerHelpStr[] =
+	"Convert all characters to lower case."
 ;
 
-const WCHAR LtrimHelpStr[] =
-	L"Remove spaces and tabs from the start of the variable."
+const char LtrimHelpStr[] =
+	"Remove spaces and tabs from the start of the variable."
 ;
 
-const WCHAR LtrimListHelpStr[] =
-	L"Remove the characters in LIST from the start of the variable.\r\n"
-	L"\r\n"
-	L"To include ']' in the list place it first."
+const char LtrimListHelpStr[] =
+	"Remove the characters in LIST from the start of the variable.\r\n"
+	"\r\n"
+	"To include ']' in the list place it first."
 ;
 
-const WCHAR NumberHelpStr[] =
-	L"Increase the variable to a specified size.\r\n"
-	L"\r\n"
-	L"If NUMBER starts with '-' left pad instead of right; if it starts with '0' pad\r\n"
-	L"with zeros instead of spaces.  Padding is applied after all other modifiers.\r\n"
-	L"Padding is only a minimum; longer variables will not be truncated."
+const char NumberHelpStr[] =
+	"Increase the variable to a specified size.\r\n"
+	"\r\n"
+	"If NUMBER starts with '-' left pad instead of right; if it starts with '0' pad\r\n"
+	"with zeros instead of spaces.  Padding is applied after all other modifiers.\r\n"
+	"Padding is only a minimum; longer variables will not be truncated."
 ;
 
-const WCHAR RtrimHelpStr[] =
-	L"Remove spaces and tabs from the end of the variable."
+const char RtrimHelpStr[] =
+	"Remove spaces and tabs from the end of the variable."
 ;
 
-const WCHAR RtrimListHelpStr[] =
-	L"Remove the characters in LIST from the end of the variable.\r\n"
-	L"\r\n"
-	L"To include ']' in the list place it first."
+const char RtrimListHelpStr[] =
+	"Remove the characters in LIST from the end of the variable.\r\n"
+	"\r\n"
+	"To include ']' in the list place it first."
 ;
 
-const WCHAR ShiftHelpStr[] =
-	L"Test if a key contains Shift.\r\n"
-	L"\r\n"
-	L"  0         Shift was not pressed\r\n"
-	L"  1         Shift was pressed\r\n"
-	L"\r\n"
-	L"See \"key\" for more details."
+const char ShiftHelpStr[] =
+	"Test if a key contains Shift.\r\n"
+	"\r\n"
+	"  0         Shift was not pressed\r\n"
+	"  1         Shift was pressed\r\n"
+	"\r\n"
+	"See \"key\" for more details."
 ;
 
-const WCHAR TrimHelpStr[] =
-	L"Remove spaces and tabs from the start and end of the variable."
+const char TrimHelpStr[] =
+	"Remove spaces and tabs from the start and end of the variable."
 ;
 
-const WCHAR TrimListHelpStr[] =
-	L"Remove the characters in LIST from the start and end of the variable.\r\n"
-	L"\r\n"
-	L"To include ']' in the list place it first."
+const char TrimListHelpStr[] =
+	"Remove the characters in LIST from the start and end of the variable.\r\n"
+	"\r\n"
+	"To include ']' in the list place it first."
 ;
 
-const WCHAR UnhexifyHelpStr[] =
-	L"Convert characters from hexadecimal.\r\n"
-	L"\r\n"
-	L"Pairs of hexadecimal digits (upper or lower case, optionally prefixed with\r\n"
-	L"\"0x\") will be converted to characters.  Whitespace and any of the characters\r\n"
-	L"\",-.:;\" will be ignored; any other characters, or an odd number of digits, will\r\n"
-	L"result in an empty value."
+const char UnhexifyHelpStr[] =
+	"Convert characters from hexadecimal.\r\n"
+	"\r\n"
+	"Pairs of hexadecimal digits (upper or lower case, optionally prefixed with\r\n"
+	"\"0x\") will be converted to characters.  Whitespace and any of the characters\r\n"
+	"\",-.:;\" will be ignored; any other characters, or an odd number of digits, will\r\n"
+	"result in an empty value."
 ;
 
-const WCHAR UpperHelpStr[] =
-	L"Convert all characters to upper case."
+const char UpperHelpStr[] =
+	"Convert all characters to upper case."
 ;
 
-const WCHAR TildeHelpStr[] =
-	L"Perform the same conversions as FOR (please see its help for details).\r\n"
-	L"\r\n"
-	L"Note: \"%$0;~...%\" will always use the batch file name."
+const char TildeHelpStr[] =
+	"Perform the same conversions as FOR (please see its help for details).\r\n"
+	"\r\n"
+	"Note: \"%$0;~...%\" will always use the batch file name."
 ;
