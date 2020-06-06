@@ -108,19 +108,19 @@ echo Done
 goto :eof
 
 :args
-echo Initial args: %$#%: %$-%
-echo tenth: %$10%
-echo first 3: %$-3%
-echo four onwards: %$4-%
-echo 5-7: %$5-7%
-echo twelfth: [%$12%]
+echo Initial args: %@#%: %@-%
+echo tenth: %@10%
+echo first 3: %@-3%
+echo four onwards: %@4-%
+echo 5-7: %@5-7%
+echo twelfth: [%@12%]
 shift
-echo After shift: %$#%: %$-%
-echo tenth: %$10%
-echo first 3: %$-3%
-echo from 4: %$4-%
-echo 5-7: %$5-7%
-echo twelfth: [%$12%]
+echo After shift: %@#%: %@-%
+echo tenth: %@10%
+echo first 3: %@-3%
+echo from 4: %@4-%
+echo 5-7: %@5-7%
+echo twelfth: [%@12%]
 goto :eof
 
 :labels

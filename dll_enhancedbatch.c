@@ -405,58 +405,48 @@ DWORD getVar(LPCWSTR lpName)
 		}
 	}
 
-	if (WCSIBEG(lpName, L"@ctrl+") && lpName[6] != L'\0' && lpName[7] == L'\0') {
-		WCHAR ctrlch = lpName[6];
-		if (ctrlch >= L'a' && ctrlch <= L'z') {
-			ctrlch &= ~0x20;
+	if (*lpName == L'@') {
+
+		// @@program
+		if (lpName[1] == L'@') {
+			return GetRun(lpName+2, stringBuffer, STRINGBUFFERMAX);
 		}
-		ctrlch -= L'@';
-		if (ctrlch > 0 && ctrlch < 32) {
-			*stringBuffer = ctrlch;
-			stringBuffer[1] = L'\0';
-			return 1;
-		}
-	}
 
-	if ((*lpName == L'$') || (*lpName == L'@')) {
-
-		khint_t k;
-
-		if (*lpName == L'@') {
-
-			if (lpName[1] == L'@') {
-				return GetRun(lpName+2, stringBuffer, STRINGBUFFERMAX);
-			} else {
-				const struct sExt *ext = bsearch(lpName, getExtensionList,
-					lenof(getExtensionList), sizeof(struct sExt), extcmp);
-				if (ext != NULL && ext->fn != NULL) {
-					if (ext->args == 2) {
-						return sbcpy(stringBuffer, ext->fn);
-					}
-					return ((fnGetExt) ext->fn)(stringBuffer, STRINGBUFFERMAX);
-				}
+		// Control character
+		if (WCSIBEG(lpName, L"@ctrl+") && lpName[6] != L'\0' && lpName[7] == L'\0') {
+			WCHAR ctrlch = lpName[6];
+			if (ctrlch >= L'a' && ctrlch <= L'z') {
+				ctrlch &= ~0x20;
+			}
+			ctrlch -= L'@';
+			if (ctrlch > 0 && ctrlch < 32) {
+				*stringBuffer = ctrlch;
+				stringBuffer[1] = L'\0';
+				return 1;
 			}
 		}
 
-		if (WCSEQ(lpName, L"$#")) {
+		// Argument Helpers
+		if (WCSEQ(lpName, L"@#")) {
 			return GetArgCount(stringBuffer, STRINGBUFFERMAX);
 		}
+		BOOL getArgs = FALSE;
+		DWORD arg1, arg2;
+		LPWSTR end;
 		if (lpName[1] == L'-') {
-			DWORD arg;
-			LPWSTR end;
+			getArgs = TRUE;
+			arg1 = 1;
 			if (lpName[2] == L'\0') {
-				arg = -1;
+				arg2 = -1;
 			} else {
-				arg = (DWORD) wcstoul(lpName + 2, &end, 10);
-				if (*end != L'\0' || arg == 0) {
-					goto dovar;
+				arg2 = (DWORD) wcstoul(lpName + 2, &end, 10);
+				if (*end != L'\0' || arg2 == 0) {
+					getArgs = FALSE;
 				}
 			}
-			return GetArgs(1, arg, stringBuffer, STRINGBUFFERMAX);
 		}
-		if (lpName[1] >= L'0' && lpName[1] <= L'9') {
-			DWORD arg1, arg2;
-			LPWSTR end;
+		else if (lpName[1] >= L'0' && lpName[1] <= L'9') {
+			getArgs = TRUE;
 			arg1 = (DWORD) wcstoul(lpName + 1, &end, 10);
 			if (*end == L'\0') {
 				arg2 = arg1;
@@ -466,29 +456,42 @@ DWORD getVar(LPCWSTR lpName)
 				} else {
 					arg2 = (DWORD) wcstoul(end + 1, &end, 10);
 					if (*end != L'\0' || arg2 < arg1) {
-						goto dovar;
+						getArgs = FALSE;
 					}
 				}
 			} else {
-				goto dovar;
+				getArgs = FALSE;
 			}
+		}
+		if (getArgs) {
 			return GetArgs(arg1, arg2, stringBuffer, STRINGBUFFERMAX);
 		}
 
-	dovar:
-		k = kh_get(wstr, variables, lpName);
-		if (k == kh_end(variables)) {
-			SetLastError(ERROR_ENVVAR_NOT_FOUND);
-			return 0;
+		// Search in the EB Extensions List
+		const struct sExt *ext = bsearch(lpName, getExtensionList,
+			lenof(getExtensionList), sizeof(struct sExt), extcmp);
+		if (ext != NULL && ext->fn != NULL) {
+			if (ext->args == 2) {
+				return sbcpy(stringBuffer, ext->fn);
+			}
+			return ((fnGetExt) ext->fn)(stringBuffer, STRINGBUFFERMAX);
 		}
+	}
 
+	// Search in the Heap
+	khint_t k = kh_get(wstr, variables, lpName);
+	if (k != kh_end(variables)) {
 		wcscpy(stringBuffer, kh_val(variables, k));
 		return (DWORD) wcslen(stringBuffer);
 	}
-
+	// If not found in the Heap: Search in the Environment
 	DWORD len = GetEnvironmentVariable(lpName, stringBuffer, STRINGBUFFERMAX);
+	// Fix dynamic variable CMDCMDLINE
 	if (len == 0 && *pfEnableExtensions && WCSIEQ(lpName, L"cmdcmdline")) {
 		len = sbcpy(stringBuffer, GetCommandLine());
+	}
+	if (len == 0) {
+		SetLastError(ERROR_ENVVAR_NOT_FOUND);
 	}
 	return len;
 }
