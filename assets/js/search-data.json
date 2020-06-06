@@ -1,0 +1,717 @@
+{
+  "0": {
+    "id": "0",
+    "title": "",
+    "content": "404 Page not found :( The requested page could not be found.",
+    "url": "https://www.enhancedbatch.com/404/",
+    "relUrl": "/404/"
+  },
+  "1": {
+    "id": "1",
+    "title": "Attr",
+    "content": "Attr set @attr get @attr related extensions set @attr Set the color attributes of the console. Upto 4 hexadecimal characters: [80][bg][fg] For specify underline write 80. Set blue background with blank text, with underline set &quot;@attr=801F&quot; get @attr Get the color attributes of the console. echo !@attr! 801F related extensions @bg @fg @ul @color",
+    "url": "https://www.enhancedbatch.com/docs/extensions/attr/",
+    "relUrl": "/docs/extensions/attr/"
+  },
+  "2": {
+    "id": "2",
+    "title": "BatchFile",
+    "content": "BatchFile set @batchfile get @batchfile set @batchfile When a error occurs in a batch file is printed the name of the batch file, followed by the error line number. If the value of the extension is 1 (Default) is not printed the full path of the file. But if the value is 2, the full path is printed. set @batchfile=1 xd docu.cmd:15: &#39;xd&#39; is not recognized as an internal or external command, operable program or batch file. set @batchfile=2 xd C: enhancedbatch docu.cmd:15: &#39;xd&#39; is not recognized as an internal or external command, operable program or batch file. get @batchfile echo The current config of @batchfile is: !@batchfile! 2",
+    "url": "https://www.enhancedbatch.com/docs/extensions/batchfile/",
+    "relUrl": "/docs/extensions/batchfile/"
+  },
+  "3": {
+    "id": "3",
+    "title": "BatchLine",
+    "content": "BatchLine get @batchline get @batchline Retrieves the number of line inside a batch file. @echo off echo The current line number is: !@batchline! 2",
+    "url": "https://www.enhancedbatch.com/docs/extensions/batchline/",
+    "relUrl": "/docs/extensions/batchline/"
+  },
+  "4": {
+    "id": "4",
+    "title": "Behaviors",
+    "content": "Behaviors Enhanced Batch changes some behaviors of the command interpreter.",
+    "url": "https://www.enhancedbatch.com/docs/behaviors",
+    "relUrl": "/docs/behaviors"
+  },
+  "5": {
+    "id": "5",
+    "title": "Bg",
+    "content": "Bg set @bg get @bg related extensions set @bg Set the background color of the console. set &quot;@bg=0&quot; get @bg Get the background color of the console. echo !@bg! 7 related extensions @bg @ul @color @attr",
+    "url": "https://www.enhancedbatch.com/docs/extensions/bg/",
+    "relUrl": "/docs/extensions/bg/"
+  },
+  "6": {
+    "id": "6",
+    "title": "Blank Text",
+    "content": "Blank Text Blank Text Blank Text echo !$no-var;&#39;is undefined&#39;!. is undefined. set &quot;$spaces= &quot; echo !$spaces;trim,&#39;is blank&#39;!. is blank.",
+    "url": "https://www.enhancedbatch.com/docs/filters/blank-text/",
+    "relUrl": "/docs/filters/blank-text/"
+  },
+  "7": {
+    "id": "7",
+    "title": "Capital",
+    "content": "Capital Capital Capital set &quot;$var= oKay &quot; echo !$var;capital!. Okay .",
+    "url": "https://www.enhancedbatch.com/docs/filters/capital/",
+    "relUrl": "/docs/filters/capital/"
+  },
+  "8": {
+    "id": "8",
+    "title": "Chhit",
+    "content": "Chhit get @chhit get @chhit Get a key from the input keyboard buffer and return the character of it. If no key is found return -1. set &quot;lastchar=!@chhit!&quot; if &quot;!lastchar!&quot; == &quot;-1&quot; echo No pressed key",
+    "url": "https://www.enhancedbatch.com/docs/extensions/chhit/",
+    "relUrl": "/docs/extensions/chhit/"
+  },
+  "9": {
+    "id": "9",
+    "title": "CmdVersion",
+    "content": "CmdVersion get @cmdversion get @cmdversion Retrieves the cmd version echo cmd version: !@cmdversion! 10.0.18362.1",
+    "url": "https://www.enhancedbatch.com/docs/extensions/cmdversion/",
+    "relUrl": "/docs/extensions/cmdversion/"
+  },
+  "10": {
+    "id": "10",
+    "title": "CodePage",
+    "content": "CodePage set @codepage set @codepage Set the input and output codepage, like the chcp command. Normally is needed change only the output codepage, because the input codepage is used to translate the keyboard input into the corresponding character value. Note: Is recommended use instead of this the extension @outputcp. Parameters: Number codepage. If you omit the codepage parameter is used the OEM codepage. The next codepage alias can be used: utf8 oem ansi rem set input and output codepage: utf-8 set &quot;@codepage=65001&quot; rem set input and output codepage: oem set &quot;@codepage=&quot;",
+    "url": "https://www.enhancedbatch.com/docs/extensions/codepage/",
+    "relUrl": "/docs/extensions/codepage/"
+  },
+  "11": {
+    "id": "11",
+    "title": "Color",
+    "content": "Color set @color get @color related extensions set @color Set the foreground and background color of the console. If you specify a single character (foreground), it uses 0 (black) as background. set &quot;@color=7&quot; get @color Get the foreground and background color of the console. echo !@color! 07 related extensions @bg @fg @ul @attr",
+    "url": "https://www.enhancedbatch.com/docs/extensions/color/",
+    "relUrl": "/docs/extensions/color/"
+  },
+  "12": {
+    "id": "12",
+    "title": "Column",
+    "content": "Column set @column get @row related extensions set @column Set the column cursor position of the console. Parameters: Number echo Setting position to column 40 and printing text set &quot;@column=40&quot; echo Text get @row Get the column cursor position of the console. echo Column: !@column! 40 related extensions @position",
+    "url": "https://www.enhancedbatch.com/docs/extensions/column/",
+    "relUrl": "/docs/extensions/column/"
+  },
+  "13": {
+    "id": "13",
+    "title": "Compatibility",
+    "content": "Compatibility Enhanced Batch is compatible with almost all released cmd.exe versions. Compatible cmd.exe versions Compatible cmd.exe versions Version x86 x64 10.0.18362.449 ✔ ✔ 10.0.18362.1 ✔ ✔ 10.0.17763.592 ✔ ✔ 10.0.17763.1 ✔ ✔ 10.0.17134.1 ✔ ✔ 10.0.16299.15 ✔ ✔ 10.0.15063.0 ✔ ✔ 10.0.14393.0 ✔ ✔ 10.0.10586.0 ✔ ✔ 10.0.10240.16384 ✔ ✔ 6.3.9600.17415 ✔ ✔ 6.3.9600.16384 ✔ ✔ 6.3.9471.0 ✔ ✔ 6.3.9431.0 ✔ ✔ 6.2.9200.16384 ✔ ✔ 6.2.8102.0 ✔ ✔ 6.1.7601.23403 ✔ ✔ 6.1.7601.17514 ✔ ✔ 6.1.7600.16385 ✔ ✔ 6.1.7100.0 ✔ ✔ 6.0.6001.18000 ✔ ✔ 6.0.6000.16386 ✔ ✔ 5.2.3790.3959 ✔ ✔ 5.2.3790.1830 ✔ ✔ 5.2.3790.0 ✔   5.1.2600.5512 ✔   5.1.2600.3311 ✔   5.1.2600.2180 ✔   5.1.2600.0 ✔   5.0.2195.6995 ✔   5.0.2195.6656 ✔   5.0.2195.4803 ✔   5.0.2195.2104 ✔   5.0.2195.1600 ✔   5.0.2144.1 ✔  ",
+    "url": "https://www.enhancedbatch.com/docs/compatibility/",
+    "relUrl": "/docs/compatibility/"
+  },
+  "14": {
+    "id": "14",
+    "title": "Constants",
+    "content": "Constants Aliases for characters Localized Yes and No Control character variables Aliases for characters You can use the next alias variables for characters: !$TAB! Tab !$BS! Backspace !$CR! Carriage return !$LF! Line feed !$CRLF! New Line !$EXCL! Exclamation !$PERC! Percent !$QUOT! Double Quote !$APOS! Single Quote !$BTICK! Backtick Quote !$DQUOT! Double Quote !$SQUOT! Single Quote !$BQUOT! Backtick Quote !$AMP! Ampersand !$BAR! Pipe !$GT! Great than !$LT! Lower than !$CARET! ^ !$TILDE! ~ !$OPAR! Opening parenthesis !$CPAR! Closing parenthesis !$OBRC! Opening brace curly !$CBRC! Closing brace curly !$OBRS! Opening brace square !$CBRS! Closing brace square !$STAR! Asterisk !$QUES! ? !$DOLLAR! $ !$COLLON! : !$SEMI! ; !$COMMA! , !$EQ! = !$AT! @ !$ESC! Escape !$BELL! Bell (sound) !$NBSP! No-break space Localized Yes and No You can use the next variables for get localized yes and no first character: !$YES! Y (english) S (spanish) J (german) !$NO! N (english) N (spanish) N (german) Control character variables You can use $CTRL+?, where ? is one of “A-Z[]^_”. It will expand to the equivalent unicode character U+0001..U+001F.",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/constants/",
+    "relUrl": "/docs/behaviors/constants/"
+  },
+  "15": {
+    "id": "15",
+    "title": "CtrlCAborts",
+    "content": "CtrlCAborts @ctrlcaborts get @ctrlcaborts @ctrlcaborts Pressing Ctrl+C in a batch asks if it should terminate. This extension allows that to be answered automatically. Automatically reply no (continues) set &quot;@ctrlcaborts=no&quot; Automatically reply yes (aborts) set &quot;@ctrlcaborts=yes&quot; Disable automatic reply set &quot;@ctrlcaborts=&quot; get @ctrlcaborts Get the status of the @ctrlcaborts echo CtrlCAborts: %@ctrlcaborts%",
+    "url": "https://www.enhancedbatch.com/docs/extensions/ctrlcaborts/",
+    "relUrl": "/docs/extensions/ctrlcaborts/"
+  },
+  "16": {
+    "id": "16",
+    "title": "Cursor",
+    "content": "Cursor set @cursor get @cursor set @cursor Set the console cursor size. Parameters: Number between 0 and 100. 0 hides the cursor 1 shows the cursor 2-100 set that size. set @cursor=50 get @cursor Get the console cursor size. echo Cursor: !@cursor!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/cursor/",
+    "relUrl": "/docs/extensions/cursor/"
+  },
+  "17": {
+    "id": "17",
+    "title": "Date",
+    "content": "Date get @date get @date Retrieves the current local date in the format: YYYY-MM-DD echo !@date! 2019-12-31",
+    "url": "https://www.enhancedbatch.com/docs/extensions/date/",
+    "relUrl": "/docs/extensions/date/"
+  },
+  "18": {
+    "id": "18",
+    "title": "DateTime",
+    "content": "DateTime get @datetime get @datetime Retrieves the current local date and time in the format: YYYY-MM-DD HH:MM:SS echo !@datetime! 2019-12-31 23:00:59",
+    "url": "https://www.enhancedbatch.com/docs/extensions/datetime/",
+    "relUrl": "/docs/extensions/datetime/"
+  },
+  "19": {
+    "id": "19",
+    "title": "DateTimeMs",
+    "content": "DateTimeMs get @datetimems get @datetimems Retrieves the current local date and time in the format: YYYY-MM-DD HH:MM:SS.milliseconds The milliseconds have a width of 3 and uses the local decimal point. echo !@datetimems! 2019-12-31 23:00:59.136",
+    "url": "https://www.enhancedbatch.com/docs/extensions/datetimems/",
+    "relUrl": "/docs/extensions/datetimems/"
+  },
+  "20": {
+    "id": "20",
+    "title": "Day",
+    "content": "Day get @day get @day Retrieves the current day number (1-31). echo !@day! 31",
+    "url": "https://www.enhancedbatch.com/docs/extensions/day/",
+    "relUrl": "/docs/extensions/day/"
+  },
+  "21": {
+    "id": "21",
+    "title": "DayName",
+    "content": "DayName get @dayname get @dayname Retrieves the current day name in the local language. If you enable @english, is retrieved on english. echo !@dayname! Viernes set @english=1 echo !@dayname! Friday",
+    "url": "https://www.enhancedbatch.com/docs/extensions/dayname/",
+    "relUrl": "/docs/extensions/dayname/"
+  },
+  "22": {
+    "id": "22",
+    "title": "DayOfWeek",
+    "content": "DayOfWeek get @dayofweek get @dayofweek Retrieves the current day of week number (0-6). 0 for Sunday 1 for Monday 6 for Saturday echo !@dayofweek! 2",
+    "url": "https://www.enhancedbatch.com/docs/extensions/dayofweek/",
+    "relUrl": "/docs/extensions/dayofweek/"
+  },
+  "23": {
+    "id": "23",
+    "title": "DayShort",
+    "content": "DayShort get @dayshort get @dayshort Retrieves the current day short name in the local language. If you enable @english, is retrieved on english. The short name have a length of 3 characters. echo !@dayshort! Vie set @english=1 echo !@dayshort! Fri",
+    "url": "https://www.enhancedbatch.com/docs/extensions/dayshort/",
+    "relUrl": "/docs/extensions/dayshort/"
+  },
+  "24": {
+    "id": "24",
+    "title": "Debug",
+    "content": "Debug Enhanced Batch helps to find errors printing automatically the name of the batch file and line number when an error occurs. See the extensions @batchfile and @batchline.",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/debug/",
+    "relUrl": "/docs/behaviors/debug/"
+  },
+  "25": {
+    "id": "25",
+    "title": "DecSep",
+    "content": "DecSep get @decsep get @decsep Retrieves the local decimal separator character echo 15!@decsep!8 15.8",
+    "url": "https://www.enhancedbatch.com/docs/extensions/decsep/",
+    "relUrl": "/docs/extensions/decsep/"
+  },
+  "26": {
+    "id": "26",
+    "title": "DelayedExpansion",
+    "content": "DelayedExpansion set @delayedexpansion get @delayedexpansion set @delayedexpansion Activate the delayed expansion without needs of setlocal Parameters: Number 0 or 1 set @delayedexpansion=1 get @delayedexpansion Get the status of the @delayedexpansion echo Delayed Expansion: %@delayedexpansion%",
+    "url": "https://www.enhancedbatch.com/docs/extensions/delayedexpansion/",
+    "relUrl": "/docs/extensions/delayedexpansion/"
+  },
+  "27": {
+    "id": "27",
+    "title": "DumpParse",
+    "content": "DumpParse set @dumpparse set @dumpparse Enable or disable the debug dump of parse set @dumpparse=1",
+    "url": "https://www.enhancedbatch.com/docs/extensions/dumpparse/",
+    "relUrl": "/docs/extensions/dumpparse/"
+  },
+  "28": {
+    "id": "28",
+    "title": "DumpTokens",
+    "content": "DumpTokens set @dumptokens set @dumptokens Enable or disable the debug dump of tokens set @dumptokens=1",
+    "url": "https://www.enhancedbatch.com/docs/extensions/dumptokens/",
+    "relUrl": "/docs/extensions/dumptokens/"
+  },
+  "29": {
+    "id": "29",
+    "title": "English",
+    "content": "English @english enable disable get @english @english Enables or disable the translation to english of the values of the next extensions: @monthname @monthshort @dayname @dayshort enable set @english=1 disable set @english=0 get @english Retrieves the current configuration value echo !@english! 0",
+    "url": "https://www.enhancedbatch.com/docs/extensions/english/",
+    "relUrl": "/docs/extensions/english/"
+  },
+  "30": {
+    "id": "30",
+    "title": "EnhancedBatch",
+    "content": "EnhancedBatch get @enhancedbatch get @enhancedbatch Retrieves a single integer number, such as 1, with the purpose of test if the Enhanced Batch present is capable of running the batch file. If the variable is not defined means the dll was not succesfully loaded. if not defined @enhancedbatch ( echo Enhanced Batch was not loaded successfully goto :eof ) The integer number will be updated only when a new function/modifier is added. It will remain 1 if there’s only bug fixes or a new version of CMD. It will become 2 or subsequent when a new feature be added. if %@enhancedbatch% lss 2 ( echo Need new Enhanced Batch goto :eof )",
+    "url": "https://www.enhancedbatch.com/docs/extensions/enhancedbatch/",
+    "relUrl": "/docs/extensions/enhancedbatch/"
+  },
+  "31": {
+    "id": "31",
+    "title": "Extensions",
+    "content": "Extensions Extensions are identified with the @ prefix. There are three types of usage: get, set and call. Not all extensions allow all the same usage. Get: For get the result of it, expand it: echo %@theextension% Set: For set a value as parameter to the extension: set &quot;@theextension=value&quot; Note: In the set, when the values are booly, the next values are equivalent: 0, no, off, false 1, yes, on, true Call: For call the extension like an internal command: call @theextension parameter",
+    "url": "https://www.enhancedbatch.com/docs/extensions",
+    "relUrl": "/docs/extensions"
+  },
+  "32": {
+    "id": "32",
+    "title": "Extensions",
+    "content": "Extensions set @extensions get @extensions set @extensions Activate the extensions without needs of setlocal Parameters: Number 0 or 1 set @extensions=1 get @extensions Get the status of the @extensions echo Extensions: %@extensions%",
+    "url": "https://www.enhancedbatch.com/docs/extensions/extensions/",
+    "relUrl": "/docs/extensions/extensions/"
+  },
+  "33": {
+    "id": "33",
+    "title": "Fg",
+    "content": "Fg set @fg get @fg related extensions set @fg Set the foreground color of the console. set &quot;@fg=7&quot; get @fg Get the foreground color of the console. echo !@fg! 7 related extensions @bg @ul @color @attr",
+    "url": "https://www.enhancedbatch.com/docs/extensions/fg/",
+    "relUrl": "/docs/extensions/fg/"
+  },
+  "34": {
+    "id": "34",
+    "title": "Filters",
+    "content": "Filters Filters allow transform the value of a variable. You can specify the first filter with ; at the end of the variable name. You can chain two or more filters separating it with ; set @delayedexpansion=1 set &quot;$var= oKay &quot; echo !$var;trim;capital!. OKay. Workaround If you need use the colon character : as part of a filter value, is needed a simple workaround: disable CMD extensions. set @delayedexpansion=1 set &quot;$var= oKay: &quot; set @extensions=0 set filtered=!$var;trim[: ay]! set @extensions=1 echo !filtered!. oK.",
+    "url": "https://www.enhancedbatch.com/docs/filters",
+    "relUrl": "/docs/filters"
+  },
+  "35": {
+    "id": "35",
+    "title": "For /F Features",
+    "content": "For /F Features Read all the lines Get line numbers Use NUL or Quote as default comment Enhanced Batch add features to the for /f command. Read all the lines You can use a new option called line for read all the lines. It sets “delims” and “eol” to NUL, ensuring a complete line will be read (assuming “tokens” is still 1). Get line numbers You can get the current line in the LOOP and the total lines processed: set &quot;file=!$0;~dp!LICENSE.txt&quot; for /f &quot;usebackq&quot; %%a in (&quot;!file!&quot;) do ( echo LINE !@forline!:%%a ) echo TOTAL:!@forlines! Use NUL or Quote as default comment In For /F the default comment character or EOL is ;. You can use !U+0! to set it to NUL, so lines had no comment by default. You can use !U+22! to set it to &quot;, so quoted lines will be ignored. Note: Is better always indicate EOL at the end of the options, else if NULL is used that character can be misinterpreted as no more options. for /f &quot;eol=!U+0!&quot; %%A in (&quot;;my token&quot;) do echo %%A ::my for /f &quot;delims=k eol=!U+0!&quot; %%A in (&quot;;my token&quot;) do echo %%A ::;my to for /f &quot;usebackq eol=!U+22!&quot; %%A in (&#39;&quot;my quote&quot;&#39;) do echo %%A ::(none)",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/for-f-features/",
+    "relUrl": "/docs/behaviors/for-f-features/"
+  },
+  "36": {
+    "id": "36",
+    "title": "For Infinite",
+    "content": "For Infinite Shortcut version The infinite for :* allows you run an infinite loop, with the possibility of stop in the next iteration using set @next= for %%j in (:*) do ( echo j = %%j press a key for stop set &quot;lastcode=!@kbhit!&quot; if !lastcode! gtr 0 set &quot;@next=&quot; ) echo key pressed. Shortcut version You can use a more simple syntax: for do is equivalent to: for %%_ in (:*) do",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/for-infinite/",
+    "relUrl": "/docs/behaviors/for-infinite/"
+  },
+  "37": {
+    "id": "37",
+    "title": "For Range",
+    "content": "For Range Start 1 Stop 2147483647 Step 1 Start 1 Stop 300 Step 1 Start 0 Stop 300 Step 1 Start 0 Stop 300 Step 2 Start -1 Stop -3 Step -1 Start 3 Stop 0 Step -1 Shortcut versions Examples You can works with a range of numbers, modify the next value with the possibility of stop in the next iteration. For set the next value, use set @next=value For stop in the next iteration, use set @next= Start 1 Stop 2147483647 Step 1 :range* Start 1 Stop 300 Step 1 :range*300 Start 0 Stop 300 Step 1 :range*0:300 Start 0 Stop 300 Step 2 :range*0:300:2 Start -1 Stop -3 Step -1 :range*-3 Start 3 Stop 0 Step -1 :range*3:0 Shortcut versions You can use a more simple syntax: for %%? do is equivalent to: for %%? in (:range*) do for %%? N is equivalent to: for %%? in (:range*N) for %%? 1:5:2 is equivalent to: for %%? in (:range*1:5:2) Examples for %%j in (:range*) do ( for %%k in (:range*) do ( echo %%j.%%k if %%k == 2 set @next=5 if %%k == 6 set @next= ) if %%j == 2 set @next=7 if %%j == 8 set @next= ) 1.1 1.2 1.5 1.6 2.1 2.2 2.5 2.6 7.1 7.2 7.5 7.6 8.1 8.2 8.5 8.6 for %%j in (:range*3) do echo %%j 1 2 3 for %%j in (:range*4:6) do echo %%j 4 5 6 for %%j in (:range*1:5:2) do echo %%j 1 3 5 for %%j in (:range*-3) do echo %%j -1 -2 -3 for %%j in (:range*3:0) do echo %%j 3 2 1 0",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/for-range/",
+    "relUrl": "/docs/behaviors/for-range/"
+  },
+  "38": {
+    "id": "38",
+    "title": "ForLine",
+    "content": "ForLine get @forline related extensions get @forline In FOR /F return the current line number (including omitted lines, like empty lines or with no tokens) in a FOR /F loop; set &quot;file=!$0;~dp!LICENSE.txt&quot; for /f &quot;usebackq&quot; %%a in (&quot;!file!&quot;) do ( echo !@forline!:%%a ) related extensions @forlines",
+    "url": "https://www.enhancedbatch.com/docs/extensions/forline/",
+    "relUrl": "/docs/extensions/forline/"
+  },
+  "39": {
+    "id": "39",
+    "title": "ForLines",
+    "content": "ForLines get @forlines related extensions get @forlines Return the total number of lines processed in the previous FOR /F. set &quot;file=!$0;~dp!LICENSE.txt&quot; for /f &quot;usebackq&quot; %%a in (&quot;!file!&quot;) do rem echo TOTAL lines:!@forlines! related extensions @forline",
+    "url": "https://www.enhancedbatch.com/docs/extensions/forlines/",
+    "relUrl": "/docs/extensions/forlines/"
+  },
+  "40": {
+    "id": "40",
+    "title": "Getch",
+    "content": "Getch get @getch get @getch Wait for key press and return the character of it. set &quot;char=&quot;!@getch!&quot; echo char: !char!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/getch/",
+    "relUrl": "/docs/extensions/getch/"
+  },
+  "41": {
+    "id": "41",
+    "title": "Getkb",
+    "content": "Getkb get @getkb call @getkb get @getkb Wait for key press and return the code of it. set &quot;code=&quot;!@getkb!&quot; echo code: !code! call @getkb Wait for key press and set the code in Errorlevel. call @getkb echo code: !errorlevel!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/getkb/",
+    "relUrl": "/docs/extensions/getkb/"
+  },
+  "42": {
+    "id": "42",
+    "title": "Global Heap Variables",
+    "content": "Global Heap Variables You can save global variables in other space rather than environment block called heap prefixing it with the $ character. That are case sensitive. set $A=1 set $a=2 echo $A=%$A% $a=%$a% $A=1 $a=2",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/global-heap-variables/",
+    "relUrl": "/docs/behaviors/global-heap-variables/"
+  },
+  "43": {
+    "id": "43",
+    "title": "Height",
+    "content": "Height get @height get @height Get the window height of the console. echo Current height: !@height! 30",
+    "url": "https://www.enhancedbatch.com/docs/extensions/height/",
+    "relUrl": "/docs/extensions/height/"
+  },
+  "44": {
+    "id": "44",
+    "title": "Helpers",
+    "content": "Helpers Parameters Helpers Module Filename Helper Parameters Helpers In Batch you can pass to a subroutine more than 9 parameters. If you want count the total number of parameters, or get a parameter after the index 9 is quick way of do it. Enhanced Batch provides helpers for that. @0 return the name of the label. @# returns the count of parameters. @N returns the parameter in the N position (1 based). @-N returns the parameters from positions 1 to N (inclusive). @N- return parameters onward position N (inclusive). @N-M returns the parameters from positions N (inclusive) to M (inclusive). @- returns all the parameters. call :test a b c d e f g h i j k l m n o p q r s t u v w x y z pause &amp; goto :eof :test echo Label: %@0% echo Count Parameters: %@#% echo All: %@-% echo Parameters 5-7: %@5-7% echo Parameter 17: %@17% echo First 3 parameters: %@-3% echo Four onwards: %@4-% goto :eof Label: :test Count Parameters: 26 All: a b c d e f g h i j k l m n o p q r s t u v w x y z Parameters 5-7: e f g Parameter 17: q First 3 parameters: a b c Four onwards: d e f g h i j k l m n o p q r s t u v w x y z Press any key to continue . . . Module Filename Helper Cmd provides the %~f0 for get the module filename. But it can return wrong data in certain conditions if your batch script was executed enclosed in quotes. For example, if you change the current drive inside your script and after it you try get the module filename, it will use the current drive as the drive of the filename, that is wrong. Enhanced Batch provides reliably helpers: @0;~ returns the module filename. @0;~x returns the module extension. @0;~dp returns the module path. d: &amp;&amp; echo changed to drive d: || echo error echo:native module filename: %~f0 echo:native module extension: %~x0 echo:native module path: %~dp0 echo:enhancedbatch module filename: %@0;~% echo:enhancedbatch module extension: %@0;~x% echo:enhancedbatch module path: %@0;~dp% C: enhancedbatch&gt;&quot;example&quot; changed to drive d: native module filename: D: example native module extension: native module path: D: enhancedbatch module filename: C: enhancedbatch example.cmd enhancedbatch module extension: .cmd enhancedbatch module path: C: enhancedbatch",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/helpers/",
+    "relUrl": "/docs/behaviors/helpers/"
+  },
+  "45": {
+    "id": "45",
+    "title": "Hexify",
+    "content": "Hexify Hexify Hexify Translate a variable to hexadecimal bytes. For simplicity hexify will ignore characters above U+00FF. Hexify will always convert using upper case digits and with a space between bytes. set &quot;$var= oKay &quot; echo !$var;hexify!. 20 6F 4B 61 79 20.",
+    "url": "https://www.enhancedbatch.com/docs/filters/hexify/",
+    "relUrl": "/docs/filters/hexify/"
+  },
+  "46": {
+    "id": "46",
+    "title": "Hour",
+    "content": "Hour get @hour get @hour Retrieves the current local hour (0-23). echo !@hour! 23",
+    "url": "https://www.enhancedbatch.com/docs/extensions/hour/",
+    "relUrl": "/docs/extensions/hour/"
+  },
+  "47": {
+    "id": "47",
+    "title": "Home",
+    "content": "Enhanced Batch Enhanced Batch is a solution to improve the functionality of your classic Windows batch files. Get started now View it on GitHub Introduction Applying a technique called Windows API Hooking, we have added capabilities never seen before. You can store variables internally in a space called heap, instead of the environment block, saving the overhead of this last. These heap variables begin with the $ prefix. Also, there are extensions identified with the @ prefix. Additionally, some bugs of cmd.exe are fixed. Example of heap variable: Set $myPrivateVar=Okay Rem Looking in the environment block, it will say not defined. Set $myPrivateVar Rem Looking in the heap also If Defined $myPrivateVar ( Echo Yep, it is defined in the heap Echo $myPrivateVar = %$myPrivateVar% ) The extensions can have getters and setters. Example of an extension, in this case @unicode: Echo Working with unicode: %@unicode% If &quot;%@unicode%&quot;==&quot;0&quot; ( Echo Enabling unicode Set &quot;@unicode=1&quot; ) Getting started Just download the DLLs from the release. Load the library and verify the result with the following command at the start of your batch script: Rundll32 &quot;%~dp0enhancedbatch_%processor_architecture%&quot; Load If Not Defined @enhancedbatch ( Echo Load Failed Pause Exit ) Alternatively, you can use this brief method: Regsvr32 /e &quot;%~dp0enhancedbatch_%processor_architecture%&quot; || ( Echo Load Failed Pause Exit ) If DLL could not be loaded a messagebox dialog will appear indicating the cause. Dependencies Enhanced Batch requires the command interpreter for Windows (cmd.exe). About the project Enhanced Batch is: © 2019 by Carlos Montiers A. © 2019 by Jason Hood Collaborators Jason Hood Carlos Montiers Petr Lázňovský Steffen Illhardt Dave Benham License Enhanced Batch is distributed by an zlib license. Contributing When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.",
+    "url": "https://www.enhancedbatch.com/",
+    "relUrl": "/"
+  },
+  "48": {
+    "id": "48",
+    "title": "InputCP",
+    "content": "InputCP set @inputcp get @inputcp set @inputcp Set the input codepage. Normally is not needed change the input codepage, because it is used to translate the keyboard input into the corresponding character value. Parameters: Number codepage. If you omit the codepage parameter is used the OEM codepage. The next codepage alias can be used: utf8 oem ansi rem set input codepage: utf-8 set &quot;@inputcp=65001&quot; rem set input codepage: oem set &quot;@inputcp=&quot; get @inputcp Get the input codepage. rem get input codepage echo input codepage: !@inputcp!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/inputcp/",
+    "relUrl": "/docs/extensions/inputcp/"
+  },
+  "49": {
+    "id": "49",
+    "title": "IsElevated",
+    "content": "IsElevated get @iselevated get @iselevated Retrieves if the current cmd is running with elevated privileges or as administrator. echo Running with elevated privileges: !@iselevated!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/iselevated/",
+    "relUrl": "/docs/extensions/iselevated/"
+  },
+  "50": {
+    "id": "50",
+    "title": "Kbhit",
+    "content": "Kbhit get @kbhit call @kbhit get @kbhit Get a key from the input keyboard buffer and return the code of it. If no key is found return -1. set &quot;lastcode=!@kbhit!&quot; if &quot;!lastcode!&quot; == &quot;-1&quot; echo No pressed key call @kbhit Get a key from the input keyboard buffer and set the code in Errorlevel. If no key is found ErrorLevel is set to -1. call @kbhit echo code: !errorlevel!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/kbhit/",
+    "relUrl": "/docs/extensions/kbhit/"
+  },
+  "51": {
+    "id": "51",
+    "title": "Left Align",
+    "content": "Left Align Left Align Left Align set $A=1 echo !$A;-5!. 1 .",
+    "url": "https://www.enhancedbatch.com/docs/filters/left-align/",
+    "relUrl": "/docs/filters/left-align/"
+  },
+  "52": {
+    "id": "52",
+    "title": "Length",
+    "content": "Length Length Length set &quot;$var= oKay &quot; echo !$var;length!. 6",
+    "url": "https://www.enhancedbatch.com/docs/filters/length/",
+    "relUrl": "/docs/filters/length/"
+  },
+  "53": {
+    "id": "53",
+    "title": "Lower",
+    "content": "Lower Lower Lower set &quot;$var= oKay &quot; echo !$var;lower!. okay .",
+    "url": "https://www.enhancedbatch.com/docs/filters/lower/",
+    "relUrl": "/docs/filters/lower/"
+  },
+  "54": {
+    "id": "54",
+    "title": "LTrim",
+    "content": "LTrim LTrim LTrim Cutset LTrim set &quot;$var= oKay &quot; echo !$var;ltrim!. oKay . LTrim Cutset set &quot;$var= oKay &quot; echo !$var;ltrim[ o]!. Kay .",
+    "url": "https://www.enhancedbatch.com/docs/filters/ltrim/",
+    "relUrl": "/docs/filters/ltrim/"
+  },
+  "55": {
+    "id": "55",
+    "title": "Milliseconds",
+    "content": "Milliseconds get @milliseconds get @milliseconds Retrieves the current local milliseconds (0-999). echo !@milliseconds! 136",
+    "url": "https://www.enhancedbatch.com/docs/extensions/milliseconds/",
+    "relUrl": "/docs/extensions/milliseconds/"
+  },
+  "56": {
+    "id": "56",
+    "title": "Minute",
+    "content": "Minute get @minute get @minute Retrieves the current local minute (0-59). echo !@minute! 0",
+    "url": "https://www.enhancedbatch.com/docs/extensions/minute/",
+    "relUrl": "/docs/extensions/minute/"
+  },
+  "57": {
+    "id": "57",
+    "title": "Month",
+    "content": "Month get @month get @month Retrieves the current month number (1-12). echo !@month! 12",
+    "url": "https://www.enhancedbatch.com/docs/extensions/month/",
+    "relUrl": "/docs/extensions/month/"
+  },
+  "58": {
+    "id": "58",
+    "title": "MonthName",
+    "content": "MonthName get @monthname get @monthname Retrieves the current month name in the local language. If you enable @english, is retrieved on english. echo !@monthname! Enero set @english=1 echo !@monthname! January",
+    "url": "https://www.enhancedbatch.com/docs/extensions/monthname/",
+    "relUrl": "/docs/extensions/monthname/"
+  },
+  "59": {
+    "id": "59",
+    "title": "MonthShort",
+    "content": "MonthShort get @monthshort get @monthshort Retrieves the current month short name in the local language. If you enable @english, is retrieved on english. The short name have a length of 3 characters. echo !@monthshort! Ene set @english=1 echo !@monthshort! Jan",
+    "url": "https://www.enhancedbatch.com/docs/extensions/monthshort/",
+    "relUrl": "/docs/extensions/monthshort/"
+  },
+  "60": {
+    "id": "60",
+    "title": "Next",
+    "content": "Next set @next set @next Inside a range or infinite for you can use @next for stop the loop. In range for, you can set the next value of the for.",
+    "url": "https://www.enhancedbatch.com/docs/extensions/next/",
+    "relUrl": "/docs/extensions/next/"
+  },
+  "61": {
+    "id": "61",
+    "title": "Opacity",
+    "content": "Opacity set @opacity get @opacity set @opacity Set the opacity of the console. Parameters: Number between 30 and 100 set @opacity=80 get @opacity Get the opacity of the console. echo Opacity: !@opacity!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/opacity/",
+    "relUrl": "/docs/extensions/opacity/"
+  },
+  "62": {
+    "id": "62",
+    "title": "OSBuild",
+    "content": "OSBuild get @osbuild get @osbuild Retrieves the build version number of the operating system echo windows build version: !@osbuild! 18362",
+    "url": "https://www.enhancedbatch.com/docs/extensions/osbuild/",
+    "relUrl": "/docs/extensions/osbuild/"
+  },
+  "63": {
+    "id": "63",
+    "title": "OSMajor",
+    "content": "OSMajor get @osmajor get @osmajor Retrieves the major version number of the operating system echo windows major version: !@osmajor! 10",
+    "url": "https://www.enhancedbatch.com/docs/extensions/osmajor/",
+    "relUrl": "/docs/extensions/osmajor/"
+  },
+  "64": {
+    "id": "64",
+    "title": "OSMinor",
+    "content": "OSMinor get @osminor get @osminor Retrieves the minor version number of the operating system echo windows minor version: !@osminor! 0",
+    "url": "https://www.enhancedbatch.com/docs/extensions/osminor/",
+    "relUrl": "/docs/extensions/osminor/"
+  },
+  "65": {
+    "id": "65",
+    "title": "OSRevision",
+    "content": "OSRevision get @osrevision get @osrevision Retrieves the revision version number of the operating system echo windows build version: !@osrevision! 239",
+    "url": "https://www.enhancedbatch.com/docs/extensions/osrevision/",
+    "relUrl": "/docs/extensions/osrevision/"
+  },
+  "66": {
+    "id": "66",
+    "title": "OSVersion",
+    "content": "OSVersion get @osversion get @osversion Retrieves the operating system version, composed of the numbers: major minor build revision echo windows version: !@osversion! 10.0.18362.239",
+    "url": "https://www.enhancedbatch.com/docs/extensions/osversion/",
+    "relUrl": "/docs/extensions/osversion/"
+  },
+  "67": {
+    "id": "67",
+    "title": "OutputCP",
+    "content": "OutputCP set @outputcp get @outputcp Example Writing file encoded in utf-8 Example Writing file encoded in utf-16 set @outputcp Set the output codepage. Parameters: Number codepage. If you omit the codepage parameter is used the OEM codepage. The next codepage alias can be used: utf8 oem ansi rem set output codepage: utf-8 set &quot;@outputcp=65001&quot; rem set output codepage: oem set &quot;@outputcp=&quot; get @outputcp Get the output codepage. rem get output codepage echo output codepage: !@outputcp! Example Writing file encoded in utf-8 set &quot;@outputcp=65001&quot; echo;!U+FEFF!&gt;myutf8.txt echo Hello&gt;&gt;myutf8.txt set &quot;@outputcp=&quot; Example Writing file encoded in utf-16 If you need write text and redirect encoded in utf-16, you need use the @unicode extension like this: set &quot;@unicode=1&quot; echo;!U+FEFF!&gt;myunicode.txt echo Hello&gt;&gt;myunicode.txt set &quot;@unicode=0&quot;",
+    "url": "https://www.enhancedbatch.com/docs/extensions/outputcp/",
+    "relUrl": "/docs/extensions/outputcp/"
+  },
+  "68": {
+    "id": "68",
+    "title": "Popen",
+    "content": "Popen Popen Popen You can execute a command an save the output of it to a variable using @@ set &quot;result=@@vol /?&quot; set result result=Displays the disk volume label and serial number, if they exist. VOL [drive:]",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/popen/",
+    "relUrl": "/docs/behaviors/popen/"
+  },
+  "69": {
+    "id": "69",
+    "title": "Position",
+    "content": "Position set @position get @position related extensions set @position Set the row and column cursor position of the console. Parameters: row column echo Setting position to row 10 and column 40 and printing text set &quot;@position=10 40&quot; echo Text get @position Get the row and column cursor position of the console. row and column separated by and space. echo Position: !@position! 10 40 related extensions @row @column",
+    "url": "https://www.enhancedbatch.com/docs/extensions/position/",
+    "relUrl": "/docs/extensions/position/"
+  },
+  "70": {
+    "id": "70",
+    "title": "Right Align",
+    "content": "Right Align Right Align Right Align set $A=1 echo !$A;5!. 1.",
+    "url": "https://www.enhancedbatch.com/docs/filters/right-align/",
+    "relUrl": "/docs/filters/right-align/"
+  },
+  "71": {
+    "id": "71",
+    "title": "Row",
+    "content": "Row set @row get @row related extensions set @row Set the row cursor position of the console. Parameters: Number echo Setting position to row 10 and printing text set &quot;@row=10&quot; echo Text get @row Get the row cursor position of the console. echo Row: !@row! 10 related extensions @position",
+    "url": "https://www.enhancedbatch.com/docs/extensions/row/",
+    "relUrl": "/docs/extensions/row/"
+  },
+  "72": {
+    "id": "72",
+    "title": "RTrim",
+    "content": "RTrim RTrim RTrim Cutset RTrim set &quot;$var= oKay &quot; echo !$var;rtrim!. oKay. RTrim Cutset set &quot;$var= oKay &quot; echo !$var;rtrim[ y]!. oKa.",
+    "url": "https://www.enhancedbatch.com/docs/filters/rtrim/",
+    "relUrl": "/docs/filters/rtrim/"
+  },
+  "73": {
+    "id": "73",
+    "title": "Second",
+    "content": "Second get @second get @second Retrieves the current local second (0-59). echo !@second! 59",
+    "url": "https://www.enhancedbatch.com/docs/extensions/second/",
+    "relUrl": "/docs/extensions/second/"
+  },
+  "74": {
+    "id": "74",
+    "title": "Set Features",
+    "content": "Set Features Assignment Append Note Assignment In Batch, in the usage of the SET command, classically you cannot put a space before and after the assignment character =, because first it it will incorporate that space character as the name of the variable, (yes in Batch you can have variable names with spaces) and the content of a variable will have space at the begin. set z = zeta set z z = zeta With Enhanced Batch you can forget about that problem: set z = zeta set z z=zeta Append Normally, in Batch for append a new value to a variable is needed write something like this: set var=%var% value Now, with Enhanced Batch, you have a new syntax: set msg = hello set msh += world set msg helloworld Note The previous mentioned syntax works only when the variable ends with ` ` or += and the value starts with ` `.",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/set-features/",
+    "relUrl": "/docs/behaviors/set-features/"
+  },
+  "75": {
+    "id": "75",
+    "title": "Size",
+    "content": "Size get @size get @size Get the window height and width of the console. echo Current size: !@size! 30 120",
+    "url": "https://www.enhancedbatch.com/docs/extensions/size/",
+    "relUrl": "/docs/extensions/size/"
+  },
+  "76": {
+    "id": "76",
+    "title": "Sleep",
+    "content": "Sleep call @sleep call @sleep Stop the execution for a time. Parameters: Number milliseconds call @sleep 4000",
+    "url": "https://www.enhancedbatch.com/docs/extensions/sleep/",
+    "relUrl": "/docs/extensions/sleep/"
+  },
+  "77": {
+    "id": "77",
+    "title": "Stderr",
+    "content": "Stdout get @stderr get @stderr Returns 1 if STDERR has not been redirected, or 0 otherwise. echo stderr is not redirected: !@stderr!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/stderr/",
+    "relUrl": "/docs/extensions/stderr/"
+  },
+  "78": {
+    "id": "78",
+    "title": "Stdin",
+    "content": "Stdin get @stdin get @stdin Returns 1 if STDIN has not been redirected, or 0 otherwise. echo stdin is not redirected: !@stdin!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/stdin/",
+    "relUrl": "/docs/extensions/stdin/"
+  },
+  "79": {
+    "id": "79",
+    "title": "Stdout",
+    "content": "Stdout get @stdout get @stdout Returns 1 if STDOUT has not been redirected, or 0 otherwise. echo stdout is not redirected: !@stdout!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/stdout/",
+    "relUrl": "/docs/extensions/stdout/"
+  },
+  "80": {
+    "id": "80",
+    "title": "String Continuation",
+    "content": "String Continuation Enhanced Batch provides you a enhanced form of line continuation. Note: this feature only works using batch files and not in the command line. For example, you can echo a long string using multiple lines. echo &quot;A long string &quot;^+ &quot;spread across &quot;^+ &quot;multiple lines.&quot; &quot;A long string spread across multiple lines.&quot;",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/string-continuation/",
+    "relUrl": "/docs/behaviors/string-continuation/"
+  },
+  "81": {
+    "id": "81",
+    "title": "Subroutine Features",
+    "content": "Subroutine Features Improve finding labels New operator Improve finding labels In Batch, you can identify subroutines with labels. Normally, work with a label using call or goto is a really slow operation because each time the batch file is read again trying to find the label. With Enhanced Batch, that is a past thing, because first, the batch file content is saved in the memory, also with the address of each label. Thus, when you request a label it “jumps” directly. New operator In Batch you can have two labels with the same name, when you request work with one, it go to the next label with that name. Enhanced Batch add a new operator ~ for allow go to the previous. goto one :two echo first two goto ~one :one echo first one goto ~two :two echo second two goto :eof :one echo second one goto ~two it outputs: first one first two second one second two",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/subroutine-features/",
+    "relUrl": "/docs/behaviors/subroutine-features/"
+  },
+  "82": {
+    "id": "82",
+    "title": "TempDir",
+    "content": "TempDir get @tempdir get @tempdir Create a temporal directory in a temporal folder. Returns the name of the new directory. The next paths are checked in the following order and is used the first path found: The path specified by the TMP environment variable. The path specified by the TEMP environment variable. The path specified by the USERPROFILE environment variable. The Windows directory. set &quot;emptydir=!@tempdir!&quot; Echo created: !emptydir!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/tempdir/",
+    "relUrl": "/docs/extensions/tempdir/"
+  },
+  "83": {
+    "id": "83",
+    "title": "TempFile",
+    "content": "TempFile get @tempfile get @tempfile Create a temporal file in a temporal folder. Returns the name of the new file. The next paths are checked in the following order and is used the first path found: The path specified by the TMP environment variable. The path specified by the TEMP environment variable. The path specified by the USERPROFILE environment variable. The Windows directory. set &quot;emptyfile=!@tempfile!&quot; Echo created: !emptyfile!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/tempfile/",
+    "relUrl": "/docs/extensions/tempfile/"
+  },
+  "84": {
+    "id": "84",
+    "title": "Time",
+    "content": "Time get @time get @time Retrieves the current local time in the format: HH:MM:SS echo !@time! 23:00:59",
+    "url": "https://www.enhancedbatch.com/docs/extensions/time/",
+    "relUrl": "/docs/extensions/time/"
+  },
+  "85": {
+    "id": "85",
+    "title": "TimeMs",
+    "content": "TimeMs get @timems get @timems Retrieves the current local time in the format: HH:MM:SS.milliseconds The milliseconds have a width of 3 and uses the local decimal point. echo !@timems! 23:00:59.136",
+    "url": "https://www.enhancedbatch.com/docs/extensions/timems/",
+    "relUrl": "/docs/extensions/timems/"
+  },
+  "86": {
+    "id": "86",
+    "title": "Timer",
+    "content": "Timer start the low-resolution timer read the running timer stop the timer toogles start/stop read the elapsed time Example Millisecond timer, with a resolution of 10-15ms. start the low-resolution timer call @timer start read the running timer echo !@timer! stop the timer call @timer stop toogles start/stop call @timer read the elapsed time echo !@timer! Example call @timer start echo Wait a little bit and press a key ... pause &gt; nul call @timer stop echo Elapsed milliseconds: !@timer!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/timer/",
+    "relUrl": "/docs/extensions/timer/"
+  },
+  "87": {
+    "id": "87",
+    "title": "TimerHi",
+    "content": "TimerHi start the high-resolution timer read the running timer stop the timer toogles start/stop read the elapsed time Example Microsecond timer, with a resolution greater than that (CPU speed). start the high-resolution timer call @timerhi start read the running timer echo !@timerhi! stop the timer call @timerhi stop toogles start/stop call @timerhi read the elapsed time echo !@timerhi! Example call @timerhi start echo Wait a little bit and press a key ... pause &gt; nul call @timerhi stop echo Elapsed microseconds: !@timerhi!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/timerhi/",
+    "relUrl": "/docs/extensions/timerhi/"
+  },
+  "88": {
+    "id": "88",
+    "title": "Title",
+    "content": "Title get @title get @title Retrieves the current title of cmd. If cmd is running with elevated privileges, it contains the Administrator prefix. The getter cut off this prefix. echo The current title is: !@title!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/title/",
+    "relUrl": "/docs/extensions/title/"
+  },
+  "89": {
+    "id": "89",
+    "title": "Transient",
+    "content": "Transient get @transient get @transient Returns 1 if the current cmd is transient (started with a /C), or 0 otherwise. echo transient: !@transient!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/transient/",
+    "relUrl": "/docs/extensions/transient/"
+  },
+  "90": {
+    "id": "90",
+    "title": "Trim",
+    "content": "Trim Trim Trim Cutset Trim set &quot;$var= oKay &quot; echo !$var;trim!. oKay. Trim Cutset set &quot;$var= oKay &quot; echo !$var;trim[ oy]!. Ka.",
+    "url": "https://www.enhancedbatch.com/docs/filters/trim/",
+    "relUrl": "/docs/filters/trim/"
+  },
+  "91": {
+    "id": "91",
+    "title": "Ul",
+    "content": "Ul set @ul get @ul related extensions set @ul Enable the underline of the console. set &quot;@ul=on&quot; Disable the underline of the console. set &quot;@ul=off&quot; get @ul Get the underline of the console. echo !@ul! 0 related extensions @bg @fg @color @attr",
+    "url": "https://www.enhancedbatch.com/docs/extensions/ul/",
+    "relUrl": "/docs/extensions/ul/"
+  },
+  "92": {
+    "id": "92",
+    "title": "Unhexify",
+    "content": "Unhexify Unhexify Unhexify Go back the result of hexify. Unhexify will ignore whitespace, any of ,-.:; and a leading 0x; anything else (including a single digit) is an error and will result in no conversion at all. set &quot;$var=20 6F 4B 61 79 20&quot; echo !$var;unhexify!. oKay .",
+    "url": "https://www.enhancedbatch.com/docs/filters/unhexify/",
+    "relUrl": "/docs/filters/unhexify/"
+  },
+  "93": {
+    "id": "93",
+    "title": "Unicode Characters",
+    "content": "Unicode Characters Example 1 Example 2 Some useful Enhanced Batch allow you generate any Unicode character in an easy way: %U+N%, where N is a hexadecimal number smaller than 0x110000. The last valid character is U+10FFFF. Example 1 echo greek psi: %U+03A8% greek psi: Ψ Example 2 set &quot;$BOM=%U+FEFF%&quot; Some useful !U+0! NUL !U+22! Quote",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/unicode-characters/",
+    "relUrl": "/docs/behaviors/unicode-characters/"
+  },
+  "94": {
+    "id": "94",
+    "title": "Unicode",
+    "content": "Unicode set @unicode get @unicode set @unicode Activate the unicode for redirected output. without needs of CMD /U Parameters: Number 0 or 1 set @unicode=1 get @unicode Get the status of the @unicode echo Unicode: !@unicode!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/unicode/",
+    "relUrl": "/docs/extensions/unicode/"
+  },
+  "95": {
+    "id": "95",
+    "title": "Unique",
+    "content": "Unique get @unique get @unique Create a temporal file in the current directory. Returns the name of the new file. set &quot;emptyfile=!@unique!&quot; Echo created: !emptyfile!",
+    "url": "https://www.enhancedbatch.com/docs/extensions/unique/",
+    "relUrl": "/docs/extensions/unique/"
+  },
+  "96": {
+    "id": "96",
+    "title": "UnixTime",
+    "content": "UnixTime get @unixtime get @unixtime Retrieves the number of seconds since 1970-01-01 0:00:00 UTC. echo !@unixtime! 1569799466",
+    "url": "https://www.enhancedbatch.com/docs/extensions/unixtime/",
+    "relUrl": "/docs/extensions/unixtime/"
+  },
+  "97": {
+    "id": "97",
+    "title": "Upper",
+    "content": "Upper Upper Upper set &quot;$var= oKay &quot; echo !$var;upper!. OKAY .",
+    "url": "https://www.enhancedbatch.com/docs/filters/upper/",
+    "relUrl": "/docs/filters/upper/"
+  },
+  "98": {
+    "id": "98",
+    "title": "UTF-8 Bugfixes",
+    "content": "UTF-8 Bugfixes Cmd have the next bugs using the utf-8 codepage: If you write text in utf-8 ocassionally bad characters are displayed. You cannot run a batch file using utf-8 on windows xp. These bugs are fixed if you use Enhanced Batch.",
+    "url": "https://www.enhancedbatch.com/docs/behaviors/utf8-bugfixes/",
+    "relUrl": "/docs/behaviors/utf8-bugfixes/"
+  },
+  "99": {
+    "id": "99",
+    "title": "Width",
+    "content": "Width get @width get @width Get the window width of the console. echo Current width: !@width! 120",
+    "url": "https://www.enhancedbatch.com/docs/extensions/width/",
+    "relUrl": "/docs/extensions/width/"
+  },
+  "100": {
+    "id": "100",
+    "title": "Year",
+    "content": "Year get @year get @year Retrieves the current year. echo !@year! 2019",
+    "url": "https://www.enhancedbatch.com/docs/extensions/year/",
+    "relUrl": "/docs/extensions/year/"
+  },
+  "101": {
+    "id": "101",
+    "title": "Zero Padding",
+    "content": "Zero Padding Zero Padding Zero Padding set $A=1 echo !$A;05!. 00001.",
+    "url": "https://www.enhancedbatch.com/docs/filters/zero-padding/",
+    "relUrl": "/docs/filters/zero-padding/"
+  }
+  
+}
