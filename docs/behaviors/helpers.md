@@ -23,25 +23,25 @@ If you want count the total number of parameters, or get a parameter after the i
 
 Enhanced Batch provides helpers for that.
 
-`$0` return  the name of the label.
-`$#` returns the count of parameters.
-`$N` returns the parameter in the N position (1 based).
-`$-N` returns the parameters from positions 1 to N (inclusive).
-`$N-` return parameters onward position N (inclusive).
-`$N-M` returns the parameters from positions N (inclusive) to M (inclusive).
-`$-` returns all the parameters.
+`@0` return  the name of the label.
+`@#` returns the count of parameters.
+`@N` returns the parameter in the N position (1 based).
+`@-N` returns the parameters from positions 1 to N (inclusive).
+`@N-` return parameters onward position N (inclusive).
+`@N-M` returns the parameters from positions N (inclusive) to M (inclusive).
+`@-` returns all the parameters.
 
 ```
 call :test a b c d e f g h i j k l m n o p q r s t u v w x y z
 pause & goto :eof
 :test
-echo Label: %$0%
-echo Count Parameters: %$#%
-echo All: %$-%
-echo Parameters 5-7: %$5-7%
-echo Parameter 17: %$17%
-echo First 3 parameters: %$-3%
-echo Four onwards: %$4-%
+echo Label: %@0%
+echo Count Parameters: %@#%
+echo All: %@-%
+echo Parameters 5-7: %@5-7%
+echo Parameter 17: %@17%
+echo First 3 parameters: %@-3%
+echo Four onwards: %@4-%
 goto :eof
 
 Label: :test
@@ -59,9 +59,9 @@ Cmd provides the `%~f0` for get the module filename. But it can return wrong dat
 
 Enhanced Batch provides reliably helpers:
 
-- `$0;~` returns the module filename.
-- `$0;~x` returns the module extension.
-- `$0;~dp` returns the module path.
+- `@0;~` returns the module filename.
+- `@0;~x` returns the module extension.
+- `@0;~dp` returns the module path.
 
 ```
 d: && echo changed to drive d: || echo error
@@ -70,9 +70,9 @@ echo:native module filename: %~f0
 echo:native module extension: %~x0
 echo:native module path: %~dp0
 
-echo:enhancedbatch module filename: %$0;~%
-echo:enhancedbatch module extension: %$0;~x%
-echo:enhancedbatch module path: %$0;~dp%
+echo:enhancedbatch module filename: %@0;~%
+echo:enhancedbatch module extension: %@0;~x%
+echo:enhancedbatch module path: %@0;~dp%
 
 C:\enhancedbatch>"example"
 changed to drive d:
