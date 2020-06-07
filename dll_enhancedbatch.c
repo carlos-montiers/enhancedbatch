@@ -44,9 +44,6 @@
 #include <shellapi.h>
 #include <tlhelp32.h>
 
-BOOL WINAPI
-CmdBatNotification(BOOL start);
-
 #include "khash.h"
 KHASH_MAP_INIT_WSTR(wstr, LPWSTR)
 KHASH_MAP_INIT_WSTR(line, DWORD)
@@ -70,8 +67,6 @@ HANDLE hSpeaking;		// speech thread
 WCHAR stringBuffer[STRINGBUFFERMAX]; // For hold conversion of values
 WCHAR varBuffer[STRINGBUFFERMAX];
 
-int CallHelp(int argc, LPCWSTR argv[]);
-
 LPWIN32_FIND_DATA findForStack[FINDFOR_STACKSIZE];
 int findForStackTop = -1;
 
@@ -85,12 +80,6 @@ struct sFor {
 	int type;
 	int start, stop, step;
 };
-
-BOOL Next(int argc, LPCWSTR argv[]);
-
-void unhook(void);
-int CallUnload(int argc, LPCWSTR argv[]);
-void handleElevation(void);
 
 fnCmdFunc *peCall, eCall;
 int *pLastRetCode;

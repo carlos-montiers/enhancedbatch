@@ -122,9 +122,17 @@ typedef int (WINAPI *fnCmdFunc)(struct cmdnode *node);
 extern fnCmdFunc *peCall, eCall;
 extern int *pLastRetCode;
 
+BOOL WINAPI CmdBatNotification(BOOL start);
+
 int WINAPI MyCall(struct cmdnode *node);
 int MyPutStdErrMsg(UINT a, int b, UINT c, va_list *d);
 UINT MyLexText(void);
+
+int CallHelp(int argc, LPCWSTR argv[]);
+BOOL Next(int argc, LPCWSTR argv[]);
+void unhook(void);
+int CallUnload(int argc, LPCWSTR argv[]);
+void handleElevation(void);
 
 typedef int (*fncmd_printf)(LPCWSTR fmt, ...);
 extern fncmd_printf cmd_printf;
