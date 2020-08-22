@@ -139,7 +139,6 @@ const char NextBriefStr[]				= "Set next FOR range value";
 
 const char CheckkeyBriefStr[]			= "Check if any key was pressed";
 const char ClearBriefStr[]				= "Clear a window";
-const char ElevateBriefStr[]			= "Run a command as administrator";
 const char HelpBriefStr[]				= "This list";
 const char ImageBriefStr[]				= "Draw an image";
 const char ImgBriefStr[]				= "Display an image";
@@ -684,22 +683,6 @@ const char EscapeHelpStr[] =
 	"\r\n"
 	"The escape character will generate itself; any other character will be\r\n"
 	"ignored, preserving the escape character."
-;
-
-const char ElevateHelpStr[] =
-	"Run a command as administrator.\r\n"
-	"\r\n"
-	"CALL @ELEVATE [/N[K]] [command [arguments]]\r\n"
-	"\r\n"
-	"  /N         run in a new window (and Keep it open)\r\n"
-	"\r\n"
-	"The command is run via CMD.EXE, with Enhanced Batch present.  Environment\r\n"
-	"variables present in the current CMD, but not in the elevated CMD, will be \r\n"
-	"added; other variables will remain unchanged.  Elevation is handled by \"Windows\r\n"
-	"host process (Rundll32)\" (default User Account Control setting will cause a\r\n"
-	"prompt for authorization); it will remain available for the remainder of the\r\n"
-	"batch file (avoiding multiple prompts).  Errorlevel will be 60399 if the\r\n"
-	"elevated command failed to run (0xEBEF - Enhanced Batch Elevation Failed)."
 ;
 
 const char HelpHelpStr[] =

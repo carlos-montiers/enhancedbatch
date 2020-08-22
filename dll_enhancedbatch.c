@@ -256,7 +256,6 @@ const struct sExt setExtensionList[] = {
 const struct sExt callExtensionList[] = {
 	{ L"@checkkey",	0, CallCheckkey, HELPSTR(Checkkey) },
 	{ L"@clear",   ~0, CallClear, HELPSTR(Clear) },
-	{ L"@elevate",  0, CallElevate, HELPSTR(Elevate) },
 	{ L"@help",    ~0, CallHelp, HELPSTR(Help) },
 	{ L"@image",   ~1, CallImage, HELPSTR(Image) },
 	{ L"@img",	   ~1, CallImg, HELPSTR(Img) },
@@ -1714,8 +1713,6 @@ MyCmdBatNotification(BOOL start)
 	} else {
 		kh_clear(line, batch_lnums);
 		doneCmdBat();
-		// Batch has exited, stop the elevated process, restoring the prompt.
-		CallElevate(-1, NULL);
 	}
 
 	return rc;
@@ -1932,8 +1929,6 @@ void unhook(void)
 {
 	khint_t k;
 
-	CallElevate(-1, NULL);	// stop the elevated process
-
 	// Wait for speech to finish before exiting.
 	WaitForSingleObject(hSpeaking, INFINITE);
 	uninitCo();
@@ -1968,7 +1963,6 @@ _dllstart(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved)
 		if (phdr->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_WINDOWS_CUI) {
 			DisableThreadLibraryCalls(hDll);
 			hook(hDll);
-			handleElevation();
 		}
 	} else if (dwReason == DLL_PROCESS_DETACH) {
 		if (variables != NULL) {
@@ -2196,105 +2190,3 @@ Export_DllLoad_Entrypoint(load);
 Export_DllLoad_Entrypoint(Load);
 // Default entry point of regsvr32 used only as a method to load the DLL into CMD
 Export_DllLoad_Entrypoint(DllRegisterServer);
-
-__declspec(dllexport)
-VOID /*CALLBACK*/	// CALLBACK exports ElevateW@16
-ElevateW(HWND hwnd, HINSTANCE ModuleHandle, LPCWSTR CmdLineBuffer, INT nCmdShow)
-{
-	WCHAR name[64];
-
-	LPCWSTR key = wcsrchr(CmdLineBuffer, L' ');
-	if (key == NULL) {
-		return;
-	}
-	++key;
-	wsnprintf(name, lenof(name), L"EB-elevate-event-%s", key);
-	HANDLE event = OpenEvent(EVENT_ALL_ACCESS, FALSE, name);
-	if (event == NULL) {
-		return;
-	}
-	for (;;) {
-		WaitForSingleObject(event, INFINITE);
-		wsnprintf(name, lenof(name), L"EB-elevate-data-%s", key);
-		HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, name);
-		if (map == NULL) {
-			// No map means the batch is finished, prompt again next time.
-			return;
-		}
-		struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
-		if (data != NULL) {
-			STARTUPINFO si = { .cb = sizeof(si) };
-
-			if (data->console_pid != 0) {
-				si.dwFlags = STARTF_USESHOWWINDOW;
-				si.wShowWindow = SW_HIDE;
-			}
-			PROCESS_INFORMATION pi;
-			SetEnvironmentVariable(L"~EB-elevate-key", key);
-			if (CreateProcess(NULL, data->cmdline, NULL, NULL, TRUE,
-							  CREATE_NEW_CONSOLE | CREATE_SUSPENDED
-							  | CREATE_UNICODE_ENVIRONMENT,
-							  NULL, data->curdir, &si, &pi)) {
-				data->elevated_pid = pi.dwProcessId;
-				Inject(pi.hProcess);
-				ResumeThread(pi.hThread);
-				CloseHandle(pi.hProcess);
-				CloseHandle(pi.hThread);
-			}
-			UnmapViewOfFile(data);
-		}
-		CloseHandle(map);
-		// If the key ends in '-' it's from the command line, which should
-		// always prompt.
-		if (key[wcslen(key)-1] == L'-') {
-			return;
-		}
-	}
-}
-
-void handleElevation(void)
-{
-	WCHAR name[64], key[32];
-
-	if (GetEnvironmentVariable(L"~EB-elevate-key", key, lenof(key)) == 0) {
-		return;
-	}
-	SetEnvironmentVariable(L"~EB-elevate-key", NULL);
-	wsnprintf(name, lenof(name), L"EB-elevate-data-%s", key);
-	HANDLE map = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, name);
-	if (map == NULL) {
-		return;
-	}
-
-	struct sElevate *data = MapViewOfFile(map, FILE_MAP_WRITE, 0, 0, 0);
-	if (data == NULL) {
-		CloseHandle(map);
-		return;
-	}
-
-	if (data->console_pid != 0) {
-		typedef BOOL (WINAPI *fnAttachConsole)(DWORD);
-		fnAttachConsole pAttachConsole = (fnAttachConsole)
-			(LPVOID) GetProcAddress(GetModuleHandle(L"kernel32.dll"), "AttachConsole");
-		if (pAttachConsole != NULL) {
-			FreeConsole();
-			pAttachConsole(data->console_pid);
-		}
-	}
-
-	LPWSTR env = data->env;
-	while (*env != L'\0') {
-		LPWSTR var = wcschr(env + 1, L'=');
-		*var++ = L'\0';
-		if (GetEnvironmentVariable(env, NULL, 0) == 0) {
-			SetEnvironmentVariable(env, var);
-		}
-		env = var + wcslen(var) + 1;
-	}
-
-	// Let the caller know we've finished using it.
-	*data->env = L'\0';
-
-	UnmapViewOfFile(data);
-	CloseHandle(map);
-}
