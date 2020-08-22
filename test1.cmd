@@ -2,7 +2,7 @@
 setlocal enableextensions enabledelayedexpansion
 
 rundll32.exe %~dp0enhancedbatch_%processor_architecture%.dll,load
-if not defined @enhancedbatch echo Failed: Enhanced Batch didn't load.&goto :eof
+if not defined @enhancedbatch echo Failed: EnhancedBatch didn't load.&goto :eof
 
 set $var=1
 if not defined $var echo Failed: $var is not defined.&goto :eof
